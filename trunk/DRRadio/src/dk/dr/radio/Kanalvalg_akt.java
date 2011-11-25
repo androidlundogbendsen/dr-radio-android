@@ -91,7 +91,11 @@ public class Kanalvalg_akt extends ListActivity {
     setListAdapter(adapter);
     getListView().setBackgroundResource(R.drawable.main_app_bg);
 
-    skrift_DRiBold = Typeface.createFromAsset(getAssets(),"DRiBold.otf");
+    try { // DRs skrifttyper er ikke offentliggjort i SVN, derfor kan følgende fejle:
+      skrift_DRiBold = Typeface.createFromAsset(getAssets(),"DRiBold.otf");
+    } catch (Exception e) {
+      Log.e("DRs skrifttyper er ikke tilgængelige", e);
+    }
 	}
 
 
@@ -137,7 +141,7 @@ public class Kanalvalg_akt extends ListActivity {
         textView.setVisibility(View.VISIBLE);
         String visningsNavn = kanal.longName;
         textView.setText(visningsNavn);
-        textView.setTypeface(skrift_DRiBold);
+        if (skrift_DRiBold!=null) textView.setTypeface(skrift_DRiBold);
       }
 
       listeElementer[position] = view; // husk til næste gang
