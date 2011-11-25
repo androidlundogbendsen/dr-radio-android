@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="about_header_size">40sp</dimen>
+    <dimen name="send_feedback_mail_size">32sp</dimen>
+    
+</resources>
