@@ -257,8 +257,12 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 		tracksLinearLayout = (LinearLayout) findViewById(R.id.player_tracks_linearlayout);
 		status = (TextView) findViewById(R.id.status);
 
-    Typeface skrift_DRiRegular = Typeface.createFromAsset(getAssets(),"DRiRegular.otf");
-		status.setTypeface(skrift_DRiRegular);
+    try { // DRs skrifttyper er ikke offentliggjort i SVN, derfor kan følgende fejle:
+      Typeface skrift_DRiRegular = Typeface.createFromAsset(getAssets(),"DRiRegular.otf");
+      status.setTypeface(skrift_DRiRegular);
+    } catch (Exception e) {
+      Log.e("DRs skrifttyper er ikke tilgængelige", e);
+    }
 
 		Button selectChannelButton = (Button) findViewById(R.id.player_select_channel_button);
 		selectChannelButton.setOnClickListener(new OnClickListener()
