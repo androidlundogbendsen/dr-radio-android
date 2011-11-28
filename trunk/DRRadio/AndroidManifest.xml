@@ -19,7 +19,6 @@
           android:label="@string/app_name">
 
         <activity android:name="dk.dr.radio.Splash_akt" android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-                  android:label="Velkommen"
                   android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

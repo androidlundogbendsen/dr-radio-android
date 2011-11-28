@@ -31,7 +31,7 @@
         	android:layout_alignParentBottom="true" >
 
             <ImageButton android:id="@+id/about_footer_button"
-            android:contentDescription="send feedback"
+            android:contentDescription="Skriv meddelelse til DR"
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
 				android:gravity="center_vertical|center_horizontal"

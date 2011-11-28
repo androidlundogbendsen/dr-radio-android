@@ -31,6 +31,8 @@
 			<Button android:id="@+id/player_select_channel_button"
 				android:layout_width="wrap_content" android:layout_height="30dp"
 				android:text="Vælg kanal" android:textSize="@dimen/player_select_channel_size"
+        android:nextFocusDown="@+id/start_stop_knap"
+        android:nextFocusLeft="@+id/start_stop_knap"
 				android:layout_gravity="center_vertical|right" android:paddingLeft="20dp"
 				android:paddingRight="20dp" android:paddingTop="0dp"
 				android:paddingBottom="0dp">
@@ -49,13 +51,17 @@
 			android:paddingLeft="5dp" android:paddingRight="5dp"
 			android:paddingTop="10dp" android:paddingBottom="10dp">
 
-			<ImageButton android:id="@+id/player_play_stop_button"
+			<ImageButton android:id="@+id/start_stop_knap"
         android:contentDescription="start stop"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:gravity="center_vertical" android:background="@drawable/play" />
 
+      <!-- android:focusable="true" gør at blinde og svagtsynede der bruger
+           skærmlæser kan bruge trackballen til at flytte hen på viewet og
+           få læst teksten højt. Jacob 28. nov 2011 -->
 			<TextView android:id="@+id/status" android:text="Forbinder"
 				android:textColor="#FF000000" android:gravity="center_vertical"
+        android:focusable="true"
 				android:paddingLeft="10dp" android:layout_weight="1"
 				android:layout_width="wrap_content" android:layout_height="fill_parent" />
 
@@ -68,9 +74,13 @@
 		android:paddingLeft="5dp" android:paddingRight="5dp"
 		android:paddingTop="10dp" android:paddingBottom="0dp">
 
+      <!-- android:focusable="true" gør at blinde og svagtsynede der bruger
+           skærmlæser kan bruge trackballen til at flytte hen på viewet og
+           få læst teksten højt. Jacob 28. nov 2011 -->
 		<TextView android:id="@+id/player_current_program_channel_textview"
 			android:textSize="@dimen/player_current_program_channel_size"
 			android:text="Lige nu på P3" android:textColor="@android:color/black"
+        android:focusable="true"
 			android:layout_gravity="center_vertical|left" android:layout_width="wrap_content"
 			android:layout_height="wrap_content">
 		</TextView>
@@ -82,9 +92,13 @@
 		android:paddingLeft="5dp" android:paddingRight="5dp"
 		android:paddingTop="5dp" android:paddingBottom="0dp">
 
+      <!-- android:focusable="true" gør at blinde og svagtsynede der bruger
+           skærmlæser kan bruge trackballen til at flytte hen på viewet og
+           få læst teksten højt. Jacob 28. nov 2011 -->
 		<TextView android:id="@+id/player_current_program_title_textview"
 			android:textSize="@dimen/player_current_program_title_size"
 			android:text="Emil fra Lønneberg" android:layout_gravity="center_vertical|left"
+        android:focusable="true"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:textColor="@android:color/black">
 		</TextView>
@@ -158,7 +172,6 @@
 		</Button>
 
 		<Button android:id="@+id/player_format_button"
-        android:contentDescription="Format"
 			android:layout_width="wrap_content" android:layout_height="30dp"
 			android:text="Format" android:textSize="@dimen/player_about_size"
 			android:layout_gravity="center_vertical|left" android:paddingLeft="10dp"
