@@ -35,7 +35,7 @@ public class Log {
   public static final String TAG = "DRRadio";
 
   // Fjernet da det ser ud til at overbelaste regnearket
-  public static final boolean RAPPORTER_VELLYKKET_AFSPILNING = true;
+  public static final boolean RAPPORTER_VELLYKKET_AFSPILNING = false;
 
   public static StringBuilder log = new StringBuilder(18000);
 

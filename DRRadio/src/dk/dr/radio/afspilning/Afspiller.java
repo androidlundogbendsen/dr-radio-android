@@ -172,6 +172,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
 
   synchronized public void stopAfspilning() {
     Log.d("AfspillerService stopAfspilning");
+    handler.removeCallbacks(startAfspilningIntern);
     mediaPlayer.stop();
     // mediaPlayer.reset();
     // Da mediaPlayer.reset() erfaringsmæssigt kan hænge i dette tilfælde afregistrerer vi
@@ -186,7 +187,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
         Log.d("gammelMediaPlayer.release() færdig");
       }
     }.start();
-
+    
     mediaPlayer = new MediaPlayer();
     sætMediaPlayerLytter(mediaPlayer, this); // registrér lyttere på den nye instans
     if (holdSkærmTændt) mediaPlayer.setWakeMode(DRData.appCtx, PowerManager.SCREEN_DIM_WAKE_LOCK);
@@ -343,8 +344,8 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     public void run() {
       try {
         startAfspilningIntern();
-      } catch (IOException e) {
-        Log.e(e);
+      } catch (Exception e) {
+        Log.kritiskFejlStille(e);
       }
     }
   };
