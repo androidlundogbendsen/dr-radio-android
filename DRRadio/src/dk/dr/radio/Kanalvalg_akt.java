@@ -121,25 +121,28 @@ public class Kanalvalg_akt extends ListActivity {
       TextView textView = (TextView)view.findViewById(R.id.tekst);
 
       // Sæt åbne/luk-ikon for P4 og højttalerikon for kanal
-      if (position == p4indeks)
+      if (position == p4indeks) {
         ikon.setImageResource( p4erÅbnet? R.drawable.icon_minus : R.drawable.icon_plus);
-      else if (drData.aktuelKanalkode.equals(kanalkode))
+        ikon.setContentDescription(p4erÅbnet? "Luk" : "Åbn"); // Til blinde og svagtsyende
+      } else if (drData.aktuelKanalkode.equals(kanalkode)) {
         ikon.setImageResource(R.drawable.icon_playing);
-      else
+        ikon.setContentDescription("Spiller nu"); // Til blinde og svagtsyende
+      } else
         ikon.setVisibility(View.INVISIBLE);
 
       //Log.d("billedebilledebilledebillede"+billede+ikon+textView);
+      String visningsNavn = kanal.longName;
 
       if (id != 0) {
         // Element med billede
         billede.setVisibility(View.VISIBLE);
         billede.setImageResource(id);
+        billede.setContentDescription(visningsNavn); // Til blinde og svagtsyende
         textView.setVisibility(View.GONE);
       } else {
         // Element uden billede
         billede.setVisibility(View.GONE);
         textView.setVisibility(View.VISIBLE);
-        String visningsNavn = kanal.longName;
         textView.setText(visningsNavn);
         if (skrift_DRiBold!=null) textView.setTypeface(skrift_DRiBold);
       }

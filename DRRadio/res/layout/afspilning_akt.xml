@@ -50,6 +50,7 @@
 			android:paddingTop="10dp" android:paddingBottom="10dp">
 
 			<ImageButton android:id="@+id/player_play_stop_button"
+        android:contentDescription="start stop"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:gravity="center_vertical" android:background="@drawable/play" />
 
@@ -157,8 +158,9 @@
 		</Button>
 
 		<Button android:id="@+id/player_format_button"
+        android:contentDescription="Format"
 			android:layout_width="wrap_content" android:layout_height="30dp"
-			android:text="@string/format" android:textSize="@dimen/player_about_size"
+			android:text="Format" android:textSize="@dimen/player_about_size"
 			android:layout_gravity="center_vertical|left" android:paddingLeft="10dp"
 			android:paddingRight="10dp" android:paddingTop="0dp"
 			android:paddingBottom="0dp">
