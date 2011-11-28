@@ -35,12 +35,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import dk.dr.radio.data.json.stamdata.Kanal;
+import dk.dr.radio.util.ImageViewTilBlinde;
 import dk.dr.radio.util.Log;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.json.JSONException;
 
 public class Kanalvalg_akt extends ListActivity {
 
@@ -116,29 +114,31 @@ public class Kanalvalg_akt extends ListActivity {
 
 			//System.out.println("getView " + position + " kanal_" + kanalkode.toLowerCase() + " type = " + id);
       view = mInflater.inflate(R.layout.kanalvalg_element, null);
-      ImageView billede = (ImageView) view.findViewById(R.id.billede);
+      ImageViewTilBlinde billede = (ImageViewTilBlinde) view.findViewById(R.id.billede);
       ImageView ikon = (ImageView)view.findViewById(R.id.ikon);
       TextView textView = (TextView)view.findViewById(R.id.tekst);
+
+      //Log.d("billedebilledebilledebillede"+billede+ikon+textView);
+      String visningsNavn = kanal.longName;
+      String blindetekst = visningsNavn; // Til blinde og svagtsyende
 
       // Sæt åbne/luk-ikon for P4 og højttalerikon for kanal
       if (position == p4indeks) {
         ikon.setImageResource( p4erÅbnet? R.drawable.icon_minus : R.drawable.icon_plus);
-        ikon.setContentDescription(p4erÅbnet? "Luk" : "Åbn"); // Til blinde og svagtsyende
+        blindetekst = (p4erÅbnet? "Luk " : "Åben ")+blindetekst;
       } else if (drData.aktuelKanalkode.equals(kanalkode)) {
         ikon.setImageResource(R.drawable.icon_playing);
-        ikon.setContentDescription("Spiller nu"); // Til blinde og svagtsyende
+        blindetekst = "Spiller nu: "+blindetekst;
       } else
         ikon.setVisibility(View.INVISIBLE);
 
-      //Log.d("billedebilledebilledebillede"+billede+ikon+textView);
-      String visningsNavn = kanal.longName;
 
       if (id != 0) {
         // Element med billede
         billede.setVisibility(View.VISIBLE);
         billede.setImageResource(id);
-        billede.setContentDescription(visningsNavn); // Til blinde og svagtsyende
-        textView.setVisibility(View.GONE);
+        billede.blindetekst = blindetekst;
+        textView.setVisibility(View.INVISIBLE);
       } else {
         // Element uden billede
         billede.setVisibility(View.GONE);
