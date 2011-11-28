@@ -19,6 +19,7 @@
           android:label="@string/app_name">
 
         <activity android:name="dk.dr.radio.Splash_akt" android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+                  android:label="Velkommen"
                   android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,16 +27,20 @@
             </intent-filter>
         </activity>
         <activity android:name="dk.dr.radio.Afspilning_akt" android:theme="@android:style/Theme.NoTitleBar"
+                  android:label="DR Radio"
               android:launchMode="singleTop" android:screenOrientation="portrait">
         </activity>
         <activity android:name="dk.dr.radio.Om_DRRadio_akt"
+                  android:label="Om DR Radio"
         		  android:screenOrientation="portrait">
         </activity>
         <activity android:name="dk.dr.radio.Kanalvalg_akt" android:theme="@android:style/Theme.NoTitleBar"
+                  android:label="Kanalvalg"
               android:noHistory="true"
          		  android:screenOrientation="portrait">
         </activity>
         <activity android:name="dk.dr.radio.Indstillinger_akt"
+                  android:label="DR Radio Indstillinger"
         		  android:screenOrientation="portrait">
         </activity>
 
