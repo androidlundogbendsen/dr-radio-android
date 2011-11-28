@@ -115,20 +115,18 @@ public class Kanalvalg_akt extends ListActivity {
 			//System.out.println("getView " + position + " kanal_" + kanalkode.toLowerCase() + " type = " + id);
       view = mInflater.inflate(R.layout.kanalvalg_element, null);
       ImageViewTilBlinde billede = (ImageViewTilBlinde) view.findViewById(R.id.billede);
-      ImageView ikon = (ImageView)view.findViewById(R.id.ikon);
+      ImageViewTilBlinde ikon = (ImageViewTilBlinde)view.findViewById(R.id.ikon);
       TextView textView = (TextView)view.findViewById(R.id.tekst);
 
       //Log.d("billedebilledebilledebillede"+billede+ikon+textView);
       String visningsNavn = kanal.longName;
-      String blindetekst = visningsNavn; // Til blinde og svagtsyende
 
       // Sæt åbne/luk-ikon for P4 og højttalerikon for kanal
       if (position == p4indeks) {
-        ikon.setImageResource( p4erÅbnet? R.drawable.icon_minus : R.drawable.icon_plus);
-        blindetekst = (p4erÅbnet? "Luk " : "Åben ")+blindetekst;
+        sætP4ikon(ikon);
       } else if (drData.aktuelKanalkode.equals(kanalkode)) {
         ikon.setImageResource(R.drawable.icon_playing);
-        blindetekst = "Spiller nu: "+blindetekst;
+        ikon.blindetekst = "Spiller nu";
       } else
         ikon.setVisibility(View.INVISIBLE);
 
@@ -137,8 +135,8 @@ public class Kanalvalg_akt extends ListActivity {
         // Element med billede
         billede.setVisibility(View.VISIBLE);
         billede.setImageResource(id);
-        billede.blindetekst = blindetekst;
-        textView.setVisibility(View.INVISIBLE);
+        billede.blindetekst = visningsNavn;
+        textView.setVisibility(View.GONE);
       } else {
         // Element uden billede
         billede.setVisibility(View.GONE);
@@ -167,13 +165,20 @@ public class Kanalvalg_akt extends ListActivity {
 		}
 	}
 
+
+  private void sætP4ikon(ImageViewTilBlinde ikon) {
+    ikon.setImageResource( p4erÅbnet? R.drawable.icon_minus : R.drawable.icon_plus);
+    ikon.blindetekst = (p4erÅbnet? "Luk" : "Åben");
+  }
+
+
   @Override
   protected void onListItemClick(ListView l, View v, int position, long id) {
     if (position == p4indeks) {
       p4erÅbnet = !p4erÅbnet;
       // Opdatér plus/minus på P4-kanal
-      ImageView åbneLukIkon = (ImageView)listeElementer[p4indeks].findViewById(R.id.ikon);
-      åbneLukIkon.setImageResource( p4erÅbnet? R.drawable.icon_minus : R.drawable.icon_plus);
+      ImageViewTilBlinde åbneLukIkon = (ImageViewTilBlinde)listeElementer[p4indeks].findViewById(R.id.ikon);
+      sætP4ikon(åbneLukIkon);
       // Fortæl at antal elementer i listen er ændret
       adapter.notifyDataSetChanged();
       return;

@@ -273,7 +273,7 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 			}
 		});
 
-		playStopButton = (ImageButton) findViewById(R.id.player_play_stop_button);
+		playStopButton = (ImageButton) findViewById(R.id.start_stop_knap);
 		playStopButton.setOnClickListener(new OnClickListener()
 		{
 			public void onClick(View v)

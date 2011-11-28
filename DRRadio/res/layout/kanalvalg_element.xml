@@ -24,7 +24,7 @@
 			/>
 
 
-				<ImageView
+				<dk.dr.radio.util.ImageViewTilBlinde
 			android:id="@+id/ikon"
 			android:src="@drawable/icon_plus"
 			android:layout_weight="1"

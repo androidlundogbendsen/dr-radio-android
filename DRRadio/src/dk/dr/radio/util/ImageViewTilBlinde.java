@@ -48,6 +48,7 @@ public class ImageViewTilBlinde extends ImageView {
 
     @Override
     public boolean dispatchPopulateAccessibilityEvent(AccessibilityEvent event) {
+        if (blindetekst==null) return false;
         event.getText().add(blindetekst);
         return true;
     }
