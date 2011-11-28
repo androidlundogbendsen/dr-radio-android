@@ -4,7 +4,7 @@
 	android:gravity="center_vertical"
 	android:layout_width="fill_parent" android:layout_height="wrap_content">
 
-   	<ImageView
+   	<dk.dr.radio.util.ImageViewTilBlinde
         android:id="@+id/billede"
         android:layout_width="wrap_content"
 		android:layout_height="50dp"
@@ -23,7 +23,7 @@
 			android:textColor="#FF000000"
 			/>
 
-    
+
 				<ImageView
 			android:id="@+id/ikon"
 			android:src="@drawable/icon_plus"
