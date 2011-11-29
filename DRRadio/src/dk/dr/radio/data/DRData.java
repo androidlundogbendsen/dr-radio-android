@@ -72,6 +72,9 @@ public class DRData implements java.io.Serializable {
 
 	public final Rapportering rapportering = new Rapportering();
 
+	/** Bruges til at sende broadcasts om nye stamdata */
+	public static final String OPDATERINGSINTENT_Stamdata = "dk.dr.radio.afspiller.OPDATERING_Stamdata";
+
 	/** Bruges til at sende broadcasts om ny info om udsendelsen (programinfo) */
 	public static final String OPDATERINGSINTENT_Udsendelse = "dk.dr.radio.afspiller.OPDATERING_Udsendelse";
 
@@ -185,22 +188,6 @@ public class DRData implements java.io.Serializable {
 	final Thread baggrundstråd = new Thread() {
 		@Override
 		public void run() {
-      hentUdsendelserOgSpillerNuListe();
-
-      // Så skal en evt ny udgave af stamdata indlæses
-      final String STAMDATA_SIDST_INDLÆST = "stamdata_sidst_indlæst";
-      long sidst = prefs.getLong(STAMDATA_SIDST_INDLÆST, 0);
-      long nu = System.currentTimeMillis();
-      if (nu - sidst> 15*60*1000) try { // stamdata er ældre end et kvarter
-        Log.d("Opdaterer stamdata...");
-        String stamdatastr  = JsonIndlaesning.hentUrlSomStreng(stamdataUrl);
-        //Log.d(stamdatastr);
-        instans.stamdata = JsonIndlaesning.parseStamdata(stamdatastr);
-        // Hentning og parsning gik godt - vi gemmer den nye udgave i prefs
-        prefs.edit().putString(STAMDATA, stamdatastr).commit();
-      } catch (Exception e) {
-        Log.e("Fejl parsning af stamdata. Url="+stamdataUrl, e);
-      }
 
       // Hovedløkke
 			while (true) {
@@ -255,6 +242,32 @@ public class DRData implements java.io.Serializable {
         appCtx.sendBroadcast(new Intent(OPDATERINGSINTENT_Udsendelse));
       }
     });
+
+
+    // Tjek om en evt ny udgave af stamdata skal indlæses
+    final String STAMDATA_SIDST_INDLÆST = "stamdata_sidst_indlæst";
+    long sidst = prefs.getLong(STAMDATA_SIDST_INDLÆST, 0);
+    long nu = System.currentTimeMillis();
+    long alder = (nu - sidst)/1000/60;
+    if (alder>= 30) try { // stamdata er ældre end en halv time
+      Log.d("Stamdata er "+alder+" minutter gamle, opdaterer dem...");
+      String stamdatastr  = JsonIndlaesning.hentUrlSomStreng(stamdataUrl);
+      //Log.d(stamdatastr);
+      final Stamdata stamdata2 = JsonIndlaesning.parseStamdata(stamdatastr);
+      // Hentning og parsning gik godt - vi gemmer den nye udgave i prefs
+      prefs.edit().putString(STAMDATA, stamdatastr).
+              putLong(STAMDATA_SIDST_INDLÆST, nu).
+              commit();
+
+      handler.post(new Runnable() {
+        public void run() {
+          stamdata = stamdata2;
+          appCtx.sendBroadcast(new Intent(OPDATERINGSINTENT_Stamdata));
+        }
+      });
+    } catch (Exception e) {
+      Log.e("Fejl parsning af stamdata. Url="+stamdataUrl, e);
+    }
   }
 
 

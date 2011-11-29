@@ -120,6 +120,7 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
       return;
     }
 
+    registerReceiver(stamdataOpdateretReciever, new IntentFilter(DRData.OPDATERINGSINTENT_Stamdata));
     registerReceiver(udsendelserOpdateretReciever, new IntentFilter(DRData.OPDATERINGSINTENT_Udsendelse));
     registerReceiver(spillerNuListeOpdateretReciever, new IntentFilter(DRData.OPDATERINGSINTENT_SpillerNuListe));
 
@@ -142,24 +143,6 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
 
-
-    final String NØGLE = "drift_statusmeddelelse";
-    final String drift_statusmeddelelse = drdata.stamdata.s(NØGLE);
-    // Tjek i prefs om denne drifmeddelelse allerede er vist.
-    // Der er 1 ud af en millards chance for at hashkoden ikke er ændret, den risiko tør vi godt løbe
-    final int nyHashkode = drift_statusmeddelelse.hashCode();
-    final int gammelHashkode = prefs.getInt(NØGLE, 0);
-    Log.d("drift_statusmeddelelse='"+drift_statusmeddelelse + "' nyHashkode="+nyHashkode+" gammelHashkode="+gammelHashkode);
-    if (gammelHashkode != nyHashkode && !"".equals(drift_statusmeddelelse)) { // Driftmeddelelsen er ændret. Vis den...
-      AlertDialog.Builder dialog=new AlertDialog.Builder(this);
-      dialog.setMessage(drift_statusmeddelelse);
-      dialog.setPositiveButton("OK", new AlertDialog.OnClickListener() {
-        public void onClick(DialogInterface arg0, int arg1) {
-          prefs.edit().putInt(NØGLE,  nyHashkode).commit(); // ...og gem ny hashkode i prefs
-        }
-      });
-      dialog.show();
-    }
 
     // Vis korrekt knap og/eller start afspilning
     boolean startAfspilningMedDetSammme = prefs.getBoolean("startAfspilningMedDetSammme", false);
@@ -458,6 +441,34 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 			sætForbinderProcent(procent);
 		}
 	}
+
+
+  private BroadcastReceiver stamdataOpdateretReciever = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context ctx, Intent i) {
+      Log.d("stamdataOpdateretReciever");
+
+      final String NØGLE = "drift_statusmeddelelse";
+      final String drift_statusmeddelelse = drdata.stamdata.s(NØGLE);
+      // Tjek i prefs om denne drifmeddelelse allerede er vist.
+      // Der er 1 ud af en millards chance for at hashkoden ikke er ændret, den risiko tør vi godt løbe
+      final int nyHashkode = drift_statusmeddelelse.hashCode();
+      final int gammelHashkode = prefs.getInt(NØGLE, 0);
+      Log.d("drift_statusmeddelelse='"+drift_statusmeddelelse + "' nyHashkode="+nyHashkode+" gammelHashkode="+gammelHashkode);
+      if (gammelHashkode != nyHashkode && !"".equals(drift_statusmeddelelse)) { // Driftmeddelelsen er ændret. Vis den...
+        AlertDialog.Builder dialog=new AlertDialog.Builder(Afspilning_akt.this);
+        dialog.setMessage(drift_statusmeddelelse);
+        dialog.setPositiveButton("OK", new AlertDialog.OnClickListener() {
+          public void onClick(DialogInterface arg0, int arg1) {
+            prefs.edit().putInt(NØGLE,  nyHashkode).commit(); // ...og gem ny hashkode i prefs
+          }
+        });
+        dialog.show();
+      }
+    }
+  };
+
+
 
   private BroadcastReceiver udsendelserOpdateretReciever = new BroadcastReceiver() {
     @Override
