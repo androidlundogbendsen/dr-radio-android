@@ -187,6 +187,7 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 	{
     afspiller.addAfspillerListener(Afspilning_akt.this);
     afspiller.addAfspillerListener(drdata.rapportering);
+    unregisterReceiver(stamdataOpdateretReciever);
     unregisterReceiver(udsendelserOpdateretReciever);
     unregisterReceiver(spillerNuListeOpdateretReciever);
 		super.onDestroy();
