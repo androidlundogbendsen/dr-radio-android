@@ -113,9 +113,11 @@ public class DRData implements java.io.Serializable {
       // Det skulle være rimeligt sikkert at vælge lydformat
       // HLS2 (httplive2) på Android 3.2 og frem
       // Det gælder nok også Android 3.1, men jeg er ikke sikkker. Jacob
+		/*
       if (Build.VERSION.SDK_INT >= 13 && !prefs.contains(NØGLE_lydformat)) {
         prefs.edit().putString(NØGLE_lydformat, "httplive2").commit();
       }
+      */	// fjernet da DRs HLS p.t. er ukompatibel med android devices
 
       instans = new DRData();
       instans.stamdata = JsonIndlaesning.parseStamdata(stamdatastr);
