@@ -18,6 +18,7 @@ DR Radio 2 for Android.  If not, see <http://www.gnu.org/licenses/>.
 
 package dk.dr.radio;
 
+import android.graphics.drawable.Drawable;
 import dk.dr.radio.data.DRData;
 import java.util.List;
 
@@ -25,7 +26,9 @@ import java.util.List;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,9 +46,8 @@ import java.util.ArrayList;
 public class Kanalvalg_akt extends ListActivity {
 
 	private DRData drData;
-	private CustomChannelAdapter adapter;
+	private KanalAdapter adapter;
   private View[] listeElementer;
-  //private HashMap<String, Kanal> kanalkodeTilKanal;
   private Typeface skrift_DRiBold;
   private List<String> overordnedeKanalkoder;
   private int p4indeks;
@@ -59,7 +61,7 @@ public class Kanalvalg_akt extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		adapter = new CustomChannelAdapter();
+		adapter = new KanalAdapter();
     try {
       drData = DRData.tjekInstansIndlæst(this);
     } catch (Exception ex) {
@@ -80,6 +82,11 @@ public class Kanalvalg_akt extends ListActivity {
       drData.stamdata.kanalkodeTilKanal.put(k, new Kanal()); // reparér problemet :-(
     }
 
+    try { // DRs skrifttyper er ikke offentliggjort i SVN, derfor kan følgende fejle:
+      skrift_DRiBold = Typeface.createFromAsset(getAssets(),"DRiBold.otf");
+    } catch (Exception e) {
+      Log.e("DRs skrifttyper er ikke tilgængelige", e);
+    }
 
 
     // Da der er tale om et fast lille antal kanaler er der ikke grund til det store bogholderi
@@ -87,17 +94,30 @@ public class Kanalvalg_akt extends ListActivity {
     listeElementer = new View[alleKanalkoder.size()];
 
     setListAdapter(adapter);
-    getListView().setBackgroundResource(R.drawable.main_app_bg);
+    // Sæt baggrunden normalt ville man gøre det fra XML eller med
+    //getListView().setBackgroundResource(R.drawable.main_app_bg);
 
-    try { // DRs skrifttyper er ikke offentliggjort i SVN, derfor kan følgende fejle:
-      skrift_DRiBold = Typeface.createFromAsset(getAssets(),"DRiBold.otf");
-    } catch (Exception e) {
-      Log.e("DRs skrifttyper er ikke tilgængelige", e);
-    }
+    ListView lv = getListView();
+
+    // Vi ønsker en mørkere udgave af baggrunden, så vi indlæser den
+    // her og sætter et farvefilter.
+    Drawable baggrund = getResources().getDrawable(R.drawable.main_app_bg);
+    baggrund = baggrund.mutate();
+    baggrund.setColorFilter(0xffa0a0a0, Mode.MULTIPLY);
+
+    lv.setBackgroundDrawable(baggrund);
+    lv.setDivider(new ColorDrawable(0x80ffffff));
+    lv.setDividerHeight(2);
+
+    // Sørg for at baggrunden bliver tegnet, også når listen scroller.
+    // Se http://android-developers.blogspot.com/2009/01/why-is-my-list-black-android.html
+    lv.setCacheColorHint(0x00000000);
+    // Man kunne have en ensfarvet baggrund, det gør scroll mere flydende
+    //getListView().setCacheColorHint(0xffe4e4e4);
 	}
 
 
-	private class CustomChannelAdapter extends BaseAdapter {
+	private class KanalAdapter extends BaseAdapter {
 
 		public View getView(int position, View convertView, ViewGroup parent) {
       // Hop over p4's positioner i tilfælde af at P4 ikke er åbnet
@@ -195,7 +215,7 @@ public class Kanalvalg_akt extends ListActivity {
     if (kanalkode.equals(drData.aktuelKanalkode)) setResult(RESULT_CANCELED);
     else setResult(RESULT_OK);  // Signalér til kalderen at der er skiftet kanal!!
 
-    // Ny kanal valgt - send valg til afspiller
+    // Ny kanal valgt - send valg til afspiller (ændrer også drData.aktuelKanalkode)
     drData.skiftKanal(kanalkode);
 
     // Hop tilbage til kalderen (hovedskærmen)
