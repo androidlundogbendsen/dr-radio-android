@@ -415,7 +415,7 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 		visStatus("Stoppet");
 		visStartStopKnap();
 		// Rapportering
-		
+
 		if (Log.RAPPORTER_VELLYKKET_AFSPILNING)
 		{
 			String rapNøgle = "rapport_"+ drdata.rapportering.lydformat;
@@ -614,29 +614,28 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 		final List <SpillerNuElement> tracks =new ArrayList<SpillerNuElement>(drdata.spillerNuListe.liste);
 
 
-    flipper.removeAllViews();
-
-    Collections.rotate(tracks, -1);
-    Collections.reverse(tracks);
-    int index = 0;
-    for (SpillerNuElement track : tracks) {
-      View view = buildViewFromTrack(track, index);
-      flipper.addView(view);
-      index++;
-    }
-
-    //On reload of songs show only the left arrow
-    previousImageView.setVisibility(ImageView.VISIBLE);
-    nextImageView.setVisibility(ImageView.GONE);
-
-    handlePreviousNextDisplay();
-
-
-    // Da getImagefromUrl(track.lastFM) skal hente over netværket skal det ske i baggrunden
     synchronized (flipper) {
+      flipper.removeAllViews();
+
+      Collections.rotate(tracks, -1);
+      Collections.reverse(tracks);
+      int index = 0;
+      for (SpillerNuElement track : tracks) {
+        View view = buildViewFromTrack(track, index);
+        flipper.addView(view);
+        index++;
+      }
+
+      //On reload of songs show only the left arrow
+      previousImageView.setVisibility(ImageView.VISIBLE);
+      nextImageView.setVisibility(ImageView.GONE);
+
+      handlePreviousNextDisplay();
+
       if (indlæsningAfBilleder!=null) indlæsningAfBilleder.cancel(false);
     }
 
+    // Da getImagefromUrl(track.lastFM) skal hente over netværket skal det ske i baggrunden
     indlæsningAfBilleder = new AsyncTask() {
       @Override
       protected Object doInBackground(Object... arg0) {
