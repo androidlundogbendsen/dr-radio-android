@@ -88,13 +88,14 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     mediaPlayer.setOnPreparedListener(lytter);
     mediaPlayer.setOnBufferingUpdateListener(lytter);
     mediaPlayer.setOnSeekCompleteListener(lytter);
+    if (holdSkærmTændt && lytter!=null) mediaPlayer.setWakeMode(DRData.appCtx, PowerManager.SCREEN_DIM_WAKE_LOCK);
   }
   private final NotificationManager notificationManager;
   private final Opkaldshaandtering opkaldshåndtering;
   private final TelephonyManager tm;
   private Notification notification;
 
-  private boolean holdSkærmTændt;
+  private static boolean holdSkærmTændt;
 
 
   /** Forudsætter DRData er initialiseret */
@@ -114,8 +115,6 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     holdSkærmTændt = DRData.prefs.getBoolean(NØGLEholdSkærmTændt, holdSkærmTændt);
     // Gem værdi hvis den ikke findes, sådan at indstillingsskærm viser det rigtige
     if (!DRData.prefs.contains(NØGLEholdSkærmTændt)) DRData.prefs.edit().putBoolean(NØGLEholdSkærmTændt, holdSkærmTændt).commit();
-
-    if (holdSkærmTændt) mediaPlayer.setWakeMode(DRData.appCtx, PowerManager.SCREEN_DIM_WAKE_LOCK);
 
     notificationManager = (NotificationManager) DRData.appCtx.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -180,10 +179,9 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
         Log.d("gammelMediaPlayer.release() færdig");
       }
     }.start();
-    
+
     mediaPlayer = new MediaPlayer();
     sætMediaPlayerLytter(mediaPlayer, this); // registrér lyttere på den nye instans
-    if (holdSkærmTændt) mediaPlayer.setWakeMode(DRData.appCtx, PowerManager.SCREEN_DIM_WAKE_LOCK);
 
     afspillerstatus = STATUS_STOPPET;
     opdaterWidgets();
