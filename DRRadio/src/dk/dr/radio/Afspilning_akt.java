@@ -31,12 +31,10 @@ import dk.dr.radio.util.StringUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -46,7 +44,6 @@ import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.util.Linkify;
@@ -67,7 +64,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-import dk.dr.radio.afspilning.AService;
 import dk.dr.radio.afspilning.AfspillerListener;
 import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.util.Log;
@@ -386,52 +382,69 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 
 	private void sætForbinderProcent(int procent)
 	{
-		Log.d( "sætforbinderProcent( " + procent + " )" );
+		//Log.d( "sætforbinderProcent( " + procent + " )" );
 
-    int afspillerstatus = afspiller.getAfspillerstatus();
+		int afspillerstatus = afspiller.getAfspillerstatus();
 
 		if (procent <= 0)
 		{
-      if (afspillerstatus == Afspiller.STATUS_FORBINDER) {
-        visStatus("Forbinder...");
-      }
-      else visStatus("");
-		} else {
+			if (afspillerstatus == Afspiller.STATUS_FORBINDER)
+			{
+				visStatus("Forbinder...");
+			}
+			else
+			{
+				visStatus("");
+			}
+		}
+		else {
 			visStatus("Forbinder... " + procent + "%");
 		}
 	}
 
 	public void onAfspilningStartet() {
-		Log.d( "onAfspilningStartet()" ) ;
+		//Log.d( "onAfspilningStartet()" ) ;
 		//startStopButton.setImageResource(R.drawable.pause_white);
 		visStatus("Afspiller");
-    visStartStopKnap();
+		visStartStopKnap();
 	}
 
 	public void onAfspilningStoppet() {
-		Log.d( "onAfspilningStoppet()" ) ;
+		//Log.d( "onAfspilningStoppet()" ) ;
 		//startStopButton.setImageResource(R.drawable.play_white);
 		visStatus("Stoppet");
-    visStartStopKnap();
-    // Rapportering
-    if (Log.RAPPORTER_VELLYKKET_AFSPILNING) {
-      String rapNøgle = "rapport_"+ drdata.rapportering.lydformat;
-      boolean rapporteret = prefs.getBoolean(rapNøgle, false);
-      if (!rapporteret) {
-        String rapport = drdata.rapportering.rapport();
-        if (rapport != null) {
-          Log.d("Indsender rapport: "+rapport);
-          ErrorReporter.getInstance().putCustomData(drdata.rapportering.lydformat, rapport);
-          ErrorReporter.getInstance().handleSilentException(null);
-          prefs.edit().putBoolean(rapNøgle, true).commit();
-          if (DRData.udvikling) Toast.makeText(this, "Sender rapport for "+drdata.rapportering.lydformat, Toast.LENGTH_LONG).show();
-        }
-      }
-    }
-    if (DRData.udvikling) {
-      String rapport = drdata.rapportering.rapport();
-      if (rapport != null) Toast.makeText(this, rapport, Toast.LENGTH_LONG).show();
-    }
+		visStartStopKnap();
+		// Rapportering
+		
+		if (Log.RAPPORTER_VELLYKKET_AFSPILNING)
+		{
+			String rapNøgle = "rapport_"+ drdata.rapportering.lydformat;
+			boolean rapporteret = prefs.getBoolean(rapNøgle, false);
+			if (!rapporteret)
+			{
+				String rapport = drdata.rapportering.rapport();
+				if (rapport != null)
+				{
+					Log.d("Indsender rapport: "+rapport);
+					ErrorReporter.getInstance().putCustomData(drdata.rapportering.lydformat, rapport);
+					ErrorReporter.getInstance().handleSilentException(null);
+					prefs.edit().putBoolean(rapNøgle, true).commit();
+					if (DRData.udvikling)
+					{
+						Toast.makeText(this, "Sender rapport for "+drdata.rapportering.lydformat, Toast.LENGTH_LONG).show();
+					}
+				}
+			}
+		}
+
+		if (DRData.udvikling)
+		{
+			String rapport = drdata.rapportering.rapport();
+			if (rapport != null)
+			{
+				Toast.makeText(this, rapport, Toast.LENGTH_LONG).show();
+			}
+		}
 	}
 
 	public void onAfspilningForbinder(int procent) {
@@ -710,9 +723,11 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 		return flipperLinearLayout;
 	}
 
+	/*
 	private boolean isFlipperDisplayed() {
 		return tracksLinearLayout.getVisibility() == LinearLayout.VISIBLE;
 	}
+	*/
 
 	private void flipNextIfNotFirstTrack() {
 		if(flipper.getDisplayedChild() != 0) {
