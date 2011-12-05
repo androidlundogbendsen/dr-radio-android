@@ -60,11 +60,11 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
         }
 
         // Har brugeren trykket på "Format" på afspilleraktiviteten skal format åbnes direkte
-        if (getIntent().getBooleanExtra(åbn_formatindstilling, false)) {
+        if (getIntent().getBooleanExtra(åbn_formatindstilling, false)) try {
           // Jeg synes toast alligevel er overflødig. Jacob
           //Toast.makeText(this, lydformatlp.getSummary(), Toast.LENGTH_LONG).show();
           ps.onItemClick(null, null, POS_lydformat, 0);
-        }
+        } catch (Exception e) {} // Ignorer - se http://www.bugsense.com/dashboard/project/57c90f98/error/11696187
 
         lydformatlp.setOnPreferenceChangeListener(this);
         aktueltLydformat = lydformatlp.getValue();
