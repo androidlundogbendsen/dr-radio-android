@@ -18,11 +18,9 @@ DR Radio 2 for Android.  If not, see <http://www.gnu.org/licenses/>.
 
 package dk.dr.radio.data;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.widget.Toast;

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="dk.dr.radio"
-      android:versionCode="23"
-      android:versionName="2.3">
+      android:versionCode="24"
+      android:versionName="2.4">
 
   <!--
   Jacob jeg ville gerne sætte android:minSdkVersion="3" da app'en kan starte på Android 1.5
@@ -10,8 +10,6 @@
   kun set på Android 1.6 (android:minSdkVersion="4").
   -->
   <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="9" />
-
-
 
     <application android:icon="@drawable/appicon"
           android:name="dk.dr.radio.diverse.AcraApplication"

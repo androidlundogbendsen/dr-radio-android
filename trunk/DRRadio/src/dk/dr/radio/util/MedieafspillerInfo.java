@@ -186,7 +186,7 @@ public class MedieafspillerInfo {
 
 // http://stackoverflow.com/questions/4579885/determine-opencore-or-stagefright-framework-for-mediaplayer
 
-
+/*
   public String findBedsteMusikformat(Activity a) {
     // For Android 1.5-kompetibilitet bruger vi ikke Build.VERSION.SDK
     int sdk = Integer.parseInt(Build.VERSION.SDK);
@@ -212,7 +212,7 @@ public class MedieafspillerInfo {
 
     return "rtsp";
   }
-
+*/
 
 
 /*

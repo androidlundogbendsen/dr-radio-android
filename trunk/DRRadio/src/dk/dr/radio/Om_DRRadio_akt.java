@@ -29,7 +29,6 @@ import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.webkit.WebViewDatabase;
 import android.widget.ImageButton;
-import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.util.Kontakt;
 import dk.dr.radio.util.Log;
 import dk.dr.radio.util.MedieafspillerInfo;
