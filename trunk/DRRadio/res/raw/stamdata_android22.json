@@ -12,21 +12,21 @@
 			"shortName": "P1D",
 			"longName": "DR P1",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel3_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel3/Channel3_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A03L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A03L.stream"
 		},
 		{
 			"shortName": "P2D",
 			"longName": "DR P2",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel4_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel4/Channel4_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A04L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A04L.stream"
 		},
 		{
 			"shortName": "P3",
 			"longName": "DR P3",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel5_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel5/Channel5_LQ0.m3u8" ,
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A05L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A05L.stream"
 		},
 		{
@@ -37,126 +37,126 @@
 			"shortName": "KH4",
 			"longName": "DR P4 København",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel8_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel8/Channel8_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A08L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A08L.stream"
 		},
 		{
 			"shortName": "NV4",
 			"longName": "DR P4 Sjælland",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel11_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel11/Channel11_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A11L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A11L.stream"
 		},
 		{
 			"shortName": "AB4",
 			"longName": "DR P4 Syd",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel12_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel12/Channel12_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A12L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A12L.stream"
 		},
 		{
 			"shortName": "OD4",
 			"longName": "DR P4 Fyn",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel17_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel17/Channel17_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A17L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A17L.stream"
 		},
 		{
 			"shortName": "RO4",
 			"longName": "DR P4 Bornholm",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel6_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel6/Channel6_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A06L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A06L.stream"
 		},
 		{
 			"shortName": "HO4",
 			"longName": "DR P4 Midt & Vest",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel9_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel9/Channel9_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A09L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A09L.stream"
 		},
 		{
 			"shortName": "AL4",
 			"longName": "DR P4 Nordjylland",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel10_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel10/Channel10_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A10L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A10L.stream"
 		},
 		{
 			"shortName": "TR4",
 			"longName": "DR P4 Trekanten",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel13_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel13/Channel13_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A13L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A13L.stream"
 		},
 		{
 			"shortName": "AR4",
 			"longName": "DR P4 Østjylland",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel14_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel14/Channel14_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A14L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A14L.stream"
 		},
 		{
 			"shortName": "ES4",
 			"longName": "DR P4 Esbjerg",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel15_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel15/Channel15_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A15L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A15L.stream"
 		},
 		{
 			"shortName": "NS4",
 			"longName": "DR P4 NordvestSjælland",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel17_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel17/Channel17_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A17L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A17L.stream"
 		},
 		{
 			"shortName": "P5D",
 			"longName": "DR P5",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel25_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel25/Channel25_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A25L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A25L.stream"
 		},
 		{
 			"shortName": "P6B",
 			"longName": "DR P6 Beat",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel29_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel29/Channel29_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A29L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A29L.stream"
 		},
 		{
 			"shortName": "P8J",
 			"longName": "DR P8 Jazz",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel22_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel22/Channel22_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A22L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A22L.stream"
 		},
 		{
 			"shortName": "RAM",
 			"longName": "DR Ramasjang",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel24_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel24/Channel24_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A24L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A24L.stream"
 		},
 		{
 			"shortName": "P7M",
 			"longName": "DR P7 Mix",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel21_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel21/Channel21_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A21L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A21L.stream"
 		},
 		{
 			"shortName": "DRM",
 			"longName": "DR MAMA",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel18_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel18/Channel18_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A18L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A18L.stream"
 		},
 		{
 			"shortName": "NEWS",
 			"longName": "DR Nyheder",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel2_LQ.mp3",
-			"aacUrl": "httplive://live-http.gss.dr.dk/streaming/audio/Channel2/Channel2_LQ0.m3u8",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A02L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A02L.stream"
 		}
 	],
@@ -217,6 +217,6 @@ Skriv evt. andre kommentarer her:\n\
 ",
 
 
-  "drift_statusmeddelelse": ""
+  "drift_statusmeddelelse": "Der er i øjeblikket problemer med afspilning af HLS. Prøv et andet format som RTSP eller Shoutcast"
 
 }
