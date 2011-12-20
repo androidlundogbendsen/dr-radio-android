@@ -17,7 +17,7 @@
 		},
 		{
 			"shortName": "P2D",
-			"longName": "DR P2",
+			"longName": "DR P2 klassisk",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel4_LQ.mp3",
 			"aacUrl": "httplive://ahls.gss.dr.dk/A/A04L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A04L.stream"
@@ -181,7 +181,7 @@
 	"text_playerConnecting": "",
 	"text_playerReConnecting": "",
 	"text_playerPlaying": "",
-	"text_spinnerText": "Forbinder",
+ 	"text_spinnerText": "Forbinder",
 	"text_trackPrevious": "TIDLIGERE AFSPILLET",
 	"text_trackLast": "SENESTE TITEL",
 	"text_trackBeforeLast": "FORRIGE TITEL",
