@@ -100,11 +100,15 @@ public class DRData implements java.io.Serializable {
 		if (instans == null) {
       prefs = PreferenceManager.getDefaultSharedPreferences(akt);
 
+      int stamdatResId = akt.getResources().getIdentifier("stamdata_android"+stamdataID, "raw", akt.getPackageName());
+      if (stamdatResId==0) throw new InternalError("Stamdata mangler at blive opdateret");
+
       String stamdatastr = prefs.getString(STAMDATA, null);
 
       if (stamdatastr == null) {
         // Indlæs fra raw this vi ikke har nogle cachede stamdata i prefs
-        InputStream is = akt.getResources().openRawResource(R.raw.stamdata_android21);
+        //InputStream is = akt.getResources().openRawResource(R.raw.stamdata_android22);
+        InputStream is = akt.getResources().openRawResource(stamdatResId);
         stamdatastr = JsonIndlaesning.læsInputStreamSomStreng(is);
       }
 
@@ -251,14 +255,17 @@ public class DRData implements java.io.Serializable {
     long alder = (nu - sidst)/1000/60;
     if (alder>= 30) try { // stamdata er ældre end en halv time
       Log.d("Stamdata er "+alder+" minutter gamle, opdaterer dem...");
+      // Opdater tid (hvad enten indlæsning lykkes eller ej)
+      prefs.edit().putLong(STAMDATA_SIDST_INDLÆST, nu).commit();
+
       String stamdatastr  = JsonIndlaesning.hentUrlSomStreng(stamdataUrl);
       //Log.d(stamdatastr);
       final Stamdata stamdata2 = JsonIndlaesning.parseStamdata(stamdatastr);
       // Hentning og parsning gik godt - vi gemmer den nye udgave i prefs
-      prefs.edit().putString(STAMDATA, stamdatastr).
-              putLong(STAMDATA_SIDST_INDLÆST, nu).
-              commit();
+      prefs.edit().putString(STAMDATA, stamdatastr).commit();
 
+      // Al opdatering, herunder tildeling bør ske i GUI-tråden for at undgå af GUIen er i gang med at
+      // bruge objektet mens det opdateres
       handler.post(new Runnable() {
         public void run() {
           stamdata = stamdata2;
