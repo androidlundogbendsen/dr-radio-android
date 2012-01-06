@@ -136,7 +136,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
       opdaterNotification();
       // Start afspillerservicen så programmet ikke bliver lukket
       // når det kører i baggrunden under afspilning
-      DRData.appCtx.startService(new Intent(DRData.appCtx, AService.class));
+      DRData.appCtx.startService(new Intent(DRData.appCtx, HoldAppIHukommelsenService.class));
       startAfspilningIntern();
 
       AudioManager audioManager = (AudioManager) DRData.appCtx.getSystemService(Context.AUDIO_SERVICE);
@@ -188,7 +188,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
 
     if (notification != null) notificationManager.cancelAll();
     // Stop afspillerservicen
-    DRData.appCtx.stopService(new Intent(DRData.appCtx, AService.class));
+    DRData.appCtx.stopService(new Intent(DRData.appCtx, HoldAppIHukommelsenService.class));
 
     // Informer evt aktivitet der lytter
     for (AfspillerListener observatør : observatører) {

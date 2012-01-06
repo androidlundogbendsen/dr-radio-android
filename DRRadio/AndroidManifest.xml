@@ -46,7 +46,7 @@
  * Tidligere AfspillerService - service-del der sørger for at app'en
  * bliver i hukommelsen mens der spilles lyd
 -->
-    <service android:name="dk.dr.radio.afspilning.AService"></service>
+    <service android:name="dk.dr.radio.afspilning.HoldAppIHukommelsenService" />
 
 
     <!--
