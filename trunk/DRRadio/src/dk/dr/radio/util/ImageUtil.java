@@ -28,7 +28,7 @@ import android.graphics.BitmapFactory;
 
 public class ImageUtil {
 
-	private static final int DEFAULT_NUM_RETRIES = 3;    
+	private static final int DEFAULT_NUM_RETRIES = 3;
 	private static int numRetries = DEFAULT_NUM_RETRIES;
 
 	public static Bitmap downloadImage(String url) {
@@ -40,7 +40,7 @@ public class ImageUtil {
 
 				return BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
 			} catch (Throwable e) {
-				timesTried++;	    
+				timesTried++;
 			}
 		}
 		return null;

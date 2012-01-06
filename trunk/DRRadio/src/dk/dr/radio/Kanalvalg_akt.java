@@ -37,7 +37,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import dk.dr.radio.data.json.stamdata.Kanal;
-import dk.dr.radio.util.ImageViewTilBlinde;
+import dk.dr.radio.diverse.ImageViewTilBlinde;
 import dk.dr.radio.util.Log;
 
 import java.util.ArrayList;
@@ -158,7 +158,7 @@ public class Kanalvalg_akt extends ListActivity {
 				textView.setText(visningsNavn);
 				if (skrift_DRiBold!=null) textView.setTypeface(skrift_DRiBold);
 			}
-			
+
 			return view;
 		}
 

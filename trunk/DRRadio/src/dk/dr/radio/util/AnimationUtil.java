@@ -23,7 +23,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 
 public class AnimationUtil {
-	
+
 	public static Animation inFromRightAnimation() {
 		Animation inFromRight = new TranslateAnimation(
 				Animation.RELATIVE_TO_PARENT, +1.0f,
