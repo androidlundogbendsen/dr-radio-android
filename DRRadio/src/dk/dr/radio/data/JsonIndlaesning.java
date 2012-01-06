@@ -230,10 +230,6 @@ public class JsonIndlaesning {
   }
 
   private static String læsNullSomTom(JSONObject j, String string) {
-    try {
-      return j.getString(string);
-    } catch (JSONException ex) {
-      return "";
-    }
+		return j.optString(string,"");
   }
 }
