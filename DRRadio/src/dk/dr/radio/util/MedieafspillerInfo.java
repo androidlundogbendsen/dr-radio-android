@@ -18,6 +18,7 @@ DR Radio 2 for Android.  If not, see <http://www.gnu.org/licenses/>.
 
 package dk.dr.radio.util;
 
+import dk.dr.radio.util.Log;
 import java.io.InputStreamReader;
 import android.app.Activity;
 import android.content.pm.PackageInfo;

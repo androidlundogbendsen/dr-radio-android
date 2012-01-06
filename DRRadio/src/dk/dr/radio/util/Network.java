@@ -26,10 +26,10 @@ public class Network
 {
 	public static boolean testConnection( Context c )
 	{
-		// get the networkinfo from the connection manager 
+		// get the networkinfo from the connection manager
 		ConnectivityManager cm = (ConnectivityManager) c.getSystemService( Context.CONNECTIVITY_SERVICE ) ;
-		
-		NetworkInfo[] netInfo = cm.getAllNetworkInfo(); 
+
+		NetworkInfo[] netInfo = cm.getAllNetworkInfo();
 		for( NetworkInfo ni : netInfo )
 		{
 			// if we find something, return true if it's connected
@@ -37,7 +37,7 @@ public class Network
 			{
 				if( ni.isConnected() )
 				{
-					return true ;				
+					return true ;
 				}
 			}
 		}

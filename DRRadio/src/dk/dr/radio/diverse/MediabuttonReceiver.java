@@ -18,12 +18,12 @@ DR Radio 2 for Android.  If not, see <http://www.gnu.org/licenses/>.
 
 package dk.dr.radio.diverse;
 
+import dk.dr.radio.util.Log;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import dk.dr.radio.util.Log;
 import android.view.KeyEvent;
 import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.afspilning.AfspillerReciever;

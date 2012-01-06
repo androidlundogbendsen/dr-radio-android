@@ -18,6 +18,7 @@ DR Radio 2 for Android.  If not, see <http://www.gnu.org/licenses/>.
 
 package dk.dr.radio.diverse;
 
+import dk.dr.radio.util.Log;
 import dk.dr.radio.afspilning.Afspiller;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -31,12 +32,12 @@ import dk.dr.radio.Afspilning_akt;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.R;
 import dk.dr.radio.afspilning.AfspillerReciever;
-import dk.dr.radio.util.Log;
 import java.util.Arrays;
 
 public class AfspillerWidget extends AppWidgetProvider {
 
 
+	@Override
   public void onReceive(Context context, Intent intent) {
     Log.d(this+" onReceive("+intent);
     super.onReceive(context, intent);

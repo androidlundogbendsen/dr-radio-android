@@ -18,9 +18,9 @@ DR Radio 2 for Android.  If not, see <http://www.gnu.org/licenses/>.
 
 package dk.dr.radio.diverse;
 
+import dk.dr.radio.util.Log;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import dk.dr.radio.util.Log;
 import dk.dr.radio.afspilning.Afspiller;
 
 
