@@ -45,12 +45,7 @@ public class Stamdata  {
    * Slår en streng op efter en nøgle. Giver "" i fald nøglen ikke findes +stakspor i loggen
    */
   public String s(String nøgle) {
-    try {
-      return json.getString(nøgle);
-    } catch (JSONException ex) {
-      ex.printStackTrace();
-      return "";
-    }
+		return json.optString(nøgle,"");
   }
 
 }
