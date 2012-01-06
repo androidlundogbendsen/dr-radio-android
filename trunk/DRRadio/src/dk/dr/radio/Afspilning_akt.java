@@ -37,6 +37,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -56,6 +57,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -141,8 +143,9 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 
 
     // Vis korrekt knap og/eller start afspilning
+		// når aktivitet startes men ikke hvis den genoptages (dvs kun når savedInstanceState==null)
     boolean startAfspilningMedDetSammme = prefs.getBoolean("startAfspilningMedDetSammme", false);
-    if (startAfspilningMedDetSammme && afspiller.getAfspillerstatus() == Afspiller.STATUS_STOPPET)
+    if (savedInstanceState==null && startAfspilningMedDetSammme && afspiller.getAfspillerstatus() == Afspiller.STATUS_STOPPET)
       startAfspilning();
     else visStartStopKnap();
 
@@ -266,6 +269,15 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 				}
 			}
 		});
+		playStopButton.setOnFocusChangeListener(new OnFocusChangeListener() {
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					playStopButton.setColorFilter(0xFFC0C0C0, PorterDuff.Mode.MULTIPLY);
+				} else {
+					playStopButton.setColorFilter(null);
+				}
+			}
+		});
 
 		Button playerAboutButton = (Button) findViewById(R.id.player_about_button);
 		playerAboutButton.setOnClickListener(new OnClickListener() {
@@ -299,7 +311,7 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 		nextImageView.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event)
 			{
-				if (event.getAction() == MotionEvent.ACTION_UP) flipNextIfNotFirstTrack();;
+				if (event.getAction() == MotionEvent.ACTION_UP) flipNextIfNotFirstTrack();
 				return true;
 			}
 		});
