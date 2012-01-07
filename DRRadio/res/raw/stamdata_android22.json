@@ -217,6 +217,7 @@ Skriv evt. andre kommentarer her:\n\
 ",
 
 
-  "drift_statusmeddelelse": "Der er i øjeblikket problemer med afspilning af HLS. Prøv et andet format som RTSP eller Shoutcast"
+//  "drift_statusmeddelelse": "Der er i øjeblikket problemer med afspilning af HLS. Prøv et andet format som RTSP eller Shoutcast"
+  "drift_statusmeddelelse": ""
 
 }
