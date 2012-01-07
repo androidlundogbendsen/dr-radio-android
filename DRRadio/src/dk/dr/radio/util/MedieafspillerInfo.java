@@ -62,6 +62,8 @@ public class MedieafspillerInfo {
     // 2xx
     MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK = 200,
   */
+
+	/*
   public static String infokodeTilStreng(int hvad) {
     if (hvad == MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING) return "VIDEO_TRACK_LAGGING";
     //if (hvad == MediaPlayer.MEDIA_INFO_BUFFERING_START) return "BUFFERING_START";			// fjernet, da det er android 2.3+
@@ -79,11 +81,13 @@ public class MedieafspillerInfo {
     if (hvad == MediaPlayer.MEDIA_ERROR_UNKNOWN) return "UNKNOWN";
     return "(ukendt)";
   }
+  */
 
   public String build_prop_stagefright;
 
   public String lavTelefoninfo(Activity a) {
-    String ret = "build.prop: ";
+    String ret = "";
+		/*
     try {
       BufferedReader br = new BufferedReader(new FileReader("/system/build.prop"));
       String l;
@@ -94,6 +98,7 @@ public class MedieafspillerInfo {
       ex.printStackTrace();
       ret += ex;
     }
+		*/
 
     PackageManager pm = a.getPackageManager();
     String version="(ukendt)";
@@ -109,20 +114,21 @@ public class MedieafspillerInfo {
         +"\nTelefonmodel: "+Build.MODEL +" "+Build.PRODUCT
         +"\nAndroid v"+Build.VERSION.RELEASE
         +"\nsdk: "+Build.VERSION.SDK
-        +"\nMedieafspiller: "+findMpUserAgent(a)
+//        +"\nMedieafspiller: "+findMpUserAgent(a)
         +"\nAndroid_ID: "+Secure.getString(a.getContentResolver(), Secure.ANDROID_ID);
 
 
-
+		/*
     // http://stackoverflow.com/questions/4617138/detect-if-flash-is-installed-on-android-and-embed-a-flash-video-in-an-activity
     // http://stackoverflow.com/questions/4458930/how-to-check-if-flash-is-installed
     PackageInfo pi = getPackageInfo(pm, "com.adobe.flashplayer");
     if (pi == null) pi = getPackageInfo(pm, "com.htc.flash");
     if (pi != null) ret +="\nFlash: "+pi.packageName+" v. "+pi.versionName;
     else ret +="\nFlash: Nej";
+		*/
     return ret;
   }
-
+/*
   private PackageInfo getPackageInfo(PackageManager pm, String pakke) {
     try {
       PackageInfo pi = pm.getPackageInfo(pakke, 0);
@@ -182,6 +188,7 @@ public class MedieafspillerInfo {
     Log.d("Medieafspiller UserAgent: "+mpUserAgent);
     return mpUserAgent;
   }
+*/
 
 
 
