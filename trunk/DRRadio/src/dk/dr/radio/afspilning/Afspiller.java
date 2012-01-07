@@ -326,7 +326,8 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
   }
 
   public boolean onInfo(MediaPlayer mp, int hvad, int extra) {
-    Log.d("onInfo(" + MedieafspillerInfo.infokodeTilStreng(hvad) + "(" + hvad + ") " + extra);
+    //Log.d("onInfo(" + MedieafspillerInfo.infokodeTilStreng(hvad) + "(" + hvad + ") " + extra);
+    Log.d("onInfo(" + hvad + ") " + extra);
     return true;
   }
 
@@ -342,7 +343,8 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
   };
 
   public boolean onError(MediaPlayer mp, int hvad, int extra) {
-    Log.d("onError(" + MedieafspillerInfo.fejlkodeTilStreng(hvad) + "(" + hvad + ") " + extra+ " onErrorTæller="+onErrorTæller);
+    //Log.d("onError(" + MedieafspillerInfo.fejlkodeTilStreng(hvad) + "(" + hvad + ") " + extra+ " onErrorTæller="+onErrorTæller);
+    Log.d("onError(" + hvad + ") " + extra+ " onErrorTæller="+onErrorTæller);
     // Iflg http://developer.android.com/guide/topics/media/index.html :
     // "It's important to remember that when an error occurs, the MediaPlayer moves to the Error
     //  state and you must reset it before you can use it again."
