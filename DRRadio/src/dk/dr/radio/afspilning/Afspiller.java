@@ -72,7 +72,6 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
   public static final int STATUS_SPILLER = 3;
   public int afspillerstatus = STATUS_STOPPET;
 
-
   private MediaPlayer mediaPlayer;
   private List<AfspillerListener> observatører = new ArrayList<AfspillerListener>();
 
@@ -90,6 +89,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     mediaPlayer.setOnSeekCompleteListener(lytter);
     if (holdSkærmTændt && lytter!=null) mediaPlayer.setWakeMode(DRData.appCtx, PowerManager.SCREEN_DIM_WAKE_LOCK);
   }
+  
   private final NotificationManager notificationManager;
   private final Opkaldshaandtering opkaldshåndtering;
   private final TelephonyManager tm;
