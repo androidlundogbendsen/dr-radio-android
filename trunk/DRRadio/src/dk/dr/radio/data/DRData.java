@@ -44,7 +44,7 @@ public class DRData implements java.io.Serializable {
 	public static Context appCtx;
 	public static SharedPreferences prefs;
 
-	private static final int stamdataID = 22 ;
+	private static final int stamdataID = 23 ;
 	private static final String stamdataUrl = "http://www.dr.dk/tjenester/iphone/radio/settings/android" + stamdataID + ".drxml";
 	private static final String STAMDATA = "stamdata" + stamdataID ;
 
@@ -103,7 +103,7 @@ public class DRData implements java.io.Serializable {
       int stamdatResId = akt.getResources().getIdentifier("stamdata_android"+stamdataID, "raw", akt.getPackageName());
       if (stamdatResId==0) throw new InternalError("Stamdata mangler at blive opdateret");
 
-      String stamdatastr = prefs.getString(STAMDATA, null);
+      String stamdatastr = null ; // prefs.getString(STAMDATA, null);
 
       if (stamdatastr == null) {
         // Indlæs fra raw this vi ikke har nogle cachede stamdata i prefs
@@ -285,11 +285,12 @@ public class DRData implements java.io.Serializable {
     rapportering.lydformat = lydformat + (højKvalitet?"_høj":"_standard");
     String url = kanal.shoutcastUrl;
     if ("rtsp".equals(lydformat)) url = kanal.rtspUrl;
-    else if ("httplive".equals(lydformat)) url = kanal.aacUrl;
+    else if ("httplive".equals(lydformat)) url = kanal.aacUrl;	// some phones can only do http live if the protocol is httplive:// instead of http://
     else if ("httplive2".equals(lydformat)) url = kanal.aacUrl.replaceAll("httplive", "http");
     if (højKvalitet)
 	{
 		url = url.replace("LQ", "HQ");
+		url = url.replace("quality=1", "quality=2");	// on-demand radio nyheder workaround
     	url = url.replace("L.stream", "H.stream") ;		// MP3, RTSP stream name workaround
 	}
     String info = "Kanal: "+kanal.longName+"\nlydformat: "+lydformat

@@ -17,7 +17,7 @@
 		},
 		{
 			"shortName": "P2D",
-			"longName": "DR P2 klassisk",
+			"longName": "DR P2",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel4_LQ.mp3",
 			"aacUrl": "httplive://ahls.gss.dr.dk/A/A04L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A04L.stream"
@@ -158,6 +158,14 @@
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel2_LQ.mp3",
 			"aacUrl": "httplive://ahls.gss.dr.dk/A/A02L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A02L.stream"
+		},
+		{
+			"shortName": "ODN",
+			"longName": "Seneste Radioavis",
+
+			"shoutcastUrl": "www.dr.dk/php/drmu/ramw/radio_app_od/senesteRadioavis.php?quality=1",
+			"aacUrl": "www.dr.dk/php/drmu/ramw/radio_app_od/senesteRadioavis.php?quality=1",
+			"rtspUrl": "www.dr.dk/php/drmu/ramw/radio_app_od/senesteRadioavis.php?quality=1"
 		}
 	],
 
@@ -181,7 +189,7 @@
 	"text_playerConnecting": "",
 	"text_playerReConnecting": "",
 	"text_playerPlaying": "",
- 	"text_spinnerText": "Forbinder",
+	"text_spinnerText": "Forbinder",
 	"text_trackPrevious": "TIDLIGERE AFSPILLET",
 	"text_trackLast": "SENESTE TITEL",
 	"text_trackBeforeLast": "FORRIGE TITEL",
@@ -199,9 +207,15 @@ Tak fordi du vil give feedback på radioappen!\n\
 Hvis du har oplevet problemer med appen, beder vi dig om at beskrive dem så udførligt som muligt herunder.\n\
 \n\
 Som standard bruger appen lydformatet MP3 (Shoutcast). Fungerer lyden tilfredsstillende?\n\
-I indstillingerne kan vælges et andet lydformat: AAC (RTSP):\n\
+I indstillingerne kan vælges andre formater:\n\
 \n\
 Hvordan fungerer AAC (RTSP)?\n\
+\n\
+Hvordan fungerer AAC (HLS)? \n\
+\n\
+Hvordan fungerer AAC (HLS2)? \n\
+\n\
+Fungerer appen som du forventede i forbindelse med opkald?\n\
 \n\
 \n\
 Skriv evt. andre kommentarer her:\n\
@@ -211,7 +225,6 @@ Skriv evt. andre kommentarer her:\n\
 ",
 
 
-//  "drift_statusmeddelelse": "Der er i øjeblikket problemer med afspilning af HLS. Prøv et andet format som RTSP eller Shoutcast"
   "drift_statusmeddelelse": ""
 
 }
