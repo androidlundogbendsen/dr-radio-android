@@ -57,9 +57,9 @@
 		{
 			"shortName": "OD4",
 			"longName": "DR P4 Fyn",
-			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel17_LQ.mp3",
-			"aacUrl": "httplive://ahls.gss.dr.dk/A/A17L.stream/Playlist.m3u8",
-			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A17L.stream"
+			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel7_LQ.mp3",
+			"aacUrl": "httplive://ahls.gss.dr.dk/A/A07L.stream/Playlist.m3u8",
+			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A07L.stream"
 		},
 		{
 			"shortName": "RO4",
