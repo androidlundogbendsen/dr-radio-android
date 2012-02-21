@@ -103,7 +103,8 @@ public class DRData implements java.io.Serializable {
       int stamdatResId = akt.getResources().getIdentifier("stamdata_android"+stamdataID, "raw", akt.getPackageName());
       if (stamdatResId==0) throw new InternalError("Stamdata mangler at blive opdateret");
 
-      String stamdatastr = null ; // prefs.getString(STAMDATA, null);
+      // indlæs stamdata fra Prefs hvis de findes
+      String stamdatastr = prefs.getString(STAMDATA, null);
 
       if (stamdatastr == null) {
         // Indlæs fra raw this vi ikke har nogle cachede stamdata i prefs
