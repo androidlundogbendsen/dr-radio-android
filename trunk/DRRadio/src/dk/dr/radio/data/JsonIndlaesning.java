@@ -133,6 +133,10 @@ public class JsonIndlaesning {
 
     String jsondata = læsInputStreamSomStreng(is);
     //Log.d("Hentede "+url+" på "+dt("hente "+url));
+    
+    // frederik: GratisDanmark fix: Strip the file of XML tags that might ruin the JSON format
+    jsondata.replaceAll("<[^>]*>","") ;
+    
     return jsondata;
   }
 
