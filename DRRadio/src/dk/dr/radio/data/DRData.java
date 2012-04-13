@@ -238,6 +238,7 @@ public class DRData implements java.io.Serializable {
       udsendelser_ikkeTilgængeligt = false;
     } catch (Exception ex) {
       Log.e("Kunne ikke hente udsendelser fra "+url, ex);
+			Log.kritiskFejl(null,ex);
       udsendelser2 = null;
       udsendelser_ikkeTilgængeligt = true;
     }

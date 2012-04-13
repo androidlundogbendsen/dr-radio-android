@@ -18,7 +18,6 @@ DR Radio 2 for Android.  If not, see <http://www.gnu.org/licenses/>.
 
 package dk.dr.radio.util;
 
-import dk.dr.radio.util.Log;
 import android.app.Activity;
 import android.content.Intent;
 import dk.dr.radio.data.DRData;
@@ -47,6 +46,6 @@ public class Kontakt {
     i.putExtra(android.content.Intent.EXTRA_EMAIL, modtagere);
     i.putExtra(android.content.Intent.EXTRA_SUBJECT, emne);
     i.putExtra(android.content.Intent.EXTRA_TEXT, txt);
-    akt.startActivity(Intent.createChooser(i, "Send feedback..."));
+    akt.startActivity(Intent.createChooser(i, "Send meddelelse..."));
   }
 }
