@@ -149,6 +149,8 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 		}
 
 
+		//XXX TODO xxx Garmin A50 skal bruge RTSP som standard. mp3/shoutcast virker ikke
+
 		afspiller.addAfspillerListener(Afspilning_akt.this);
 		afspiller.addAfspillerListener(drdata.rapportering);
 	}
