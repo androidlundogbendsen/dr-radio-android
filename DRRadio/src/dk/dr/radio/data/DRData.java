@@ -200,7 +200,9 @@ public class DRData implements java.io.Serializable {
           if (baggrundstrådSkalVente) synchronized (baggrundstråd) {
             if (baggrundsopdateringAktiv)
               baggrundstråd.wait(15000); // Vent 15 sekunder. Men vågn op hvis nogen kalder baggrundstråd.notify()!
-            else
+						 // baggrundsopdateringAktiv kan være sat til false inden for de sidste 15 sekunder og så skal vi vente videre
+
+            if (!baggrundsopdateringAktiv)
               baggrundstråd.wait(); // Vent indtil tråden vækkes
 
             baggrundstråd.wait(50); // Vent kort så den aktiverende tråd kan gøre sit arbejde færdigt
