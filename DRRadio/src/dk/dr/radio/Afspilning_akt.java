@@ -29,6 +29,7 @@ import dk.dr.radio.util.Network;
 import dk.dr.radio.util.StringUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -170,9 +171,14 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 		// Hvis der er skruet helt ned så stop afspilningen
 		if (volumen == 0 && afspiller.afspillerstatus != Afspiller.STATUS_STOPPET) {
 			afspiller.stopAfspilning();
+			finish();
+		} else if (afspiller.afspillerstatus == Afspiller.STATUS_STOPPET) {
+			finish();
+		} else {
+			// Spørg brugeren om afspilningen skal stoppes
+			showDialog(1);
 		}
 
-		finish();
 		return true;
 	}
 
@@ -435,30 +441,66 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 			sætForbinderProcent(procent);
 		}
 	}
+
+	final static String drift_statusmeddelelse_NØGLE = "drift_statusmeddelelse";
+	static int drift_statusmeddelelse_hash = 0;
+	static String drift_statusmeddelelse = ""; // static necesas por certigi ke la valoro pluiros al venonta aktiveco se oni turnas la ekranon
+
 	private BroadcastReceiver stamdataOpdateretReciever = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context ctx, Intent i) {
 			Log.d("stamdataOpdateretReciever");
 
-			final String NØGLE = "drift_statusmeddelelse";
-			final String drift_statusmeddelelse = drdata.stamdata.s(NØGLE);
+			drift_statusmeddelelse = drdata.stamdata.s(drift_statusmeddelelse_NØGLE).trim();
+
 			// Tjek i prefs om denne drifmeddelelse allerede er vist.
 			// Der er 1 ud af en millards chance for at hashkoden ikke er ændret, den risiko tør vi godt løbe
-			final int nyHashkode = drift_statusmeddelelse.hashCode();
-			final int gammelHashkode = prefs.getInt(NØGLE, 0);
-			Log.d("drift_statusmeddelelse='" + drift_statusmeddelelse + "' nyHashkode=" + nyHashkode + " gammelHashkode=" + gammelHashkode);
-			if (gammelHashkode != nyHashkode && !"".equals(drift_statusmeddelelse)) { // Driftmeddelelsen er ændret. Vis den...
-				AlertDialog.Builder dialog = new AlertDialog.Builder(Afspilning_akt.this);
-				dialog.setMessage(drift_statusmeddelelse);
-				dialog.setPositiveButton("OK", new AlertDialog.OnClickListener() {
-					public void onClick(DialogInterface arg0, int arg1) {
-						prefs.edit().putInt(NØGLE, nyHashkode).commit(); // ...og gem ny hashkode i prefs
-					}
-				});
-				dialog.show();
+			drift_statusmeddelelse_hash = drift_statusmeddelelse.hashCode();
+			final int gammelHashkode = prefs.getInt(drift_statusmeddelelse_NØGLE, 0);
+			Log.d("drift_statusmeddelelse='" + drift_statusmeddelelse + "' nyHashkode=" + drift_statusmeddelelse_hash + " gammelHashkode=" + gammelHashkode);
+			if (gammelHashkode != drift_statusmeddelelse_hash && !"".equals(drift_statusmeddelelse)) { // Driftmeddelelsen er ændret. Vis den...
+				showDialog(0);
 			}
 		}
 	};
+
+
+	@Override
+	protected Dialog onCreateDialog(final int id) {
+		AlertDialog.Builder ab = new AlertDialog.Builder(this);
+		if (id == 0) {
+			ab.setMessage(drift_statusmeddelelse);
+			ab.setPositiveButton("OK", new AlertDialog.OnClickListener() {
+				public void onClick(DialogInterface arg0, int arg1) {
+					prefs.edit().putInt(drift_statusmeddelelse_NØGLE, drift_statusmeddelelse_hash).commit(); // ...og gem ny hashkode i prefs
+				}
+			});
+		} else { // if (id == 1)
+			ab.setMessage("Stop afspilningen?");
+			ab.setPositiveButton("Stop", new AlertDialog.OnClickListener() {
+				public void onClick(DialogInterface arg0, int arg1) {
+					stopAfspilning();
+					finish();
+				}
+			});
+			ab.setNeutralButton("Spil i\nbaggrunden", new AlertDialog.OnClickListener() {
+				public void onClick(DialogInterface arg0, int arg1) {
+					finish();
+				}
+			});
+			ab.setNegativeButton("Annullér", null);
+		}
+		return ab.create();
+	}
+
+
+	@Override
+	public void onPrepareDialog(int id, Dialog d) {
+		if (id == 0) ((AlertDialog) d).setMessage(drift_statusmeddelelse);
+	}
+
+
+
 	private BroadcastReceiver udsendelserOpdateretReciever = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context ctx, Intent i) {
