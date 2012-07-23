@@ -44,6 +44,17 @@ public class AcraApplication extends Application {
         // The following line triggers the initialization of ACRA
         ACRA.init(this);
         super.onCreate();
+
+/* TODO - noget a la det her ind i stedet for
+				tjek for initialisering i hver aktivitet/service/...
+		try {
+			drdata = DRData.tjekInstansIndlæst(this);
+		} catch (Exception ex) {
+			// TODO popop-advarsel til bruger om intern fejl og rapporter til udvikler-dialog
+			Log.kritiskFejl(this, ex);
+			return;
+		}
+*/
     }
 
 }
