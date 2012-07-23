@@ -41,6 +41,9 @@ import org.json.JSONException;
  */
 public class DRData implements java.io.Serializable {
 
+	public static DRData instans;
+
+
 	public static Context appCtx;
 	public static SharedPreferences prefs;
 
@@ -84,7 +87,6 @@ public class DRData implements java.io.Serializable {
 	*/
 	public boolean indlæserVentVenligst = false;
 
-	public static DRData instans;
 
 	//
 	// Opdateringer i baggrunden.
