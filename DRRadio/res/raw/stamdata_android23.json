@@ -196,24 +196,13 @@
 
  "feedback_brugerspørgsmål": "\
 Tak fordi du vil give feedback på radioappen!\n\
-Hvis du har oplevet problemer med appen, beder vi dig om at beskrive dem så udførligt som muligt herunder.\n\
-\n\
-Som standard bruger appen lydformatet MP3 (Shoutcast). Fungerer lyden tilfredsstillende?\n\
-I indstillingerne kan vælges andre formater:\n\
-\n\
-Hvordan fungerer AAC (RTSP)?\n\
-\n\
-Hvordan fungerer AAC (HLS)? \n\
-\n\
-Hvordan fungerer AAC (HLS2)? \n\
-\n\
-Fungerer appen som du forventede i forbindelse med opkald?\n\
+Fungerer den tilfredsstillende?  JA  NEJ\n\
+Hvis ikke, så beder vi dig om at beskrive problemerne så udførligt som muligt herunder.\n\
 \n\
 \n\
-Skriv evt. andre kommentarer her:\n\
 \n\
 \n\
----\n\
+----- herunder følger teknisk info til udviklerne -----\n\
 ",
 
 
