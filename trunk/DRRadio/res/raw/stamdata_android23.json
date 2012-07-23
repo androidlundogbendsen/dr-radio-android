@@ -154,18 +154,10 @@
 		},
 		{
 			"shortName": "NEWS",
-			"longName": "DR Nyheder",
+			"longName": "Seneste Radioavis",
 			"shoutcastUrl": "http://live-icy.gss.dr.dk:8000/Channel2_LQ.mp3",
 			"aacUrl": "httplive://ahls.gss.dr.dk/A/A02L.stream/Playlist.m3u8",
 			"rtspUrl": "rtsp://artsp.gss.dr.dk/A/A02L.stream"
-		},
-		{
-			"shortName": "ODN",
-			"longName": "Seneste Radioavis",
-
-			"shoutcastUrl": "www.dr.dk/php/drmu/ramw/radio_app_od/senesteRadioavis.php?quality=1",
-			"aacUrl": "www.dr.dk/php/drmu/ramw/radio_app_od/senesteRadioavis.php?quality=1",
-			"rtspUrl": "www.dr.dk/php/drmu/ramw/radio_app_od/senesteRadioavis.php?quality=1"
 		}
 	],
 
@@ -200,7 +192,7 @@
 	"stats_url": "http://www.dr.dk/tjenester/iphone/radio/stats/android22.drxml?channel=",
 	"about_url": "http://www.dr.dk/tjenester/iphone/radio/about/android22.drxml",
 
-	"feedback_modtagere": ["fraa@dr.dk", "jacob.nordfalk@gmail.com" ],
+	"feedback_modtagere": ["chrp@dr.dk", "jacob.nordfalk@gmail.com" ],
 
  "feedback_brugerspørgsmål": "\
 Tak fordi du vil give feedback på radioappen!\n\
