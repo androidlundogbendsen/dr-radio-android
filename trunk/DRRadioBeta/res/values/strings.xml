@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DR Radio Beta</string>
+    <string name="about">Om</string>
+    <string name="format">Format</string>
+    <string name="send_feedback_mail">Send feedback via mail</string>
+
+  <string-array name="lydformat_tekst">
+		<item>AAC (RTSP)</item>
+		<item>MP3 (Shoutcast)</item>
+		<item>AAC (HLS)</item>
+		<item>AAC (HLS2)</item>
+<!-- DRs HLS-format kan desværre ikke spilles
+-->
+	</string-array>
+
+	<string-array name="lydformat_kode">
+		<item>rtsp</item>
+		<item>shoutcast</item>
+		<item>httplive</item>
+		<item>httplive2</item>
+<!-- DRs HLS-format kan desværre ikke spilles
+-->
+	</string-array>
+
+  <string-array name="lydkvalitet_tekst">
+		<item>Standard</item>
+		<item>Høj (192 kbps)</item>
+	</string-array>
+
+	<string-array name="lydkvalitet_kode">
+		<item>standard</item>
+		<item>høj</item>
+	</string-array>
+</resources>
