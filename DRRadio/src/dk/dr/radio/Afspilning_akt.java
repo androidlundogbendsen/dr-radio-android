@@ -477,18 +477,18 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 			});
 		} else { // if (id == 1)
 			ab.setMessage("Stop afspilningen?");
-			ab.setPositiveButton("Stop", new AlertDialog.OnClickListener() {
+			ab.setPositiveButton("Stop\nradioen", new AlertDialog.OnClickListener() {
 				public void onClick(DialogInterface arg0, int arg1) {
 					stopAfspilning();
 					finish();
 				}
 			});
-			ab.setNeutralButton("Spil i\nbaggrunden", new AlertDialog.OnClickListener() {
+			ab.setNeutralButton("Fortsæt i\nbaggrunden", new AlertDialog.OnClickListener() {
 				public void onClick(DialogInterface arg0, int arg1) {
 					finish();
 				}
 			});
-			ab.setNegativeButton("Annullér", null);
+			//ab.setNegativeButton("Annullér", null);
 		}
 		return ab.create();
 	}

@@ -48,7 +48,8 @@ public class DRData implements java.io.Serializable {
 	public static SharedPreferences prefs;
 
 	private static final int stamdataID = 24 ;
-	private static final String stamdataUrl = "http://www.dr.dk/tjenester/iphone/radio/settings/android" + stamdataID + ".drxml";
+	private static final String stamdataUrl = "http://javabog.dk/privat/stamdata_android" + stamdataID + ".json";
+//	private static final String stamdataUrl = "http://www.dr.dk/tjenester/iphone/radio/settings/android" + stamdataID + ".drxml";
 	private static final String STAMDATA = "stamdata" + stamdataID ;
 
 	/** Globalt flag */
