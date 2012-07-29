@@ -83,8 +83,7 @@ public class Log {
         String brødtekst = "Skriv, hvad der skete:\n\n\n---\n";
         brødtekst += "\nFejlspor;\n"+android.util.Log.getStackTraceString(e);
         brødtekst += "\n\n" + new MedieafspillerInfo().lavTelefoninfo(akt);
-        brødtekst += "\n\n" + Log.log;
-        Kontakt.kontakt(akt, "Fejl DR Radio", brødtekst);
+        Kontakt.kontakt(akt, "Fejl DR Radio", brødtekst, Log.log.toString());
       }
 
     });

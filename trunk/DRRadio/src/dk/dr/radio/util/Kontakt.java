@@ -20,8 +20,11 @@ package dk.dr.radio.util;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.JsonIndlaesning;
+import java.io.File;
+import java.io.FileOutputStream;
 
 /**
  *
@@ -31,7 +34,7 @@ public class Kontakt {
 
 
 
-  public static void kontakt(Activity akt, String emne, String txt) {
+  public static void kontakt(Activity akt, String emne, String txt, String vedhæftning) {
 
     String[] modtagere = null;
     try {
@@ -45,6 +48,17 @@ public class Kontakt {
     i.setType("plain/text");
     i.putExtra(android.content.Intent.EXTRA_EMAIL, modtagere);
     i.putExtra(android.content.Intent.EXTRA_SUBJECT, emne);
+    if (vedhæftning!=null) try {
+      String xmlFilename = "programlog.txt";
+      FileOutputStream fos = akt.openFileOutput(xmlFilename, akt.MODE_WORLD_READABLE);
+      fos.write(vedhæftning.getBytes());
+      fos.close();
+      Uri uri = Uri.fromFile(new File("/mnt/sdcard/../.."+akt.getFilesDir()+"/"+xmlFilename));
+      i.putExtra(android.content.Intent.EXTRA_STREAM, uri);
+    } catch (Exception e) {
+      Log.e(e);
+      txt += "\n"+e;
+    }
     i.putExtra(android.content.Intent.EXTRA_TEXT, txt);
     akt.startActivity(Intent.createChooser(i, "Send meddelelse..."));
   }
