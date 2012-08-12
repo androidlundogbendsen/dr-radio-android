@@ -39,6 +39,10 @@
         <activity android:name="dk.dr.radio.Indstillinger_akt"
                   android:label="DR Radio Indstillinger"
         		  android:screenOrientation="portrait">
+             <intent-filter>
+                <action android:name="android.intent.action.MANAGE_NETWORK_USAGE" />
+                <category android:name="android.intent.category.DEFAULT" />
+          </intent-filter>
         </activity>
 
 
