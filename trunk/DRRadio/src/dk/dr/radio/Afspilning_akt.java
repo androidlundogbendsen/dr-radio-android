@@ -419,7 +419,7 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 					ErrorReporter.getInstance().handleSilentException(null);
 					prefs.edit().putBoolean(rapNøgle, true).commit();
 					if (DRData.udvikling) {
-						Toast.makeText(this, "Sender rapport for " + drdata.rapportering.lydformat, Toast.LENGTH_LONG).show();
+						DRData.toast("Sender rapport for " + drdata.rapportering.lydformat);
 					}
 				}
 			}
@@ -428,7 +428,7 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 		if (DRData.udvikling) {
 			String rapport = drdata.rapportering.rapport();
 			if (rapport != null) {
-				Toast.makeText(this, rapport, Toast.LENGTH_LONG).show();
+				DRData.toast(rapport);
 			}
 		}
 	}
