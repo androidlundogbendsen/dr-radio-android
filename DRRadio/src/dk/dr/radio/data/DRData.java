@@ -188,6 +188,10 @@ public class DRData implements java.io.Serializable {
     if (baggrundsopdateringAktiv) baggrundstrådSkalOpdatereNu(); // væk baggrundtråd
   }
 
+  public static void toast(String info) {
+    Toast.makeText(appCtx, info, Toast.LENGTH_LONG).show();
+  }
+
   private void baggrundstrådSkalOpdatereNu() {
     baggrundstrådSkalVente = false;
     synchronized (baggrundstråd) { baggrundstråd.notify(); }
@@ -302,7 +306,7 @@ public class DRData implements java.io.Serializable {
 	}
     String info = "Kanal: "+kanal.longName+"\nlydformat: "+lydformat
             +"\nKvalitet: "+(højKvalitet?"Høj":"Normal")+"\n"+url;
-    if (DRData.udvikling) Toast.makeText(appCtx, info, Toast.LENGTH_LONG).show();
+    if (DRData.udvikling) toast(info);
     Log.d(info);
     return url;
   }

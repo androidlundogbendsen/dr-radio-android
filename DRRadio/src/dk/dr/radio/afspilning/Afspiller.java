@@ -89,7 +89,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     mediaPlayer.setOnSeekCompleteListener(lytter);
     if (holdSkærmTændt && lytter!=null) mediaPlayer.setWakeMode(DRData.appCtx, PowerManager.SCREEN_DIM_WAKE_LOCK);
   }
-  
+
   private final NotificationManager notificationManager;
   private final Opkaldshaandtering opkaldshåndtering;
   private final TelephonyManager tm;
@@ -368,8 +368,8 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
         handler.postDelayed(startAfspilningIntern, ventetid);
       } else {
         stopAfspilning(); // Vi giver op efter 10. forsøg
-        Toast.makeText(DRData.appCtx, "Beklager, kan ikke spille radio", Toast.LENGTH_LONG).show();
-        Toast.makeText(DRData.appCtx, "Prøv at vælge et andet format i indstillingerne", Toast.LENGTH_LONG).show();
+        DRData.toast("Beklager, kan ikke spille radio");
+        DRData.toast("Prøv at vælge et andet format i indstillingerne");
       }
     } else {
       mediaPlayer.reset();
