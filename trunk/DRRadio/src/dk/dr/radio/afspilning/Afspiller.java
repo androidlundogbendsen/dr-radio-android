@@ -87,7 +87,10 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     mediaPlayer.setOnPreparedListener(lytter);
     mediaPlayer.setOnBufferingUpdateListener(lytter);
     mediaPlayer.setOnSeekCompleteListener(lytter);
-    if (holdSkærmTændt && lytter!=null) mediaPlayer.setWakeMode(DRData.appCtx, PowerManager.SCREEN_DIM_WAKE_LOCK);
+    if (lytter!=null && DRData.prefs.getBoolean(NØGLEholdSkærmTændt, false)) {
+      mediaPlayer.setWakeMode(DRData.appCtx, PowerManager.SCREEN_DIM_WAKE_LOCK);
+      //DRData.toast("holdSkærmTændt");
+    }
   }
 
   private final NotificationManager notificationManager;
@@ -95,7 +98,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
   private final TelephonyManager tm;
   private Notification notification;
 
-  private static boolean holdSkærmTændt;
+  static final String NØGLEholdSkærmTændt = "holdSkærmTændt";
 
 
   /** Forudsætter DRData er initialiseret */
@@ -103,18 +106,17 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     mediaPlayer = new MediaPlayer();
 
     sætMediaPlayerLytter(mediaPlayer, this);
-
     // Indlæs gamle værdier så vi har nogle...
     // Fjernet. Skulle ikke være nødvendigt. Jacob 22/10-2011
     // kanalNavn = p.getString("kanalNavn", "P1");
     // kanalUrl = p.getString("kanalUrl", "rtsp://live-rtsp.dr.dk/rtplive/_definst_/Channel5_LQ.stream");
 
-    // Xperia Play har brug for at holde skærmen tændt. Muligvis også andre....
-    holdSkærmTændt = "R800i".equals(Build.MODEL);
-    String NØGLEholdSkærmTændt = "holdSkærmTændt";
-    holdSkærmTændt = DRData.prefs.getBoolean(NØGLEholdSkærmTændt, holdSkærmTændt);
     // Gem værdi hvis den ikke findes, sådan at indstillingsskærm viser det rigtige
-    if (!DRData.prefs.contains(NØGLEholdSkærmTændt)) DRData.prefs.edit().putBoolean(NØGLEholdSkærmTændt, holdSkærmTændt).commit();
+    if (!DRData.prefs.contains(NØGLEholdSkærmTændt)) {
+      // Xperia Play har brug for at holde skærmen tændt. Muligvis også andre....
+      boolean holdSkærmTændt = "R800i".equals(Build.MODEL);
+      DRData.prefs.edit().putBoolean(NØGLEholdSkærmTændt, holdSkærmTændt).commit();
+    }
 
     notificationManager = (NotificationManager) DRData.appCtx.getSystemService(Context.NOTIFICATION_SERVICE);
 
