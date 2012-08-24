@@ -78,8 +78,8 @@ public class Om_DRRadio_akt extends Activity implements OnClickListener {
   public void onClick(View v) {
     String brødtekst = "";
     brødtekst += DRData.instans.stamdata.s("feedback_brugerspørgsmål");
-    brødtekst += "\n" + DRData.instans.afspiller.kanalUrl;
-    brødtekst += "\n\n" + new MedieafspillerInfo().lavTelefoninfo(Om_DRRadio_akt.this);
+    brødtekst += "\nkanal: " + DRData.instans.afspiller.kanalNavn+" ("+DRData.instans.afspiller.kanalUrl+")";
+    brødtekst += "\n" + new MedieafspillerInfo().lavTelefoninfo(Om_DRRadio_akt.this);
 
     Kontakt.kontakt(this, EMAILSUBJECT, brødtekst, Log.log.toString());
   }

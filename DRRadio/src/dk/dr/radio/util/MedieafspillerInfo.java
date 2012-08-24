@@ -110,12 +110,13 @@ public class MedieafspillerInfo {
       e.printStackTrace();
     }
 
-    ret+="\nProgram: "+a.getPackageName()+" version "+version
+    ret+=a.getPackageName()+" (v "+version+")"
         +"\nTelefonmodel: "+Build.MODEL +" "+Build.PRODUCT
         +"\nAndroid v"+Build.VERSION.RELEASE
-        +"\nsdk: "+Build.VERSION.SDK
+        +" (sdk: "+Build.VERSION.SDK+")"
 //        +"\nMedieafspiller: "+findMpUserAgent(a)
-        +"\nAndroid_ID: "+Secure.getString(a.getContentResolver(), Secure.ANDROID_ID);
+//        +"\nAndroid_ID: "+Secure.getString(a.getContentResolver(), Secure.ANDROID_ID)
+        ;
 
 
 		/*
