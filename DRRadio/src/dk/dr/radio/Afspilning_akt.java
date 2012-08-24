@@ -48,14 +48,8 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.util.Linkify;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
@@ -205,7 +199,7 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 			if (internetforbindelseManglerDialog == null) {
 				internetforbindelseManglerDialog = new AlertDialog.Builder(this).create();
 				internetforbindelseManglerDialog.setTitle("Internetforbindelse mangler");
-				internetforbindelseManglerDialog.setMessage("Din telefon er ikke tilsluttet internettet. For at høre radio skal du åbne op for forbindelser via WiFI eller mobil data.");
+				internetforbindelseManglerDialog.setMessage("Din telefon er ikke tilsluttet internettet. For at høre radio skal du åbne op for forbindelser via WIFI eller mobildata.");
 			}
 			if (!internetforbindelseManglerDialog.isShowing()) {
 				internetforbindelseManglerDialog.show();
@@ -827,37 +821,26 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 	/** Håndtering af MENU-knappen */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, 101, Menu.NONE, "Om").setIcon(android.R.drawable.ic_menu_help);
-		menu.add(Menu.NONE, 102, Menu.NONE, "Indstillinger").setIcon(android.R.drawable.ic_menu_preferences);
-		/*
-		menu.add(Menu.NONE, 103, Menu.NONE, "SR P1 rtsp");
-		menu.add(Menu.NONE, 105, Menu.NONE, "DR P3 rtsp");
-		 */
+		//Log.d("onCreateOptionsMenu!!!");
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.afspilning_menu, menu);
 		return true;
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case 101:
-				startActivity(new Intent(this, Om_DRRadio_akt.class));
-				break;
-			case 102:
-				startActivity(new Intent(this, Indstillinger_akt.class));
-				break;
-			/*
-			case 103:
-			Kanal k = new Kanal();
-			k.setLongName("SR p1-aac-96", "rtsp://mobil-live.sr.se/mobilradio/kanaler/p1-aac-96");
-			afspillerService.setKanal(k);
-			break;
-			case 105:
-			k = new Kanal("DR rtsp", "rtsp://live-rtsp.dr.dk:1935/rtplive/_definst_/Channel5_LQ.stream");
-			afspillerService.setKanal(k);
-			break;
-			 *
-			 */
-		}
-		return true;
-	}
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    int id = item.getItemId();
+    if (id == R.id.om) {
+      startActivity(new Intent(this, Om_DRRadio_akt.class));
+    } else if (id == R.id.indstillinger) {
+      startActivity(new Intent(this, Indstillinger_akt.class));
+    } else if (id == R.id.sluk) {
+      if (afspiller.getAfspillerstatus() != Afspiller.STATUS_STOPPET) {
+        stopAfspilning();
+      }
+      finish();
+    }
+    return true;
+  }
 }
