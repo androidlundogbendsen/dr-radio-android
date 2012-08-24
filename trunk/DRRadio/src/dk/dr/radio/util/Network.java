@@ -24,6 +24,17 @@ import android.net.NetworkInfo;
 
 public class Network
 {
+  /* Version fra http://developer.android.com/training/basics/network-ops/managing.html */
+	public static boolean testConnection( Context c )
+	{
+    ConnectivityManager connMgr = (ConnectivityManager)
+                c.getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+    return (networkInfo != null && networkInfo.isConnected());
+  }
+/*
+  Gammel version (før 12. aug 2012)
+
 	public static boolean testConnection( Context c )
 	{
 		// get the networkinfo from the connection manager
@@ -43,4 +54,6 @@ public class Network
 		}
 		return false ;
 	}
+
+*/
 }
