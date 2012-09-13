@@ -24,13 +24,12 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
-import dk.dr.radio.data.json.stamdata.Kanal;
-import dk.dr.radio.data.json.udsendelser.Udsendelser;
-import dk.dr.radio.data.json.stamdata.Stamdata;
-import dk.dr.radio.data.json.spiller_nu.SpillerNu;
-import dk.dr.radio.diverse.Rapportering;
-import dk.dr.radio.R;
 import dk.dr.radio.afspilning.Afspiller;
+import dk.dr.radio.data.json.spiller_nu.SpillerNu;
+import dk.dr.radio.data.json.stamdata.Kanal;
+import dk.dr.radio.data.json.stamdata.Stamdata;
+import dk.dr.radio.data.json.udsendelser.Udsendelser;
+import dk.dr.radio.diverse.Rapportering;
 import dk.dr.radio.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
@@ -157,27 +156,6 @@ public class DRData {
   }
 
 
-
-  /**
-	 * Skifter til en anden kanal
-	 * @param nyKanalkode en af "P1", "P2", "P3", "P5D", "P6B", "P7M", "RAM", etc
-	 * eller evt P4-kanal "KH4", "NV4", "AR4", "AB4", "OD4", "AL4", "HO4", "TR4", "RO4", "ES4", "NS4"],
-	 * Bemærk at "P4" eller andre uden en streamUrl IKKE er tilladt
-	 */
-	public void skiftKanal(String nyKanalkode) {
-    Log.d("DRData.skiftKanal("+nyKanalkode);
-		aktuelKanalkode = nyKanalkode;
-    aktuelKanal = stamdata.kanalkodeTilKanal.get(aktuelKanalkode);
-
-		prefs.edit().putString(NØGLE_kanal, aktuelKanalkode).commit();
-    udsendelser = null;
-    spillerNuListe = null;
-    udsendelser_ikkeTilgængeligt = false;
-    // Væk baggrundstråden så den indlæser den nye kanals udsendelser etc og laver broadcasts med nyt info
-    baggrundstrådSkalOpdatereNu();
-	}
-
-
   public void setBaggrundsopdateringAktiv(boolean aktiv) {
     if (baggrundsopdateringAktiv == aktiv) return;
 
@@ -188,9 +166,6 @@ public class DRData {
     if (baggrundsopdateringAktiv) baggrundstrådSkalOpdatereNu(); // væk baggrundtråd
   }
 
-  public static void toast(String info) {
-    Toast.makeText(appCtx, info, Toast.LENGTH_LONG).show();
-  }
 
   private void baggrundstrådSkalOpdatereNu() {
     baggrundstrådSkalVente = false;
@@ -294,6 +269,29 @@ public class DRData {
     }
   }
 
+
+  /**
+	 * Skifter til en anden kanal
+	 * @param nyKanalkode en af "P1", "P2", "P3", "P5D", "P6B", "P7M", "RAM", etc
+	 * eller evt P4-kanal "KH4", "NV4", "AR4", "AB4", "OD4", "AL4", "HO4", "TR4", "RO4", "ES4", "NS4"],
+	 * Bemærk at "P4" eller andre uden en streamUrl IKKE er tilladt
+	 */
+	public void skiftKanal(String nyKanalkode) {
+    Log.d("DRData.skiftKanal("+nyKanalkode);
+		aktuelKanalkode = nyKanalkode;
+    aktuelKanal = stamdata.kanalkodeTilKanal.get(aktuelKanalkode);
+
+		prefs.edit().putString(NØGLE_kanal, aktuelKanalkode).commit();
+    udsendelser = null;
+    spillerNuListe = null;
+    udsendelser_ikkeTilgængeligt = false;
+    // Væk baggrundstråden så den indlæser den nye kanals udsendelser etc og laver broadcasts med nyt info
+    baggrundstrådSkalOpdatereNu();
+	}
+
+  public static void toast(String info) {
+    Toast.makeText(appCtx, info, Toast.LENGTH_LONG).show();
+  }
 
   public String findKanalUrlFraKode(Kanal kanal) {
     String lydformat = prefs.getString(NØGLE_lydformat, "shoutcast");
