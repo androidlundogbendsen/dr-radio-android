@@ -194,16 +194,18 @@
 
 	"feedback_modtagere": ["chrp@dr.dk", "jacob.nordfalk@gmail.com" ],
 
+
  "feedback_brugerspørgsmål": "\
-Hvor er du?  Fyn  Sjælland  Andet: \n\
-Hvad spiller P4 Fyn?  P4 Fyn    P4 Sjælland\n\
-Andre kommentarer\n\
+Tak fordi du vil give feedback på radioappen!\n\
+Fungerer den tilfredsstillende?  JA  NEJ\n\
+Hvis ikke, så beder vi dig om at beskrive problemerne så udførligt som muligt herunder.\n\
 \n\
 \n\
------ teknisk info herunder -----\
+\n\
+\n\
+----- teknisk info til udviklerne -----\n\
 ",
 
-
-  "drift_statusmeddelelse": "Denne version er kun beregnet til at undersøge et P4 Fyn/Sjælland problem"
+  "drift_statusmeddelelse": ""
 
 }
