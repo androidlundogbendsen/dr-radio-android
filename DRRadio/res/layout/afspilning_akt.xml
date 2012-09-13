@@ -29,7 +29,7 @@
 				android:layout_weight="1" android:layout_width="wrap_content" />
 
 			<Button android:id="@+id/player_select_channel_button"
-				android:layout_width="wrap_content" android:layout_height="30dp"
+				android:layout_width="wrap_content" android:layout_height="@dimen/button_height"
 				android:text="Vælg kanal" android:textSize="@dimen/player_select_channel_size"
         android:nextFocusDown="@+id/start_stop_knap"
         android:nextFocusLeft="@+id/start_stop_knap"
@@ -61,6 +61,7 @@
            få læst teksten højt. Jacob 28. nov 2011 -->
 			<TextView android:id="@+id/status" android:text="Forbinder"
 				android:textColor="#FF000000" android:gravity="center_vertical"
+  			android:textSize="@dimen/player_current_program_channel_size"
         android:focusable="true"
 				android:paddingLeft="10dp" android:layout_weight="1"
 				android:layout_width="wrap_content" android:layout_height="fill_parent" />
@@ -164,7 +165,7 @@
 		android:paddingBottom="10dp">
 
 		<Button android:id="@+id/player_about_button"
-			android:layout_width="wrap_content" android:layout_height="30dp"
+			android:layout_width="wrap_content" android:layout_height="@dimen/button_height"
 			android:text="@string/about" android:textSize="@dimen/player_about_size"
 			android:layout_gravity="center_vertical|left" android:paddingLeft="20dp"
 			android:paddingRight="20dp" android:paddingTop="0dp"
@@ -172,7 +173,7 @@
 		</Button>
 
 		<Button android:id="@+id/player_format_button"
-			android:layout_width="wrap_content" android:layout_height="30dp"
+			android:layout_width="wrap_content" android:layout_height="@dimen/button_height"
 			android:text="Format" android:textSize="@dimen/player_about_size"
 			android:layout_gravity="center_vertical|left" android:paddingLeft="10dp"
 			android:paddingRight="10dp" android:paddingTop="0dp"

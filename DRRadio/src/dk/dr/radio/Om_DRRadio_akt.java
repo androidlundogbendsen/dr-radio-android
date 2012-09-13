@@ -36,7 +36,7 @@ import dk.dr.radio.util.MedieafspillerInfo;
 public class Om_DRRadio_akt extends Activity implements OnClickListener {
 	WebView webview;
 
-	private static final String EMAILSUBJECT = "DR Radio Android App - Feedback";
+	private static final String EMAILSUBJECT = "Feedback på DR Radio Android App";
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
