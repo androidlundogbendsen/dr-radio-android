@@ -21,9 +21,7 @@ package dk.dr.radio.data.json.spiller_nu;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpillerNu implements java.io.Serializable {
-  // Vigtigt: Sæt IKKE versionsnummer så objekt kan læses selvom klassen er ændret. Den bør i stedet indlæses fra server igen
-	// private static final long serialVersionUID = 12345;
+public class SpillerNu {
 
 	public List<SpillerNuElement> liste = new ArrayList<SpillerNuElement>();
 

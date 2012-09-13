@@ -39,7 +39,7 @@ import org.json.JSONException;
 /**
  * Det centrale objekt som alt andet bruger til
  */
-public class DRData implements java.io.Serializable {
+public class DRData {
 
 	public static DRData instans;
 
@@ -158,7 +158,7 @@ public class DRData implements java.io.Serializable {
 
 
 
-	/**
+  /**
 	 * Skifter til en anden kanal
 	 * @param nyKanalkode en af "P1", "P2", "P3", "P5D", "P6B", "P7M", "RAM", etc
 	 * eller evt P4-kanal "KH4", "NV4", "AR4", "AB4", "OD4", "AL4", "HO4", "TR4", "RO4", "ES4", "NS4"],
@@ -217,6 +217,7 @@ public class DRData implements java.io.Serializable {
           baggrundstrådSkalVente = true;
 
 					hentUdsendelserOgSpillerNuListe();
+          tjekForNyeStamdata();
 
 				} catch (Exception ex) { Log.e(ex); }
 			}
@@ -232,11 +233,12 @@ public class DRData implements java.io.Serializable {
       Log.e("Kunne ikke hente spillerNuListe "+url, ex);
       spillerNuListe2 = null;
     }
-    // Al opdatering, herunder tildeling bør ske i GUI-tråden for at undgå af GUIen er i gang med at
-    // bruge objektet mens det opdateres
+    // Al opdatering, herunder tildeling bør ske i GUI-tråden for at undgå at
+    // GUIen er i gang med at bruge objektet mens det opdateres
     handler.post(new Runnable() {
       public void run() {
         spillerNuListe = spillerNuListe2;
+        // Send broadcast om at listen er opdateret
         appCtx.sendBroadcast(new Intent(OPDATERINGSINTENT_SpillerNuListe));
       }
     });
@@ -257,9 +259,12 @@ public class DRData implements java.io.Serializable {
         appCtx.sendBroadcast(new Intent(OPDATERINGSINTENT_Udsendelse));
       }
     });
+  }
 
-
-    // Tjek om en evt ny udgave af stamdata skal indlæses
+ /**
+  *  Tjek om en evt ny udgave af stamdata skal indlæses
+  */
+  private void tjekForNyeStamdata() {
     final String STAMDATA_SIDST_INDLÆST = "stamdata_sidst_indlæst";
     long sidst = prefs.getLong(STAMDATA_SIDST_INDLÆST, 0);
     long nu = System.currentTimeMillis();
@@ -275,11 +280,12 @@ public class DRData implements java.io.Serializable {
       // Hentning og parsning gik godt - vi gemmer den nye udgave i prefs
       prefs.edit().putString(STAMDATA, stamdatastr).commit();
 
-      // Al opdatering, herunder tildeling bør ske i GUI-tråden for at undgå af GUIen er i gang med at
-      // bruge objektet mens det opdateres
+      // Al opdatering, herunder tildeling bør ske i GUI-tråden for at undgå at
+      // GUIen er i gang med at bruge objektet mens det opdateres
       handler.post(new Runnable() {
         public void run() {
           stamdata = stamdata2;
+          // Send broadcast om at stamdata er opdateret
           appCtx.sendBroadcast(new Intent(OPDATERINGSINTENT_Stamdata));
         }
       });
