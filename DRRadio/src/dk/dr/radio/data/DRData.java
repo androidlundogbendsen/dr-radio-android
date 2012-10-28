@@ -224,7 +224,7 @@ public class DRData {
       udsendelser_ikkeTilgængeligt = false;
     } catch (Exception ex) {
       Log.e("Kunne ikke hente udsendelser fra "+url, ex);
-			Log.kritiskFejl(null,ex);
+			//Skal ikke rapporteres: https://www.bugsense.com/dashboard/project/57c90f98#error/28786099 , https://www.bugsense.com/dashboard/project/57c90f98#error/61580882  og https://www.bugsense.com/dashboard/project/57c90f98#error/29664901 // Log.kritiskFejl(null,ex);
       udsendelser2 = null;
       udsendelser_ikkeTilgængeligt = true;
     }

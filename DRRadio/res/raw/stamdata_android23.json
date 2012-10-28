@@ -189,24 +189,12 @@
 	"text_trackPhoto": "Last.fm",
 	"text_noProgramInfo": "Ingen programinfo",
 
-	"stats_url": "http://www.dr.dk/tjenester/iphone/radio/stats/android22.drxml?channel=",
-	"about_url": "http://www.dr.dk/tjenester/iphone/radio/about/android22.drxml",
+	"stats_url": "http://www.dr.dk/tjenester/iphone/radio/stats/android23.drxml?channel=",
+	"about_url": "http://www.dr.dk/tjenester/iphone/radio/about/android23.drxml",
 
 	"feedback_modtagere": ["chrp@dr.dk", "jacob.nordfalk@gmail.com" ],
+    "feedback_brugerspørgsmål": "Tak fordi du vil give feedback på radioappen!\nFungerer den tilfredsstillende?  JA  NEJ\nHvis ikke, så beder vi dig om at beskrive problemerne så udførligt som muligt herunder.\n\n\n\n\n----- teknisk info til udviklerne -----\nstamdata23 - 12. okt 2012\n",
+    "drift_statusmeddelelse": "Der er kommet en ny version af DR Radio. Opdatér venligst."
 
-
- "feedback_brugerspørgsmål": "\
-Tak fordi du vil give feedback på radioappen!\n\
-Fungerer den tilfredsstillende?  JA  NEJ\n\
-Hvis ikke, så beder vi dig om at beskrive problemerne så udførligt som muligt herunder.\n\
-\n\
-\n\
-\n\
-\n\
------ teknisk info til udviklerne -----\n\
-",
-
-
-  "drift_statusmeddelelse": ""
 
 }
