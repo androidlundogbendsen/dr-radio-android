@@ -6,6 +6,15 @@
 
   <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="9" />
 
+
+  <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+  <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
+<!--
+  <uses-feature android:name="android.hardware.screen.portrait" android:required="false" />
+-->
+
     <application android:icon="@drawable/appicon"
           android:name="dk.dr.radio.diverse.AcraApplication"
           android:process="dk.dr.radio"
@@ -76,11 +85,4 @@
 
   </application>
 
-  <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-  <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
-  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
-  <uses-permission android:name="android.permission.WAKE_LOCK" />
-<!--
-  <uses-feature android:name="android.hardware.screen.portrait" android:required="false" />
--->
 </manifest>
