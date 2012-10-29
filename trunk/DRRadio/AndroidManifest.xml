@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="dk.dr.radio"
-      android:versionCode="26"
-      android:versionName="2.6">
+      android:versionCode="27"
+      android:versionName="2.7">
 
   <!--
   Jacob jeg ville gerne sætte android:minSdkVersion="3" da app'en kan starte på Android 1.5
@@ -35,7 +35,7 @@
         </activity>
         <activity android:name="dk.dr.radio.Afspilning_akt" android:theme="@android:style/Theme.NoTitleBar"
                   android:label="DR Radio"
-              android:launchMode="singleTop" android:screenOrientation="portrait">
+              android:launchMode="singleTask" android:screenOrientation="portrait">
         </activity>
         <activity android:name="dk.dr.radio.Om_DRRadio_akt"
                   android:label="Om DR Radio"

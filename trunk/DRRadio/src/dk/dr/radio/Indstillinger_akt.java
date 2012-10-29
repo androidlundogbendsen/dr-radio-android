@@ -26,6 +26,9 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.util.Log;
 
@@ -90,6 +93,29 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
     handler.post(this);
     return true;
   }
+
+	/** Håndtering af MENU-knappen */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+    menu.add(0,0,0,"udvikler");
+    return super.onCreateOptionsMenu(menu);
+	}
+
+  int onPrepareOptionsMenu = 0;
+
+	/** Håndtering af MENU-knappen. Vis 'udvikler' efter 10 tryk */
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+    onPrepareOptionsMenu++;
+    Log.d("onPrepareOptionsMenu="+onPrepareOptionsMenu);
+    menu.findItem(0).setVisible(false);
+    if (onPrepareOptionsMenu>9) {
+      DRData.udvikling = !DRData.udvikling;
+      DRData.toast("udvikling="+DRData.udvikling);
+    }
+		return super.onPrepareOptionsMenu(menu);
+	}
+
 
   public void run() {
     String nytLydformat = lydformatlp.getValue();

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="dk.dr.radio.test2011"
-      android:versionCode="14"
-      android:versionName="0.14">
+      android:versionCode="15"
+      android:versionName="tst0.15">
 
   <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="9" />
 
@@ -28,7 +28,7 @@
         </activity>
         <activity android:name="dk.dr.radio.Afspilning_akt" android:theme="@android:style/Theme.NoTitleBar"
                   android:label="DR Radio"
-              android:launchMode="singleTop">
+              android:launchMode="singleTask">
         </activity>
         <activity android:name="dk.dr.radio.Om_DRRadio_akt"
                   android:label="Om DR Radio">

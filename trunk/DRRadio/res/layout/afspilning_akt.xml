@@ -91,7 +91,7 @@
 	<LinearLayout android:id="@+id/player_current_program_title_linearlayout"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
 		android:paddingLeft="5dp" android:paddingRight="5dp"
-		android:paddingTop="5dp" android:paddingBottom="0dp">
+		android:paddingTop="2dp" android:paddingBottom="0dp">
 
       <!-- android:focusable="true" gør at blinde og svagtsynede der bruger
            skærmlæser kan bruge trackballen til at flytte hen på viewet og
@@ -112,7 +112,7 @@
 
 		<ScrollView android:layout_height="wrap_content"
 			android:layout_width="fill_parent" android:paddingLeft="5dp"
-			android:paddingRight="5dp" android:paddingTop="20dp"
+			android:paddingRight="5dp" android:paddingTop="5dp"
 			android:paddingBottom="0dp">
 
 			<TextView android:id="@+id/player_current_program_description_textview"
@@ -128,7 +128,7 @@
 	<LinearLayout android:id="@+id/player_tracks_linearlayout"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
 		android:paddingLeft="10dp" android:paddingRight="10dp"
-		android:paddingTop="20dp" android:paddingBottom="10dp">
+		android:paddingTop="10dp" android:paddingBottom="10dp">
 
 		<FrameLayout android:layout_width="fill_parent"
 			android:layout_height="wrap_content">

@@ -20,12 +20,24 @@
 		android:defaultValue="false"
 		android:summary="Start afspilling automatisk, når appen åbnes" />
 
+
+	<CheckBoxPreference android:key="wifilås" android:title="Hold wifi tændt"
+		android:defaultValue="true" android:summaryOn="Undlad at skrue ned for wifi (bruger mere batteri)"
+		android:summaryOff="Tillad enheden at skrue ned for wifi. Kan forårsage at afspilningen hakker." />
+
 	<CheckBoxPreference android:key="holdSkærmTændt"
 		android:title="Hold skærmen tændt"
 		android:defaultValue="false"
 		android:summary="Hakker afspilningen når skærmen er slukket så prøv at krydse af her (bruger mere batteri). Nødvendigt på XPeria Play." />
 
+
 <!--
+	<CheckBoxPreference android:key="udvikler" android:title="Udvikler"
+		android:defaultValue="false" android:summaryOff=""
+    android:summaryOn="Til udviklere og fejlfinding. Appen skal genstartes før det træder i kraft" />
+
+ />
+
 	<CheckBoxPreference android:key="udvikler" android:title="Udvikler"
 		android:defaultValue="false" android:summaryOff=""
     android:summaryOn="Til udviklere og fejlfinding. Appen skal genstartes før det træder i kraft" />
