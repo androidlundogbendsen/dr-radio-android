@@ -91,7 +91,6 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		DRData.udvikling = prefs.getBoolean("udvikler", false);
 
 
 		// Fuld skærm skjuler den notification vi sætter op så brugeren ikke opdager den,
@@ -189,6 +188,8 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 
 	@Override
 	protected void onResume() {
+		//Gemmes ikke i prefs længere DRData.udvikling = prefs.getBoolean("udvikler", false);
+
 		// se om vi er online
 		boolean connectionOK = Network.testConnection(getApplicationContext());
 		if (connectionOK) {

@@ -37,22 +37,22 @@ import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
+import android.net.wifi.WifiManager;
+import android.net.wifi.WifiManager.WifiLock;
 import android.os.Build;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.widget.Toast;
 import dk.dr.radio.Afspilning_akt;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.AfspillerWidget;
 import dk.dr.radio.R;
 import dk.dr.radio.util.Log;
-import dk.dr.radio.util.MedieafspillerInfo;
 import java.util.ArrayList;
 
+
 /**
- * Tidligere AfspillerService - afspilerdel
  * @author j
  */
 public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
@@ -99,7 +99,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
   private Notification notification;
 
   static final String NØGLEholdSkærmTændt = "holdSkærmTændt";
-
+  private WifiLock wifilock = null;
 
   /** Forudsætter DRData er initialiseret */
   public Afspiller() {
@@ -119,7 +119,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     }
 
     notificationManager = (NotificationManager) DRData.appCtx.getSystemService(Context.NOTIFICATION_SERVICE);
-
+    try { wifilock = ((WifiManager) DRData.appCtx.getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "DR Radio"); wifilock.setReferenceCounted(false); } catch (Exception e) { Log.kritiskFejlStille(e); } // TODO fjern try/catch
     opkaldshåndtering = new Opkaldshaandtering(this);
     tm = (TelephonyManager) DRData.appCtx.getSystemService(Context.TELEPHONY_SERVICE);
     tm.listen(opkaldshåndtering, PhoneStateListener.LISTEN_CALL_STATE);
@@ -139,8 +139,8 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
       // Start afspillerservicen så programmet ikke bliver lukket
       // når det kører i baggrunden under afspilning
       DRData.appCtx.startService(new Intent(DRData.appCtx, HoldAppIHukommelsenService.class));
+      if (DRData.prefs.getBoolean("wifilås", true) && wifilock!=null) try { wifilock.acquire(); if (DRData.udvikling) DRData.toast("wifilock.acquire()"); } catch (Exception e) { Log.kritiskFejlStille(e); } // TODO fjern try/catch
       startAfspilningIntern();
-
       AudioManager audioManager = (AudioManager) DRData.appCtx.getSystemService(Context.AUDIO_SERVICE);
       // Skru op til 1/5 styrke hvis volumen er lavere end det
       int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -191,7 +191,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     if (notification != null) notificationManager.cancelAll();
     // Stop afspillerservicen
     DRData.appCtx.stopService(new Intent(DRData.appCtx, HoldAppIHukommelsenService.class));
-
+    if (wifilock!=null) try { wifilock.release(); } catch (Exception e) { Log.kritiskFejlStille(e); } // TODO fjern try/catch
     // Informer evt aktivitet der lytter
     for (AfspillerListener observatør : observatører) {
       observatør.onAfspilningStoppet();
@@ -358,7 +358,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
       // 2) der højest er 1 fejl pr 20 sekunder så prøv igen
       long dt = System.currentTimeMillis()-onErrorTællerNultid;
 
-      if (onErrorTæller ++<10 || (dt/onErrorTæller>20000) ) {
+      if (onErrorTæller ++<(DRData.udvikling?2:10) || (dt/onErrorTæller>20000) ) {
         mediaPlayer.stop();
         mediaPlayer.reset();
 
