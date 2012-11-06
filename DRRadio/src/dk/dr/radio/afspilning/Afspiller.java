@@ -59,7 +59,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
         OnCompletionListener, OnInfoListener, OnErrorListener, OnBufferingUpdateListener {
 
   /** ID til notifikation i toppen. Skal bare være unikt og det samme altid */
-  private static final int NOTIFIKATION_ID = 117;
+  //private static final int NOTIFIKATION_ID = 117;
 
   /** Bruges fra widget til at kommunikere med servicen */
   //public static final int WIDGET_HENT_INFO = 10;
@@ -78,7 +78,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
   public String kanalNavn;
   public String kanalUrl;
   //private Udsendelse aktuelUdsendelse;
-  private String PROGRAMNAVN = "Radio";
+  //private String PROGRAMNAVN = "Radio";
 
   private static void sætMediaPlayerLytter(MediaPlayer mediaPlayer, Afspiller lytter) {
     mediaPlayer.setOnCompletionListener(lytter);
@@ -93,10 +93,10 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     }
   }
 
-  private final NotificationManager notificationManager;
+  //private final NotificationManager notificationManager;
   private final Opkaldshaandtering opkaldshåndtering;
   private final TelephonyManager tm;
-  private Notification notification;
+  //private Notification notification;
 
   static final String NØGLEholdSkærmTændt = "holdSkærmTændt";
   private WifiLock wifilock = null;
@@ -118,7 +118,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
       DRData.prefs.edit().putBoolean(NØGLEholdSkærmTændt, holdSkærmTændt).commit();
     }
 
-    notificationManager = (NotificationManager) DRData.appCtx.getSystemService(Context.NOTIFICATION_SERVICE);
+    //notificationManager = (NotificationManager) DRData.appCtx.getSystemService(Context.NOTIFICATION_SERVICE);
     try { wifilock = ((WifiManager) DRData.appCtx.getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "DR Radio"); wifilock.setReferenceCounted(false); } catch (Exception e) { Log.kritiskFejlStille(e); } // TODO fjern try/catch
     opkaldshåndtering = new Opkaldshaandtering(this);
     tm = (TelephonyManager) DRData.appCtx.getSystemService(Context.TELEPHONY_SERVICE);
@@ -129,16 +129,16 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
   private long onErrorTællerNultid;
 
   public void startAfspilning() throws IOException {
-    Log.d("AfspillerService startAfspilning() "+ kanalUrl);
+    Log.d("startAfspilning() "+ kanalUrl);
 
     onErrorTæller = 0;
     onErrorTællerNultid = System.currentTimeMillis();
 
     if (afspillerstatus == STATUS_STOPPET) {
-      opdaterNotification();
+      //opdaterNotification();
       // Start afspillerservicen så programmet ikke bliver lukket
       // når det kører i baggrunden under afspilning
-      DRData.appCtx.startService(new Intent(DRData.appCtx, HoldAppIHukommelsenService.class));
+      DRData.appCtx.startService(new Intent(DRData.appCtx, HoldAppIHukommelsenService.class).putExtra("kanalNavn", kanalNavn));
       if (DRData.prefs.getBoolean("wifilås", true) && wifilock!=null) try { wifilock.acquire(); if (DRData.udvikling) DRData.toast("wifilock.acquire()"); } catch (Exception e) { Log.kritiskFejlStille(e); } // TODO fjern try/catch
       startAfspilningIntern();
       AudioManager audioManager = (AudioManager) DRData.appCtx.getSystemService(Context.AUDIO_SERVICE);
@@ -152,12 +152,26 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     } else Log.d(" forkert status="+afspillerstatus);
   }
 
-  synchronized private void startAfspilningIntern() throws IOException  {
+  synchronized private void startAfspilningIntern()  {
     Log.d("Starter streaming fra " + kanalNavn);
+    Log.d("mediaPlayer.setDataSource( " + kanalUrl);
 
-    mediaPlayer.setDataSource(kanalUrl);
-    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-    mediaPlayer.prepareAsync();
+    // mediaPlayer.setDataSource() bør kaldes fra en baggrundstråd da det kan ske
+    // at den hænger under visse netværksforhold
+    new Thread() {
+      public void run() {
+        Log.d("mediaPlayer.setDataSource() start");
+        try {
+          mediaPlayer.setDataSource(kanalUrl);
+          Log.d("mediaPlayer.setDataSource() slut");
+          mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+          mediaPlayer.prepareAsync();
+        } catch (Exception ex) {
+          Log.kritiskFejlStille(ex);
+          stopAfspilning();
+        }
+      }
+    }.start();
     afspillerstatus = STATUS_FORBINDER;
     sendOnAfspilningForbinder(-1);
     opdaterWidgets();
@@ -167,8 +181,6 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
   synchronized public void stopAfspilning() {
     Log.d("AfspillerService stopAfspilning");
     handler.removeCallbacks(startAfspilningIntern);
-    mediaPlayer.stop();
-    // mediaPlayer.reset();
     // Da mediaPlayer.reset() erfaringsmæssigt kan hænge i dette tilfælde afregistrerer vi
     // alle lyttere og bruger en ny
     final MediaPlayer gammelMediaPlayer = mediaPlayer;
@@ -176,9 +188,14 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     new Thread() {
       @Override
       public void run() {
-        Log.d("gammelMediaPlayer.release() start");
-        gammelMediaPlayer.release();
-        Log.d("gammelMediaPlayer.release() færdig");
+        try {
+          gammelMediaPlayer.stop();
+          Log.d("gammelMediaPlayer.release() start");
+          gammelMediaPlayer.release();
+          Log.d("gammelMediaPlayer.release() færdig");
+        } catch (Exception e) {
+          Log.kritiskFejlStille(e);
+        }
       }
     }.start();
 
@@ -188,7 +205,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     afspillerstatus = STATUS_STOPPET;
     opdaterWidgets();
 
-    if (notification != null) notificationManager.cancelAll();
+    //if (notification != null) notificationManager.cancelAll();
     // Stop afspillerservicen
     DRData.appCtx.stopService(new Intent(DRData.appCtx, HoldAppIHukommelsenService.class));
     if (wifilock!=null) try { wifilock.release(); } catch (Exception e) { Log.kritiskFejlStille(e); } // TODO fjern try/catch
@@ -201,7 +218,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
 
   /**
    * Sætter notification i toppen af skærmen
-   */
+
   private void opdaterNotification() {
     if (notification == null) {
       notification = new Notification(R.drawable.statusbaricon, null, 0);
@@ -214,6 +231,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     notification.setLatestEventInfo(DRData.appCtx, PROGRAMNAVN, kanalNavn, notification.contentIntent);
     notificationManager.notify(NOTIFIKATION_ID, notification);
   }
+*/
 
 
 
@@ -283,9 +301,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
   //    TILBAGEKALD FRA MEDIAPLAYER
   //
   public void onPrepared(MediaPlayer mp) {
-    Log.d("AfspillerService onPrepared!");
-    //mp.start();
-    mediaPlayer.start();
+    Log.d("onPrepared");
     afspillerstatus = STATUS_SPILLER; //No longer buffering
     if (observatører != null) {
       opdaterWidgets();
@@ -293,6 +309,15 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
         observer.onAfspilningStartet();
       }
     }
+    // Det ser ud til kaldet til start() kan tage lang tid på Android 4.1 Jelly Bean
+    // (i hvert fald på Samsung Galaxy S III), så vi kalder det i baggrunden
+    new Thread() {
+      public void run() {
+        Log.d("mediaPlayer.start()");
+        mediaPlayer.start();
+        Log.d("mediaPlayer.start() slut");
+      }
+    }.start();
   }
 
   public void onCompletion(MediaPlayer mp) {
@@ -318,12 +343,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
       mediaPlayer = new MediaPlayer();
       sætMediaPlayerLytter(mediaPlayer, this); // registrér lyttere på den nye instans
 
-      try {
-        startAfspilningIntern();
-      } catch (IOException e) {
-        Log.e(e);
-      }
-    } else {
+      startAfspilningIntern();
     }
   }
 
@@ -399,7 +419,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
 
   public void lukNed() {
     stopAfspilning();
-    notificationManager.cancelAll(); // Luk notifikationen
+    //notificationManager.cancelAll(); // Luk notifikationen
     tm.listen(opkaldshåndtering, PhoneStateListener.LISTEN_NONE);
   }
 }

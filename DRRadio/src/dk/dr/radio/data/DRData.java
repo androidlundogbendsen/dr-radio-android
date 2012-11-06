@@ -21,9 +21,11 @@ package dk.dr.radio.data;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
+import com.bugsense.trace.BugSenseHandler;
 import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.data.json.spiller_nu.SpillerNu;
 import dk.dr.radio.data.json.stamdata.Kanal;
@@ -294,19 +296,26 @@ public class DRData {
   }
 
   public String findKanalUrlFraKode(Kanal kanal) {
+
+    if (Build.VERSION.SDK_INT>=16 && !prefs.contains("jbfix")) {
+      // Forvælg rtsp for jelly bean da det ser ud til at shoutcast ikke virker
+      // Set flere Samsung Galaxy SIII med Android 4.1
+      prefs.edit().putString(NØGLE_lydformat, "rtsp").putBoolean("jbfix", true).commit();
+    }
+
     String lydformat = prefs.getString(NØGLE_lydformat, "shoutcast");
     boolean højKvalitet = "høj".equals(prefs.getString("lydkvalitet", "standard"));
     rapportering.nulstil();
     rapportering.lydformat = lydformat + (højKvalitet?"_høj":"_standard");
     String url = kanal.shoutcastUrl;
     if ("rtsp".equals(lydformat)) url = kanal.rtspUrl;
-    else if ("httplive".equals(lydformat)) url = kanal.aacUrl;	// some phones can only do http live if the protocol is httplive:// instead of http://
+    else if ("httplive".equals(lydformat)) url = kanal.aacUrl;
     else if ("httplive2".equals(lydformat)) url = kanal.aacUrl.replaceAll("httplive", "http");
     if (højKvalitet)
 	{
 		url = url.replace("LQ", "HQ");
 		url = url.replace("quality=1", "quality=2");	// on-demand radio nyheder workaround
-    	url = url.replace("L.stream", "H.stream") ;		// MP3, RTSP stream name workaround
+    	url = url.replace("L.stream", "H.stream") ;		// MP3, RTSP stream navn workaround
 	}
     String info = "Kanal: "+kanal.longName+"\nlydformat: "+lydformat
             +"\nKvalitet: "+(højKvalitet?"Høj":"Normal")+"\n"+url;

@@ -23,6 +23,7 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import com.bugsense.trace.BugSenseHandler;
 
 /**
  * Loggerklasse
@@ -65,13 +66,13 @@ public class Log {
 
 
   public static void kritiskFejlStille(final Exception e) {
-    org.acra.ErrorReporter.getInstance().handleSilentException(e);
+    BugSenseHandler.sendException(e);
     Log.e(e);
   }
 
 
   public static void kritiskFejl(final Activity akt, final Exception e) {
-    org.acra.ErrorReporter.getInstance().handleSilentException(e);
+    BugSenseHandler.sendException(e);
     Log.e(e);
 
     Builder ab=new AlertDialog.Builder(akt);
