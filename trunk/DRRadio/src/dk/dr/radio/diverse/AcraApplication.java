@@ -24,37 +24,16 @@ package dk.dr.radio.diverse;
  */
 
 import android.app.Application;
-import org.acra.*;
-import org.acra.annotation.*;
+import com.bugsense.trace.BugSenseHandler;
 
-// Gammelt regneark
-// @ReportsCrashes(formKey = "dDVyUzgzX1Bfb3dJV0ZBMUx0akRQR3c6MQ")
-
-
-
-// BugSense
-@ReportsCrashes(formUri = "http://www.bugsense.com/api/acra?api_key=57c90f98", formKey="")
-
-// Regneark 2.1.x
-//@ReportsCrashes(formKey = "dHItUlZ0eDRzZU5WMVFfYmZJZ1FId3c6MQ")
 public class AcraApplication extends Application {
 
   @Override
     public void onCreate() {
         // The following line triggers the initialization of ACRA
-        ACRA.init(this);
+        BugSenseHandler.initAndStartSession(this, "57c90f98");
         super.onCreate();
 
-/* TODO - noget a la det her ind i stedet for
-				tjek for initialisering i hver aktivitet/service/...
-		try {
-			drdata = DRData.tjekInstansIndlæst(this);
-		} catch (Exception ex) {
-			// TODO popop-advarsel til bruger om intern fejl og rapporter til udvikler-dialog
-			Log.kritiskFejl(this, ex);
-			return;
-		}
-*/
     }
 
 }

@@ -65,7 +65,6 @@ import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.util.Log;
 import java.util.ArrayList;
 import java.util.WeakHashMap;
-import org.acra.ErrorReporter;
 
 public class Afspilning_akt extends Activity implements AfspillerListener {
 	private ViewFlipper flipper;
@@ -410,8 +409,8 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 				String rapport = drdata.rapportering.rapport();
 				if (rapport != null) {
 					Log.d("Indsender rapport: " + rapport);
-					ErrorReporter.getInstance().putCustomData(drdata.rapportering.lydformat, rapport);
-					ErrorReporter.getInstance().handleSilentException(null);
+					//ErrorReporter.getInstance().putCustomData(drdata.rapportering.lydformat, rapport);
+					//ErrorReporter.getInstance().handleSilentException(null);
 					prefs.edit().putBoolean(rapNøgle, true).commit();
 					if (DRData.udvikling) {
 						DRData.toast("Sender rapport for " + drdata.rapportering.lydformat);
