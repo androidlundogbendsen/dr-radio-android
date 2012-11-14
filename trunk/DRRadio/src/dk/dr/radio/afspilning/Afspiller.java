@@ -156,6 +156,11 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     Log.d("Starter streaming fra " + kanalNavn);
     Log.d("mediaPlayer.setDataSource( " + kanalUrl);
 
+    afspillerstatus = STATUS_FORBINDER;
+    sendOnAfspilningForbinder(-1);
+    opdaterWidgets();
+    handler.removeCallbacks(startAfspilningIntern);
+
     // mediaPlayer.setDataSource() bør kaldes fra en baggrundstråd da det kan ske
     // at den hænger under visse netværksforhold
     new Thread() {
@@ -167,15 +172,16 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
           mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
           mediaPlayer.prepareAsync();
         } catch (Exception ex) {
+          ex = new Exception("spiller "+kanalNavn+" "+kanalUrl, ex);
           Log.kritiskFejlStille(ex);
-          stopAfspilning();
+          handler.post(new Runnable() {
+            public void run() { // Stop afspilleren fra forgrundstråden. Jacob 14/11
+              onError(mediaPlayer, 42, 42); // kalder stopAfspilning(); og forsøger igen senere og melder fejl til bruger efter 10 forsøg
+            }
+          });
         }
       }
     }.start();
-    afspillerstatus = STATUS_FORBINDER;
-    sendOnAfspilningForbinder(-1);
-    opdaterWidgets();
-    handler.removeCallbacks(startAfspilningIntern);
   }
 
   synchronized public void stopAfspilning() {

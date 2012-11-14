@@ -48,6 +48,11 @@ public class Kontakt {
     i.setType("plain/text");
     i.putExtra(android.content.Intent.EXTRA_EMAIL, modtagere);
     i.putExtra(android.content.Intent.EXTRA_SUBJECT, emne);
+    // Fejler i Android 4.1 Jelly Bean med
+    //  file:// attachment paths must point to file:///storage/sdcard0. Ignoring attachment [obscured file path]
+    // TODO Løsning: Se http://stephendnicholas.com/archives/974
+
+
     if (vedhæftning!=null) try {
       String xmlFilename = "programlog.txt";
       FileOutputStream fos = akt.openFileOutput(xmlFilename, akt.MODE_WORLD_READABLE);
