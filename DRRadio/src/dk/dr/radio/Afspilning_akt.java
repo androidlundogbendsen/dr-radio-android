@@ -665,10 +665,10 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 			}
 
 			protected void onProgressUpdate(Object[] values) {
-				if (isCancelled() || flipper == null) {
-					return; // Nødvendigt da GUI-trådens udførelse kan være forsinket. Jacob 21/11 2011
-				}
+				if (isCancelled() || flipper == null) return; // Nødvendigt da GUI-trådens udførelse kan være forsinket. Jacob 21/11 2011
+
 				View view = flipper.getChildAt((Integer) values[0]);
+        if (view==null) return; // Nødvendigt da GUI-trådens udførelse kan være forsinket. Jacob 14/11 2011
 				Drawable drawable = (Drawable) values[1];
 				ImageView flipperImageImageView = (ImageView) view.findViewById(R.id.FlipperImageImageView);
 				flipperImageImageView.setImageDrawable(drawable);

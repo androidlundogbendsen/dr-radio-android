@@ -34,7 +34,10 @@ public class Splash_akt extends Activity implements Runnable {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.splash);
+    try {
+  		setContentView(R.layout.splash);
+    } catch (Throwable t) {} // TODO bitmappen main_app_bg.png fylder for meget på Xperia X10i. Indtil der engang er tid til det må de leve uden splash-skærmbillede
+
     // Jacob: Det oprindelige 200k billede med baggrund og DR-logo var på 640x960 punkter
     // Det træk jeg DR-logoet ud på 260x78 punkter.
     // DVS vi skal skalere logoet så det fylder 260/640 = 40,625 % af skærmen i bredden
