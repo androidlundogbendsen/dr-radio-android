@@ -204,21 +204,24 @@ public class DRData {
 
   private void hentUdsendelserOgSpillerNuListe() {
     String url = stamdata.s("spiller_nu_url") + aktuelKanalkode;
-    try {
-      spillerNuListe2 = JsonIndlaesning.hentSpillerNuListe(url);
-    } catch (Exception ex) {
-      Log.e("Kunne ikke hente spillerNuListe "+url, ex);
-      spillerNuListe2 = null;
-    }
-    // Al opdatering, herunder tildeling bør ske i GUI-tråden for at undgå at
-    // GUIen er i gang med at bruge objektet mens det opdateres
-    handler.post(new Runnable() {
-      public void run() {
-        spillerNuListe = spillerNuListe2;
-        // Send broadcast om at listen er opdateret
-        appCtx.sendBroadcast(new Intent(OPDATERINGSINTENT_SpillerNuListe));
+    spillerNuListe2 = null;
+
+    if (stamdata.kanalerDerSkalViseSpillerNu.contains(aktuelKanalkode)) {
+      try {
+        spillerNuListe2 = JsonIndlaesning.hentSpillerNuListe(url);
+      } catch (Exception ex) {
+        Log.e("Kunne ikke hente spillerNuListe "+url, ex);
       }
-    });
+      // Al opdatering, herunder tildeling bør ske i GUI-tråden for at undgå at
+      // GUIen er i gang med at bruge objektet mens det opdateres
+      handler.post(new Runnable() {
+        public void run() {
+          spillerNuListe = spillerNuListe2;
+          // Send broadcast om at listen er opdateret
+          appCtx.sendBroadcast(new Intent(OPDATERINGSINTENT_SpillerNuListe));
+        }
+      });
+    }
 
     try {
       url = stamdata.s("program_url") + aktuelKanalkode;

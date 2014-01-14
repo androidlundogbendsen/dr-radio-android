@@ -8,7 +8,7 @@
 		android:layout_height="50dp"
    		android:layout_gravity="left|center_vertical"
    		android:scaleType="fitStart"
-   		android:src="@drawable/kanal_p1"
+   		android:src="@drawable/kanal_p1d"
    		 />
 		<TextView
 			android:id="@+id/tekst"
