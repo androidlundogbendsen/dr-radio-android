@@ -101,14 +101,14 @@ public class Kanalvalg_akt extends ListActivity {
     //getListView().setBackgroundResource(R.drawable.main_app_bg);
 
     ListView lv = getListView();
-
+/*
     // Vi ønsker en mørkere udgave af baggrunden, så vi indlæser den
     // her og sætter et farvefilter.
     Drawable baggrund = getResources().getDrawable(R.drawable.main_app_bg);
     baggrund = baggrund.mutate();
     baggrund.setColorFilter(0xffa0a0a0, Mode.MULTIPLY);
-
-    lv.setBackgroundDrawable(baggrund);
+*/
+    lv.setBackgroundColor(0xffa0a0a0);
     lv.setDivider(new ColorDrawable(0x80ffffff));
     lv.setDividerHeight(2);
 

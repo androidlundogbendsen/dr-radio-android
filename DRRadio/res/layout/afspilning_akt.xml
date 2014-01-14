@@ -2,7 +2,7 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 
-	android:background="@drawable/main_app_bg">
+	android:background="#FFFFFFFF">
 
 	<LinearLayout android:id="@+id/player_select_channel_linearlayout"
 		android:layout_height="wrap_content" android:layout_width="wrap_content"
@@ -17,7 +17,7 @@
 			<ImageView android:id="@+id/player_select_channel_billede"
 				android:layout_width="wrap_content" android:layout_height="fill_parent"
 				android:layout_gravity="left|center_vertical" android:scaleType="fitStart"
-				android:src="@drawable/kanal_p1" />
+				android:src="@drawable/kanal_p1d" />
 			<TextView android:id="@+id/player_select_channel_text"
 				android:layout_width="wrap_content" android:text="P4kbh"
 				android:textColor="@android:color/white" android:textSize="@dimen/player_channel_title_size"

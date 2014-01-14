@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="dk.dr.radio"
-      android:versionCode="29"
-      android:versionName="2.7.2">
+      android:versionCode="30"
+      android:versionName="2.8.0">
 
   <!--
   Jacob jeg ville gerne sætte android:minSdkVersion="3" da app'en kan starte på Android 1.5
@@ -92,6 +92,7 @@
       <meta-data android:name="android.appwidget.provider"
 	               android:resource="@xml/afspiller_widgetinfo" />
     </receiver>
+
 
   </application>
 

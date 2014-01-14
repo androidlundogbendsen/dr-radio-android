@@ -5,7 +5,7 @@
         "forvalgt": "P3",
 
         "kanalkoder": ["P1D", "P2D", "P3", "P4", "P5D", "P6B", "P7M", "P8J", "RAM", "DRM", "NEWS"],
-        "p4koder": ["P4", "KH4", "NV4", "AR4", "AB4", "OD4", "AL4", "HO4", "TR4", "RO4", "ES4", "NS4"],
+        "p4koder": ["P4", "KH4", "NV4", "AR4", "AB4", "OD4", "AL4", "HO4", "TR4", "RO4", "ES4"],
 
         "kanaler": [
                 {
@@ -104,13 +104,6 @@
                         "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A15L.stream"
                 },
                 {
-                        "shortName": "NS4",
-                        "longName": "DR P4 NordvestSjælland",
-                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A17L.mp3",
-                        "aacUrl": "httplive://ahls.gss.dr.dk/A/A17L.stream/Playlist.m3u8",
-                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A17L.stream"
-                },
-                {
                         "shortName": "P5D",
                         "longName": "DR P5",
                         "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A25L.mp3",
@@ -192,7 +185,7 @@
         "stats_url": "http://www.dr.dk/tjenester/iphone/radio/stats/android22.drxml?channel=",
         "about_url": "http://www.dr.dk/tjenester/iphone/radio/about/android22.drxml",
 
-        "feedback_modtagere": ["chrp@dr.dk","jacob.nordfalk@gmail.com" ],
+        "feedback_modtagere": ["chrp@dr.dk","android@lundogbendsen.dk" ],
 		"feedback_brugerspørgsmål": "Tak fordi du vil give feedback på radioappen!\nFungerer den tilfredsstillende?  JA  NEJ\nHvis ikke, så beder vi dig om at beskrive problemerne så udførligt som muligt herunder.\n\n\n\n\n----- teknisk info til udviklerne -----\nstamdata24 - 12. okt 2012\n",
 		"drift_statusmeddelelse": ""
 
