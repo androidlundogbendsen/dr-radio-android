@@ -18,37 +18,26 @@ DR Radio 2 for Android.  If not, see <http://www.gnu.org/licenses/>.
 package dk.dr.radio.afspilning;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import dk.dr.radio.Afspilning_akt;
 import dk.dr.radio.R;
 import dk.dr.radio.util.Log;
-import java.lang.reflect.Method;
 
 /**
  * Sørger for at app'en holdes i hukommelsen
  * @author j
  */
 public class HoldAppIHukommelsenService extends Service {
-	/** Service-mekanik. Ligegyldig da vi kører i samme proces. */
+	/** Service-mekanik. Ligegyldig, da vi kører i samme proces. */
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
 
-  private NotificationManager notificationManager;
   private Notification notification;
-  private static final Class[] mStartForegroundSignature = new Class[]{int.class, Notification.class};
-  private static final Class[] mStopForegroundSignature = new Class[]{boolean.class};
-  private Method mStartForeground;
-  private Method mStopForeground;
-  private Method mSetForeground;
-  private Object[] mStartForegroundArgs = new Object[2];
-  private Object[] mStopForegroundArgs = new Object[1];
 
   private String PROGRAMNAVN = "Radio";
   /** ID til notifikation i toppen. Skal bare være unikt og det samme altid */
@@ -57,27 +46,8 @@ public class HoldAppIHukommelsenService extends Service {
 	@Override
 	public void onCreate() {
 		Log.d("AfspillerService onCreate!");
-    notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-    try {
-      mStartForeground = getClass().getMethod("startForeground", mStartForegroundSignature);
-      mStopForeground = getClass().getMethod("stopForeground", mStopForegroundSignature);
-    } catch (NoSuchMethodException e) {
-      // Running on an older platform.
-      try {
-        mSetForeground = getClass().getMethod("setForeground", mStopForegroundSignature);
-      } catch (NoSuchMethodException ex) {
-        // Running on an older platform.
-        Log.kritiskFejlStille(ex);
-      }
-    }
 	}
 
-
-  @Override
-  public void onStart(Intent intent, int startId) {
-    handleCommand(intent);
-  }
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
@@ -102,31 +72,7 @@ public class HoldAppIHukommelsenService extends Service {
     if (kanalNavn==null) kanalNavn="";
 
     notification.setLatestEventInfo(this, PROGRAMNAVN, kanalNavn, notification.contentIntent);
-    notificationManager.notify(NOTIFIKATION_ID, notification);
-
-
-    // If we have the new startForeground API, then use it.
-    if (mStartForeground != null) {
-      mStartForegroundArgs[0] = Integer.valueOf(NOTIFIKATION_ID);
-      mStartForegroundArgs[1] = notification;
-      try {
-        mStartForeground.invoke(this, mStartForegroundArgs);
-      } catch (Exception e) {
-        // Should not happen.
-        Log.kritiskFejlStille(e);
-      }
-      return;
-    }
-    // Fall back on the old API.
-    //setForeground(true);
-    mStopForegroundArgs[0] = Boolean.TRUE;
-    try {
-      mSetForeground.invoke(this, mStopForegroundArgs);
-    } catch (Exception e) {
-      // Should not happen.
-      Log.kritiskFejlStille(e);
-    }
-    notificationManager.notify(NOTIFIKATION_ID, notification);
+		startForeground(NOTIFIKATION_ID, notification);
   }
 
 
@@ -134,29 +80,6 @@ public class HoldAppIHukommelsenService extends Service {
 	@Override
 	public void onDestroy() {
 		Log.d("AfspillerService onDestroy!");
-    // If we have the new stopForeground API, then use it.
-    if (mStopForeground != null) {
-      mStopForegroundArgs[0] = Boolean.TRUE;
-      try {
-        mStopForeground.invoke(this, mStopForegroundArgs);
-      } catch (Exception e) {
-        // Should not happen.
-        Log.kritiskFejlStille(e);
-      }
-      return;
-    }
-
-    // Fall back on the old API.  Note to cancel BEFORE changing the
-    // foreground state, since we could be killed at that point.
-    notificationManager.cancelAll(); // Luk notifikationen
-    //setForeground(false);
-    mStopForegroundArgs[0] = Boolean.FALSE;
-    try {
-      mSetForeground.invoke(this, mStopForegroundArgs);
-    } catch (Exception e) {
-      // Should not happen.
-      Log.kritiskFejlStille(e);
-    }
-  }
-
+		stopForeground(true);
+	}
 }

@@ -63,7 +63,7 @@ public class Splash_akt extends Activity implements Runnable {
       handler.postDelayed(this, 200);
     } catch (Exception ex) {
       // TODO popop-advarsel til bruger om intern fejl og rapporter til udvikler-dialog
-      Log.kritiskFejl(this, ex);
+      Log.rapporterOgvisFejl(this, ex);
     }
   }
 

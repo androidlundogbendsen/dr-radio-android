@@ -119,7 +119,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     }
 
     //notificationManager = (NotificationManager) DRData.appCtx.getSystemService(Context.NOTIFICATION_SERVICE);
-    try { wifilock = ((WifiManager) DRData.appCtx.getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "DR Radio"); wifilock.setReferenceCounted(false); } catch (Exception e) { Log.kritiskFejlStille(e); } // TODO fjern try/catch
+    try { wifilock = ((WifiManager) DRData.appCtx.getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "DR Radio"); wifilock.setReferenceCounted(false); } catch (Exception e) { Log.rapporterFejl(e); } // TODO fjern try/catch
     opkaldshåndtering = new Opkaldshaandtering(this);
     tm = (TelephonyManager) DRData.appCtx.getSystemService(Context.TELEPHONY_SERVICE);
     tm.listen(opkaldshåndtering, PhoneStateListener.LISTEN_CALL_STATE);
@@ -139,7 +139,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
       // Start afspillerservicen så programmet ikke bliver lukket
       // når det kører i baggrunden under afspilning
       DRData.appCtx.startService(new Intent(DRData.appCtx, HoldAppIHukommelsenService.class).putExtra("kanalNavn", kanalNavn));
-      if (DRData.prefs.getBoolean("wifilås", true) && wifilock!=null) try { wifilock.acquire(); if (DRData.udvikling) DRData.toast("wifilock.acquire()"); } catch (Exception e) { Log.kritiskFejlStille(e); } // TODO fjern try/catch
+      if (DRData.prefs.getBoolean("wifilås", true) && wifilock!=null) try { wifilock.acquire(); if (DRData.udvikling) DRData.toast("wifilock.acquire()"); } catch (Exception e) { Log.rapporterFejl(e); } // TODO fjern try/catch
       startAfspilningIntern();
       AudioManager audioManager = (AudioManager) DRData.appCtx.getSystemService(Context.AUDIO_SERVICE);
       // Skru op til 1/5 styrke hvis volumen er lavere end det
@@ -200,7 +200,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
           gammelMediaPlayer.release();
           Log.d("gammelMediaPlayer.release() færdig");
         } catch (Exception e) {
-          Log.kritiskFejlStille(e);
+          Log.rapporterFejl(e);
         }
       }
     }.start();
@@ -214,7 +214,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     //if (notification != null) notificationManager.cancelAll();
     // Stop afspillerservicen
     DRData.appCtx.stopService(new Intent(DRData.appCtx, HoldAppIHukommelsenService.class));
-    if (wifilock!=null) try { wifilock.release(); } catch (Exception e) { Log.kritiskFejlStille(e); } // TODO fjern try/catch
+    if (wifilock!=null) try { wifilock.release(); } catch (Exception e) { Log.rapporterFejl(e); } // TODO fjern try/catch
     // Informer evt aktivitet der lytter
     for (AfspillerListener observatør : observatører) {
       observatør.onAfspilningStoppet();
@@ -365,7 +365,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
       try {
         startAfspilningIntern();
       } catch (Exception e) {
-        Log.kritiskFejlStille(e);
+        Log.rapporterFejl(e);
       }
     }
   };

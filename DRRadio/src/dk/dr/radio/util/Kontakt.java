@@ -48,9 +48,6 @@ public class Kontakt {
     i.setType("plain/text");
     i.putExtra(android.content.Intent.EXTRA_EMAIL, modtagere);
     i.putExtra(android.content.Intent.EXTRA_SUBJECT, emne);
-    // Fejler i Android 4.1 Jelly Bean med
-    //  file:// attachment paths must point to file:///storage/sdcard0. Ignoring attachment [obscured file path]
-    // TODO Løsning: Se http://stephendnicholas.com/archives/974
 
 
     if (vedhæftning!=null) try {
@@ -58,13 +55,15 @@ public class Kontakt {
       FileOutputStream fos = akt.openFileOutput(xmlFilename, akt.MODE_WORLD_READABLE);
       fos.write(vedhæftning.getBytes());
       fos.close();
-      Uri uri = Uri.fromFile(new File("/mnt/sdcard/../.."+akt.getFilesDir()+"/"+xmlFilename));
+      Uri uri = Uri.fromFile(new File(akt.getFilesDir().getAbsolutePath(), xmlFilename));
+			txt +="\n\nRul op øverst i meddelelsen og giv din feedback, tak.";
       i.putExtra(android.content.Intent.EXTRA_STREAM, uri);
     } catch (Exception e) {
       Log.e(e);
       txt += "\n"+e;
     }
     i.putExtra(android.content.Intent.EXTRA_TEXT, txt);
-    akt.startActivity(Intent.createChooser(i, "Send meddelelse..."));
+//    akt.startActivity(Intent.createChooser(i, "Send meddelelse..."));
+    akt.startActivity(i);
   }
 }
