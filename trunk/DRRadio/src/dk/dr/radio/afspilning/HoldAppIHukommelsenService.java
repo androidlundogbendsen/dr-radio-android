@@ -43,7 +43,6 @@ public class HoldAppIHukommelsenService extends Service {
 
   private Notification notification;
 
-  private String PROGRAMNAVN = "Radio";
   /**
    * ID til notifikation i toppen. Skal bare være unikt og det samme altid
    */
@@ -77,7 +76,7 @@ public class HoldAppIHukommelsenService extends Service {
     String kanalNavn = intent == null ? null : intent.getStringExtra("kanalNavn");
     if (kanalNavn == null) kanalNavn = "";
 
-    notification.setLatestEventInfo(this, PROGRAMNAVN, kanalNavn, notification.contentIntent);
+    notification.setLatestEventInfo(this, "Radio", kanalNavn, notification.contentIntent);
     startForeground(NOTIFIKATION_ID, notification);
   }
 

@@ -59,7 +59,6 @@ public class JsonIndlaesning {
    *                     eller parsning (dvs interne fejl af forskellig art som bør rapporteres til udvikler)
    */
   static Stamdata parseStamdata(String str) throws JSONException {
-    dt("");
 
     //Log.d("str=\n============="+str+"\n==================");
 
@@ -166,16 +165,12 @@ public class JsonIndlaesning {
       }
     } while (read >= 0);
     in.close();
-    String jsondata = out.toString();
-    return jsondata;
+    return out.toString();
   }
 
 
-  static int nummer = 0;
-
   static SpillerNu hentSpillerNuListe(String url) throws Exception {
 
-    //ObjectMapper mapper = new ObjectMapper();
     String str = hentUrlSomStreng(url);
     SpillerNu d = new SpillerNu(); //mapper.readValue(jsondata, SpillerNu.class);
 
@@ -192,16 +187,10 @@ public class JsonIndlaesning {
       d.liste.add(e);
     }
 
-    //Log.d("TIDSTAGNING parsning tog "+dt("parsning "+url));
-
-    //if (nummer++ % 10 == 0) Log.d("TIDSTAGNING\n===============\n"+tidstagning.toString().replace(',', '\n')+"\n================== Kørt i sek: "+(System.currentTimeMillis() - førsteTid)/1000);
     return d;
 
   }
 
-  private static String dt(String hvad) {
-    return hvad;
-  }
   /*
   private static long førsteTid;
   private static long sidsteTid;

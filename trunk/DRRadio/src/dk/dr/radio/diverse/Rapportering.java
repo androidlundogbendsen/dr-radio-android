@@ -19,7 +19,6 @@
 package dk.dr.radio.diverse;
 
 import dk.dr.radio.afspilning.AfspillerListener;
-import dk.dr.radio.util.Log;
 
 /**
  * @author j
@@ -52,27 +51,6 @@ public class Rapportering implements AfspillerListener {
   public void onAfspilningForbinder(int bufferProcent) {
     // Hvis vi får 'forbinder' med procenter efter afspilning faktisk er startet så er der hakker
     if (bufferProcent > 0 && afspilningFaktiskStartet > 0) nulstil();
-  }
-
-  /**
-   * Giver en rappport - hvis der er noget at fortælle
-   *
-   * @return null hvis det ikke er værd at rapportere
-   */
-  public String rapport() {
-    if (afspilningFaktiskStartet == 0) return null;
-    long nu = System.currentTimeMillis();
-    long spilletUafbrudt = (nu - afspilningFaktiskStartet) / 1000;
-    long forsøgtTilFaktiskStart = (afspilningFaktiskStartet - afspilningForsøgtStartet) / 1000;
-    String rapport = "Rapportering: " + lydformat + " forsøgtTilFaktiskStart=" + forsøgtTilFaktiskStart + " spilletUafbrudt=" + spilletUafbrudt;
-    Log.d(rapport);
-
-    if (spilletUafbrudt > 60 * 10) { // Over 10 minutters uafbrudt afspilning
-      rapport = "forsøgtTilFaktiskStart=" + forsøgtTilFaktiskStart + " spilletUafbrudt=" + spilletUafbrudt;
-      //Log.d("Over 10 minutters uafbrudt afspilning - indsender rapport");
-      return rapport;
-    }
-    return null;
   }
 
 }

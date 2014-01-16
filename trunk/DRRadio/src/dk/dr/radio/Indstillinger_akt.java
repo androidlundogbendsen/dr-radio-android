@@ -66,7 +66,7 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
         // Jeg synes toast alligevel er overflødig. Jacob
         //Toast.makeText(this, lydformatlp.getSummary(), Toast.LENGTH_LONG).show();
         ps.onItemClick(null, null, POS_lydformat, 0);
-      } catch (Exception e) {
+      } catch (Exception ignored) {
       } // Ignorer - se http://www.bugsense.com/dashboard/project/57c90f98/error/11696187
 
       lydformatlp.setOnPreferenceChangeListener(this);

@@ -29,12 +29,11 @@ import java.net.URL;
 public class ImageUtil {
 
   private static final int DEFAULT_NUM_RETRIES = 3;
-  private static int numRetries = DEFAULT_NUM_RETRIES;
 
   public static Bitmap downloadImage(String url) {
     int timesTried = 1;
 
-    while (timesTried <= numRetries) {
+    while (timesTried <= DEFAULT_NUM_RETRIES) {
       try {
         byte[] imageData = retrieveImageData(url);
 

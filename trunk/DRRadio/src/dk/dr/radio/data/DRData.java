@@ -94,12 +94,6 @@ public class DRData {
    */
   public static final String OPDATERINGSINTENT_SpillerNuListe = "dk.dr.radio.afspiller.OPDATERING_SpillerNuListe";
 
-  /**
-   * Hvis true er indlæsning i gang og der skal vises en venteskærm.
-   * Man kan vente på et broadcast eller kalde wait() for at blive vækket når indlæsning er færdig
-   */
-  public boolean indlæserVentVenligst = false;
-
 
   //
   // Opdateringer i baggrunden.
