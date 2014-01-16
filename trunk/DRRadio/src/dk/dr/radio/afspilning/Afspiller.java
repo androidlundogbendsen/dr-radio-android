@@ -1,30 +1,23 @@
 /**
-DR Radio 2 is developed by Jacob Nordfalk, Hanafi Mughrabi and Frederik Aagaard.
-Some parts of the code are loosely based on Sveriges Radio Play for Android.
+ DR Radio 2 is developed by Jacob Nordfalk, Hanafi Mughrabi and Frederik Aagaard.
+ Some parts of the code are loosely based on Sveriges Radio Play for Android.
 
-DR Radio 2 for Android is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License version 2 as published by
-the Free Software Foundation.
+ DR Radio 2 for Android is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License version 2 as published by
+ the Free Software Foundation.
 
-DR Radio 2 for Android is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU General Public License for more details.
+ DR Radio 2 for Android is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with
-DR Radio 2 for Android.  If not, see <http://www.gnu.org/licenses/>.
+ You should have received a copy of the GNU General Public License along with
+ DR Radio 2 for Android.  If not, see <http://www.gnu.org/licenses/>.
 
-*/
+ */
 
 package dk.dr.radio.afspilning;
 
-import dk.dr.radio.diverse.Opkaldshaandtering;
-import java.io.IOException;
-import java.util.List;
-
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -44,28 +37,34 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import dk.dr.radio.Afspilning_akt;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.AfspillerWidget;
-import dk.dr.radio.R;
+import dk.dr.radio.diverse.Opkaldshaandtering;
 import dk.dr.radio.util.Log;
-import java.util.ArrayList;
 
 
 /**
  * @author j
  */
-public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
-        OnCompletionListener, OnInfoListener, OnErrorListener, OnBufferingUpdateListener {
+public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, OnCompletionListener, OnInfoListener, OnErrorListener, OnBufferingUpdateListener {
 
   /** ID til notifikation i toppen. Skal bare være unikt og det samme altid */
   //private static final int NOTIFIKATION_ID = 117;
 
-  /** Bruges fra widget til at kommunikere med servicen */
+  /**
+   * Bruges fra widget til at kommunikere med servicen
+   */
   //public static final int WIDGET_HENT_INFO = 10;
   public static final int WIDGET_START_ELLER_STOP = 11;
 
-  /** Afspillerens status - bruges også i broadcasts */
+  /**
+   * Afspillerens status - bruges også i broadcasts
+   */
   public static final int STATUS_UDEFINERET = 0;
   public static final int STATUS_STOPPET = 1;
   public static final int STATUS_FORBINDER = 2;
@@ -87,7 +86,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     mediaPlayer.setOnPreparedListener(lytter);
     mediaPlayer.setOnBufferingUpdateListener(lytter);
     mediaPlayer.setOnSeekCompleteListener(lytter);
-    if (lytter!=null && DRData.prefs.getBoolean(NØGLEholdSkærmTændt, false)) {
+    if (lytter != null && DRData.prefs.getBoolean(NØGLEholdSkærmTændt, false)) {
       mediaPlayer.setWakeMode(DRData.appCtx, PowerManager.SCREEN_DIM_WAKE_LOCK);
       //DRData.toast("holdSkærmTændt");
     }
@@ -101,7 +100,9 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
   static final String NØGLEholdSkærmTændt = "holdSkærmTændt";
   private WifiLock wifilock = null;
 
-  /** Forudsætter DRData er initialiseret */
+  /**
+   * Forudsætter DRData er initialiseret
+   */
   public Afspiller() {
     mediaPlayer = new MediaPlayer();
 
@@ -119,7 +120,12 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     }
 
     //notificationManager = (NotificationManager) DRData.appCtx.getSystemService(Context.NOTIFICATION_SERVICE);
-    try { wifilock = ((WifiManager) DRData.appCtx.getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "DR Radio"); wifilock.setReferenceCounted(false); } catch (Exception e) { Log.rapporterFejl(e); } // TODO fjern try/catch
+    try {
+      wifilock = ((WifiManager) DRData.appCtx.getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "DR Radio");
+      wifilock.setReferenceCounted(false);
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
+    } // TODO fjern try/catch
     opkaldshåndtering = new Opkaldshaandtering(this);
     tm = (TelephonyManager) DRData.appCtx.getSystemService(Context.TELEPHONY_SERVICE);
     tm.listen(opkaldshåndtering, PhoneStateListener.LISTEN_CALL_STATE);
@@ -129,7 +135,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
   private long onErrorTællerNultid;
 
   public void startAfspilning() throws IOException {
-    Log.d("startAfspilning() "+ kanalUrl);
+    Log.d("startAfspilning() " + kanalUrl);
 
     onErrorTæller = 0;
     onErrorTællerNultid = System.currentTimeMillis();
@@ -139,7 +145,12 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
       // Start afspillerservicen så programmet ikke bliver lukket
       // når det kører i baggrunden under afspilning
       DRData.appCtx.startService(new Intent(DRData.appCtx, HoldAppIHukommelsenService.class).putExtra("kanalNavn", kanalNavn));
-      if (DRData.prefs.getBoolean("wifilås", true) && wifilock!=null) try { wifilock.acquire(); if (DRData.udvikling) DRData.toast("wifilock.acquire()"); } catch (Exception e) { Log.rapporterFejl(e); } // TODO fjern try/catch
+      if (DRData.prefs.getBoolean("wifilås", true) && wifilock != null) try {
+        wifilock.acquire();
+        if (DRData.udvikling) DRData.toast("wifilock.acquire()");
+      } catch (Exception e) {
+        Log.rapporterFejl(e);
+      } // TODO fjern try/catch
       startAfspilningIntern();
       AudioManager audioManager = (AudioManager) DRData.appCtx.getSystemService(Context.AUDIO_SERVICE);
       // Skru op til 1/5 styrke hvis volumen er lavere end det
@@ -149,10 +160,10 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 1 * max / 5, AudioManager.FLAG_SHOW_UI);
       }
 
-    } else Log.d(" forkert status="+afspillerstatus);
+    } else Log.d(" forkert status=" + afspillerstatus);
   }
 
-  synchronized private void startAfspilningIntern()  {
+  synchronized private void startAfspilningIntern() {
     Log.d("Starter streaming fra " + kanalNavn);
     Log.d("mediaPlayer.setDataSource( " + kanalUrl);
 
@@ -214,7 +225,11 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
     //if (notification != null) notificationManager.cancelAll();
     // Stop afspillerservicen
     DRData.appCtx.stopService(new Intent(DRData.appCtx, HoldAppIHukommelsenService.class));
-    if (wifilock!=null) try { wifilock.release(); } catch (Exception e) { Log.rapporterFejl(e); } // TODO fjern try/catch
+    if (wifilock != null) try {
+      wifilock.release();
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
+    } // TODO fjern try/catch
     // Informer evt aktivitet der lytter
     for (AfspillerListener observatør : observatører) {
       observatør.onAfspilningStoppet();
@@ -224,21 +239,20 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
 
   /**
    * Sætter notification i toppen af skærmen
-
-  private void opdaterNotification() {
-    if (notification == null) {
-      notification = new Notification(R.drawable.statusbaricon, null, 0);
-
-      // PendingIntent er til at pege på aktiviteten der skal startes hvis brugeren vælger notifikationen
-      notification.contentIntent = PendingIntent.getActivity(DRData.appCtx, 0, new Intent(DRData.appCtx, Afspilning_akt.class), 0);
-      notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT);
-    }
-
-    notification.setLatestEventInfo(DRData.appCtx, PROGRAMNAVN, kanalNavn, notification.contentIntent);
-    notificationManager.notify(NOTIFIKATION_ID, notification);
-  }
-*/
-
+   * <p/>
+   * private void opdaterNotification() {
+   * if (notification == null) {
+   * notification = new Notification(R.drawable.statusbaricon, null, 0);
+   * <p/>
+   * // PendingIntent er til at pege på aktiviteten der skal startes hvis brugeren vælger notifikationen
+   * notification.contentIntent = PendingIntent.getActivity(DRData.appCtx, 0, new Intent(DRData.appCtx, Afspilning_akt.class), 0);
+   * notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT);
+   * }
+   * <p/>
+   * notification.setLatestEventInfo(DRData.appCtx, PROGRAMNAVN, kanalNavn, notification.contentIntent);
+   * notificationManager.notify(NOTIFIKATION_ID, notification);
+   * }
+   */
 
 
   public void addAfspillerListener(AfspillerListener lytter) {
@@ -289,7 +303,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
   private void opdaterWidgets() {
 
     AppWidgetManager mAppWidgetManager = AppWidgetManager.getInstance(DRData.appCtx);
-    int[] appWidgetId=mAppWidgetManager.getAppWidgetIds(new ComponentName(DRData.appCtx, AfspillerWidget.class));
+    int[] appWidgetId = mAppWidgetManager.getAppWidgetIds(new ComponentName(DRData.appCtx, AfspillerWidget.class));
 
     for (int id : appWidgetId) {
       AfspillerWidget.opdaterUdseende(DRData.appCtx, mAppWidgetManager, id);
@@ -300,7 +314,6 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
   public int getAfspillerstatus() {
     return afspillerstatus;
   }
-
 
 
   //
@@ -372,10 +385,10 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
 
   public boolean onError(MediaPlayer mp, int hvad, int extra) {
     //Log.d("onError(" + MedieafspillerInfo.fejlkodeTilStreng(hvad) + "(" + hvad + ") " + extra+ " onErrorTæller="+onErrorTæller);
-    Log.d("onError(" + hvad + ") " + extra+ " onErrorTæller="+onErrorTæller);
+    Log.d("onError(" + hvad + ") " + extra + " onErrorTæller=" + onErrorTæller);
 
 
-    if (Build.VERSION.SDK_INT >= 16 && hvad==MediaPlayer.MEDIA_ERROR_UNKNOWN) {
+    if (Build.VERSION.SDK_INT >= 16 && hvad == MediaPlayer.MEDIA_ERROR_UNKNOWN) {
       // Ignorer, da Samsung Galaxy SIII på Android 4.1 Jelly Bean
       // sender denne fejl (onError(1) -110) men i øvrigt spiller fint videre!
       return true;
@@ -390,17 +403,17 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener,
       // Hvis der har været
       // 1) færre end 10 fejl eller
       // 2) der højest er 1 fejl pr 20 sekunder så prøv igen
-      long dt = System.currentTimeMillis()-onErrorTællerNultid;
+      long dt = System.currentTimeMillis() - onErrorTællerNultid;
 
-      if (onErrorTæller ++<(DRData.udvikling?2:10) || (dt/onErrorTæller>20000) ) {
+      if (onErrorTæller++ < (DRData.udvikling ? 2 : 10) || (dt / onErrorTæller > 20000)) {
         mediaPlayer.stop();
         mediaPlayer.reset();
 
         // Vi venter længere og længere tid her
         int n = onErrorTæller;
-        if (n>11) n=11;
-        int ventetid = 10+ 5 * (1<<n); // fra n=0:10 msek til n=10:5 sek   til max n=11:10 sek
-        Log.d("Ventetid før vi prøver igen: "+ventetid + "  n="+n+" "+onErrorTæller);
+        if (n > 11) n = 11;
+        int ventetid = 10 + 5 * (1 << n); // fra n=0:10 msek til n=10:5 sek   til max n=11:10 sek
+        Log.d("Ventetid før vi prøver igen: " + ventetid + "  n=" + n + " " + onErrorTæller);
         handler.postDelayed(startAfspilningIntern, ventetid);
       } else {
         stopAfspilning(); // Vi giver op efter 10. forsøg
