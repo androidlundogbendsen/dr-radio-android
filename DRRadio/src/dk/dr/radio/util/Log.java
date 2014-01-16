@@ -1,20 +1,20 @@
 /**
-DR Radio 2 is developed by Jacob Nordfalk, Hanafi Mughrabi and Frederik Aagaard.
-Some parts of the code are loosely based on Sveriges Radio Play for Android.
+ DR Radio 2 is developed by Jacob Nordfalk, Hanafi Mughrabi and Frederik Aagaard.
+ Some parts of the code are loosely based on Sveriges Radio Play for Android.
 
-DR Radio 2 for Android is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License version 2 as published by
-the Free Software Foundation.
+ DR Radio 2 for Android is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License version 2 as published by
+ the Free Software Foundation.
 
-DR Radio 2 for Android is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU General Public License for more details.
+ DR Radio 2 for Android is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with
-DR Radio 2 for Android.  If not, see <http://www.gnu.org/licenses/>.
+ You should have received a copy of the GNU General Public License along with
+ DR Radio 2 for Android.  If not, see <http://www.gnu.org/licenses/>.
 
-*/
+ */
 
 package dk.dr.radio.util;
 
@@ -23,14 +23,15 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.DialogInterface;
+
 import com.bugsense.trace.BugSenseHandler;
-import java.util.Date;
 
 /**
  * Loggerklasse
  * - hvor man slipper for at angive tag
  * - man kan logge objekter (få kaldt toString)
  * - cirkulær buffer tillader at man kan gemme loggen til fejlrapportering
+ *
  * @author j
  */
 public class Log {
@@ -61,7 +62,9 @@ public class Log {
     return log.toString();
   }
 
-  /** Logfunktion uden TAG som tager et objekt. Sparer bytekode og tid */
+  /**
+   * Logfunktion uden TAG som tager et objekt. Sparer bytekode og tid
+   */
   public static void d(Object o) {
     String s = String.valueOf(o);
     android.util.Log.d(TAG, s);
@@ -89,14 +92,14 @@ public class Log {
     BugSenseHandler.sendException(e);
     Log.e(e);
 
-    Builder ab=new AlertDialog.Builder(akt);
+    Builder ab = new AlertDialog.Builder(akt);
     ab.setTitle("Beklager, der skete en fejl");
     ab.setMessage(e.toString());
     ab.setNegativeButton("Fortsæt", null);
     ab.setPositiveButton("Indsend fejl", new Dialog.OnClickListener() {
       public void onClick(DialogInterface arg0, int arg1) {
         String brødtekst = "Skriv, hvad der skete:\n\n\n---\n";
-        brødtekst += "\nFejlspor;\n"+android.util.Log.getStackTraceString(e);
+        brødtekst += "\nFejlspor;\n" + android.util.Log.getStackTraceString(e);
         brødtekst += "\n\n" + new MedieafspillerInfo().lavTelefoninfo(akt);
         Kontakt.kontakt(akt, "Fejl DR Radio", brødtekst, Log.log.toString());
       }

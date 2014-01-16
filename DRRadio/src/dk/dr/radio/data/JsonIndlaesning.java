@@ -1,37 +1,23 @@
 /**
-DR Radio 2 is developed by Jacob Nordfalk, Hanafi Mughrabi and Frederik Aagaard.
-Some parts of the code are loosely based on Sveriges Radio Play for Android.
+ DR Radio 2 is developed by Jacob Nordfalk, Hanafi Mughrabi and Frederik Aagaard.
+ Some parts of the code are loosely based on Sveriges Radio Play for Android.
 
-DR Radio 2 for Android is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License version 2 as published by
-the Free Software Foundation.
+ DR Radio 2 for Android is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License version 2 as published by
+ the Free Software Foundation.
 
-DR Radio 2 for Android is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU General Public License for more details.
+ DR Radio 2 for Android is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with
-DR Radio 2 for Android.  If not, see <http://www.gnu.org/licenses/>.
+ You should have received a copy of the GNU General Public License along with
+ DR Radio 2 for Android.  If not, see <http://www.gnu.org/licenses/>.
 
-*/
+ */
 
 package dk.dr.radio.data;
 
-import dk.dr.radio.data.json.spiller_nu.SpillerNuElement;
-import dk.dr.radio.data.json.udsendelser.Udsendelse;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import dk.dr.radio.data.json.udsendelser.Udsendelser;
-import dk.dr.radio.data.json.spiller_nu.SpillerNu;
-import dk.dr.radio.data.json.stamdata.Kanal;
-import dk.dr.radio.data.json.stamdata.Stamdata;
-import dk.dr.radio.util.Log;
-import java.io.BufferedInputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.ArrayList;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
@@ -46,37 +32,53 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+
+import dk.dr.radio.data.json.spiller_nu.SpillerNu;
+import dk.dr.radio.data.json.spiller_nu.SpillerNuElement;
+import dk.dr.radio.data.json.stamdata.Kanal;
+import dk.dr.radio.data.json.stamdata.Stamdata;
+import dk.dr.radio.data.json.udsendelser.Udsendelse;
+import dk.dr.radio.data.json.udsendelser.Udsendelser;
+import dk.dr.radio.util.Log;
+
 
 public class JsonIndlaesning {
 
 
   /**
    * Henter stamdata (faste data)
+   *
    * @throws IOException hvis der er et problem med netværk
-   * eller parsning (dvs interne fejl af forskellig art som bør rapporteres til udvikler)
+   *                     eller parsning (dvs interne fejl af forskellig art som bør rapporteres til udvikler)
    */
-	static Stamdata parseStamdata(String str) throws JSONException
-  {
+  static Stamdata parseStamdata(String str) throws JSONException {
     dt("");
 
     //Log.d("str=\n============="+str+"\n==================");
 
     Stamdata d = new Stamdata();
-    JSONObject json = d.json=new JSONObject(str);
+    JSONObject json = d.json = new JSONObject(str);
 
     d.all = jsonArrayTilArrayListString(json.getJSONArray("kanalkoder"));
     d.p4 = jsonArrayTilArrayListString(json.getJSONArray("p4koder"));
 
-    JSONArray kanaler=json.getJSONArray("kanaler");
-    int antal=kanaler.length();
-    for (int i=0; i<antal; i++) {
-      JSONObject j=kanaler.getJSONObject(i);
+    JSONArray kanaler = json.getJSONArray("kanaler");
+    int antal = kanaler.length();
+    for (int i = 0; i < antal; i++) {
+      JSONObject j = kanaler.getJSONObject(i);
       Kanal k = new Kanal();
-      k.shortName = læsNullSomTom(j,"shortName");
-      k.longName = læsNullSomTom(j,"longName");
-      k.aacUrl = læsNullSomTom(j,"aacUrl");
-      k.rtspUrl = læsNullSomTom(j,"rtspUrl");
-      k.shoutcastUrl = læsNullSomTom(j,"shoutcastUrl");
+      k.shortName = læsNullSomTom(j, "shortName");
+      k.longName = læsNullSomTom(j, "longName");
+      k.aacUrl = læsNullSomTom(j, "aacUrl");
+      k.rtspUrl = læsNullSomTom(j, "rtspUrl");
+      k.shoutcastUrl = læsNullSomTom(j, "shoutcastUrl");
       d.kanaler.add(k);
     }
 
@@ -89,11 +91,10 @@ public class JsonIndlaesning {
     d.kanalerDerSkalViseSpillerNu.addAll(jsonArrayTilArrayListString(json.getJSONArray("vis_spiller_nu")));
 
     return d;
-	}
+  }
 
 
-
-	static Udsendelser hentUdsendelser(String url) throws Exception {
+  static Udsendelser hentUdsendelser(String url) throws Exception {
     String jsondata = hentUrlSomStreng(url);
 
     JSONObject json = new JSONObject(jsondata);
@@ -104,7 +105,7 @@ public class JsonIndlaesning {
     uds.nextProgram = jsonTilUdsendelse(json.getJSONObject("nextProgram"));
     //Log.d("TIDSTAGNING parsning tog "+dt("parsning "+url));
     return uds;
-	}
+  }
 
 
   private static HttpClient httpClient;
@@ -123,7 +124,7 @@ public class JsonIndlaesning {
       httpClient = new DefaultHttpClient(params);
     }
     //dt("");
-    Log.d("Henter "+url);
+    Log.d("Henter " + url);
     //Log.e(new Exception("Henter "+url));
     //InputStream is = new URL(url).openStream();
 
@@ -133,10 +134,10 @@ public class JsonIndlaesning {
 
     String jsondata = læsInputStreamSomStreng(is);
     //Log.d("Hentede "+url+" på "+dt("hente "+url));
-    
+
     // frederik: GratisDanmark fix: Strip the file of XML tags that might ruin the JSON format
-    jsondata.replaceAll("<[^>]*>","") ;
-    
+    jsondata.replaceAll("<[^>]*>", "");
+
     return jsondata;
   }
 
@@ -147,7 +148,10 @@ public class JsonIndlaesning {
     // Hop over BOM - hvis den er der!
     is = new BufferedInputStream(is);  // bl.a. FileInputStream understøtter ikke mark, så brug BufferedInputStream
     is.mark(1); // vi har faktisk kun brug for at søge én byte tilbage
-    if (is.read() == 0xef) { is.read(); is.read(); } // Der var en BOM! Læs de sidste 2 byte
+    if (is.read() == 0xef) {
+      is.read();
+      is.read();
+    } // Der var en BOM! Læs de sidste 2 byte
     else is.reset(); // Der var ingen BOM - hop tilbage til start
 
 
@@ -157,10 +161,10 @@ public class JsonIndlaesning {
     int read;
     do {
       read = in.read(buffer, 0, buffer.length);
-      if (read>0) {
+      if (read > 0) {
         out.append(buffer, 0, read);
       }
-    } while (read>=0);
+    } while (read >= 0);
     in.close();
     String jsondata = out.toString();
     return jsondata;
@@ -168,22 +172,23 @@ public class JsonIndlaesning {
 
 
   static int nummer = 0;
-	static SpillerNu hentSpillerNuListe(String url) throws Exception {
 
-		//ObjectMapper mapper = new ObjectMapper();
+  static SpillerNu hentSpillerNuListe(String url) throws Exception {
+
+    //ObjectMapper mapper = new ObjectMapper();
     String str = hentUrlSomStreng(url);
     SpillerNu d = new SpillerNu(); //mapper.readValue(jsondata, SpillerNu.class);
 
     JSONObject json = new JSONObject(str);
-    JSONArray liste=json.getJSONArray("tracks");
-    int antal=liste.length();
-    for (int i=0; i<antal; i++) {
-      JSONObject j=liste.getJSONObject(i);
+    JSONArray liste = json.getJSONArray("tracks");
+    int antal = liste.length();
+    for (int i = 0; i < antal; i++) {
+      JSONObject j = liste.getJSONObject(i);
       SpillerNuElement e = new SpillerNuElement();
-      e.title = læsNullSomTom(j,"title");
-      e.displayArtist = læsNullSomTom(j,"displayArtist");
-      e.lastFM = læsNullSomTom(j,"lastFM");
-      e.start = læsNullSomTom(j,"start");
+      e.title = læsNullSomTom(j, "title");
+      e.displayArtist = læsNullSomTom(j, "displayArtist");
+      e.lastFM = læsNullSomTom(j, "lastFM");
+      e.start = læsNullSomTom(j, "start");
       d.liste.add(e);
     }
 
@@ -192,9 +197,11 @@ public class JsonIndlaesning {
     //if (nummer++ % 10 == 0) Log.d("TIDSTAGNING\n===============\n"+tidstagning.toString().replace(',', '\n')+"\n================== Kørt i sek: "+(System.currentTimeMillis() - førsteTid)/1000);
     return d;
 
-	}
+  }
 
-  private static String dt(String hvad) { return hvad; }
+  private static String dt(String hvad) {
+    return hvad;
+  }
   /*
   private static long førsteTid;
   private static long sidsteTid;
@@ -218,7 +225,7 @@ public class JsonIndlaesning {
   public static ArrayList<String> jsonArrayTilArrayListString(JSONArray j) throws JSONException {
     int n = j.length();
     ArrayList<String> res = new ArrayList<String>(n);
-    for (int i=0; i<n; i++) {
+    for (int i = 0; i < n; i++) {
       res.add(j.getString(i));
     }
     return res;
@@ -226,14 +233,14 @@ public class JsonIndlaesning {
 
   private static Udsendelse jsonTilUdsendelse(JSONObject j) throws JSONException {
     Udsendelse u = new Udsendelse();
-    u.description = læsNullSomTom(j,"description");
-    u.start = læsNullSomTom(j,"start");
-    u.stop = læsNullSomTom(j,"stop");
-    u.title = læsNullSomTom(j,"title");
+    u.description = læsNullSomTom(j, "description");
+    u.start = læsNullSomTom(j, "start");
+    u.stop = læsNullSomTom(j, "stop");
+    u.title = læsNullSomTom(j, "title");
     return u;
   }
 
   private static String læsNullSomTom(JSONObject j, String string) {
-		return j.optString(string,"");
+    return j.optString(string, "");
   }
 }

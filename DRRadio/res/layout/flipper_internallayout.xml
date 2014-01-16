@@ -1,76 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/FlipperLinearLayout"
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="horizontal"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent">
- 	
-    <LinearLayout android:id="@+id/FlipperTrackPictureLinearLayout"
-    	android:layout_width="wrap_content"
-  		android:layout_height="wrap_content"
-  		android:orientation="vertical"
-  		>
-  		
-  		<ImageView android:id="@+id/FlipperImageImageView"  				
-  				android:layout_width="75dp"
-  				android:layout_height="75dp">
-  		</ImageView>
-  		
-  		<TextView android:id="@+id/FlipperLastFmTextTextView"  			
-  				android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:text="Last.fm"
-  				android:textSize="@dimen/player_track_lastfm_size">
-  		</TextView>
+<LinearLayout
+        android:id="@+id/FlipperLinearLayout"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+    <LinearLayout
+            android:id="@+id/FlipperTrackPictureLinearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+        <ImageView
+                android:id="@+id/FlipperImageImageView"
+                android:layout_width="75dp"
+                android:layout_height="75dp">
+        </ImageView>
+
+        <TextView
+                android:id="@+id/FlipperLastFmTextTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last.fm"
+                android:textSize="@dimen/player_track_lastfm_size">
+        </TextView>
     </LinearLayout>
 
-   
-     <LinearLayout android:id="@+id/FlipperTrackInfolinearLayout"
-    	android:layout_width="wrap_content"
-  		android:layout_height="wrap_content"
-  		android:orientation="vertical"
-  		android:paddingLeft="5dp"
-        android:paddingRight="5dp">
-  		
-  		<TextView android:id="@+id/FlipperTrackTitleHeaderTextView"  			
-  				android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:text="SENESTE TITEL"
-  				android:textSize="@dimen/player_track_header_size"
-  				android:paddingTop="2dp"
-        		android:paddingBottom="5dp"
-        		android:maxLines="1"
-        		>
-  		</TextView>
-  		<TextView android:id="@+id/FlipperTrackTitleTextView"  			
-  				android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:text="Radioactive"  				
-        		android:paddingBottom="0dp"
-        		android:textSize="@dimen/player_track_title_size"
-        		android:textColor="@android:color/white"
-        		android:maxLines="1">
-  		</TextView>
-  		<TextView android:id="@+id/FlipperTrackDisplayArtistTextView"
-  			android:src="@drawable/trackpic"
-  				android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:text="Mariana and The Diamonds"
-  				android:paddingBottom="10dp"
-  				android:textSize="@dimen/player_track_artist_size"
-  				android:textColor="@android:color/white"
-  				android:maxLines="1">
-  		</TextView>
-  		<TextView android:id="@+id/FlipperTrackStartTimeTextView"
-  			android:src="@drawable/trackpic"
-  				android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:text="Afspillet kl. 16:11"
-  				android:textSize="@dimen/player_track_starttime_size"
-  				android:textColor="@android:color/white"
-  				android:maxLines="1">
-  		</TextView>
-  		
+
+    <LinearLayout
+            android:id="@+id/FlipperTrackInfolinearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
+
+        <TextView
+                android:id="@+id/FlipperTrackTitleHeaderTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SENESTE TITEL"
+                android:textSize="@dimen/player_track_header_size"
+                android:paddingTop="2dp"
+                android:paddingBottom="5dp"
+                android:maxLines="1"
+                >
+        </TextView>
+
+        <TextView
+                android:id="@+id/FlipperTrackTitleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Radioactive"
+                android:paddingBottom="0dp"
+                android:textSize="@dimen/player_track_title_size"
+                android:textColor="@android:color/white"
+                android:maxLines="1">
+        </TextView>
+
+        <TextView
+                android:id="@+id/FlipperTrackDisplayArtistTextView"
+                android:src="@drawable/trackpic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mariana and The Diamonds"
+                android:paddingBottom="10dp"
+                android:textSize="@dimen/player_track_artist_size"
+                android:textColor="@android:color/white"
+                android:maxLines="1">
+        </TextView>
+
+        <TextView
+                android:id="@+id/FlipperTrackStartTimeTextView"
+                android:src="@drawable/trackpic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Afspillet kl. 16:11"
+                android:textSize="@dimen/player_track_starttime_size"
+                android:textColor="@android:color/white"
+                android:maxLines="1">
+        </TextView>
+
     </LinearLayout>
-    
+
 </LinearLayout>

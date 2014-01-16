@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-<!--
-	<item android:id="@+id/vækkeur"
-				android:icon="@drawable/deskclock_ic_menu_alarms"
-				android:showAsAction="ifRoom|withText"
-				android:title="Vækkeur" />
--->
-	<item android:id="@+id/om"
-				android:icon="@android:drawable/ic_menu_help"
-				android:showAsAction="ifRoom|withText"
-				android:title="Om" />
+    <!--
+        <item android:id="@+id/vækkeur"
+                    android:icon="@drawable/deskclock_ic_menu_alarms"
+                    android:showAsAction="ifRoom|withText"
+                    android:title="Vækkeur" />
+    -->
+    <item
+            android:id="@+id/om"
+            android:icon="@android:drawable/ic_menu_help"
+            android:showAsAction="ifRoom|withText"
+            android:title="Om"/>
 
-	<item android:id="@+id/indstillinger"
-				android:icon="@android:drawable/ic_menu_preferences"
-				android:showAsAction="ifRoom|withText"
-				android:title="Indstillinger" />
+    <item
+            android:id="@+id/indstillinger"
+            android:icon="@android:drawable/ic_menu_preferences"
+            android:showAsAction="ifRoom|withText"
+            android:title="Indstillinger"/>
 
-	<item android:id="@+id/sluk"
-				android:icon="@android:drawable/ic_menu_close_clear_cancel"
-				android:showAsAction="ifRoom|withText"
-				android:title="Sluk" />
+    <item
+            android:id="@+id/sluk"
+            android:icon="@android:drawable/ic_menu_close_clear_cancel"
+            android:showAsAction="ifRoom|withText"
+            android:title="Sluk"/>
 
 </menu>
