@@ -72,7 +72,7 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
         lydformatlp.setOnPreferenceChangeListener(this);
         aktueltLydformat = lydformatlp.getValue();
       } catch (Exception ex) {
-        Log.kritiskFejlStille(ex);
+        Log.rapporterFejl(ex);
       }
    }
 

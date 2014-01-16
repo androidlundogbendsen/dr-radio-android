@@ -2,14 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="dk.dr.radio"
       android:versionCode="30"
-      android:versionName="2.8.0">
+      android:versionName="2.9.0">
 
-  <!--
-  Jacob jeg ville gerne sætte android:minSdkVersion="3" da app'en kan starte på Android 1.5
-  dog har jeg ikke set nogle eksempler på at det rent faktisk har fungeret, det har jeg
-  kun set på Android 1.6 (android:minSdkVersion="4").
-  -->
-  <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="9" />
+  <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="18" />
 
 
   <uses-permission android:name="android.permission.INTERNET"></uses-permission>

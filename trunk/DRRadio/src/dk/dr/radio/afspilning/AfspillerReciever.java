@@ -52,7 +52,7 @@ public class AfspillerReciever extends BroadcastReceiver {
       }
 
     } catch (Exception ex) {
-      Log.kritiskFejlStille(ex);
+      Log.rapporterFejl(ex);
     }
   }
 }

@@ -81,6 +81,6 @@ public class Om_DRRadio_akt extends Activity implements OnClickListener {
     brødtekst += "\nkanal: " + DRData.instans.afspiller.kanalNavn+" ("+DRData.instans.afspiller.kanalUrl+")";
     brødtekst += "\n" + new MedieafspillerInfo().lavTelefoninfo(Om_DRRadio_akt.this);
 
-    Kontakt.kontakt(this, EMAILSUBJECT, brødtekst, Log.log.toString());
+    Kontakt.kontakt(this, EMAILSUBJECT, brødtekst, Log.getLog());
   }
 }

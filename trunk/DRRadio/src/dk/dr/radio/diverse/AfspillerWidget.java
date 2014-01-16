@@ -60,7 +60,7 @@ public class AfspillerWidget extends AppWidgetProvider {
       // for sørge for at vores knapper får tilknyttet intentsne
       opdaterUdseende(ctx, appWidgetManager, appWidgetIds[0]);
     } catch (Exception ex) {
-      Log.kritiskFejlStille(ex);
+      Log.rapporterFejl(ex);
     }
   }
 

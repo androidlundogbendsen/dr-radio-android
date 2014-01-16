@@ -104,7 +104,7 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 			afspiller = drdata.afspiller;
 		} catch (Exception ex) {
 			// TODO popop-advarsel til bruger om intern fejl og rapporter til udvikler-dialog
-			Log.kritiskFejl(this, ex);
+			Log.rapporterOgvisFejl(this, ex);
 			return;
 		}
 
@@ -122,7 +122,7 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 			visNæsteUdsendelse();
 			visSpillerNuInfo();
 		} catch (Exception e) {
-			Log.kritiskFejlStille(e);
+			Log.rapporterFejl(e);
 		}
 
 		visStartStopKnap();
@@ -148,12 +148,9 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 		afspiller.addAfspillerListener(drdata.rapportering);
 	}
 
-	// For Android 1.6-kompetibilitet bruger vi ikke onBackPressed()
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode != KeyEvent.KEYCODE_BACK) {
-			return super.onKeyDown(keyCode, event);
-		}
+	public void onBackPressed() {
+		super.onBackPressed();
 
 		AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 		int volumen = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -163,15 +160,13 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 		// Hvis der er skruet helt ned så stop afspilningen
 		if (volumen == 0 && afspiller.afspillerstatus != Afspiller.STATUS_STOPPET) {
 			afspiller.stopAfspilning();
-			finish();
+			super.onBackPressed();
 		} else if (afspiller.afspillerstatus == Afspiller.STATUS_STOPPET) {
-			finish();
+			super.onBackPressed();
 		} else {
 			// Spørg brugeren om afspilningen skal stoppes
 			showDialog(1);
 		}
-
-		return true;
 	}
 
 	@Override
@@ -328,7 +323,7 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 			visNæsteUdsendelse();
 			visSpillerNuInfo();
 		} catch (Exception e) {
-			Log.kritiskFejl(this, e);
+			Log.rapporterOgvisFejl(this, e);
 		}
 	}
 
@@ -389,49 +384,19 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 	}
 
 	public void onAfspilningStartet() {
-		//Log.d( "onAfspilningStartet()" ) ;
-		//startStopButton.setImageResource(R.drawable.pause_white);
 		visStatus("Afspiller");
 		visStartStopKnap();
 	}
 
 	public void onAfspilningStoppet() {
-		//Log.d( "onAfspilningStoppet()" ) ;
-		//startStopButton.setImageResource(R.drawable.play_white);
 		visStatus("Stoppet");
 		visStartStopKnap();
-		// Rapportering
-
-		if (Log.RAPPORTER_VELLYKKET_AFSPILNING) {
-			String rapNøgle = "rapport_" + drdata.rapportering.lydformat;
-			boolean rapporteret = prefs.getBoolean(rapNøgle, false);
-			if (!rapporteret) {
-				String rapport = drdata.rapportering.rapport();
-				if (rapport != null) {
-					Log.d("Indsender rapport: " + rapport);
-					//ErrorReporter.getInstance().putCustomData(drdata.rapportering.lydformat, rapport);
-					//ErrorReporter.getInstance().handleSilentException(null);
-					prefs.edit().putBoolean(rapNøgle, true).commit();
-					if (DRData.udvikling) {
-						DRData.toast("Sender rapport for " + drdata.rapportering.lydformat);
-					}
-				}
-			}
-		}
-
-		if (DRData.udvikling) {
-			String rapport = drdata.rapportering.rapport();
-			if (rapport != null) {
-				DRData.toast(rapport);
-			}
-		}
 	}
 
 	public void onAfspilningForbinder(int procent) {
 		if (procent >= 100) {
 			onAfspilningStartet();
 		} else {
-			//startStopButton.setImageResource(R.drawable.buffer_white);
 			sætForbinderProcent(procent);
 		}
 	}
@@ -503,7 +468,7 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 				visAktuelUdsendelse();
 				visNæsteUdsendelse();
 			} catch (Exception e) {
-				Log.kritiskFejlStille(e);
+				Log.rapporterFejl(e);
 			}
 		}
 	};

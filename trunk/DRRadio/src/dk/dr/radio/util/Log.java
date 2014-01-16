@@ -24,6 +24,7 @@ import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import com.bugsense.trace.BugSenseHandler;
+import java.util.Date;
 
 /**
  * Loggerklasse
@@ -35,16 +36,29 @@ import com.bugsense.trace.BugSenseHandler;
 public class Log {
   public static final String TAG = "DRRadio";
 
-  // Fjernet da det ser ud til at overbelaste regnearket
-  public static final boolean RAPPORTER_VELLYKKET_AFSPILNING = false;
+  private static final StringBuilder log = new StringBuilder(18000);
 
-  public static StringBuilder log = new StringBuilder(18000);
-
-  private static void logappend(String s) {
+  /**
+   * Føjer data til loggen.
+   * Er loggen blevet for lang trimmes den.
+   * Er synkroniseret da der enkelte gange er blevet set crashes fordi der blev skrevet
+   * loggen samtidig med at den var ved at blive trimmet.
+   * Af performancehensyn bør logning nok begrænses til kun at omfatte det vi som udviklere
+   * tror vil afhjælpe en evt senere fejlfinding
+   */
+  private static synchronized void logappend(String s) {
+    if (log.length() > 57500) {
+      log.delete(0, 10000);
+    }
     // Roterende log
-    log.append(s);
+    int n = s.length();
+    if (n > 10000) n = 10000;
+    log.append(s, 0, n);
     log.append('\n');
-    if (log.length()>17500) log.delete(0, 7000);
+  }
+
+  public static synchronized String getLog() {
+    return log.toString();
   }
 
   /** Logfunktion uden TAG som tager et objekt. Sparer bytekode og tid */
@@ -65,13 +79,13 @@ public class Log {
   }
 
 
-  public static void kritiskFejlStille(final Exception e) {
+  public static void rapporterFejl(final Exception e) {
     BugSenseHandler.sendException(e);
     Log.e(e);
   }
 
 
-  public static void kritiskFejl(final Activity akt, final Exception e) {
+  public static void rapporterOgvisFejl(final Activity akt, final Exception e) {
     BugSenseHandler.sendException(e);
     Log.e(e);
 
