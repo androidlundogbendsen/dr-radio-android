@@ -29,13 +29,11 @@ import android.os.Build;
 public class MedieafspillerInfo {
 
 
-  public String build_prop_stagefright;
-
   public String lavTelefoninfo(Activity a) {
     String ret = "";
 
     PackageManager pm = a.getPackageManager();
-    String version = "(ukendt)";
+    String version;
     try {
       PackageInfo pi = pm.getPackageInfo(a.getPackageName(), 0);
       version = pi.versionName;

@@ -62,10 +62,6 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
   //public static final int WIDGET_HENT_INFO = 10;
   public static final int WIDGET_START_ELLER_STOP = 11;
 
-  /**
-   * Afspillerens status - bruges også i broadcasts
-   */
-  public static final int STATUS_UDEFINERET = 0;
   public static final int STATUS_STOPPET = 1;
   public static final int STATUS_FORBINDER = 2;
   public static final int STATUS_SPILLER = 3;
@@ -444,9 +440,4 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
   }
 
 
-  public void lukNed() {
-    stopAfspilning();
-    //notificationManager.cancelAll(); // Luk notifikationen
-    tm.listen(opkaldshåndtering, PhoneStateListener.LISTEN_NONE);
-  }
 }

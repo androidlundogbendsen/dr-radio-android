@@ -18,8 +18,6 @@
 
 package dk.dr.radio.util;
 
-import android.text.Html;
-
 public class StringUtil {
 
   public static String getTimeFromDate(String date) {
@@ -34,11 +32,6 @@ public class StringUtil {
       }
     }
     return time;
-  }
-
-  public static String stripHtml(String htmlString) {
-    Log.d("stripHtml(" + htmlString);
-    return Html.fromHtml(htmlString).toString();
   }
 
   public static String limitString(String stringToLimit, String maxStringLimit) {

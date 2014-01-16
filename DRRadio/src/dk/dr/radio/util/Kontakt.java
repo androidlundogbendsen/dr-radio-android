@@ -36,7 +36,7 @@ public class Kontakt {
 
   public static void kontakt(Activity akt, String emne, String txt, String vedhæftning) {
 
-    String[] modtagere = null;
+    String[] modtagere;
     try {
       modtagere = JsonIndlaesning.jsonArrayTilArrayListString(DRData.instans.stamdata.json.getJSONArray("feedback_modtagere")).toArray(new String[0]);
     } catch (Exception ex) {
@@ -52,6 +52,7 @@ public class Kontakt {
 
     if (vedhæftning != null) try {
       String xmlFilename = "programlog.txt";
+      //noinspection AccessStaticViaInstance
       FileOutputStream fos = akt.openFileOutput(xmlFilename, akt.MODE_WORLD_READABLE);
       fos.write(vedhæftning.getBytes());
       fos.close();

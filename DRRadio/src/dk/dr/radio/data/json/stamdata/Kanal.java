@@ -24,7 +24,6 @@ public class Kanal {
   public String longName;
   public String shoutcastUrl;
   public String aacUrl;
-  public String streamURL;
   public String rtspUrl;
 
 
