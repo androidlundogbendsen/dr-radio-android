@@ -25,12 +25,15 @@ package dk.dr.radio.diverse;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
@@ -46,16 +49,73 @@ import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.JsonIndlaesning;
 
 public class App extends Application {
-  public static Context appCtx;
+  public static Context ctx;
   public static SharedPreferences prefs;
-  private static ConnectivityManager connMgr;
+  private static ConnectivityManager connectivityManager;
+  private static String versionName;
+  public static NotificationManager notificationManager;
+
+
+  @Override
+  public void onCreate() {
+    // The following line triggers the initialization of ACRA
+    BugSenseHandler.initAndStartSession(this, "57c90f98");
+    super.onCreate();
+
+    ctx = this;
+    connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+    // HTTP-forbindelser havde en fejl præ froyo, men jeg har også set problemet på Xperia Play, der er 2.3.4 (!)
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+      System.setProperty("http.keepAlive", "false");
+    }
+    try {
+      Class.forName("android.os.AsyncTask"); // Fix for http://code.google.com/p/android/issues/detail?id=20915
+      App.versionName = App.ctx.getPackageManager().getPackageInfo(App.ctx.getPackageName(), PackageManager.GET_ACTIVITIES).versionName;
+      if (Log.EMULATOR) App.versionName += " UDV";
+      App.versionName += "/" + Build.MODEL + " " + Build.PRODUCT;
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
+    }
+
+
+    try {
+      DRData.instans = new DRData();
+
+      // indlæs stamdata fra Prefs hvis de findes
+      String stamdatastr = prefs.getString(DRData.STAMDATA_URL, null);
+
+      if (stamdatastr == null) {
+        // Indlæs fra raw this vi ikke har nogle cachede stamdata i prefs
+        InputStream is = getResources().openRawResource(R.raw.stamdata_android29);
+        stamdatastr = JsonIndlaesning.læsInputStreamSomStreng(is);
+      }
+
+      DRData.instans.stamdata = JsonIndlaesning.parseStamdata(stamdatastr);
+
+      // Kanalvalg. Tjek først Preferences, brug derefter JSON-filens forvalgte kanal
+      DRData.instans.aktuelKanalkode = prefs.getString(DRData.NØGLE_kanal, DRData.instans.aktuelKanalkode = DRData.instans.stamdata.json.optString("forvalgt"));
+      DRData.instans.aktuelKanal = DRData.instans.stamdata.kanalkodeTilKanal.get(DRData.instans.aktuelKanalkode);
+
+      DRData.instans.afspiller = new Afspiller();
+
+      String url = DRData.instans.findKanalUrlFraKode(DRData.instans.aktuelKanal);
+      DRData.instans.afspiller.setKanal(DRData.instans.aktuelKanal.longName, url);
+    } catch (Exception ex) {
+      // TODO popop-advarsel til bruger om intern fejl og rapporter til udvikler-dialog
+      Log.rapporterFejl(ex);
+    }
+  }
+
 
   /*
      * Version fra
      * http://developer.android.com/training/basics/network-ops/managing.html
      */
   public static boolean erOnline() {
-    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
     return (networkInfo != null && networkInfo.isConnected());
   }
 
@@ -98,56 +158,8 @@ public class App extends Application {
   }
 
   public static void toast(String info) {
-    Toast.makeText(appCtx, info, Toast.LENGTH_LONG).show();
+    Toast.makeText(ctx, info, Toast.LENGTH_LONG).show();
   }
 
-
-  @Override
-  public void onCreate() {
-    // The following line triggers the initialization of ACRA
-    BugSenseHandler.initAndStartSession(this, "57c90f98");
-    super.onCreate();
-
-    connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-    try {
-      DRData result;
-
-      synchronized (DRData.class) {
-        appCtx = getApplicationContext();
-        if (DRData.instans == null) {
-          prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-          // indlæs stamdata fra Prefs hvis de findes
-          String stamdatastr = prefs.getString(DRData.STAMDATA_URL, null);
-
-          if (stamdatastr == null) {
-            // Indlæs fra raw this vi ikke har nogle cachede stamdata i prefs
-            InputStream is = getResources().openRawResource(R.raw.stamdata_android29);
-            stamdatastr = JsonIndlaesning.læsInputStreamSomStreng(is);
-          }
-
-          DRData.instans = new DRData();
-          DRData.instans.stamdata = JsonIndlaesning.parseStamdata(stamdatastr);
-
-          // Kanalvalg. Tjek først Preferences, brug derefter JSON-filens forvalgte kanal
-          if (DRData.instans.aktuelKanalkode == null)
-            DRData.instans.aktuelKanalkode = prefs.getString(DRData.NØGLE_kanal, null);
-          if (DRData.instans.aktuelKanalkode == null)
-            DRData.instans.aktuelKanalkode = DRData.instans.stamdata.json.optString("forvalgt");
-          DRData.instans.aktuelKanal = DRData.instans.stamdata.kanalkodeTilKanal.get(DRData.instans.aktuelKanalkode);
-
-          DRData.instans.afspiller = new Afspiller();
-
-          String url = DRData.instans.findKanalUrlFraKode(DRData.instans.aktuelKanal);
-          DRData.instans.afspiller.setKanal(DRData.instans.aktuelKanal.longName, url);
-        }
-        result = DRData.instans;
-      }
-    } catch (Exception ex) {
-      // TODO popop-advarsel til bruger om intern fejl og rapporter til udvikler-dialog
-      Log.rapporterFejl(ex);
-      return;
-    }
-  }
 
 }
