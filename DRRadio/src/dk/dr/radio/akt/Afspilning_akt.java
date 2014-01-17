@@ -317,9 +317,9 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
       return;
     }
     if (afspiller.getAfspillerstatus() == Afspiller.STATUS_STOPPET) {
-      playStopButton.setImageResource(R.drawable.play);
+      playStopButton.setImageResource(R.drawable.afspilning_start);
     } else {
-      playStopButton.setImageResource(R.drawable.stop);
+      playStopButton.setImageResource(R.drawable.afspilning_stop);
     }
   }
 

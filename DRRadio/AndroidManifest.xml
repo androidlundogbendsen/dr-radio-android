@@ -9,13 +9,12 @@
             android:targetSdkVersion="19"/>
 
 
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <!--
-      <uses-feature android:name="android.hardware.screen.portrait" android:required="false" />
-    -->
+    <!-- For at kunne gemme podcasts -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
 
     <application
@@ -28,6 +27,7 @@
         <activity
                 android:name=".akt.Splash_akt"
                 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+                android:noHistory="true"
                 android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -38,25 +38,22 @@
                 android:name="dk.dr.radio.akt.Afspilning_akt"
                 android:theme="@android:style/Theme.NoTitleBar"
                 android:label="DR Radio"
-                android:launchMode="singleTask"
-                android:screenOrientation="portrait">
+                android:launchMode="singleTask">
         </activity>
         <activity
                 android:name="dk.dr.radio.akt.Om_DRRadio_akt"
-                android:label="Om DR Radio"
-                android:screenOrientation="portrait">
+                android:label="Om DR Radio">
         </activity>
         <activity
                 android:name="dk.dr.radio.akt.Kanalvalg_akt"
                 android:theme="@android:style/Theme.NoTitleBar"
                 android:label="Kanalvalg"
-                android:noHistory="true"
-                android:screenOrientation="portrait">
+                android:noHistory="true">
         </activity>
         <activity
                 android:name="dk.dr.radio.akt.Indstillinger_akt"
-                android:label="DR Radio Indstillinger"
-                android:screenOrientation="portrait">
+                android:label="DR Radio Indstillinger">
+            <!-- Gør aktivitet synlig i forbindelse med at brugeren gennemser sit dataforbrug -->
             <intent-filter>
                 <action android:name="android.intent.action.MANAGE_NETWORK_USAGE"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -94,9 +91,6 @@
                 android:label="DR Radio">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-                <!-- Denne skal IKKE være i manifestet da det gør at widgetten instantieres når servicen sender broadcastet!
-                <action android:name="dk.dr.radio.afspiller.OPDATERING_STARTSTOP_væk_fjernet"></action>
-                -->
             </intent-filter>
             <meta-data
                     android:name="android.appwidget.provider"

@@ -135,7 +135,7 @@ public class Kanalvalg_akt extends ListActivity {
       if (position == p4indeks) {
         sætP4ikon(ikon);
       } else if (DRData.instans.aktuelKanalkode.equals(kanalkode)) {
-        ikon.setImageResource(R.drawable.icon_playing);
+        ikon.setImageResource(R.drawable.kanalvalg_spiller);
         ikon.blindetekst = "Spiller nu";
       } else ikon.setVisibility(View.INVISIBLE);
       if (id != 0) {
@@ -183,7 +183,7 @@ public class Kanalvalg_akt extends ListActivity {
 
 
   private void sætP4ikon(ImageViewTilBlinde ikon) {
-    ikon.setImageResource(p4erÅbnet ? R.drawable.icon_minus : R.drawable.icon_plus);
+    ikon.setImageResource(p4erÅbnet ? R.drawable.kanalvalg_minus : R.drawable.kanalvalg_plus);
     ikon.blindetekst = (p4erÅbnet ? "Luk" : "Åben");
   }
 

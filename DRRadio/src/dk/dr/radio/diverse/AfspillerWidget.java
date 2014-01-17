@@ -60,73 +60,72 @@ public class AfspillerWidget extends AppWidgetProvider {
 
   public static void opdaterUdseende(Context ctx, AppWidgetManager appWidgetManager, int appWidgetId) {
     Log.d("AfspillerWidget opdaterUdseende()");
-    RemoteViews updateViews = new RemoteViews(ctx.getPackageName(), R.layout.afspillerwidget);
 
-    Intent startStopI = new Intent(ctx, AfspillerReciever.class);
+    RemoteViews remoteViews = lavRemoteViews();
+
+    appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+  }
+
+  public static RemoteViews lavRemoteViews() {
+
+    RemoteViews remoteViews = new RemoteViews(App.ctx.getPackageName(), R.layout.afspillerwidget);
+
+    Intent startStopI = new Intent(App.ctx, AfspillerReciever.class);
     startStopI.putExtra("flag", Afspiller.WIDGET_START_ELLER_STOP);
-    PendingIntent pi = PendingIntent.getBroadcast(ctx, 0, startStopI, PendingIntent.FLAG_UPDATE_CURRENT);
-    updateViews.setOnClickPendingIntent(R.id.startStopKnap, pi);
+    PendingIntent pi = PendingIntent.getBroadcast(App.ctx, 0, startStopI, PendingIntent.FLAG_UPDATE_CURRENT);
+    remoteViews.setOnClickPendingIntent(R.id.startStopKnap, pi);
 
 
-    Intent åbnAktivitetI = new Intent(ctx, Afspilning_akt.class);
-    PendingIntent pi2 = PendingIntent.getActivity(ctx, 0, åbnAktivitetI, PendingIntent.FLAG_UPDATE_CURRENT);
-    updateViews.setOnClickPendingIntent(R.id.yderstelayout, pi2);
+    Intent åbnAktivitetI = new Intent(App.ctx, Afspilning_akt.class);
+    PendingIntent pi2 = PendingIntent.getActivity(App.ctx, 0, åbnAktivitetI, PendingIntent.FLAG_UPDATE_CURRENT);
+    remoteViews.setOnClickPendingIntent(R.id.yderstelayout, pi2);
 
 
-    /*
-    boolean visProgressbar = false;
-    boolean visKanalnavn = false;
-    boolean visKanaltekst = false;
-    int startStopKnapResId = R.drawable.widget_radio_play;
-     */
-
-    DRData drData = DRData.instans;
-    if (drData != null) {
-      Resources res = ctx.getResources();
-      String kanalkode = drData.aktuelKanalkode;
+    if (DRData.instans != null) {
+      Resources res = App.ctx.getResources();
+      String kanalkode = DRData.instans.aktuelKanalkode;
       // tjek om der er et billede i 'drawable' med det navn filnavn
-      int id = res.getIdentifier("kanal_" + kanalkode.toLowerCase(), "drawable", ctx.getPackageName());
+      int id = res.getIdentifier("kanal_" + kanalkode.toLowerCase(), "drawable", App.ctx.getPackageName());
 
 
       if (id != 0) {
         // Element med billede
-        updateViews.setViewVisibility(R.id.kanalnavn, View.GONE);
-        updateViews.setViewVisibility(R.id.billede, View.VISIBLE);
-        updateViews.setImageViewResource(R.id.billede, id);
+        remoteViews.setViewVisibility(R.id.kanalnavn, View.GONE);
+        remoteViews.setViewVisibility(R.id.billede, View.VISIBLE);
+        remoteViews.setImageViewResource(R.id.billede, id);
       } else {
         // Element uden billede
-        updateViews.setViewVisibility(R.id.kanalnavn, View.VISIBLE);
-        updateViews.setViewVisibility(R.id.billede, View.GONE);
-        updateViews.setTextViewText(R.id.kanalnavn, drData.aktuelKanal.longName);
+        remoteViews.setViewVisibility(R.id.kanalnavn, View.VISIBLE);
+        remoteViews.setViewVisibility(R.id.billede, View.GONE);
+        remoteViews.setTextViewText(R.id.kanalnavn, DRData.instans.aktuelKanal.longName);
       }
 
 
-      int afspillerstatus = drData.afspiller.getAfspillerstatus();
+      int afspillerstatus = DRData.instans.afspiller.getAfspillerstatus();
 
       if (afspillerstatus == Afspiller.STATUS_STOPPET) {
-        updateViews.setImageViewResource(R.id.startStopKnap, R.drawable.widget_radio_play);
-        updateViews.setViewVisibility(R.id.progressbar, View.INVISIBLE);
+        remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.widget_afspilning_start);
+        remoteViews.setViewVisibility(R.id.progressbar, View.INVISIBLE);
       } else if (afspillerstatus == Afspiller.STATUS_FORBINDER) {
-        updateViews.setImageViewResource(R.id.startStopKnap, R.drawable.widget_radio_stop);
-        updateViews.setViewVisibility(R.id.progressbar, View.VISIBLE);
+        remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.widget_afspilning_stop);
+        remoteViews.setViewVisibility(R.id.progressbar, View.VISIBLE);
       } else if (afspillerstatus == Afspiller.STATUS_SPILLER) {
-        updateViews.setImageViewResource(R.id.startStopKnap, R.drawable.widget_radio_stop);
-        updateViews.setViewVisibility(R.id.progressbar, View.INVISIBLE);
+        remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.widget_afspilning_stop);
+        remoteViews.setViewVisibility(R.id.progressbar, View.INVISIBLE);
       } else {
         Log.e(new Exception("Ugyldig afspillerstatus: " + afspillerstatus));
-        updateViews.setImageViewResource(R.id.startStopKnap, R.drawable.icon_minus);
-        updateViews.setViewVisibility(R.id.progressbar, View.INVISIBLE);
+        remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.kanalvalg_minus);
+        remoteViews.setViewVisibility(R.id.progressbar, View.INVISIBLE);
       }
     } else {
       // Ingen instans eller service oprettet - dvs afspiller kører ikke
-      updateViews.setImageViewResource(R.id.startStopKnap, R.drawable.widget_radio_play);
-      updateViews.setViewVisibility(R.id.progressbar, View.INVISIBLE);
-      updateViews.setViewVisibility(R.id.kanalnavn, View.GONE);
-      updateViews.setViewVisibility(R.id.billede, View.GONE);
+      remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.widget_afspilning_start);
+      remoteViews.setViewVisibility(R.id.progressbar, View.INVISIBLE);
+      remoteViews.setViewVisibility(R.id.kanalnavn, View.GONE);
+      remoteViews.setViewVisibility(R.id.billede, View.GONE);
       // Vis P3 i mangel af info om valgt kanal??
-      //updateViews.setImageViewResource(R.id.billede, R.drawable.kanal_p3);
+      //remoteViews.setImageViewResource(R.id.billede, R.drawable.kanal_p3);
     }
-
-    appWidgetManager.updateAppWidget(appWidgetId, updateViews);
+    return remoteViews;
   }
 }

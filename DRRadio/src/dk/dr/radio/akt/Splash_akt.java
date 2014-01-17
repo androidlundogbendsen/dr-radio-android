@@ -32,16 +32,13 @@ import dk.dr.radio.diverse.Log;
 public class Splash_akt extends Activity implements Runnable {
 
 
-  /**
-   * Called when the activity is first created.
-   */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     try {
       setContentView(R.layout.splash_akt);
     } catch (Throwable ignored) {
-    } // TODO bitmappen main_app_bg.png fylder for meget på Xperia X10i. Indtil der engang er tid til det må de leve uden splash-skærmbillede
+    } // bitmappen main_app_bg.png fylder for meget på Xperia X10i. De må leve uden splash-skærmbillede
 
     // Jacob: Det oprindelige 200k billede med baggrund og DR-logo var på 640x960 punkter
     // Det træk jeg DR-logoet ud på 260x78 punkter.
@@ -58,9 +55,8 @@ public class Splash_akt extends Activity implements Runnable {
     // Volumen op/ned skal styre lydstyrken af medieafspilleren, uanset som noget spilles lige nu eller ej
     setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
-    try {
+    if (savedInstanceState == null) try { // Hvis frisk start (ikke skærmvending)
       DRData.instans.tjekBaggrundstrådStartet();
-
 
       Handler handler = new Handler();
       // Starter hurtig splash nu - under udviklingen skal vi ikke sidde og vente på den!
@@ -72,7 +68,6 @@ public class Splash_akt extends Activity implements Runnable {
   }
 
   public void run() {
-    startActivity(new Intent(Splash_akt.this, Afspilning_akt.class));
-    finish(); // Splash skal ikke ligge i aktivitetsstakken
+    startActivity(new Intent(this, Afspilning_akt.class));
   }
 }

@@ -231,7 +231,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
    * <p/>
    * private void opdaterNotification() {
    * if (notification == null) {
-   * notification = new Notification(R.drawable.statusbaricon, null, 0);
+   * notification = new Notification(R.drawable.notifikation_ikon, null, 0);
    * <p/>
    * // PendingIntent er til at pege på aktiviteten der skal startes hvis brugeren vælger notifikationen
    * notification.contentIntent = PendingIntent.getActivity(DRData.appCtx, 0, new Intent(DRData.appCtx, Afspilning_akt.class), 0);
