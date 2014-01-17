@@ -29,12 +29,11 @@ import android.widget.RemoteViews;
 
 import java.util.Arrays;
 
-import dk.dr.radio.Afspilning_akt;
 import dk.dr.radio.R;
 import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.afspilning.AfspillerReciever;
+import dk.dr.radio.akt.Afspilning_akt;
 import dk.dr.radio.data.DRData;
-import dk.dr.radio.util.Log;
 
 public class AfspillerWidget extends AppWidgetProvider {
 
@@ -54,29 +53,9 @@ public class AfspillerWidget extends AppWidgetProvider {
 
     Log.d(this + " onUpdate (levende ikon oprettet) - appWidgetIds = " + Arrays.toString(appWidgetIds));
 
-    try {
-      // Instans indlæses så vi kender kanalen
-      DRData.tjekInstansIndlæst(ctx);
-
-      // for sørge for at vores knapper får tilknyttet intentsne
-      opdaterUdseende(ctx, appWidgetManager, appWidgetIds[0]);
-    } catch (Exception ex) {
-      Log.rapporterFejl(ex);
-    }
+    // for sørge for at vores knapper får tilknyttet intentsne
+    opdaterUdseende(ctx, appWidgetManager, appWidgetIds[0]);
   }
-
-/*
-  @Override
-  public void onDeleted(Context ctx, int[] appWidgetIds) {
-    Log.d(this+" onDeleted( widgetId="+widgetId);
-    if (widgetId != -1) try {
-      Context actx = ctx.getApplicationContext();
-      actx.unregisterReceiver(afspillerServiceReciever);
-    } catch (Exception e) { Log.e(e); }// Er ikke set ske, men for en sikkerheds skyld
-    widgetId = -1;
-    super.onDeleted(ctx, appWidgetIds);
-  }
-*/
 
 
   public static void opdaterUdseende(Context ctx, AppWidgetManager appWidgetManager, int appWidgetId) {

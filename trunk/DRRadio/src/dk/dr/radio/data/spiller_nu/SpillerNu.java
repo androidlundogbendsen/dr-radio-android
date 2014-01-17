@@ -16,7 +16,7 @@
 
  */
 
-package dk.dr.radio.data.json.spiller_nu;
+package dk.dr.radio.data.spiller_nu;
 
 import java.util.ArrayList;
 import java.util.List;

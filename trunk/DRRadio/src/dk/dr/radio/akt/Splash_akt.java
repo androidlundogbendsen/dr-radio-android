@@ -16,7 +16,7 @@
 
  */
 
-package dk.dr.radio;
+package dk.dr.radio.akt;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -25,8 +25,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 
+import dk.dr.radio.R;
 import dk.dr.radio.data.DRData;
-import dk.dr.radio.util.Log;
+import dk.dr.radio.diverse.Log;
 
 public class Splash_akt extends Activity implements Runnable {
 
@@ -38,7 +39,7 @@ public class Splash_akt extends Activity implements Runnable {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     try {
-      setContentView(R.layout.splash);
+      setContentView(R.layout.splash_akt);
     } catch (Throwable ignored) {
     } // TODO bitmappen main_app_bg.png fylder for meget på Xperia X10i. Indtil der engang er tid til det må de leve uden splash-skærmbillede
 
@@ -58,8 +59,7 @@ public class Splash_akt extends Activity implements Runnable {
     setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
     try {
-      DRData drData = DRData.tjekInstansIndlæst(this);
-      drData.tjekBaggrundstrådStartet();
+      DRData.instans.tjekBaggrundstrådStartet();
 
 
       Handler handler = new Handler();

@@ -16,12 +16,12 @@
 
  */
 
-package dk.dr.radio.data.json.udsendelser;
+package dk.dr.radio.data.udsendelser;
 
-public class Udsendelse {
 
-  public String title;
-  public String description;
-  public String start;
-  public String stop;
+public class Udsendelser {
+
+  public Udsendelse currentProgram;
+  public Udsendelse nextProgram;
+
 }

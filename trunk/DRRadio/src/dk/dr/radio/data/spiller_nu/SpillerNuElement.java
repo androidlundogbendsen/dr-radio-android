@@ -16,15 +16,13 @@
 
  */
 
-package dk.dr.radio.data.json.stamdata;
+package dk.dr.radio.data.spiller_nu;
 
-public class Kanal {
+public class SpillerNuElement {
 
-  public String shortName;
-  public String longName;
-  public String shoutcastUrl;
-  public String aacUrl;
-  public String rtspUrl;
-
+  public String title;
+  public String displayArtist;
+  public String start;
+  public String lastFM;
 
 }

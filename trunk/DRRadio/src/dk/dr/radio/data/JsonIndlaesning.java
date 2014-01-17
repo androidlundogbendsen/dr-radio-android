@@ -40,13 +40,13 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-import dk.dr.radio.data.json.spiller_nu.SpillerNu;
-import dk.dr.radio.data.json.spiller_nu.SpillerNuElement;
-import dk.dr.radio.data.json.stamdata.Kanal;
-import dk.dr.radio.data.json.stamdata.Stamdata;
-import dk.dr.radio.data.json.udsendelser.Udsendelse;
-import dk.dr.radio.data.json.udsendelser.Udsendelser;
-import dk.dr.radio.util.Log;
+import dk.dr.radio.data.spiller_nu.SpillerNu;
+import dk.dr.radio.data.spiller_nu.SpillerNuElement;
+import dk.dr.radio.data.stamdata.Kanal;
+import dk.dr.radio.data.stamdata.Stamdata;
+import dk.dr.radio.data.udsendelser.Udsendelse;
+import dk.dr.radio.data.udsendelser.Udsendelser;
+import dk.dr.radio.diverse.Log;
 
 
 public class JsonIndlaesning {
@@ -58,26 +58,26 @@ public class JsonIndlaesning {
    * @throws IOException hvis der er et problem med netværk
    *                     eller parsning (dvs interne fejl af forskellig art som bør rapporteres til udvikler)
    */
-  static Stamdata parseStamdata(String str) throws JSONException {
+  public static Stamdata parseStamdata(String str) throws JSONException {
 
     //Log.d("str=\n============="+str+"\n==================");
 
     Stamdata d = new Stamdata();
     JSONObject json = d.json = new JSONObject(str);
 
-    d.all = jsonArrayTilArrayListString(json.getJSONArray("kanalkoder"));
-    d.p4 = jsonArrayTilArrayListString(json.getJSONArray("p4koder"));
+    d.kanalkoder = jsonArrayTilArrayListString(json.getJSONArray("kanalkoder"));
+    d.p4koder = jsonArrayTilArrayListString(json.getJSONArray("p4koder"));
 
     JSONArray kanaler = json.getJSONArray("kanaler");
     int antal = kanaler.length();
     for (int i = 0; i < antal; i++) {
       JSONObject j = kanaler.getJSONObject(i);
       Kanal k = new Kanal();
-      k.shortName = læsNullSomTom(j, "shortName");
-      k.longName = læsNullSomTom(j, "longName");
-      k.aacUrl = læsNullSomTom(j, "aacUrl");
-      k.rtspUrl = læsNullSomTom(j, "rtspUrl");
-      k.shoutcastUrl = læsNullSomTom(j, "shoutcastUrl");
+      k.shortName = j.optString("shortName", "");
+      k.longName = j.optString("longName", "");
+      k.aacUrl = j.optString("aacUrl", "");
+      k.rtspUrl = j.optString("rtspUrl", "");
+      k.shoutcastUrl = j.optString("shoutcastUrl", "");
       d.kanaler.add(k);
     }
 
@@ -180,10 +180,10 @@ public class JsonIndlaesning {
     for (int i = 0; i < antal; i++) {
       JSONObject j = liste.getJSONObject(i);
       SpillerNuElement e = new SpillerNuElement();
-      e.title = læsNullSomTom(j, "title");
-      e.displayArtist = læsNullSomTom(j, "displayArtist");
-      e.lastFM = læsNullSomTom(j, "lastFM");
-      e.start = læsNullSomTom(j, "start");
+      e.title = j.optString("title", "");
+      e.displayArtist = j.optString("displayArtist", "");
+      e.lastFM = j.optString("lastFM", "");
+      e.start = j.optString("start", "");
       d.liste.add(e);
     }
 
@@ -222,14 +222,11 @@ public class JsonIndlaesning {
 
   private static Udsendelse jsonTilUdsendelse(JSONObject j) throws JSONException {
     Udsendelse u = new Udsendelse();
-    u.description = læsNullSomTom(j, "description");
-    u.start = læsNullSomTom(j, "start");
-    u.stop = læsNullSomTom(j, "stop");
-    u.title = læsNullSomTom(j, "title");
+    u.description = j.optString("description", "");
+    u.start = j.optString("start", "");
+    u.stop = j.optString("stop", "");
+    u.title = j.optString("title", "");
     return u;
   }
 
-  private static String læsNullSomTom(JSONObject j, String string) {
-    return j.optString(string, "");
-  }
 }

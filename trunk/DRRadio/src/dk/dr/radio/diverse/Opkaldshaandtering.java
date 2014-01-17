@@ -22,7 +22,6 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
 import dk.dr.radio.afspilning.Afspiller;
-import dk.dr.radio.util.Log;
 
 
 /*

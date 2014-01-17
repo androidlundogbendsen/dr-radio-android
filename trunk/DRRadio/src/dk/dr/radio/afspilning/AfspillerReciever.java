@@ -23,7 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import dk.dr.radio.data.DRData;
-import dk.dr.radio.util.Log;
+import dk.dr.radio.diverse.Log;
 
 /**
  * BroadcastReceiver som aktiverer afspilleren og evt instantierer den.
@@ -38,18 +38,16 @@ public class AfspillerReciever extends BroadcastReceiver {
   @Override
   public void onReceive(Context context, Intent intent) {
     try {
-      DRData.tjekInstansIndlæst(context);
 
-      Afspiller afspiller = DRData.instans.afspiller;
       int flag = intent.getIntExtra("flag", 0);
-      Log.d("AfspillerReciever onReceive(" + intent + ") flag " + flag + " afspillerstatus =" + afspiller.afspillerstatus);
+      Log.d("AfspillerReciever onReceive(" + intent + ") flag " + flag + " afspillerstatus =" + DRData.instans.afspiller.afspillerstatus);
 
 
       if (flag == Afspiller.WIDGET_START_ELLER_STOP) {
-        if (afspiller.afspillerstatus == Afspiller.STATUS_STOPPET) {
-          afspiller.startAfspilning();
+        if (DRData.instans.afspiller.afspillerstatus == Afspiller.STATUS_STOPPET) {
+          DRData.instans.afspiller.startAfspilning();
         } else {
-          afspiller.stopAfspilning();
+          DRData.instans.afspiller.stopAfspilning();
         }
       }
 

@@ -18,23 +18,32 @@
 
 package dk.dr.radio.diverse;
 
+import android.app.Activity;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
+
 /**
- *
  * @author j
  */
+public class MedieafspillerInfo {
 
-import android.app.Application;
 
-import com.bugsense.trace.BugSenseHandler;
+  public String lavTelefoninfo(Activity a) {
+    String ret = "";
 
-public class AcraApplication extends Application {
+    PackageManager pm = a.getPackageManager();
+    String version;
+    try {
+      PackageInfo pi = pm.getPackageInfo(a.getPackageName(), 0);
+      version = pi.versionName;
+    } catch (Exception e) {
+      version = e.toString();
+      e.printStackTrace();
+    }
 
-  @Override
-  public void onCreate() {
-    // The following line triggers the initialization of ACRA
-    BugSenseHandler.initAndStartSession(this, "57c90f98");
-    super.onCreate();
+    ret += a.getPackageName() + " (v " + version + ")" + "\nTelefonmodel: " + Build.MODEL + " " + Build.PRODUCT + "\nAndroid v" + Build.VERSION.RELEASE + " (sdk: " + Build.VERSION.SDK + ")";
 
+    return ret;
   }
-
 }

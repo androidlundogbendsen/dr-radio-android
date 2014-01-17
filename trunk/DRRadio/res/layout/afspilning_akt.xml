@@ -6,7 +6,6 @@
              android:background="#FFFFFFFF">
 
     <LinearLayout
-            android:id="@+id/player_select_channel_linearlayout"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:background="@color/tranparent_darkgrey"
@@ -17,12 +16,11 @@
 
 
         <LinearLayout
-                android:id="@+id/player_select_channel_imagelinearlayout"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent">
 
             <ImageView
-                    android:id="@+id/player_select_channel_billede"
+                    android:id="@+id/kanalbillede"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:layout_gravity="left|center_vertical"
@@ -30,7 +28,7 @@
                     android:src="@drawable/kanal_p1d"/>
 
             <TextView
-                    android:id="@+id/player_select_channel_text"
+                    android:id="@+id/kanaltekst"
                     android:layout_width="wrap_content"
                     android:text="P4kbh"
                     android:textColor="@android:color/white"
@@ -65,13 +63,11 @@
     </LinearLayout>
 
     <LinearLayout
-            android:id="@+id/player_play_music_linearlayout"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:background="@color/transparent_grey">
 
         <LinearLayout
-                android:id="@+id/player_play_music_linearlayout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
@@ -208,7 +204,7 @@
                     android:layout_marginLeft="0dp"
                     android:layout_marginRight="0dp"
                     android:layout_weight="0"
-                    android:background="@layout/flipper_background"
+                    android:background="#000000"
                     android:layout_gravity="center_vertical">
             </dk.dr.radio.diverse.MinViewFlipper>
 
@@ -249,7 +245,7 @@
                 android:id="@+id/player_about_button"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/button_height"
-                android:text="@string/about"
+                android:text="Om"
                 android:textSize="@dimen/player_about_size"
                 android:layout_gravity="center_vertical|left"
                 android:paddingLeft="20dp"

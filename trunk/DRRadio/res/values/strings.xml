@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">DR Radio</string>
     <string name="about">Om</string>
     <string name="format">Format</string>
     <string name="send_feedback_mail">Send feedback via mail</string>

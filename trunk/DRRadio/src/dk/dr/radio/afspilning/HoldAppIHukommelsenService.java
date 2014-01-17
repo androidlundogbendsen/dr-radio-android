@@ -23,9 +23,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-import dk.dr.radio.Afspilning_akt;
 import dk.dr.radio.R;
-import dk.dr.radio.util.Log;
+import dk.dr.radio.akt.Afspilning_akt;
+import dk.dr.radio.diverse.Log;
 
 /**
  * Sørger for at app'en holdes i hukommelsen

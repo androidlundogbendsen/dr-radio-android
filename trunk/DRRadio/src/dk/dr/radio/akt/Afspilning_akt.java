@@ -15,7 +15,7 @@
  DR Radio 2 for Android.  If not, see <http://www.gnu.org/licenses/>.
 
  */
-package dk.dr.radio;
+package dk.dr.radio.akt;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,29 +27,21 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.util.Linkify;
-import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
-import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -62,27 +54,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.WeakHashMap;
 
+import dk.dr.radio.R;
 import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.afspilning.AfspillerListener;
 import dk.dr.radio.data.DRData;
-import dk.dr.radio.data.json.spiller_nu.SpillerNuElement;
-import dk.dr.radio.data.json.stamdata.Kanal;
-import dk.dr.radio.util.AnimationUtil;
-import dk.dr.radio.util.ImageUtil;
-import dk.dr.radio.util.Log;
-import dk.dr.radio.util.Network;
-import dk.dr.radio.util.StringUtil;
+import dk.dr.radio.data.spiller_nu.SpillerNuElement;
+import dk.dr.radio.data.stamdata.Kanal;
+import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
 
 public class Afspilning_akt extends Activity implements AfspillerListener {
   private ViewFlipper flipper;
-  private DRData drdata;
   private ImageButton playStopButton;
   private ImageView previousImageView;
   private ImageView nextImageView;
   private Afspiller afspiller;
-  private Handler previousNextHandler;
-  private Runnable previousNextRunner;
-  private AsyncTask indlæsningAfBilleder = null;
   private TextView currentProgramTitleTextView;
   private TextView currentProgramDescriptionTextView;
   private TextView currentChannelTextView;
@@ -104,22 +90,15 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
     setContentView(R.layout.afspilning_akt);
     initControls();
 
-    try {
-      drdata = DRData.tjekInstansIndlæst(this);
-      drdata.tjekBaggrundstrådStartet();
-      afspiller = drdata.afspiller;
-    } catch (Exception ex) {
-      // TODO popop-advarsel til bruger om intern fejl og rapporter til udvikler-dialog
-      Log.rapporterOgvisFejl(this, ex);
-      return;
-    }
+    DRData.instans.tjekBaggrundstrådStartet();
+    afspiller = DRData.instans.afspiller;
 
     registerReceiver(stamdataOpdateretReciever, new IntentFilter(DRData.OPDATERINGSINTENT_Stamdata));
     registerReceiver(udsendelserOpdateretReciever, new IntentFilter(DRData.OPDATERINGSINTENT_Udsendelse));
     registerReceiver(spillerNuListeOpdateretReciever, new IntentFilter(DRData.OPDATERINGSINTENT_SpillerNuListe));
 
     TextView nextProgramHeaderTextView = (TextView) findViewById(R.id.player_next_program_textview);
-    nextProgramHeaderTextView.setText(drdata.stamdata.s("text_footerTitle"));
+    nextProgramHeaderTextView.setText(DRData.instans.stamdata.json.optString("text_footerTitle"));
 
     INGEN_LASTFM = getResources().getDrawable(R.drawable.nolastfm);
     try {
@@ -150,7 +129,7 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
     //XXX TODO xxx Garmin A50 skal bruge RTSP som standard. mp3/shoutcast virker ikke
 
     afspiller.addAfspillerListener(Afspilning_akt.this);
-    afspiller.addAfspillerListener(drdata.rapportering);
+    afspiller.addAfspillerListener(DRData.instans.rapportering);
   }
 
   @Override
@@ -177,7 +156,7 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
   @Override
   protected void onDestroy() {
     afspiller.addAfspillerListener(Afspilning_akt.this);
-    afspiller.addAfspillerListener(drdata.rapportering);
+    afspiller.addAfspillerListener(DRData.instans.rapportering);
     unregisterReceiver(stamdataOpdateretReciever);
     unregisterReceiver(udsendelserOpdateretReciever);
     unregisterReceiver(spillerNuListeOpdateretReciever);
@@ -188,13 +167,11 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 
   @Override
   protected void onResume() {
-    //Gemmes ikke i prefs længere DRData.udvikling = prefs.getBoolean("udvikler", false);
 
     // se om vi er online
-    boolean connectionOK = Network.testConnection(getApplicationContext());
-    if (connectionOK) {
+    if (App.erOnline()) {
       // hurra - opdater data fra server
-      drdata.setBaggrundsopdateringAktiv(true);
+      DRData.instans.setBaggrundsopdateringAktiv(true);
     } else {
       // Informer brugeren hvis vi er offline
       if (internetforbindelseManglerDialog == null) {
@@ -211,12 +188,12 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 
   @Override
   protected void onPause() {
-    drdata.setBaggrundsopdateringAktiv(false);
+    DRData.instans.setBaggrundsopdateringAktiv(false);
     super.onPause();
   }
 
   private void initControls() {
-
+    flipper = (ViewFlipper) findViewById(R.id.flipper);
     currentProgramTitleTextView = (TextView) findViewById(R.id.player_current_program_title_textview);
     currentProgramDescriptionTextView = (TextView) findViewById(R.id.player_current_program_description_textview);
     currentChannelTextView = (TextView) findViewById(R.id.player_current_program_channel_textview);
@@ -276,39 +253,10 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 
     previousImageView = (ImageView) findViewById(R.id.previous);
     previousImageView.setAlpha(200);
-    previousImageView.setOnTouchListener(new OnTouchListener() {
-      public boolean onTouch(View v, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-          flipPreviousIfNotLastTrack();
-        }
-        return true;
-      }
-    });
 
     nextImageView = (ImageView) findViewById(R.id.next);
     nextImageView.setAlpha(200);
     nextImageView.setVisibility(ImageButton.GONE);
-    nextImageView.setOnTouchListener(new OnTouchListener() {
-      public boolean onTouch(View v, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-          flipNextIfNotFirstTrack();
-        }
-        return true;
-      }
-    });
-
-
-    final GestureDetector gestureDetector = new GestureDetector(new MyGestureDetector());
-    flipper = (ViewFlipper) findViewById(R.id.flipper);
-    flipper.setOnTouchListener(new OnTouchListener() {
-      public boolean onTouch(View v, MotionEvent event) {
-        if (gestureDetector.onTouchEvent(event)) {
-          return false;
-        } else {
-          return true;
-        }
-      }
-    });
   }
 
   /**
@@ -340,7 +288,7 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
     try {
       sætKanal();
       afspiller.startAfspilning();
-      drdata.rapportering.afspilningForsøgtStartet = System.currentTimeMillis();
+      DRData.instans.rapportering.afspilningForsøgtStartet = System.currentTimeMillis();
       visStartStopKnap();
     } catch (Exception e) {
       Log.e(e);
@@ -348,9 +296,9 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
   }
 
   private void sætKanal() {
-    String url = drdata.findKanalUrlFraKode(drdata.aktuelKanal);
+    String url = DRData.instans.findKanalUrlFraKode(DRData.instans.aktuelKanal);
 
-    afspiller.setKanal(drdata.aktuelKanal.longName, url);
+    afspiller.setKanal(DRData.instans.aktuelKanal.longName, url);
     //startStopButton.setImageResource(R.drawable.buffer_white);
     visAktuelKanal();
   }
@@ -418,7 +366,7 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
     public void onReceive(Context ctx, Intent i) {
       Log.d("stamdataOpdateretReciever");
 
-      drift_statusmeddelelse = drdata.stamdata.s(drift_statusmeddelelse_NØGLE).trim();
+      drift_statusmeddelelse = DRData.instans.stamdata.json.optString(drift_statusmeddelelse_NØGLE).trim();
 
       // Tjek i prefs om denne drifmeddelelse allerede er vist.
       // Der er 1 ud af en millards chance for at hashkoden ikke er ændret, den risiko tør vi godt løbe
@@ -488,8 +436,8 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
       // visSpillerNuInfo() er dyr at kalde så den kalder vi kun hvis data er ændret
       String spillerNu = "null";
 
-      if (drdata.spillerNuListe != null && drdata.spillerNuListe.liste.size() > 0) {
-        spillerNu = String.valueOf(drdata.spillerNuListe.liste.get(0).title);
+      if (DRData.instans.spillerNuListe != null && DRData.instans.spillerNuListe.liste.size() > 0) {
+        spillerNu = String.valueOf(DRData.instans.spillerNuListe.liste.get(0).title);
       }
 
       if (!forrigeSpillerNu.equals(spillerNu)) {
@@ -501,16 +449,16 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
   };
 
   private void visAktuelKanal() {
-    String kanal = drdata.aktuelKanalkode;
+    String kanal = DRData.instans.aktuelKanalkode;
 
-    ImageView aktuelKanalImageView = (ImageView) findViewById(R.id.player_select_channel_billede);
-    TextView aktuelKanalTextView = (TextView) findViewById(R.id.player_select_channel_text);
+    ImageView aktuelKanalImageView = (ImageView) findViewById(R.id.kanalbillede);
+    TextView aktuelKanalTextView = (TextView) findViewById(R.id.kanaltekst);
 
     Resources res = getResources();
     int id = res.getIdentifier("kanal_" + kanal.toLowerCase(), "drawable", getPackageName());
 
     if (id == 0) {
-      String visningsnavn = drdata.stamdata.kanalkodeTilKanal.get(kanal).longName;
+      String visningsnavn = DRData.instans.stamdata.kanalkodeTilKanal.get(kanal).longName;
       aktuelKanalTextView.setText(visningsnavn);
       aktuelKanalTextView.setVisibility(View.VISIBLE);
       aktuelKanalImageView.setVisibility(View.GONE);
@@ -522,38 +470,24 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
   }
 
   private void visAktuelUdsendelse() {
-    String aboveHeader = drdata.stamdata.s("text_aboveHeader");
-    Kanal kanal = drdata.aktuelKanal;
+    String aboveHeader = DRData.instans.stamdata.json.optString("text_aboveHeader");
+    Kanal kanal = DRData.instans.aktuelKanal;
     String tekst = aboveHeader + " " + kanal.longName + ":";
 
     currentChannelTextView.setText(tekst);
 
-    if (drdata.udsendelser_ikkeTilgængeligt) {
+    if (DRData.instans.udsendelser_ikkeTilgængeligt) {
       currentProgramTitleTextView.setText("Kunne ikke hente programinfo");
       currentProgramDescriptionTextView.setText("");
-    } else if (drdata.udsendelser == null || drdata.udsendelser.currentProgram == null) {
+    } else if (DRData.instans.udsendelser == null || DRData.instans.udsendelser.currentProgram == null) {
       currentProgramTitleTextView.setText("Venter på programinfo");
       currentProgramDescriptionTextView.setText("");
     } else {
 
-      String currentProgamTitle = drdata.udsendelser.currentProgram.title;
+      String currentProgamTitle = DRData.instans.udsendelser.currentProgram.title;
       currentProgramTitleTextView.setText(currentProgamTitle);
 
-      String currentProgamDescription = drdata.udsendelser.currentProgram.description;
-
-      //Drop klipning af tekst og lad layout om at begrænse tekstens størrelse
-      // fixet ved at lave et scrollview i afspilning_akt.xml - frederik
-      /*
-      String descriptionMaxLength ;
-			if(isFlipperDisplayed()) {
-			descriptionMaxLength = drdata.stamdata.s("program_descMaxLengthWithTrack");
-			}
-			else {
-			descriptionMaxLength = drdata.stamdata.s("program_descMaxLength");
-			}
-			Log.d(currentProgamDescription);
-			currentProgamDescription = StringUtil.limitString(currentProgamDescription, descriptionMaxLength);
-			 */
+      String currentProgamDescription = DRData.instans.udsendelser.currentProgram.description;
       currentProgramDescriptionTextView.setText(Html.fromHtml(currentProgamDescription));
 
       // Konverter tekst-links i programinfo til rigtige links - frederik
@@ -563,12 +497,11 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 
   private void visNæsteUdsendelse() {
 
-    if (drdata.udsendelser != null && drdata.udsendelser.nextProgram != null) {
-      String nextProgramTitle = drdata.udsendelser.nextProgram.title;
-      String descriptionMaxLength = drdata.stamdata.s("program_nextProgramTitleMaxLength");
-      String nextProgramTitleLimited = StringUtil.limitString(nextProgramTitle, descriptionMaxLength);
-      String nextProgramStartTime = StringUtil.getTimeFromDate(drdata.udsendelser.nextProgram.start);
-      String nextProgramStopTime = StringUtil.getTimeFromDate(drdata.udsendelser.nextProgram.stop);
+    if (DRData.instans.udsendelser != null && DRData.instans.udsendelser.nextProgram != null) {
+      String nextProgramTitle = DRData.instans.udsendelser.nextProgram.title;
+      String nextProgramTitleLimited = nextProgramTitle;
+      String nextProgramStartTime = DRData.instans.udsendelser.nextProgram.start;
+      String nextProgramStopTime = DRData.instans.udsendelser.nextProgram.stop;
       String nextProgramTime = "(" + nextProgramStartTime + " - " + nextProgramStopTime + ")";
       nextProgramTitleTextView.setText(nextProgramTitleLimited + " " + nextProgramTime);
     } else {
@@ -579,16 +512,16 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
   //@SuppressWarnings("unchecked")
   private void visSpillerNuInfo() {
 
-    boolean showChannel = drdata.stamdata.kanalerDerSkalViseSpillerNu.contains(drdata.aktuelKanalkode);
+    boolean showChannel = DRData.instans.stamdata.kanalerDerSkalViseSpillerNu.contains(DRData.instans.aktuelKanalkode);
 
-    if (!showChannel || drdata.spillerNuListe == null || drdata.spillerNuListe.liste == null || drdata.spillerNuListe.liste.isEmpty()) {
+    if (!showChannel || DRData.instans.spillerNuListe == null || DRData.instans.spillerNuListe.liste == null || DRData.instans.spillerNuListe.liste.isEmpty()) {
       tracksLinearLayout.setVisibility(LinearLayout.GONE);
       return;
     }
 
     tracksLinearLayout.setVisibility(LinearLayout.VISIBLE);
 
-    final List<SpillerNuElement> tracks = new ArrayList<SpillerNuElement>(drdata.spillerNuListe.liste);
+    final List<SpillerNuElement> tracks = new ArrayList<SpillerNuElement>(DRData.instans.spillerNuListe.liste);
 
 
     synchronized (flipper) {
@@ -607,73 +540,11 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
       previousImageView.setVisibility(ImageView.VISIBLE);
       nextImageView.setVisibility(ImageView.GONE);
 
-      handlePreviousNextDisplay();
-
-      if (indlæsningAfBilleder != null) {
-        indlæsningAfBilleder.cancel(false);
-      }
     }
-
-    // Da getImagefromUrl(track.lastFM) skal hente over netværket skal det ske i baggrunden
-    indlæsningAfBilleder = new AsyncTask() {
-      @Override
-      protected Object doInBackground(Object... arg0) {
-        int index = 0;
-        for (SpillerNuElement track : tracks) {
-
-          Drawable drawable = getImagefromUrl(track.lastFM);
-          if (isCancelled()) {
-            break;
-          }
-
-          publishProgress(index, drawable);
-          index++;
-        }
-        synchronized (flipper) {
-          indlæsningAfBilleder = null;
-        }
-        return null;
-      }
-
-      protected void onProgressUpdate(Object[] values) {
-        if (isCancelled() || flipper == null)
-          return; // Nødvendigt da GUI-trådens udførelse kan være forsinket. Jacob 21/11 2011
-
-        View view = flipper.getChildAt((Integer) values[0]);
-        if (view == null) return; // Nødvendigt da GUI-trådens udførelse kan være forsinket. Jacob 14/11 2011
-        Drawable drawable = (Drawable) values[1];
-        ImageView flipperImageImageView = (ImageView) view.findViewById(R.id.FlipperImageImageView);
-        flipperImageImageView.setImageDrawable(drawable);
-        // Vis/skjul teksten "Last.fm"
-        View flipperLastFmTextTextView = view.findViewById(R.id.FlipperLastFmTextTextView);
-        if (drawable != INGEN_LASTFM) {
-          flipperLastFmTextTextView.setVisibility(View.VISIBLE);
-        } else {
-          flipperLastFmTextTextView.setVisibility(View.INVISIBLE);
-        }
-      }
-    }.execute();
   }
 
   WeakHashMap<String, Drawable> urlTilDrawable = new WeakHashMap<String, Drawable>();
   Drawable INGEN_LASTFM;
-
-  private Drawable getImagefromUrl(String url) {
-    Drawable d = urlTilDrawable.get(url);
-    if (d != null) {
-      return d;
-    }
-
-    Bitmap bitmap = ImageUtil.downloadImage(url);
-    if (bitmap != null) {
-      d = new BitmapDrawable(bitmap);
-    } else {
-      d = INGEN_LASTFM;
-    }
-
-    urlTilDrawable.put(url, d);
-    return d;
-  }
 
   private View buildViewFromTrack(SpillerNuElement track, int index) {
     LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -682,19 +553,19 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
     LinearLayout flipperLinearLayout = (LinearLayout) view.findViewById(R.id.FlipperLinearLayout);
 
     TextView flipperLastFmTextTextView = (TextView) view.findViewById(R.id.FlipperLastFmTextTextView);
-    String lastFm = drdata.stamdata.s("text_trackPhoto");
+    String lastFm = DRData.instans.stamdata.json.optString("text_trackPhoto");
     flipperLastFmTextTextView.setText(lastFm);
 
     TextView flipperTrackTitleHeaderTextView = (TextView) view.findViewById(R.id.FlipperTrackTitleHeaderTextView);
 
-    int numberOfTracks = drdata.spillerNuListe.liste.size();
+    int numberOfTracks = DRData.instans.spillerNuListe.liste.size();
     String trackHeader;
     if (index == 0) {
-      trackHeader = drdata.stamdata.s("text_trackLast");
+      trackHeader = DRData.instans.stamdata.json.optString("text_trackLast");
     } else if (index == numberOfTracks - 1) {
-      trackHeader = drdata.stamdata.s("text_trackBeforeLast");
+      trackHeader = DRData.instans.stamdata.json.optString("text_trackBeforeLast");
     } else {
-      trackHeader = drdata.stamdata.s("text_trackPrevious");
+      trackHeader = DRData.instans.stamdata.json.optString("text_trackPrevious");
     }
 
     flipperTrackTitleHeaderTextView.setText(trackHeader);
@@ -706,87 +577,9 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
     flipperTrackDisplayArtistTextView.setText(track.displayArtist);
 
     TextView flipperTrackStartTimeTextView = (TextView) view.findViewById(R.id.FlipperTrackStartTimeTextView);
-    flipperTrackStartTimeTextView.setText("Afspillet kl. " + StringUtil.getTimeFromDate(track.start));
+    flipperTrackStartTimeTextView.setText("Afspillet kl. " + track.start);
 
     return flipperLinearLayout;
-  }
-
-  /*
-  private boolean isFlipperDisplayed() {
-  return tracksLinearLayout.getVisibility() == LinearLayout.VISIBLE;
-  }
-   */
-  private void flipNextIfNotFirstTrack() {
-    if (flipper.getDisplayedChild() != 0) {
-      flipper.setInAnimation(AnimationUtil.inFromRightAnimation());
-      flipper.setOutAnimation(AnimationUtil.outToLeftAnimation());
-      flipper.showNext();
-
-      if (flipper.getDisplayedChild() == 0) {
-        previousImageView.setVisibility(ImageView.VISIBLE);
-        nextImageView.setVisibility(ImageView.GONE);
-      } else {
-        previousImageView.setVisibility(ImageView.VISIBLE);
-        nextImageView.setVisibility(ImageView.VISIBLE);
-      }
-    }
-    handlePreviousNextDisplay();
-  }
-
-  private void flipPreviousIfNotLastTrack() {
-    if (flipper.getDisplayedChild() != 1) {
-
-      flipper.setInAnimation(AnimationUtil.inFromLeftAnimation());
-      flipper.setOutAnimation(AnimationUtil.outToRightAnimation());
-      flipper.showPrevious();
-
-      if (flipper.getDisplayedChild() == 1) {
-        previousImageView.setVisibility(ImageView.GONE);
-        nextImageView.setVisibility(ImageView.VISIBLE);
-      } else {
-        previousImageView.setVisibility(ImageView.VISIBLE);
-        nextImageView.setVisibility(ImageView.VISIBLE);
-      }
-    }
-    handlePreviousNextDisplay();
-  }
-
-  public void handlePreviousNextDisplay() {
-    if (previousNextHandler != null) {
-      previousNextHandler.removeCallbacks(previousNextRunner);
-    }
-    previousNextHandler = new Handler();
-    previousNextRunner = new Runnable() {
-      public void run() {
-        previousImageView.setVisibility(ImageView.GONE);
-        nextImageView.setVisibility(ImageView.GONE);
-      }
-    };
-    previousNextHandler.postDelayed(previousNextRunner, 5000);
-  }
-
-  class MyGestureDetector extends SimpleOnGestureListener {
-    private static final int SWIPE_MIN_DISTANCE = 50;//120;
-    private static final int SWIPE_MAX_OFF_PATH = 250;
-    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-
-    @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-      Log.d(" in onFling() :: " + e1 + "   " + e2);
-      if (e1 == null || e2 == null) {
-        return false; // Det sker nogen gange at en af dem er null
-      }
-      if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH) {
-        return false;
-      }
-      if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-        flipNextIfNotFirstTrack();
-
-      } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-        flipPreviousIfNotLastTrack();
-      }
-      return super.onFling(e1, e2, velocityX, velocityY);
-    }
   }
 
   /**
