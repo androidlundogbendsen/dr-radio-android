@@ -58,7 +58,6 @@ public class App extends Application {
 
   @Override
   public void onCreate() {
-    // The following line triggers the initialization of ACRA
     BugSenseHandler.initAndStartSession(this, "57c90f98");
     super.onCreate();
 

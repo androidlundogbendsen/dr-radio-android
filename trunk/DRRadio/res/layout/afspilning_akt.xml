@@ -81,7 +81,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:background="@drawable/play"/>
+                    android:background="@drawable/afspilning_start"/>
 
             <!-- android:focusable="true" gør at blinde og svagtsynede der bruger
                  skærmlæser kan bruge trackballen til at flytte hen på viewet og

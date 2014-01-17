@@ -27,7 +27,7 @@
 
     <dk.dr.radio.diverse.ImageViewTilBlinde
             android:id="@+id/ikon"
-            android:src="@drawable/icon_plus"
+            android:src="@drawable/kanalvalg_plus"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

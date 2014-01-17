@@ -3,8 +3,6 @@
     <color name="transparent_grey">#95666666</color>
     <color name="tranparent_darkgrey">#95111111</color>
     <color name="white">#ffffff</color>
-    <!--  svarer til farven i punktet i drawable/channel_bg.png  -->
-    <color name="channel_bg">#CC909090</color>
 
 
 </resources>

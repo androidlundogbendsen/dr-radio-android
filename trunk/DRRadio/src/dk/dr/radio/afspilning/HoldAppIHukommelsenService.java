@@ -22,9 +22,11 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 
 import dk.dr.radio.R;
 import dk.dr.radio.akt.Afspilning_akt;
+import dk.dr.radio.diverse.AfspillerWidget;
 import dk.dr.radio.diverse.Log;
 
 /**
@@ -41,43 +43,32 @@ public class HoldAppIHukommelsenService extends Service {
     return null;
   }
 
-  private Notification notification;
-
   /**
    * ID til notifikation i toppen. Skal bare være unikt og det samme altid
    */
   private static final int NOTIFIKATION_ID = 117;
 
-  @Override
-  public void onCreate() {
-    Log.d("AfspillerService onCreate!");
-  }
-
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
     Log.d("AfspillerService onStartCommand(" + intent + " " + flags + " " + startId);
-    handleCommand(intent);
-    // We want this service to continue running until it is explicitly
-    // stopped, so return sticky.
-    return START_STICKY;
-  }
-
-  private void handleCommand(Intent intent) {
-    Log.d("AfspillerService handleCommand(" + intent);
-    if (notification == null) {
-      notification = new Notification(R.drawable.statusbaricon, null, 0);
-
-      // PendingIntent er til at pege på aktiviteten der skal startes hvis brugeren vælger notifikationen
-      notification.contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, Afspilning_akt.class), 0);
-      notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT);
-    }
 
     String kanalNavn = intent == null ? null : intent.getStringExtra("kanalNavn");
     if (kanalNavn == null) kanalNavn = "";
 
-    notification.setLatestEventInfo(this, "Radio", kanalNavn, notification.contentIntent);
+    NotificationCompat.Builder b = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.notifikation_ikon).setContentTitle("DR Radio").setContentText(kanalNavn).setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, Afspilning_akt.class), 0)).setContent(AfspillerWidget.lavRemoteViews());
+
+    //notification = new Notification(R.drawable.notifikation_ikon, null, 0);
+    Notification notification = b.build();
+
+    // PendingIntent er til at pege på aktiviteten der skal startes hvis brugeren vælger notifikationen
+    //notification.contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, Afspilning_akt.class), 0);
+    notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT);
+
+
+    //notification.setLatestEventInfo(this, "Radio", kanalNavn, notification.contentIntent);
     startForeground(NOTIFIKATION_ID, notification);
+    return START_STICKY;
   }
 
 
