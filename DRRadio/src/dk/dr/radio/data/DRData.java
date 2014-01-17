@@ -46,16 +46,18 @@ public class DRData {
 
   private Handler handler = new Handler();
 
-  private SpillerNu spillerNuListe2;
-  private Udsendelser udsendelser2;
 
   public Stamdata stamdata;
-  public Udsendelser udsendelser;
-  public boolean udsendelser_ikkeTilgængeligt;
-  public SpillerNu spillerNuListe;
 
   public String aktuelKanalkode;
   public Kanal aktuelKanal;
+
+  public Udsendelser udsendelser;
+  private Udsendelser udsendelser2;
+  public boolean udsendelser_ikkeTilgængeligt;
+
+  public SpillerNu spillerNuListe;
+  private SpillerNu spillerNuListe2;
 
   public static final String NØGLE_lydformat = "lydformat";
   public static final String NØGLE_kanal = "kanal";
@@ -157,7 +159,7 @@ public class DRData {
         public void run() {
           spillerNuListe = spillerNuListe2;
           // Send broadcast om at listen er opdateret
-          App.appCtx.sendBroadcast(new Intent(OPDATERINGSINTENT_SpillerNuListe));
+          App.ctx.sendBroadcast(new Intent(OPDATERINGSINTENT_SpillerNuListe));
         }
       });
     }
@@ -175,7 +177,7 @@ public class DRData {
     handler.post(new Runnable() {
       public void run() {
         udsendelser = udsendelser2;
-        App.appCtx.sendBroadcast(new Intent(OPDATERINGSINTENT_Udsendelse));
+        App.ctx.sendBroadcast(new Intent(OPDATERINGSINTENT_Udsendelse));
       }
     });
   }
@@ -205,7 +207,7 @@ public class DRData {
         public void run() {
           stamdata = stamdata2;
           // Send broadcast om at stamdata er opdateret
-          App.appCtx.sendBroadcast(new Intent(OPDATERINGSINTENT_Stamdata));
+          App.ctx.sendBroadcast(new Intent(OPDATERINGSINTENT_Stamdata));
         }
       });
     } catch (Exception e) {
