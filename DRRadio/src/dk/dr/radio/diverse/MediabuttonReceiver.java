@@ -27,7 +27,6 @@ import android.view.KeyEvent;
 
 import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.afspilning.AfspillerReciever;
-import dk.dr.radio.util.Log;
 
 public class MediabuttonReceiver extends BroadcastReceiver {
 

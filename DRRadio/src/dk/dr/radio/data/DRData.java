@@ -18,26 +18,17 @@
 
 package dk.dr.radio.data;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.widget.Toast;
-
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 import dk.dr.radio.afspilning.Afspiller;
-import dk.dr.radio.data.json.spiller_nu.SpillerNu;
-import dk.dr.radio.data.json.stamdata.Kanal;
-import dk.dr.radio.data.json.stamdata.Stamdata;
-import dk.dr.radio.data.json.udsendelser.Udsendelser;
+import dk.dr.radio.data.spiller_nu.SpillerNu;
+import dk.dr.radio.data.stamdata.Kanal;
+import dk.dr.radio.data.stamdata.Stamdata;
+import dk.dr.radio.data.udsendelser.Udsendelser;
+import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.Rapportering;
-import dk.dr.radio.util.Log;
 
 /**
  * Det centrale objekt som alt andet bruger til
@@ -47,21 +38,13 @@ public class DRData {
   public static DRData instans;
 
 
-  public static Context appCtx;
-  public static SharedPreferences prefs;
+  public static final String STAMDATA_URL = "http://javabog.dk/privat/stamdata_android29.json";
+  //public static final String STAMDATA_URL = "http://www.dr.dk/tjenester/iphone/radio/settings/android29.drxml";
 
-  private static final int stamdataID = 24;
-  //	private static final String stamdataUrl = "http://javabog.dk/privat/stamdata_android" + stamdataID + ".json";
-  private static final String stamdataUrl = "http://www.dr.dk/tjenester/iphone/radio/settings/android" + stamdataID + ".drxml";
-  private static final String STAMDATA = "stamdata" + stamdataID;
-
-  /**
-   * Globalt flag
-   */
   public static boolean udvikling;
   public Afspiller afspiller;
 
-  Handler handler = new Handler();
+  private Handler handler = new Handler();
 
   private SpillerNu spillerNuListe2;
   private Udsendelser udsendelser2;
@@ -100,59 +83,6 @@ public class DRData {
   //
   private boolean baggrundsopdateringAktiv = false;
   private boolean baggrundstrådSkalVente = true;
-
-  /**
-   * Variation der tjekker om instansen er tom og - hvis det er tilfældet - indlæser en instans fra disk - synkront
-   * SKAL kaldes fra GUI-tråden
-   */
-  public static synchronized DRData tjekInstansIndlæst(Context akt) throws IOException, JSONException {
-    appCtx = akt.getApplicationContext();
-    if (instans == null) {
-      prefs = PreferenceManager.getDefaultSharedPreferences(akt);
-
-      int stamdatResId = akt.getResources().getIdentifier("stamdata_android" + stamdataID, "raw", akt.getPackageName());
-      if (stamdatResId == 0) throw new InternalError("Stamdata mangler at blive opdateret");
-
-      // indlæs stamdata fra Prefs hvis de findes
-      String stamdatastr = prefs.getString(STAMDATA, null);
-
-      if (stamdatastr == null) {
-        // Indlæs fra raw this vi ikke har nogle cachede stamdata i prefs
-        //InputStream is = akt.getResources().openRawResource(R.raw.stamdata_android22);
-        InputStream is = akt.getResources().openRawResource(stamdatResId);
-        stamdatastr = JsonIndlaesning.læsInputStreamSomStreng(is);
-      }
-
-      // Det skulle være rimeligt sikkert at vælge lydformat
-      // HLS2 (httplive2) på Android 3.2 og frem
-      // Det gælder nok også Android 3.1, men jeg er ikke sikkker. Jacob
-    /*
-      if (Build.VERSION.SDK_INT >= 13 && !prefs.contains(NØGLE_lydformat)) {
-        prefs.edit().putString(NØGLE_lydformat, "httplive2").commit();
-      }
-      */  // fjernet da DRs HLS p.t. er ukompatibel med android devices
-
-      instans = new DRData();
-      instans.stamdata = JsonIndlaesning.parseStamdata(stamdatastr);
-
-      // Kanalvalg. Tjek først Preferences, brug derefter JSON-filens forvalgte kanal
-      if (instans.aktuelKanalkode == null) instans.aktuelKanalkode = prefs.getString(NØGLE_kanal, null);
-      if (instans.aktuelKanalkode == null) instans.aktuelKanalkode = instans.stamdata.s("forvalgt");
-      instans.aktuelKanal = instans.stamdata.kanalkodeTilKanal.get(instans.aktuelKanalkode);
-
-      instans.afspiller = new Afspiller();
-
-      String url = instans.findKanalUrlFraKode(instans.aktuelKanal);
-      instans.afspiller.setKanal(instans.aktuelKanal.longName, url);
-    }
-
-
-    // 31. okt: Fjernet af Jacob - da baggrundstråden ikke skal startes af f.eks. widgetter
-    // se tjekBaggrundstrådStartet()
-    //if (!instans.baggrundstråd.isAlive()) instans.baggrundstråd.start();
-
-    return instans;
-  }
 
 
   /**
@@ -212,14 +142,14 @@ public class DRData {
 
 
   private void hentUdsendelserOgSpillerNuListe() {
-    String url = stamdata.s("spiller_nu_url") + aktuelKanalkode;
+    String url = stamdata.json.optString("spiller_nu_url") + aktuelKanalkode;
     spillerNuListe2 = null;
 
     if (stamdata.kanalerDerSkalViseSpillerNu.contains(aktuelKanalkode)) {
       try {
         spillerNuListe2 = JsonIndlaesning.hentSpillerNuListe(url);
       } catch (Exception ex) {
-        Log.e("Kunne ikke hente spillerNuListe " + url, ex);
+        Log.d("Kunne ikke hente spillerNuListe " + url);
       }
       // Al opdatering, herunder tildeling bør ske i GUI-tråden for at undgå at
       // GUIen er i gang med at bruge objektet mens det opdateres
@@ -227,13 +157,13 @@ public class DRData {
         public void run() {
           spillerNuListe = spillerNuListe2;
           // Send broadcast om at listen er opdateret
-          appCtx.sendBroadcast(new Intent(OPDATERINGSINTENT_SpillerNuListe));
+          App.appCtx.sendBroadcast(new Intent(OPDATERINGSINTENT_SpillerNuListe));
         }
       });
     }
 
     try {
-      url = stamdata.s("program_url") + aktuelKanalkode;
+      url = stamdata.json.optString("program_url") + aktuelKanalkode;
       udsendelser2 = JsonIndlaesning.hentUdsendelser(url);
       udsendelser_ikkeTilgængeligt = false;
     } catch (Exception ex) {
@@ -245,7 +175,7 @@ public class DRData {
     handler.post(new Runnable() {
       public void run() {
         udsendelser = udsendelser2;
-        appCtx.sendBroadcast(new Intent(OPDATERINGSINTENT_Udsendelse));
+        App.appCtx.sendBroadcast(new Intent(OPDATERINGSINTENT_Udsendelse));
       }
     });
   }
@@ -255,19 +185,19 @@ public class DRData {
    */
   private void tjekForNyeStamdata() {
     final String STAMDATA_SIDST_INDLÆST = "stamdata_sidst_indlæst";
-    long sidst = prefs.getLong(STAMDATA_SIDST_INDLÆST, 0);
+    long sidst = App.prefs.getLong(STAMDATA_SIDST_INDLÆST, 0);
     long nu = System.currentTimeMillis();
     long alder = (nu - sidst) / 1000 / 60;
     if (alder >= 30) try { // stamdata er ældre end en halv time
       Log.d("Stamdata er " + alder + " minutter gamle, opdaterer dem...");
       // Opdater tid (hvad enten indlæsning lykkes eller ej)
-      prefs.edit().putLong(STAMDATA_SIDST_INDLÆST, nu).commit();
+      App.prefs.edit().putLong(STAMDATA_SIDST_INDLÆST, nu).commit();
 
-      String stamdatastr = JsonIndlaesning.hentUrlSomStreng(stamdataUrl);
+      String stamdatastr = JsonIndlaesning.hentUrlSomStreng(STAMDATA_URL);
       //Log.d(stamdatastr);
       final Stamdata stamdata2 = JsonIndlaesning.parseStamdata(stamdatastr);
       // Hentning og parsning gik godt - vi gemmer den nye udgave i prefs
-      prefs.edit().putString(STAMDATA, stamdatastr).commit();
+      App.prefs.edit().putString(STAMDATA_URL, stamdatastr).commit();
 
       // Al opdatering, herunder tildeling bør ske i GUI-tråden for at undgå at
       // GUIen er i gang med at bruge objektet mens det opdateres
@@ -275,11 +205,11 @@ public class DRData {
         public void run() {
           stamdata = stamdata2;
           // Send broadcast om at stamdata er opdateret
-          appCtx.sendBroadcast(new Intent(OPDATERINGSINTENT_Stamdata));
+          App.appCtx.sendBroadcast(new Intent(OPDATERINGSINTENT_Stamdata));
         }
       });
     } catch (Exception e) {
-      Log.e("Fejl parsning af stamdata. Url=" + stamdataUrl, e);
+      Log.e("Fejl parsning af stamdata. Url=" + STAMDATA_URL, e);
     }
   }
 
@@ -296,7 +226,7 @@ public class DRData {
     aktuelKanalkode = nyKanalkode;
     aktuelKanal = stamdata.kanalkodeTilKanal.get(aktuelKanalkode);
 
-    prefs.edit().putString(NØGLE_kanal, aktuelKanalkode).commit();
+    App.prefs.edit().putString(NØGLE_kanal, aktuelKanalkode).commit();
     udsendelser = null;
     spillerNuListe = null;
     udsendelser_ikkeTilgængeligt = false;
@@ -304,18 +234,8 @@ public class DRData {
     baggrundstrådSkalOpdatereNu();
   }
 
-  public static void toast(String info) {
-    Toast.makeText(appCtx, info, Toast.LENGTH_LONG).show();
-  }
-
   public String findKanalUrlFraKode(Kanal kanal) {
-
-    if (Build.VERSION.SDK_INT >= 16 && !prefs.contains("jbfix")) {
-      // Forvælg rtsp for jelly bean da det ser ud til at shoutcast ikke virker
-      // Set flere Samsung Galaxy SIII med Android 4.1
-      prefs.edit().putString(NØGLE_lydformat, "rtsp").putBoolean("jbfix", true).commit();
-    }
-
+    /*
     String lydformat = prefs.getString(NØGLE_lydformat, "shoutcast");
     boolean højKvalitet = "høj".equals(prefs.getString("lydkvalitet", "standard"));
     rapportering.nulstil();
@@ -332,6 +252,8 @@ public class DRData {
     String info = "Kanal: " + kanal.longName + "\nlydformat: " + lydformat + "\nKvalitet: " + (højKvalitet ? "Høj" : "Normal") + "\n" + url;
     if (DRData.udvikling) toast(info);
     Log.d(info);
+    */
+    String url = kanal.shoutcastUrl;
     return url;
   }
 

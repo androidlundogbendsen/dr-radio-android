@@ -16,7 +16,7 @@
 
  */
 
-package dk.dr.radio;
+package dk.dr.radio.akt;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -34,14 +34,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import dk.dr.radio.R;
 import dk.dr.radio.data.DRData;
-import dk.dr.radio.data.json.stamdata.Kanal;
+import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.diverse.ImageViewTilBlinde;
-import dk.dr.radio.util.Log;
+import dk.dr.radio.diverse.Log;
 
 public class Kanalvalg_akt extends ListActivity {
 
-  private DRData drData;
   private KanalAdapter kanaladapter;
   private View[] listeElementer;
   private Typeface skrift_DRiBold;
@@ -61,15 +61,8 @@ public class Kanalvalg_akt extends ListActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    try {
-      drData = DRData.tjekInstansIndlæst(this);
-    } catch (Exception ex) {
-      Log.e(ex);
-      finish(); // Hop ud!
-      return;
-    }
-    overordnedeKanalkoder = drData.stamdata.all;
-    p4koder = drData.stamdata.p4;
+    overordnedeKanalkoder = DRData.instans.stamdata.kanalkoder;
+    p4koder = DRData.instans.stamdata.p4koder;
     if (p4koder.get(0).equals("P4")) p4koder.remove(0); // Selve P4 skal ikke vises som en del af underlisten
     p4indeks = overordnedeKanalkoder.indexOf("P4");
 
@@ -77,9 +70,9 @@ public class Kanalvalg_akt extends ListActivity {
     alleKanalkoder.addAll(p4indeks + 1, p4koder); // P4's underkanaler ligger lige under P4-indgangen
 
     for (String k : alleKanalkoder)
-      if (drData.stamdata.kanalkodeTilKanal.get(k) == null) {
+      if (DRData.instans.stamdata.kanalkodeTilKanal.get(k) == null) {
         new IllegalStateException("Kanalkode mangler! Det her må ikke ske!").printStackTrace();
-        drData.stamdata.kanalkodeTilKanal.put(k, new Kanal()); // reparér problemet :-(
+        DRData.instans.stamdata.kanalkodeTilKanal.put(k, new Kanal()); // reparér problemet :-(
       }
 
     try { // DRs skrifttyper er ikke offentliggjort i SVN, derfor kan følgende fejle:
@@ -128,7 +121,7 @@ public class Kanalvalg_akt extends ListActivity {
     private View bygListeelement(int position) {
 
       String kanalkode = alleKanalkoder.get(position);
-      Kanal kanal = drData.stamdata.kanalkodeTilKanal.get(kanalkode);
+      Kanal kanal = DRData.instans.stamdata.kanalkodeTilKanal.get(kanalkode);
       // tjek om der er et billede i 'drawable' med det navn filnavn
       int id = res.getIdentifier("kanal_" + kanalkode.toLowerCase(), "drawable", getPackageName());
       //System.out.println("getView " + position + " kanal_" + kanalkode.toLowerCase() + " type = " + id);
@@ -141,7 +134,7 @@ public class Kanalvalg_akt extends ListActivity {
       // Sæt åbne/luk-ikon for P4 og højttalerikon for kanal
       if (position == p4indeks) {
         sætP4ikon(ikon);
-      } else if (drData.aktuelKanalkode.equals(kanalkode)) {
+      } else if (DRData.instans.aktuelKanalkode.equals(kanalkode)) {
         ikon.setImageResource(R.drawable.icon_playing);
         ikon.blindetekst = "Spiller nu";
       } else ikon.setVisibility(View.INVISIBLE);
@@ -215,11 +208,11 @@ public class Kanalvalg_akt extends ListActivity {
     //Kanal kanal = drData.stamdata.kanalkodeTilKanal.get(kanalkode);
     //Toast.makeText(this, "Klik på "+position+" "+kanal.longName, Toast.LENGTH_LONG).show();
 
-    if (kanalkode.equals(drData.aktuelKanalkode)) setResult(RESULT_CANCELED);
+    if (kanalkode.equals(DRData.instans.aktuelKanalkode)) setResult(RESULT_CANCELED);
     else setResult(RESULT_OK);  // Signalér til kalderen at der er skiftet kanal!!
 
     // Ny kanal valgt - send valg til afspiller (ændrer også drData.aktuelKanalkode)
-    drData.skiftKanal(kanalkode);
+    DRData.instans.skiftKanal(kanalkode);
 
     // Hop tilbage til kalderen (hovedskærmen)
     finish();

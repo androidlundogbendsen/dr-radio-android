@@ -16,13 +16,14 @@
 
  */
 
-package dk.dr.radio.util;
+package dk.dr.radio.diverse;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Build;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -36,6 +37,7 @@ import com.bugsense.trace.BugSenseHandler;
  */
 public class Log {
   public static final String TAG = "DRRadio";
+  public static final boolean EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator"); // false;
 
   private static final StringBuilder log = new StringBuilder(18000);
 
@@ -83,13 +85,13 @@ public class Log {
 
 
   public static void rapporterFejl(final Exception e) {
-    BugSenseHandler.sendException(e);
+    if (!EMULATOR) BugSenseHandler.sendException(e);
     Log.e(e);
   }
 
 
   public static void rapporterOgvisFejl(final Activity akt, final Exception e) {
-    BugSenseHandler.sendException(e);
+    if (!EMULATOR) BugSenseHandler.sendException(e);
     Log.e(e);
 
     Builder ab = new AlertDialog.Builder(akt);
@@ -101,7 +103,7 @@ public class Log {
         String brødtekst = "Skriv, hvad der skete:\n\n\n---\n";
         brødtekst += "\nFejlspor;\n" + android.util.Log.getStackTraceString(e);
         brødtekst += "\n\n" + new MedieafspillerInfo().lavTelefoninfo(akt);
-        Kontakt.kontakt(akt, "Fejl DR Radio", brødtekst, Log.log.toString());
+        App.kontakt(akt, "Fejl DR Radio", brødtekst, Log.log.toString());
       }
 
     });

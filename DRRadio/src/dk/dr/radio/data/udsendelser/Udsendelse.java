@@ -16,13 +16,12 @@
 
  */
 
-package dk.dr.radio.data.json.spiller_nu;
+package dk.dr.radio.data.udsendelser;
 
-public class SpillerNuElement {
+public class Udsendelse {
 
   public String title;
-  public String displayArtist;
+  public String description;
   public String start;
-  public String lastFM;
-
+  public String stop;
 }

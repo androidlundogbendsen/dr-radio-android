@@ -16,7 +16,7 @@
 
  */
 
-package dk.dr.radio.data.json.stamdata;
+package dk.dr.radio.data.stamdata;
 
 import org.json.JSONObject;
 
@@ -32,8 +32,8 @@ public class Stamdata {
    */
   public JSONObject json;
 
-  public List<String> all = new ArrayList<String>();
-  public List<String> p4 = new ArrayList<String>();
+  public List<String> kanalkoder = new ArrayList<String>();
+  public List<String> p4koder = new ArrayList<String>();
   public List<Kanal> kanaler = new ArrayList<Kanal>();
 
 
@@ -42,12 +42,5 @@ public class Stamdata {
    * Liste over de kanaler der vises 'Spiller lige nu' med info om musiknummer på skærmen
    */
   public Set<String> kanalerDerSkalViseSpillerNu = new HashSet<String>();
-
-  /**
-   * Slår en streng op efter en nøgle. Giver "" i fald nøglen ikke findes +stakspor i loggen
-   */
-  public String s(String nøgle) {
-    return json.optString(nøgle, "");
-  }
 
 }

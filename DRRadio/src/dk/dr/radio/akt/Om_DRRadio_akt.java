@@ -16,7 +16,7 @@
 
  */
 
-package dk.dr.radio;
+package dk.dr.radio.akt;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -29,30 +29,21 @@ import android.webkit.WebView;
 import android.webkit.WebViewDatabase;
 import android.widget.ImageButton;
 
+import dk.dr.radio.R;
 import dk.dr.radio.data.DRData;
-import dk.dr.radio.util.Kontakt;
-import dk.dr.radio.util.Log;
-import dk.dr.radio.util.MedieafspillerInfo;
+import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.MedieafspillerInfo;
 
 public class Om_DRRadio_akt extends Activity implements OnClickListener {
   WebView webview;
 
-  private static final String EMAILSUBJECT = "Feedback på DR Radio Android App";
-
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.about);
+    setContentView(R.layout.om_drradio_akt);
 
-    DRData drData;
-    try {
-      drData = DRData.tjekInstansIndlæst(this);
-    } catch (Exception ex) {
-      Log.e(ex);
-      finish(); // Hop ud!
-      return;
-    }
-    String aboutUrl = drData.stamdata.s("about_url");
+    String aboutUrl = DRData.instans.stamdata.json.optString("about_url");
 
     webview = (WebView) findViewById(R.id.about_webview);
 
@@ -78,10 +69,10 @@ public class Om_DRRadio_akt extends Activity implements OnClickListener {
 
   public void onClick(View v) {
     String brødtekst = "";
-    brødtekst += DRData.instans.stamdata.s("feedback_brugerspørgsmål");
+    brødtekst += DRData.instans.stamdata.json.optString("feedback_brugerspørgsmål");
     brødtekst += "\nkanal: " + DRData.instans.afspiller.kanalNavn + " (" + DRData.instans.afspiller.kanalUrl + ")";
     brødtekst += "\n" + new MedieafspillerInfo().lavTelefoninfo(Om_DRRadio_akt.this);
 
-    Kontakt.kontakt(this, EMAILSUBJECT, brødtekst, Log.getLog());
+    App.kontakt(this, "Feedback på DR Radio Android App", brødtekst, Log.getLog());
   }
 }

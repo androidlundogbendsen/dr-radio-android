@@ -16,7 +16,7 @@
 
  */
 
-package dk.dr.radio;
+package dk.dr.radio.akt;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -28,8 +28,10 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
 import android.view.Menu;
 
+import dk.dr.radio.R;
 import dk.dr.radio.data.DRData;
-import dk.dr.radio.util.Log;
+import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
 
 public class Indstillinger_akt extends PreferenceActivity implements OnPreferenceChangeListener, Runnable {
   public static final String åbn_formatindstilling = "åbn_formatindstilling";
@@ -42,7 +44,6 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
     addPreferencesFromResource(R.xml.indstillinger);
 
     try {
-      DRData.tjekInstansIndlæst(this);
 
       // Find lydformat
       PreferenceScreen ps = this.getPreferenceScreen();
@@ -115,7 +116,7 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
     menu.findItem(0).setVisible(false);
     if (onPrepareOptionsMenu > 9) {
       DRData.udvikling = !DRData.udvikling;
-      DRData.toast("udvikling=" + DRData.udvikling);
+      App.toast("udvikling=" + DRData.udvikling);
     }
     return super.onPrepareOptionsMenu(menu);
   }

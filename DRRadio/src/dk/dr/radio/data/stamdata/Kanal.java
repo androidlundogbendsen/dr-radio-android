@@ -16,12 +16,15 @@
 
  */
 
-package dk.dr.radio.data.json.udsendelser;
+package dk.dr.radio.data.stamdata;
 
+public class Kanal {
 
-public class Udsendelser {
+  public String shortName;
+  public String longName;
+  public String shoutcastUrl;
+  public String aacUrl;
+  public String rtspUrl;
 
-  public Udsendelse currentProgram;
-  public Udsendelse nextProgram;
 
 }

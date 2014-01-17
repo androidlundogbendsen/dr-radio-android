@@ -1,0 +1,153 @@
+/**
+ DR Radio 2 is developed by Jacob Nordfalk, Hanafi Mughrabi and Frederik Aagaard.
+ Some parts of the code are loosely based on Sveriges Radio Play for Android.
+
+ DR Radio 2 for Android is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License version 2 as published by
+ the Free Software Foundation.
+
+ DR Radio 2 for Android is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License along with
+ DR Radio 2 for Android.  If not, see <http://www.gnu.org/licenses/>.
+
+ */
+
+package dk.dr.radio.diverse;
+
+/**
+ *
+ * @author j
+ */
+
+import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
+import android.preference.PreferenceManager;
+import android.widget.Toast;
+
+import com.bugsense.trace.BugSenseHandler;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+
+import dk.dr.radio.R;
+import dk.dr.radio.afspilning.Afspiller;
+import dk.dr.radio.data.DRData;
+import dk.dr.radio.data.JsonIndlaesning;
+
+public class App extends Application {
+  public static Context appCtx;
+  public static SharedPreferences prefs;
+  private static ConnectivityManager connMgr;
+
+  /*
+     * Version fra
+     * http://developer.android.com/training/basics/network-ops/managing.html
+     */
+  public static boolean erOnline() {
+    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+    return (networkInfo != null && networkInfo.isConnected());
+  }
+
+  public static void kontakt(Activity akt, String emne, String txt, String vedhæftning) {
+
+    String[] modtagere;
+    try {
+      modtagere = JsonIndlaesning.jsonArrayTilArrayListString(DRData.instans.stamdata.json.getJSONArray("feedback_modtagere")).toArray(new String[0]);
+    } catch (Exception ex) {
+      Log.e("JSONParsning af feedback_modtagere", ex);
+      modtagere = new String[]{"MIKP@dr.dk", "fraa@dr.dk", "jacob.nordfalk@gmail.com"};
+    }
+
+    Intent i = new Intent(Intent.ACTION_SEND);
+    i.setType("plain/text");
+    i.putExtra(Intent.EXTRA_EMAIL, modtagere);
+    i.putExtra(Intent.EXTRA_SUBJECT, emne);
+
+
+    if (vedhæftning != null) try {
+      String xmlFilename = "programlog.txt";
+      //noinspection AccessStaticViaInstance
+      FileOutputStream fos = akt.openFileOutput(xmlFilename, akt.MODE_WORLD_READABLE);
+      fos.write(vedhæftning.getBytes());
+      fos.close();
+      Uri uri = Uri.fromFile(new File(akt.getFilesDir().getAbsolutePath(), xmlFilename));
+      txt += "\n\nRul op øverst i meddelelsen og giv din feedback, tak.";
+      i.putExtra(Intent.EXTRA_STREAM, uri);
+    } catch (Exception e) {
+      Log.e(e);
+      txt += "\n" + e;
+    }
+    i.putExtra(Intent.EXTRA_TEXT, txt);
+//    akt.startActivity(Intent.createChooser(i, "Send meddelelse..."));
+    try {
+      akt.startActivity(i);
+    } catch (Exception e) {
+      Log.rapporterOgvisFejl(akt, e);
+    }
+  }
+
+  public static void toast(String info) {
+    Toast.makeText(appCtx, info, Toast.LENGTH_LONG).show();
+  }
+
+
+  @Override
+  public void onCreate() {
+    // The following line triggers the initialization of ACRA
+    BugSenseHandler.initAndStartSession(this, "57c90f98");
+    super.onCreate();
+
+    connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    try {
+      DRData result;
+
+      synchronized (DRData.class) {
+        appCtx = getApplicationContext();
+        if (DRData.instans == null) {
+          prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+          // indlæs stamdata fra Prefs hvis de findes
+          String stamdatastr = prefs.getString(DRData.STAMDATA_URL, null);
+
+          if (stamdatastr == null) {
+            // Indlæs fra raw this vi ikke har nogle cachede stamdata i prefs
+            InputStream is = getResources().openRawResource(R.raw.stamdata_android29);
+            stamdatastr = JsonIndlaesning.læsInputStreamSomStreng(is);
+          }
+
+          DRData.instans = new DRData();
+          DRData.instans.stamdata = JsonIndlaesning.parseStamdata(stamdatastr);
+
+          // Kanalvalg. Tjek først Preferences, brug derefter JSON-filens forvalgte kanal
+          if (DRData.instans.aktuelKanalkode == null)
+            DRData.instans.aktuelKanalkode = prefs.getString(DRData.NØGLE_kanal, null);
+          if (DRData.instans.aktuelKanalkode == null)
+            DRData.instans.aktuelKanalkode = DRData.instans.stamdata.json.optString("forvalgt");
+          DRData.instans.aktuelKanal = DRData.instans.stamdata.kanalkodeTilKanal.get(DRData.instans.aktuelKanalkode);
+
+          DRData.instans.afspiller = new Afspiller();
+
+          String url = DRData.instans.findKanalUrlFraKode(DRData.instans.aktuelKanal);
+          DRData.instans.afspiller.setKanal(DRData.instans.aktuelKanal.longName, url);
+        }
+        result = DRData.instans;
+      }
+    } catch (Exception ex) {
+      // TODO popop-advarsel til bruger om intern fejl og rapporter til udvikler-dialog
+      Log.rapporterFejl(ex);
+      return;
+    }
+  }
+
+}

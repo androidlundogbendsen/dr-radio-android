@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:text="@string/about">
+                android:text="Om">
         </TextView>
 
     </LinearLayout>

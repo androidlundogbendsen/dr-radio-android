@@ -44,8 +44,9 @@ import java.util.List;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.AfspillerWidget;
+import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.Opkaldshaandtering;
-import dk.dr.radio.util.Log;
 
 
 /**
@@ -82,15 +83,12 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
     mediaPlayer.setOnPreparedListener(lytter);
     mediaPlayer.setOnBufferingUpdateListener(lytter);
     mediaPlayer.setOnSeekCompleteListener(lytter);
-    if (lytter != null && DRData.prefs.getBoolean(NØGLEholdSkærmTændt, false)) {
-      mediaPlayer.setWakeMode(DRData.appCtx, PowerManager.SCREEN_DIM_WAKE_LOCK);
+    if (lytter != null && App.prefs.getBoolean(NØGLEholdSkærmTændt, false)) {
+      mediaPlayer.setWakeMode(App.appCtx, PowerManager.SCREEN_DIM_WAKE_LOCK);
       //DRData.toast("holdSkærmTændt");
     }
   }
 
-  //private final NotificationManager notificationManager;
-  private final Opkaldshaandtering opkaldshåndtering;
-  private final TelephonyManager tm;
   //private Notification notification;
 
   static final String NØGLEholdSkærmTændt = "holdSkærmTændt";
@@ -109,21 +107,16 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
     // kanalUrl = p.getString("kanalUrl", "rtsp://live-rtsp.dr.dk/rtplive/_definst_/Channel5_LQ.stream");
 
     // Gem værdi hvis den ikke findes, sådan at indstillingsskærm viser det rigtige
-    if (!DRData.prefs.contains(NØGLEholdSkærmTændt)) {
+    if (!App.prefs.contains(NØGLEholdSkærmTændt)) {
       // Xperia Play har brug for at holde skærmen tændt. Muligvis også andre....
       boolean holdSkærmTændt = "R800i".equals(Build.MODEL);
-      DRData.prefs.edit().putBoolean(NØGLEholdSkærmTændt, holdSkærmTændt).commit();
+      App.prefs.edit().putBoolean(NØGLEholdSkærmTændt, holdSkærmTændt).commit();
     }
 
-    //notificationManager = (NotificationManager) DRData.appCtx.getSystemService(Context.NOTIFICATION_SERVICE);
-    try {
-      wifilock = ((WifiManager) DRData.appCtx.getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "DR Radio");
-      wifilock.setReferenceCounted(false);
-    } catch (Exception e) {
-      Log.rapporterFejl(e);
-    } // TODO fjern try/catch
-    opkaldshåndtering = new Opkaldshaandtering(this);
-    tm = (TelephonyManager) DRData.appCtx.getSystemService(Context.TELEPHONY_SERVICE);
+    wifilock = ((WifiManager) App.appCtx.getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "DR Radio");
+    wifilock.setReferenceCounted(false);
+    Opkaldshaandtering opkaldshåndtering = new Opkaldshaandtering(this);
+    TelephonyManager tm = (TelephonyManager) App.appCtx.getSystemService(Context.TELEPHONY_SERVICE);
     tm.listen(opkaldshåndtering, PhoneStateListener.LISTEN_CALL_STATE);
   }
 
@@ -140,15 +133,15 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
       //opdaterNotification();
       // Start afspillerservicen så programmet ikke bliver lukket
       // når det kører i baggrunden under afspilning
-      DRData.appCtx.startService(new Intent(DRData.appCtx, HoldAppIHukommelsenService.class).putExtra("kanalNavn", kanalNavn));
-      if (DRData.prefs.getBoolean("wifilås", true) && wifilock != null) try {
+      App.appCtx.startService(new Intent(App.appCtx, HoldAppIHukommelsenService.class).putExtra("kanalNavn", kanalNavn));
+      if (App.prefs.getBoolean("wifilås", true) && wifilock != null) try {
         wifilock.acquire();
-        if (DRData.udvikling) DRData.toast("wifilock.acquire()");
+        if (DRData.udvikling) App.toast("wifilock.acquire()");
       } catch (Exception e) {
         Log.rapporterFejl(e);
       } // TODO fjern try/catch
       startAfspilningIntern();
-      AudioManager audioManager = (AudioManager) DRData.appCtx.getSystemService(Context.AUDIO_SERVICE);
+      AudioManager audioManager = (AudioManager) App.appCtx.getSystemService(Context.AUDIO_SERVICE);
       // Skru op til 1/5 styrke hvis volumen er lavere end det
       int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
       int nu = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -220,7 +213,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
 
     //if (notification != null) notificationManager.cancelAll();
     // Stop afspillerservicen
-    DRData.appCtx.stopService(new Intent(DRData.appCtx, HoldAppIHukommelsenService.class));
+    App.appCtx.stopService(new Intent(App.appCtx, HoldAppIHukommelsenService.class));
     if (wifilock != null) try {
       wifilock.release();
     } catch (Exception e) {
@@ -298,11 +291,11 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
 
   private void opdaterWidgets() {
 
-    AppWidgetManager mAppWidgetManager = AppWidgetManager.getInstance(DRData.appCtx);
-    int[] appWidgetId = mAppWidgetManager.getAppWidgetIds(new ComponentName(DRData.appCtx, AfspillerWidget.class));
+    AppWidgetManager mAppWidgetManager = AppWidgetManager.getInstance(App.appCtx);
+    int[] appWidgetId = mAppWidgetManager.getAppWidgetIds(new ComponentName(App.appCtx, AfspillerWidget.class));
 
     for (int id : appWidgetId) {
-      AfspillerWidget.opdaterUdseende(DRData.appCtx, mAppWidgetManager, id);
+      AfspillerWidget.opdaterUdseende(App.appCtx, mAppWidgetManager, id);
     }
   }
 
@@ -413,8 +406,8 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
         handler.postDelayed(startAfspilningIntern, ventetid);
       } else {
         stopAfspilning(); // Vi giver op efter 10. forsøg
-        DRData.toast("Beklager, kan ikke spille radio");
-        DRData.toast("Prøv at vælge et andet format i indstillingerne");
+        App.toast("Beklager, kan ikke spille radio");
+        App.toast("Prøv at vælge et andet format i indstillingerne");
       }
     } else {
       mediaPlayer.reset();

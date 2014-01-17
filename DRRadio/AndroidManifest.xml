@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="dk.dr.radio"
-          android:versionCode="30"
+          android:versionCode="31"
           android:versionName="2.9.0">
 
     <uses-sdk
@@ -20,13 +20,13 @@
 
     <application
             android:icon="@drawable/appicon"
-            android:name="dk.dr.radio.diverse.AcraApplication"
+            android:name="dk.dr.radio.diverse.App"
             android:process="dk.dr.radio"
             android:allowBackup="true"
-            android:label="@string/app_name">
+            android:label="DR Radio">
 
         <activity
-                android:name="dk.dr.radio.Splash_akt"
+                android:name=".akt.Splash_akt"
                 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
                 android:screenOrientation="portrait">
             <intent-filter>
@@ -35,26 +35,26 @@
             </intent-filter>
         </activity>
         <activity
-                android:name="dk.dr.radio.Afspilning_akt"
+                android:name="dk.dr.radio.akt.Afspilning_akt"
                 android:theme="@android:style/Theme.NoTitleBar"
                 android:label="DR Radio"
                 android:launchMode="singleTask"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name="dk.dr.radio.Om_DRRadio_akt"
+                android:name="dk.dr.radio.akt.Om_DRRadio_akt"
                 android:label="Om DR Radio"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name="dk.dr.radio.Kanalvalg_akt"
+                android:name="dk.dr.radio.akt.Kanalvalg_akt"
                 android:theme="@android:style/Theme.NoTitleBar"
                 android:label="Kanalvalg"
                 android:noHistory="true"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name="dk.dr.radio.Indstillinger_akt"
+                android:name="dk.dr.radio.akt.Indstillinger_akt"
                 android:label="DR Radio Indstillinger"
                 android:screenOrientation="portrait">
             <intent-filter>
