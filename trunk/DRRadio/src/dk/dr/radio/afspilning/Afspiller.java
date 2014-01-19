@@ -84,8 +84,8 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
     mediaPlayer.setOnBufferingUpdateListener(lytter);
     mediaPlayer.setOnSeekCompleteListener(lytter);
     if (lytter != null && App.prefs.getBoolean(NØGLEholdSkærmTændt, false)) {
-      mediaPlayer.setWakeMode(App.ctx, PowerManager.SCREEN_DIM_WAKE_LOCK);
-      //DRData.toast("holdSkærmTændt");
+      mediaPlayer.setWakeMode(App.instans, PowerManager.SCREEN_DIM_WAKE_LOCK);
+      //DRData.langToast("holdSkærmTændt");
     }
   }
 
@@ -113,10 +113,10 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
       App.prefs.edit().putBoolean(NØGLEholdSkærmTændt, holdSkærmTændt).commit();
     }
 
-    wifilock = ((WifiManager) App.ctx.getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "DR Radio");
+    wifilock = ((WifiManager) App.instans.getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "DR Radio");
     wifilock.setReferenceCounted(false);
     Opkaldshaandtering opkaldshåndtering = new Opkaldshaandtering(this);
-    TelephonyManager tm = (TelephonyManager) App.ctx.getSystemService(Context.TELEPHONY_SERVICE);
+    TelephonyManager tm = (TelephonyManager) App.instans.getSystemService(Context.TELEPHONY_SERVICE);
     tm.listen(opkaldshåndtering, PhoneStateListener.LISTEN_CALL_STATE);
   }
 
@@ -133,15 +133,15 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
       //opdaterNotification();
       // Start afspillerservicen så programmet ikke bliver lukket
       // når det kører i baggrunden under afspilning
-      App.ctx.startService(new Intent(App.ctx, HoldAppIHukommelsenService.class).putExtra("kanalNavn", kanalNavn));
+      App.instans.startService(new Intent(App.instans, HoldAppIHukommelsenService.class).putExtra("kanalNavn", kanalNavn));
       if (App.prefs.getBoolean("wifilås", true) && wifilock != null) try {
         wifilock.acquire();
-        if (DRData.udvikling) App.toast("wifilock.acquire()");
+        if (DRData.udvikling) App.langToast("wifilock.acquire()");
       } catch (Exception e) {
         Log.rapporterFejl(e);
       } // TODO fjern try/catch
       startAfspilningIntern();
-      AudioManager audioManager = (AudioManager) App.ctx.getSystemService(Context.AUDIO_SERVICE);
+      AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
       // Skru op til 1/5 styrke hvis volumen er lavere end det
       int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
       int nu = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -213,7 +213,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
 
     //if (notification != null) notificationManager.cancelAll();
     // Stop afspillerservicen
-    App.ctx.stopService(new Intent(App.ctx, HoldAppIHukommelsenService.class));
+    App.instans.stopService(new Intent(App.instans, HoldAppIHukommelsenService.class));
     if (wifilock != null) try {
       wifilock.release();
     } catch (Exception e) {
@@ -291,11 +291,11 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
 
   private void opdaterWidgets() {
 
-    AppWidgetManager mAppWidgetManager = AppWidgetManager.getInstance(App.ctx);
-    int[] appWidgetId = mAppWidgetManager.getAppWidgetIds(new ComponentName(App.ctx, AfspillerWidget.class));
+    AppWidgetManager mAppWidgetManager = AppWidgetManager.getInstance(App.instans);
+    int[] appWidgetId = mAppWidgetManager.getAppWidgetIds(new ComponentName(App.instans, AfspillerWidget.class));
 
     for (int id : appWidgetId) {
-      AfspillerWidget.opdaterUdseende(App.ctx, mAppWidgetManager, id);
+      AfspillerWidget.opdaterUdseende(App.instans, mAppWidgetManager, id);
     }
   }
 
@@ -406,8 +406,8 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
         handler.postDelayed(startAfspilningIntern, ventetid);
       } else {
         stopAfspilning(); // Vi giver op efter 10. forsøg
-        App.toast("Beklager, kan ikke spille radio");
-        App.toast("Prøv at vælge et andet format i indstillingerne");
+        App.langToast("Beklager, kan ikke spille radio");
+        App.langToast("Prøv at vælge et andet format i indstillingerne");
       }
     } else {
       mediaPlayer.reset();

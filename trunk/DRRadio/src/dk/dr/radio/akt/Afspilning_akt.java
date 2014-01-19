@@ -57,6 +57,7 @@ import java.util.WeakHashMap;
 import dk.dr.radio.R;
 import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.afspilning.AfspillerListener;
+import dk.dr.radio.akt_v3.ListeAkt;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.spiller_nu.SpillerNuElement;
 import dk.dr.radio.data.stamdata.Kanal;
@@ -599,6 +600,9 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
     int id = item.getItemId();
     if (id == R.id.om) {
       startActivity(new Intent(this, Om_DRRadio_akt.class));
+    } else if (id == R.id.v3) {
+      startActivity(new Intent(this, ListeAkt.class));
+      //startActivity(new Intent(this, VisFragmentAkt.class).putExtra(VisFragmentAkt.KLASSE, MineOpkaldFrag.class));
     } else if (id == R.id.indstillinger) {
       startActivity(new Intent(this, Indstillinger_akt.class));
     } else if (id == R.id.sluk) {

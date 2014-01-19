@@ -68,24 +68,24 @@ public class AfspillerWidget extends AppWidgetProvider {
 
   public static RemoteViews lavRemoteViews() {
 
-    RemoteViews remoteViews = new RemoteViews(App.ctx.getPackageName(), R.layout.afspillerwidget);
+    RemoteViews remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspillerwidget);
 
-    Intent startStopI = new Intent(App.ctx, AfspillerReciever.class);
+    Intent startStopI = new Intent(App.instans, AfspillerReciever.class);
     startStopI.putExtra("flag", Afspiller.WIDGET_START_ELLER_STOP);
-    PendingIntent pi = PendingIntent.getBroadcast(App.ctx, 0, startStopI, PendingIntent.FLAG_UPDATE_CURRENT);
+    PendingIntent pi = PendingIntent.getBroadcast(App.instans, 0, startStopI, PendingIntent.FLAG_UPDATE_CURRENT);
     remoteViews.setOnClickPendingIntent(R.id.startStopKnap, pi);
 
 
-    Intent åbnAktivitetI = new Intent(App.ctx, Afspilning_akt.class);
-    PendingIntent pi2 = PendingIntent.getActivity(App.ctx, 0, åbnAktivitetI, PendingIntent.FLAG_UPDATE_CURRENT);
+    Intent åbnAktivitetI = new Intent(App.instans, Afspilning_akt.class);
+    PendingIntent pi2 = PendingIntent.getActivity(App.instans, 0, åbnAktivitetI, PendingIntent.FLAG_UPDATE_CURRENT);
     remoteViews.setOnClickPendingIntent(R.id.yderstelayout, pi2);
 
 
     if (DRData.instans != null) {
-      Resources res = App.ctx.getResources();
+      Resources res = App.instans.getResources();
       String kanalkode = DRData.instans.aktuelKanalkode;
       // tjek om der er et billede i 'drawable' med det navn filnavn
-      int id = res.getIdentifier("kanal_" + kanalkode.toLowerCase(), "drawable", App.ctx.getPackageName());
+      int id = res.getIdentifier("kanal_" + kanalkode.toLowerCase(), "drawable", App.instans.getPackageName());
 
 
       if (id != 0) {
