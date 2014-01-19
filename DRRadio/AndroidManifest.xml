@@ -25,11 +25,19 @@
             android:label="DR Radio">
 
         <activity
+                android:theme="@android:style/Theme.Light"
+                android:name=".akt_v3.ListeAkt">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
                 android:name=".akt.Splash_akt"
                 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-                android:noHistory="true"
-                android:screenOrientation="portrait">
-            <intent-filter>
+                android:noHistory="true">
+        <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
@@ -50,6 +58,7 @@
                 android:label="Kanalvalg"
                 android:noHistory="true">
         </activity>
+
         <activity
                 android:name="dk.dr.radio.akt.Indstillinger_akt"
                 android:label="DR Radio Indstillinger">

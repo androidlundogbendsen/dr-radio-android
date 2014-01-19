@@ -116,7 +116,7 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
     menu.findItem(0).setVisible(false);
     if (onPrepareOptionsMenu > 9) {
       DRData.udvikling = !DRData.udvikling;
-      App.toast("udvikling=" + DRData.udvikling);
+      App.langToast("udvikling=" + DRData.udvikling);
     }
     return super.onPrepareOptionsMenu(menu);
   }

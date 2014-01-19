@@ -159,7 +159,7 @@ public class DRData {
         public void run() {
           spillerNuListe = spillerNuListe2;
           // Send broadcast om at listen er opdateret
-          App.ctx.sendBroadcast(new Intent(OPDATERINGSINTENT_SpillerNuListe));
+          App.instans.sendBroadcast(new Intent(OPDATERINGSINTENT_SpillerNuListe));
         }
       });
     }
@@ -177,7 +177,7 @@ public class DRData {
     handler.post(new Runnable() {
       public void run() {
         udsendelser = udsendelser2;
-        App.ctx.sendBroadcast(new Intent(OPDATERINGSINTENT_Udsendelse));
+        App.instans.sendBroadcast(new Intent(OPDATERINGSINTENT_Udsendelse));
       }
     });
   }
@@ -207,7 +207,7 @@ public class DRData {
         public void run() {
           stamdata = stamdata2;
           // Send broadcast om at stamdata er opdateret
-          App.ctx.sendBroadcast(new Intent(OPDATERINGSINTENT_Stamdata));
+          App.instans.sendBroadcast(new Intent(OPDATERINGSINTENT_Stamdata));
         }
       });
     } catch (Exception e) {
@@ -252,7 +252,7 @@ public class DRData {
       url = url.replace("L.stream", "H.stream");    // MP3, RTSP stream navn workaround
     }
     String info = "Kanal: " + kanal.longName + "\nlydformat: " + lydformat + "\nKvalitet: " + (højKvalitet ? "Høj" : "Normal") + "\n" + url;
-    if (DRData.udvikling) toast(info);
+    if (DRData.udvikling) langToast(info);
     Log.d(info);
     */
     String url = kanal.shoutcastUrl;

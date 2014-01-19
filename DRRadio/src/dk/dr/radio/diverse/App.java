@@ -34,6 +34,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
@@ -45,15 +46,18 @@ import java.io.InputStream;
 
 import dk.dr.radio.R;
 import dk.dr.radio.afspilning.Afspiller;
+import dk.dr.radio.akt_v3.BasisAktivitet;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.JsonIndlaesning;
 
 public class App extends Application {
-  public static Context ctx;
+  public static App instans;
   public static SharedPreferences prefs;
   private static ConnectivityManager connectivityManager;
   private static String versionName;
   public static NotificationManager notificationManager;
+  public static boolean udvikling = true;
+  public static Handler forgrundstråd = new Handler();
 
 
   @Override
@@ -61,7 +65,7 @@ public class App extends Application {
     BugSenseHandler.initAndStartSession(this, "57c90f98");
     super.onCreate();
 
-    ctx = this;
+    instans = instans = this;
     connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -72,7 +76,7 @@ public class App extends Application {
     }
     try {
       Class.forName("android.os.AsyncTask"); // Fix for http://code.google.com/p/android/issues/detail?id=20915
-      App.versionName = App.ctx.getPackageManager().getPackageInfo(App.ctx.getPackageName(), PackageManager.GET_ACTIVITIES).versionName;
+      App.versionName = App.instans.getPackageManager().getPackageInfo(App.instans.getPackageName(), PackageManager.GET_ACTIVITIES).versionName;
       if (Log.EMULATOR) App.versionName += " UDV";
       App.versionName += "/" + Build.MODEL + " " + Build.PRODUCT;
     } catch (Exception e) {
@@ -118,8 +122,65 @@ public class App extends Application {
     return (networkInfo != null && networkInfo.isConnected());
   }
 
-  public static void kontakt(Activity akt, String emne, String txt, String vedhæftning) {
 
+  public static BasisAktivitet aktivitetIForgrunden = null;
+  public static BasisAktivitet senesteAktivitetIForgrunden = null;
+  private static int erIGang = 0;
+
+  public static void sætErIGang(boolean netværkErIGang) {
+    boolean før = erIGang > 0;
+    erIGang += netværkErIGang ? 1 : -1;
+    boolean nu = erIGang > 0;
+    if (udvikling) Log.d("erIGang = " + erIGang);
+    if (før != nu && aktivitetIForgrunden != null) forgrundstråd.post(setProgressBarIndeterminateVisibility);
+  }
+
+  private static Runnable setProgressBarIndeterminateVisibility = new Runnable() {
+    public void run() {
+      Activity a = aktivitetIForgrunden; // trådsikkerhed
+      if (a != null) {
+        a.setProgressBarIndeterminateVisibility(erIGang > 0);
+      }
+    }
+  };
+
+  public void onResume(BasisAktivitet akt) {
+    //((NotificationManager) getSystemService("notification")).cancelAll();
+    akt.setProgressBarIndeterminateVisibility(erIGang > 0);
+    senesteAktivitetIForgrunden = aktivitetIForgrunden = akt;
+  }
+
+  public void onPause() {
+    aktivitetIForgrunden = null;
+  }
+
+
+  public static void langToast(String txt) {
+    Log.d("langToast(" + txt);
+    if (aktivitetIForgrunden == null) txt = "DR Radio:\n" + txt;
+    final String txt2 = txt;
+    forgrundstråd.post(new Runnable() {
+      @Override
+      public void run() {
+        Toast.makeText(instans, txt2, Toast.LENGTH_LONG).show();
+      }
+    });
+  }
+
+  public static void kortToast(String txt) {
+    Log.d("kortToast(" + txt);
+    if (aktivitetIForgrunden == null) txt = "DR Radio:\n" + txt;
+    final String txt2 = txt;
+    forgrundstråd.post(new Runnable() {
+      @Override
+      public void run() {
+        Toast.makeText(instans, txt2, Toast.LENGTH_SHORT).show();
+      }
+    });
+  }
+
+
+  public static void kontakt(Activity akt, String emne, String txt, String vedhæftning) {
     String[] modtagere;
     try {
       modtagere = JsonIndlaesning.jsonArrayTilArrayListString(DRData.instans.stamdata.json.getJSONArray("feedback_modtagere")).toArray(new String[0]);
@@ -155,10 +216,4 @@ public class App extends Application {
       Log.rapporterOgvisFejl(akt, e);
     }
   }
-
-  public static void toast(String info) {
-    Toast.makeText(ctx, info, Toast.LENGTH_LONG).show();
-  }
-
-
 }
