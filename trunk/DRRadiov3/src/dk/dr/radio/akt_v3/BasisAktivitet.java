@@ -85,7 +85,7 @@ public class BasisAktivitet extends FragmentActivity {
     return super.onCreateOptionsMenu(menu);
   }
 
-  protected Bundle putString(Bundle args, String key, String value) {
+  protected static Bundle putString(Bundle args, String key, String value) {
     args = new Bundle(args);
     args.putString(key, value);
     return args;

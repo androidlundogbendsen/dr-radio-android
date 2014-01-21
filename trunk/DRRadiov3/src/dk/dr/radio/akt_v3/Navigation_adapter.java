@@ -124,7 +124,9 @@ public class Navigation_adapter extends BasisAdapter {
       b.putString(Kanal_frag.P_url, "http://www.dr.dk/tjenester/mu-apps/schedule/P3/0");
       f.setArguments(b);
     } else {
-      f = Skrald_dummyFragment.newInstance(position + 1);
+      f = new KanalViewpager_frag();
+      Bundle b = new Bundle();
+      f.setArguments(b);
     }
 
     FragmentManager fragmentManager = akt.getSupportFragmentManager();
