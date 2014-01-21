@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content">
+
+
+    <ImageView
+            android:id="@+id/venstreikon"
+            android:src="@drawable/kanalvalg_spiller"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:scaleType="fitEnd"
+            android:layout_marginLeft="10dp"
+            />
+
+    <TextView
+            android:id="@+id/tekst"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="P4 København"
+            android:gravity="center_vertical"/>
+
+</LinearLayout>

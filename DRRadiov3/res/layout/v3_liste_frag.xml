@@ -1,0 +1,25 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <ListView
+            android:id="@+id/listView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"/>
+    <!-- hurtigscroll
+                android:scrollbars="none"
+                android:fastScrollEnabled="true"/>
+
+
+    For mere komplekst tomhedsindikator, brug ViewStub - se
+               http://cyrilmottier.com/2011/06/20/listview-tips-tricks-1-handle-emptiness/
+                android:visibility="gone"
+    -->
+    <TextView
+            android:id="@+id/tom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Intet indhold"/>
+</FrameLayout>
+
