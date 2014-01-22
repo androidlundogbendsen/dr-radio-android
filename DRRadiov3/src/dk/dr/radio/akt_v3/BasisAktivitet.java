@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +21,7 @@ import com.androidquery.AQuery;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
-public class BasisAktivitet extends FragmentActivity {
+public class BasisAktivitet extends ActionBarActivity {
   protected final AQuery aq = new AQuery(this);
 
 
@@ -28,21 +29,7 @@ public class BasisAktivitet extends FragmentActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-    getActionBarSetDisplayHomeAsUpEnabledKompat(this, true);
-  }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
-    if (App.udvikling) Log.d(this + " onResume()");
-    App.instans.onResume(this);
-  }
-
-  @Override
-  protected void onPause() {
-    super.onPause();
-    if (App.udvikling) Log.d(this + " onPause()");
-    App.instans.onPause();
+    //getActionBarSetDisplayHomeAsUpEnabledKompat(this, true);
   }
 
   @SuppressWarnings("UnusedDeclaration")
@@ -76,6 +63,7 @@ public class BasisAktivitet extends FragmentActivity {
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
+    Log.d("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
     if (App.udvikling) {
       menu.add(0, 642, 0, "Udvikler");
       menu.add(0, 643, 0, "Log");
@@ -95,10 +83,12 @@ public class BasisAktivitet extends FragmentActivity {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
+      /*
       case android.R.id.home:
         //NavUtils.navigateUpTo(this, new Intent(this, HjemAkt.class));
         finish();
         return true;
+        */
       case 642:
         App.udvikling = !App.udvikling;
         App.kortToast("Log.udvikling = " + App.udvikling);
@@ -133,5 +123,20 @@ public class BasisAktivitet extends FragmentActivity {
         return true;
     }
     return super.onOptionsItemSelected(item);
+  }
+
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    if (App.udvikling) Log.d(this + " onResume()");
+    App.instans.onResume(this);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    if (App.udvikling) Log.d(this + " onPause()");
+    App.instans.onPause();
   }
 }
