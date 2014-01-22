@@ -17,18 +17,6 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.v3.R;
 
 
-class MenuElement {
-  final int type;
-  final String data;
-  final View layout;
-
-  MenuElement(int type, String data, View layout) {
-    this.type = type;
-    this.data = data;
-    this.layout = layout;
-  }
-}
-
 /**
  * Created by j on 19-01-14.
  */
@@ -44,16 +32,23 @@ public class Navigation_adapter extends BasisAdapter {
     return v;
   }
 
+
   public Navigation_adapter(Context themedContext) {
     layoutInflater = (LayoutInflater) themedContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     aq = new AQuery(themedContext);
     elem.add(new MenuElement(0, null, aq(R.layout.nav_elem_soeg)));
     elem.add(new MenuElement(1, null, aq(R.layout.nav_elem_adskiller)));
+    elem.add(new MenuElement(4, null, aq(R.layout.nav_elem_overskrift)));
+    aq.id(R.id.tekst).text("Kanaloversigt");
+    elem.add(new MenuElement(1, null, aq(R.layout.nav_elem_adskiller)));
+
     elem.add(new MenuElement(1, null, aq(R.layout.nav_elem_overskrift)));
-    aq.id(R.id.tekst).text("HØR LIVE RADIO");
-    elem.add(new MenuElement(2, "P1", aq(R.layout.nav_elem_kanal)));
+    aq.id(R.id.tekst).text("(fjernes):");
+    elem.add(new MenuElement(1, null, aq(R.layout.nav_elem_overskrift)));
+    aq.id(R.id.tekst).text("xHØR LIVE RADIOx");
+    elem.add(new MenuElement(2, "P1D", aq(R.layout.nav_elem_kanal)));
     aq.id(R.id.billede).image(R.drawable.kanal_p1d);
-    elem.add(new MenuElement(2, "P2", aq(R.layout.nav_elem_kanal)));
+    elem.add(new MenuElement(2, "P2D", aq(R.layout.nav_elem_kanal)));
     aq.id(R.id.billede).image(R.drawable.kanal_p2d);
     elem.add(new MenuElement(2, "P3", aq(R.layout.nav_elem_kanal)));
     aq.id(R.id.billede).image(R.drawable.kanal_p3);
@@ -63,6 +58,7 @@ public class Navigation_adapter extends BasisAdapter {
     aq.id(R.id.tekst).text("P4 København");
     elem.add(new MenuElement(3, "P4S", aq(R.layout.nav_elem_kanaltekst)));
     aq.id(R.id.tekst).text("P4 Sjælland");
+
     elem.add(new MenuElement(1, null, aq(R.layout.nav_elem_adskiller)));
     elem.add(new MenuElement(3, null, aq(R.layout.nav_elem_overskrift)));
     aq.id(R.id.tekst).text("Senest lyttede");
@@ -78,6 +74,29 @@ public class Navigation_adapter extends BasisAdapter {
   }
 
 
+  public void vælgMenu(FragmentActivity akt, int position) {
+    MenuElement e = elem.get(position);
+    Bundle b = new Bundle();
+    Fragment f;
+
+    if (e.type == 4) {
+      f = new KanalViewpager_frag();
+    } else if (e.type == 2) {
+      f = new Kanal_frag();
+      b.putString(Kanal_frag.P_kode, e.data);
+    } else {
+      App.kortToast("Ikke implementeret");
+      f = new Kanal_frag();
+      b.putString(Kanal_frag.P_kode, "P3");
+    }
+
+    f.setArguments(b);
+    FragmentManager fragmentManager = akt.getSupportFragmentManager();
+    fragmentManager.beginTransaction().replace(R.id.indhold_frag, f).commit();
+
+  }
+
+
   @Override
   public int getCount() {
     return elem.size();
@@ -85,7 +104,7 @@ public class Navigation_adapter extends BasisAdapter {
 
   @Override
   public int getViewTypeCount() {
-    return 4;
+    return 10;
   }
 
   @Override
@@ -104,35 +123,18 @@ public class Navigation_adapter extends BasisAdapter {
     return elem.get(position).layout;
   }
 
+  static class MenuElement {
+    final int type;
+    final String data;
+    final View layout;
 
-  public void vælgMenu(FragmentActivity akt, int position) {
-
-    // update the main content by replacing fragments
-    Fragment f;
-    if (position == 1) {
-      App.kortToast("P1");
-      f = new Kanal_frag();
-      Bundle b = new Bundle();
-      b.putString(Kanal_frag.P_navn, "P1");
-      b.putString(Kanal_frag.P_url, "http://www.dr.dk/tjenester/mu-apps/schedule/P1D/0");
-      f.setArguments(b);
-    } else if (position == 3) {
-      App.kortToast("P3");
-      f = new Kanal_frag();
-      Bundle b = new Bundle();
-      b.putString(Kanal_frag.P_navn, "P3");
-      b.putString(Kanal_frag.P_url, "http://www.dr.dk/tjenester/mu-apps/schedule/P3/0");
-      f.setArguments(b);
-    } else {
-      f = new KanalViewpager_frag();
-      Bundle b = new Bundle();
-      f.setArguments(b);
+    MenuElement(int type, String data, View layout) {
+      this.type = type;
+      this.data = data;
+      this.layout = layout;
     }
-
-    FragmentManager fragmentManager = akt.getSupportFragmentManager();
-    fragmentManager.beginTransaction().replace(R.id.indhold_frag, f).commit();
-
   }
+
 }
 
 

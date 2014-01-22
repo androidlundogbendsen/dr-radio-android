@@ -1,0 +1,193 @@
+{
+"kopi": "scp /home/j/android/dr-radio-android/DRRadioBeta/res/raw/stamdata_android2.json  javabog.dk:javabog.dk/privat/",
+
+
+
+        "alleKanalerUrl" : "http://www.dr.dk/mu/Bundle?BundleType=%22Channel%22&DrChannel=true&Dirty=true&ChannelType=%22RADIO%22&limit=100",
+
+        "forvalgt": "P3",
+
+        "kanalkoder": ["P1D", "P2D", "P3", "P4", "P5D", "P6B", "P7M", "P8J", "RAM", "DRM", "NEWS"],
+        "p4koder": ["P4", "KH4", "NV4", "AR4", "AB4", "OD4", "AL4", "HO4", "TR4", "RO4", "ES4"],
+
+        "kanaler": [
+                {
+                        "kode": "P1D",
+                        "navn": "DR P1",
+         "Slug" : "p1",
+                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A03L.mp3",
+                        "aacUrl": "http://drradio1-lh.akamaihd.net/i/p1_9@143503/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A03L.stream"
+                },
+                {
+                        "kode": "P2D",
+                        "navn": "DR P2",
+         "Slug" : "p2",
+                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A04L.mp3",
+                        "aacUrl": "http://drradio2-lh.akamaihd.net/i/p2_9@143504/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A04L.stream"
+                },
+                {
+                        "kode": "P3",
+         "Slug" : "p3",
+                        "navn": "DR P3",
+                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A05L.mp3",
+                        "aacUrl": "http://drradio3-lh.akamaihd.net/i/p3_9@143506/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A05L.stream"
+                },
+                {
+                        "kode": "P4",
+         "Slug" : "p4",
+                        "navn": "P4"
+                },
+                {
+                        "kode": "KH4",
+                        "navn": "DR P4 København",
+         "Slug" : "p4kbh",
+                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A08L.mp3",
+                        "aacUrl": "http://drradio3-lh.akamaihd.net/i/p4kobenhavn_9@143509/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A08L.stream"
+                },
+                {
+                        "kode": "NV4",
+                        "navn": "DR P4 Sjælland",
+                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A11L.mp3",
+         "Slug" : "p4sjaelland",
+                        "aacUrl": "http://drradio3-lh.akamaihd.net/i/p4sjaelland_9@143512/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A11L.stream"
+                },
+                {
+                        "kode": "AB4",
+         "Slug" : "p4syd",
+                        "navn": "DR P4 Syd",
+                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A12L.mp3",
+                        "aacUrl": "http://drradio1-lh.akamaihd.net/i/p4syd_9@143513/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A12L.stream"
+                },
+                {
+                        "kode": "OD4",
+          "Slug" : "p4fyn",
+                       "navn": "DR P4 Fyn",
+                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A07L.mp3",
+                        "aacUrl": "http://drradio2-lh.akamaihd.net/i/p4fyn_9@143508/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A07L.stream"
+                },
+                {
+                        "kode": "RO4",
+                        "navn": "DR P4 Bornholm",
+         "Slug" : "p4bornholm",
+                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A06L.mp3",
+                        "aacUrl": "http://drradio1-lh.akamaihd.net/i/p4bornholm_9@143507/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A06L.stream"
+                },
+                {
+                        "kode": "HO4",
+         "Slug" : "p4vest",
+                        "navn": "DR P4 Midt & Vest",
+                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A09L.mp3",
+                        "aacUrl": "http://drradio1-lh.akamaihd.net/i/p4midtvest_9@143510/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A09L.stream"
+                },
+                {
+                        "kode": "AL4",
+                        "navn": "DR P4 Nordjylland",
+         "Slug" : "p4nord",
+                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A10L.mp3",
+                        "aacUrl": "http://drradio2-lh.akamaihd.net/i/p4nordjylland_9@143511/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A10L.stream"
+                },
+                {
+                        "kode": "TR4",
+         "Slug" : "p4trekanten",
+                        "navn": "DR P4 Trekanten",
+                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A13L.mp3",
+                        "aacUrl": "http://drradio2-lh.akamaihd.net/i/p4trekanten_9@143514/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A13L.stream"
+                },
+                {
+                        "kode": "AR4",
+                        "navn": "DR P4 Østjylland",
+         "Slug" : "p4aarhus",
+                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A14L.mp3",
+                        "aacUrl": "http://drradio3-lh.akamaihd.net/i/p4ostjylland_9@143515/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A14L.stream"
+                },
+                {
+                        "kode": "ES4",
+         "Slug" : "p4esbjerg",
+                        "navn": "DR P4 Esbjerg",
+                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A15L.mp3",
+                        "aacUrl": "http://drradio1-lh.akamaihd.net/i/p4esbjerg_9@143516/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A15L.stream"
+                },
+                {
+                        "kode": "P5D",
+         "Slug" : "p5",
+                        "navn": "DR P5",
+                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A25L.mp3",
+                        "aacUrl": "http://drradio1-lh.akamaihd.net/i/p5_9@143530/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A25L.stream"
+                },
+                {
+                        "kode": "P6B",
+         "Slug" : "p6beat",
+                        "navn": "DR P6 Beat",
+                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A29L.mp3",
+                        "aacUrl": "/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A29L.stream"
+                },
+                {
+                        "kode": "P8J",
+          "Slug" : "p8jazz",
+                       "navn": "DR P8 Jazz",
+                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A22L.mp3",
+                        "aacUrl": "http://drradio2-lh.akamaihd.net/i/p8jazz_9@143524/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A22L.stream"
+                },
+                {
+                        "kode": "RAM",
+         "Slug" : "ramasjangradio",
+                        "navn": "DR Ramasjang",
+                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A24L.mp3",
+                        "aacUrl": "http://drradio3-lh.akamaihd.net/i/ramasjang_9@143529/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A24L.stream"
+                },
+                {
+                        "kode": "P7M",
+                        "navn": "DR P7 Mix",
+          "Slug" : "p7mix",
+                       "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A21L.mp3",
+                        "aacUrl": "http://drradio1-lh.akamaihd.net/i/p7mix_9@143522/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A21L.stream"
+                },
+                {
+                        "kode": "DRM",
+          "Slug" : "mama",
+                       "navn": "DR MAMA",
+                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A18L.mp3",
+                        "aacUrl": "http://drradio3-lh.akamaihd.net/i/mama_9@143520/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A18L.stream"
+                },
+                {
+                        "kode": "NEWS",
+         "Slug" : "nyhederradio",
+                        "navn": "Seneste Radioavis",
+                        "shoutcastUrl": "http://live-icy.gss.dr.dk:8000/A/A02L.mp3",
+                        "aacUrl": "http://drradio2-lh.akamaihd.net/i/drnyheder_9@143532/master.m3u8",
+                        "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A02L.stream"
+                }
+        ],
+
+        "vis_spiller_nu": ["P2D", "P3", "P4", "P5D", "P6B", "P7M", "P8J", "SOF", "DRM", "RAM", "DAN", "DAB"],
+        "spiller_nu_url": "http://www.dr.dk/info/musik/service/TrackInfoJsonService.svc/TrackInfo/",
+
+        "program_url": "http://www.dr.dk/tjenester/medieapi/api/ProgramInfo/" ,
+
+        "stats_url": "http://www.dr.dk/tjenester/iphone/radio/stats/android22.drxml?channel=",
+        "about_url": "http://www.dr.dk/tjenester/iphone/radio/about/android22.drxml",
+
+        "feedback_modtagere": ["nordfalk@lundogbendsen.dk" ],
+		"feedback_titel": "DR Radio v3 beta1 test feedback",
+		"feedback_brugerspørgsmål": "DR Radio v3 beta1 test - Hvis du oplever fejl med afspilning o.l., så vil vi meget gerne have din feedback\n\nVirker P3? JA NEJ\n\nHvis nej, hvad er fejlen?\n\n\n\n\n----- teknisk info til udviklerne -----\n\n",
+		"drift_statusmeddelelse": "Dette er en afprøvning af, om DRs nye Akamai HLS radiostreams fungerer tilfredsstillende på Android.\nEfter at have hørt et stykke tid bedes du trykke på 'Send feedback' og fortælle hvorvidt det fungerer godt eller ej."
+}

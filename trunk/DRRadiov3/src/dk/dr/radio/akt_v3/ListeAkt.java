@@ -25,13 +25,13 @@ public class ListeAkt extends BasisAktivitet {
     ViewPager viewPager0 = (ViewPager) findViewById(R.id.pager0);
 
     faneAdapter = new VariabelFaneAdapter(getSupportFragmentManager());
-    faneAdapter.tilføj("P1", new Kanal_frag(), putString(args, Kanal_frag.P_url, "http://www.dr.dk/tjenester/mu-apps/schedule/P1D/0"));
+    faneAdapter.tilføj("P1", new Kanal_frag(), putString(args, Kanal_frag.P_kode, "P1D"));
     if (viewPager0 != null) {
       viewPager0.setAdapter(faneAdapter);
       faneAdapter = new VariabelFaneAdapter(getSupportFragmentManager());
     }
     //faneAdapter.tilføj("fremtidige", new MineOpkaldFrag(), putString(args, MineOpkaldFrag.P_url, "1"));
-    faneAdapter.tilføj("P3", new Kanal_frag(), putString(args, Kanal_frag.P_url, "http://www.dr.dk/tjenester/mu-apps/schedule/P3/0"));
+    faneAdapter.tilføj("P3", new Kanal_frag(), putString(args, Kanal_frag.P_kode, "P3"));
     viewPager.setAdapter(faneAdapter);
   }
 
@@ -62,10 +62,10 @@ public class ListeAkt extends BasisAktivitet {
       return faneNavne.get(position);
     }
 
-    public void tilføj(String opgave, Fragment opgaveFrag, Bundle args) {
+    public void tilføj(String opgave, Fragment fragment, Bundle args) {
       faneNavne.add(opgave);
-      opgaveFrag.setArguments(args);
-      faneFragmenter.add(opgaveFrag);
+      fragment.setArguments(args);
+      faneFragmenter.add(fragment);
     }
   }
 
