@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 
 import com.androidquery.AQuery;
 
+import dk.dr.radio.diverse.Log;
+
 /**
  * @author j
  */
@@ -23,6 +25,7 @@ public class BasisFragment extends Fragment {
   protected View rod;
 
   protected void setContentView(int layoutRes, LayoutInflater inflater, ViewGroup container) {
+    Log.d("Viser fragment " + this);
     rod = inflater.inflate(layoutRes, container, false);
     aq = new AQuery(rod);
   }

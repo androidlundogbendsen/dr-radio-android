@@ -24,26 +24,33 @@ import dk.dr.radio.v3.R;
 
 public class Kanal_frag extends BasisFragment implements AdapterView.OnItemClickListener {
 
-  public static String P_url = "url";
-  public static String P_navn = "navn";
+  public static String P_kode = "kanalkode";
   private ListView listView;
   private ArrayList<JSONObject> liste = new ArrayList<JSONObject>();
+  private String kanalkode;
+  private String url;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     setContentView(R.layout.v3_liste_frag, inflater, container);
     //setRetainInstance(true);
 
+
     //String url = "http://www.dr.dk/mu/Bundle?BundleType=%22Channel%22&DrChannel=true&ChannelType=%22RADIO%22&limit=100";
-    String url = getArguments().getString(P_url);
+    kanalkode = getArguments().getString(P_kode);
+
+    url = "http://www.dr.dk/tjenester/mu-apps/schedule/" + kanalkode;
+
     //App.kortToast(url);
 
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
     listView.setEmptyView(aq.id(R.id.tom).getView());
 
-    aq.ajax(url, String.class, new AjaxCallback<String>() {
+    Log.d("XXX url=" + url);
+    aq.ajax(url, String.class, 60000, new AjaxCallback<String>() {
       @Override
       public void callback(String url, String json, AjaxStatus status) {
+        Log.d("XXX url " + url + "   status=" + status);
         if (json != null) try {
           //successful ajax call, show status code and json content
           //App.langToast(status.getCode() + ": OK");
@@ -113,7 +120,7 @@ public class Kanal_frag extends BasisFragment implements AdapterView.OnItemClick
   @Override
   public void onAttach(Activity activity) {
     super.onAttach(activity);
-    ((Navigation_akt) activity).sætTitel(getArguments().getString(P_navn));
+    ((Navigation_akt) activity).sætTitel(getArguments().getString(P_kode));
   }
 }
 

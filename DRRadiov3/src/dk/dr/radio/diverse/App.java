@@ -40,8 +40,13 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 
 import dk.dr.radio.akt_v3.BasisAktivitet;
+import dk.dr.radio.data.DRData;
+import dk.dr.radio.data.JsonIndlaesning;
+import dk.dr.radio.data.stamdata.Stamdata;
+import dk.dr.radio.v3.R;
 
 public class App extends Application {
   public static App instans;
@@ -58,7 +63,7 @@ public class App extends Application {
     //BugSenseHandler.initAndStartSession(this, "57c90f98");
     super.onCreate();
 
-    instans = instans = this;
+    instans = this;
     connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -76,6 +81,40 @@ public class App extends Application {
       Log.rapporterFejl(e);
     }
 
+
+    try {
+      DRData.instans = new DRData();
+
+      // indlæs stamdata fra Prefs hvis de findes
+      String stamdatastr = prefs.getString(DRData.STAMDATA_URL, null);
+
+      if (stamdatastr == null) {
+        // Indlæs fra raw this vi ikke har nogle cachede stamdata i prefs
+        InputStream is = getResources().openRawResource(R.raw.stamdata_android_v3_01);
+        stamdatastr = JsonIndlaesning.læsInputStreamSomStreng(is);
+      }
+
+      DRData.instans.stamdata = Stamdata.parseStamdatafil(stamdatastr);
+      String alleKanalerUrl = DRData.instans.stamdata.json.getString("alleKanalerUrl");
+
+      String alleKanalerStr = prefs.getString(alleKanalerUrl, null);
+      if (alleKanalerStr == null) {
+        // Indlæs fra raw this vi ikke har nogle cachede stamdata i prefs
+        InputStream is = getResources().openRawResource(R.raw.v3_alle_kanaler);
+        alleKanalerStr = JsonIndlaesning.læsInputStreamSomStreng(is);
+      }
+      DRData.instans.stamdata.parseAlleKanaler(alleKanalerStr);
+
+
+      // Kanalvalg. Tjek først Preferences, brug derefter JSON-filens forvalgte kanal
+      //DRData.instans.aktuelKanalkode = prefs.getString(DRData.NØGLE_kanal, DRData.instans.aktuelKanalkode = DRData.instans.stamdata.json.optString("forvalgt"));
+      //DRData.instans.aktuelKanal = DRData.instans.stamdata.kanalkodeTilKanal.get(DRData.instans.aktuelKanalkode);
+      //DRData.instans.afspiller = new Afspiller();      //String url = DRData.instans.findKanalUrlFraKode(DRData.instans.aktuelKanal);
+      //DRData.instans.afspiller.setKanal(DRData.instans.aktuelKanal.longName, url);
+    } catch (Exception ex) {
+      // TODO popop-advarsel til bruger om intern fejl og rapporter til udvikler-dialog
+      Log.rapporterFejl(ex);
+    }
   }
 
 
@@ -149,11 +188,11 @@ public class App extends Application {
   public static void kontakt(Activity akt, String emne, String txt, String vedhæftning) {
     String[] modtagere;
     try {
-      //modtagere = JsonIndlaesning.jsonArrayTilArrayListString(DRData.instans.stamdata.json.getJSONArray("feedback_modtagere")).toArray(new String[0]);
+      modtagere = JsonIndlaesning.jsonArrayTilArrayListString(DRData.instans.stamdata.json.getJSONArray("feedback_modtagere")).toArray(new String[0]);
     } catch (Exception ex) {
       Log.e("JSONParsning af feedback_modtagere", ex);
+      modtagere = new String[]{"MIKP@dr.dk", "fraa@dr.dk", "jacob.nordfalk@gmail.com"};
     }
-    modtagere = new String[]{"jacob.nordfalk@gmail.com"};
 
     Intent i = new Intent(Intent.ACTION_SEND);
     i.setType("plain/text");
