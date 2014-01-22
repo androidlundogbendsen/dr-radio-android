@@ -47,9 +47,11 @@ public class Kanal_frag extends BasisFragment implements AdapterView.OnItemClick
     listView.setEmptyView(aq.id(R.id.tom).getView());
 
     Log.d("XXX url=" + url);
+    App.sætErIGang(true);
     aq.ajax(url, String.class, 60000, new AjaxCallback<String>() {
       @Override
       public void callback(String url, String json, AjaxStatus status) {
+        App.sætErIGang(false);
         Log.d("XXX url " + url + "   status=" + status);
         if (json != null) try {
           //successful ajax call, show status code and json content

@@ -3,13 +3,13 @@ package dk.dr.radio.akt_v3;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-public class Navigation_akt extends ActionBarActivity {
+public class Navigation_akt extends BasisAktivitet {
 
   /**
    * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -43,15 +43,16 @@ public class Navigation_akt extends ActionBarActivity {
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
+    super.onCreateOptionsMenu(menu);
+    Log.d("XXX navigationFrag.isDrawerOpen()=" + navigationFrag.isDrawerOpen());
     if (!navigationFrag.isDrawerOpen()) {
       // Only show items in the action bar relevant to this screen
       // if the drawer is not showing. Otherwise, let the drawer
       // decide what to show in the action bar.
       getMenuInflater().inflate(R.menu.hoved_akt, menu);
       restoreActionBar();
-      return true;
     }
-    return super.onCreateOptionsMenu(menu);
+    return true;
   }
 
   @Override
