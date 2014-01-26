@@ -1,16 +1,19 @@
 package dk.dr.radio.akt_v3;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,9 +21,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
+
+import com.androidquery.AQuery;
+
+import java.util.ArrayList;
 
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.v3.R;
@@ -28,9 +33,9 @@ import dk.dr.radio.v3.R;
 ;
 
 /**
- * Fragment used for managing interactions for and presentation of a navigation drawer.
- * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
- * design guidelines</a> for a complete explanation of the behaviors implemented here.
+ * Venstremenu-navigering
+ * Se <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
+ * design guidelines</a> for en nærmere beskrivelse.
  */
 public class Navigation_frag extends Fragment {
 
@@ -221,10 +226,6 @@ public class Navigation_frag extends Fragment {
       return true;
     }
 
-    if (item.getItemId() == R.id.action_example) {
-      Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
-      return true;
-    }
 
     return super.onOptionsItemSelected(item);
   }
@@ -242,5 +243,131 @@ public class Navigation_frag extends Fragment {
 
   private ActionBar getActionBar() {
     return ((ActionBarActivity) getActivity()).getSupportActionBar();
+  }
+
+
+  static class Navigation_adapter extends BasisAdapter {
+    private final LayoutInflater layoutInflater;
+    private AQuery aq;
+    ArrayList<MenuElement> elem = new ArrayList<MenuElement>();
+
+    private View aq(int nav_elem_soeg) {
+      View v = layoutInflater.inflate(nav_elem_soeg, null);
+      aq = new AQuery(v);
+      return v;
+    }
+
+
+    public void vælgMenu(FragmentActivity akt, int position) {
+      MenuElement e = elem.get(position);
+      Bundle b = new Bundle();
+      Fragment f;
+
+      if (e.type == 4) {
+        f = new KanalViewpager_frag();
+      } else if (e.type == 2) {
+        f = new Kanal_frag();
+        b.putString(Kanal_frag.P_kode, e.data);
+      } else {
+        App.kortToast("Ikke implementeret");
+        f = new Kanal_frag();
+        b.putString(Kanal_frag.P_kode, "P3");
+      }
+
+      f.setArguments(b);
+      FragmentManager fragmentManager = akt.getSupportFragmentManager();
+      fragmentManager.beginTransaction().replace(R.id.indhold_frag, f).commit();
+
+    }
+
+
+    @Override
+    public int getCount() {
+      return elem.size();
+    }
+
+    @Override
+    public int getViewTypeCount() {
+      return 10;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+      return elem.get(position).type >= 2;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+      return elem.get(position).type;
+    }
+
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+      return elem.get(position).layout;
+    }
+
+    static class MenuElement {
+      final int type;
+      final String data;
+      final View layout;
+
+      MenuElement(int type, String data, View layout) {
+        this.type = type;
+        this.data = data;
+        this.layout = layout;
+      }
+    }
+
+    public Navigation_adapter(Context themedContext) {
+      layoutInflater = (LayoutInflater) themedContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      aq = new AQuery(themedContext);
+      elem.add(new MenuElement(0, null, aq(R.layout.nav_elem_soeg)));
+
+      elem.add(new MenuElement(3, null, aq(R.layout.nav_elem_overskrift)));
+      aq.id(R.id.tekst).text(Html.fromHtml("<b>Senest lyttede</b>"));
+
+      elem.add(new MenuElement(1, null, aq(R.layout.nav_elem_adskiller_tynd)));
+
+      elem.add(new MenuElement(3, null, aq(R.layout.nav_elem_overskrift)));
+      aq.id(R.id.tekst).text(Html.fromHtml("<b>Dine favoritprogrammer</b><br/>(2 nye udsendelser)"));
+
+      elem.add(new MenuElement(1, null, aq(R.layout.nav_elem_adskiller_tynd)));
+
+      elem.add(new MenuElement(3, null, aq(R.layout.nav_elem_overskrift)));
+      aq.id(R.id.tekst).text(Html.fromHtml("<b>Downloadede udsendelser</b> (13)"));
+
+      elem.add(new MenuElement(1, null, aq(R.layout.nav_elem_adskiller_tyk)));
+
+      elem.add(new MenuElement(3, null, aq(R.layout.nav_elem_overskrift)));
+      aq.id(R.id.tekst).text(Html.fromHtml("<b>Alle programmer A-Å"));
+
+      elem.add(new MenuElement(1, null, aq(R.layout.nav_elem_adskiller_tynd)));
+
+      elem.add(new MenuElement(4, null, aq(R.layout.nav_elem_overskrift)));
+      aq.id(R.id.tekst).text(Html.fromHtml("<b>Live kanaler</b>"));
+
+      elem.add(new MenuElement(4, null, aq(R.layout.nav_elem_overskrift)));
+      aq.id(R.id.tekst).text(Html.fromHtml("<b>Kontakt / info / om</b>"));
+
+      elem.add(new MenuElement(1, null, aq(R.layout.nav_elem_overskrift)));
+      aq.id(R.id.tekst).text(Html.fromHtml("<br/><br/>(fjernes):"));
+      elem.add(new MenuElement(1, null, aq(R.layout.nav_elem_overskrift)));
+      elem.add(new MenuElement(2, "P1D", aq(R.layout.nav_elem_kanal)));
+      aq.id(R.id.billede).image(R.drawable.kanal_p1d);
+      elem.add(new MenuElement(2, "P2D", aq(R.layout.nav_elem_kanal)));
+      aq.id(R.id.billede).image(R.drawable.kanal_p2d);
+      elem.add(new MenuElement(2, "P3", aq(R.layout.nav_elem_kanal)));
+      aq.id(R.id.billede).image(R.drawable.kanal_p3);
+      elem.add(new MenuElement(2, "P4", aq(R.layout.nav_elem_kanal)));
+      aq.id(R.id.billede).image(R.drawable.kanal_p4).id(R.id.p4åbn).visible();
+      elem.add(new MenuElement(3, "P4K", aq(R.layout.nav_elem_kanaltekst)));
+      aq.id(R.id.tekst).text("P4 København");
+      elem.add(new MenuElement(3, "P4S", aq(R.layout.nav_elem_kanaltekst)));
+      aq.id(R.id.tekst).text("P4 Sjælland");
+
+    }
+
+
   }
 }

@@ -1,7 +1,13 @@
-<EditText
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:padding="16dp"
+        android:layout_height="wrap_content">
+
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editText"
-        android:hint="Søg efter program"
-        xmlns:android="http://schemas.android.com/apk/res/android"/>
-
+        android:hint="Søg efter program"/>
+</LinearLayout>

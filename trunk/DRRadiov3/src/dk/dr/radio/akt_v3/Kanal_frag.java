@@ -52,13 +52,13 @@ public class Kanal_frag extends BasisFragment implements AdapterView.OnItemClick
       @Override
       public void callback(String url, String json, AjaxStatus status) {
         App.sætErIGang(false);
-        Log.d("XXX url " + url + "   status=" + status);
+        Log.d("XXX url " + url + "   status=" + status.getCode());
         if (json != null) try {
           //successful ajax call, show status code and json content
           //App.langToast(status.getCode() + ": OK");
           opdaterListe(new JSONArray(json));
         } catch (Exception e) {
-          Log.rapporterFejl(e);
+          Log.d("Parsefejl: " + e + " for json=" + json);
         }
         else {
           App.langToast("Error:" + status.getCode());

@@ -2,13 +2,12 @@
 "kopi": "scp /home/j/android/dr-radio-android/DRRadioBeta/res/raw/stamdata_android2.json  javabog.dk:javabog.dk/privat/",
 
 
-
         "alleKanalerUrl" : "http://www.dr.dk/mu/Bundle?BundleType=%22Channel%22&DrChannel=true&Dirty=true&ChannelType=%22RADIO%22&limit=100",
 
         "forvalgt": "P3",
 
-        "kanalkoder": ["P1D", "P2D", "P3", "P4", "P5D", "P6B", "P7M", "P8J", "RAM", "DRM", "NEWS"],
-        "p4koder": ["P4", "KH4", "NV4", "AR4", "AB4", "OD4", "AL4", "HO4", "TR4", "RO4", "ES4"],
+        "kanalkoder": ["P1D", "P2D", "P3", "P4F", "P5D", "P6B", "P7M", "P8J", "RAM", "DRM", "NEWS"],
+        "p4koder": ["KH4", "NV4", "AR4", "AB4", "OD4", "AL4", "HO4", "TR4", "RO4", "ES4"],
 
         "kanaler": [
                 {
@@ -36,7 +35,7 @@
                         "rtspUrl": "rtsp://artsp.gss.dr.dk/A/A05L.stream"
                 },
                 {
-                        "kode": "P4",
+                        "kode": "P4F",
          "Slug" : "p4",
                         "navn": "P4"
                 },

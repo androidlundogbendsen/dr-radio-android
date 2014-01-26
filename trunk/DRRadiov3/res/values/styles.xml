@@ -4,7 +4,27 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
     -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
-        <!-- Customize your theme here. -->
+        <!-- Customize your theme here.
+        android:background="@color/hvid"
+        <item name="android:windowBackground">@color/hvid</item>
+        <item name="android:colorBackground">@color/hvid</item>
+        <item name="android:background">@color/hvid</item>
+        -->
+
     </style>
 
+    <!--
+        <style name="MyTheme.ActionBarStyle" parent="android:style/Widget.Holo.ActionBar">
+            <item name="android:background">@color/hvid</item>
+            <item name="android:windowBackground">@color/hvid</item>
+            <item name="android:colorBackground">@color/hvid</item>
+        </style>
+
+
+        <style name="AppTheme.ActionBar.TitleTextStyle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+            <item name="android:background">@color/hvid</item>
+            <item name="android:windowBackground">@color/hvid</item>
+            <item name="android:colorBackground">@color/hvid</item>
+        </style>
+    -->
 </resources>
