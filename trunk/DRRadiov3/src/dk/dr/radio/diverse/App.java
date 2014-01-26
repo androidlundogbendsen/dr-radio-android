@@ -42,7 +42,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-import dk.dr.radio.akt_v3.BasisAktivitet;
+import dk.dr.radio.akt_v3.Basisaktivitet;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.JsonIndlaesning;
 import dk.dr.radio.data.stamdata.Stamdata;
@@ -128,8 +128,8 @@ public class App extends Application {
   }
 
 
-  public static BasisAktivitet aktivitetIForgrunden = null;
-  public static BasisAktivitet senesteAktivitetIForgrunden = null;
+  public static Basisaktivitet aktivitetIForgrunden = null;
+  public static Basisaktivitet senesteAktivitetIForgrunden = null;
   private static int erIGang = 0;
 
   public static void sætErIGang(boolean netværkErIGang) {
@@ -149,7 +149,7 @@ public class App extends Application {
     }
   };
 
-  public void onResume(BasisAktivitet akt) {
+  public void onResume(Basisaktivitet akt) {
     //((NotificationManager) getSystemService("notification")).cancelAll();
     akt.setProgressBarIndeterminateVisibility(erIGang > 0);
     senesteAktivitetIForgrunden = aktivitetIForgrunden = akt;

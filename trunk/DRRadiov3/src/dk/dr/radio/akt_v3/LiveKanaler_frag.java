@@ -19,9 +19,9 @@ import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-import static dk.dr.radio.akt_v3.BasisAktivitet.putString;
+import static dk.dr.radio.akt_v3.Basisaktivitet.putString;
 
-public class KanalViewpager_frag extends BasisFragment implements ActionBar.TabListener {
+public class LiveKanaler_frag extends Basisfragment implements ActionBar.TabListener {
 
 
   private FaneAdapter faneAdapter;
@@ -44,7 +44,7 @@ public class KanalViewpager_frag extends BasisFragment implements ActionBar.TabL
     viewPager.setAdapter(faneAdapter);
 
 
-    Navigation_akt a = (Navigation_akt) getActivity();
+    Hovedaktivitet a = (Hovedaktivitet) getActivity();
     a.sætTitel("KanalViewpager");
     final ActionBar actionBar = a.getSupportActionBar();
     actionBar.removeAllTabs();

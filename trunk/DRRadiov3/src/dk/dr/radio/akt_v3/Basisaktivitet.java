@@ -21,7 +21,7 @@ import com.androidquery.AQuery;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
-public class BasisAktivitet extends ActionBarActivity {
+public class Basisaktivitet extends ActionBarActivity {
   protected final AQuery aq = new AQuery(this);
 
 
