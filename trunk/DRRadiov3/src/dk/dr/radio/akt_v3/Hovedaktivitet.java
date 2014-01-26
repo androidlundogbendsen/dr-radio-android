@@ -25,7 +25,7 @@ public class Hovedaktivitet extends Basisaktivitet {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.navigation_akt);
+    setContentView(R.layout.hoved_akt);
 
     venstremenuFrag = (Venstremenu_frag) getSupportFragmentManager().findFragmentById(R.id.navigation_frag);
     actionbartitel = getTitle();

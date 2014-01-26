@@ -21,15 +21,6 @@
             tools:ignore="HardcodedText"/>
 
     <TextView
-            android:id="@+id/undertitel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/lysegrå"
-            android:text="undertitel"
-            tools:ignore="HardcodedText"/>
-
-
-    <TextView
             android:id="@+id/beskrivelse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

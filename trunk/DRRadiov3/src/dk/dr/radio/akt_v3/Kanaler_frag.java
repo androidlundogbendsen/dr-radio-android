@@ -21,7 +21,7 @@ import dk.dr.radio.v3.R;
 
 import static dk.dr.radio.akt_v3.Basisaktivitet.putString;
 
-public class LiveKanaler_frag extends Basisfragment implements ActionBar.TabListener {
+public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener {
 
 
   private FaneAdapter faneAdapter;
@@ -29,7 +29,7 @@ public class LiveKanaler_frag extends Basisfragment implements ActionBar.TabList
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    setContentView(R.layout.v3_liste_akt, inflater, container);
+    setContentView(R.layout.kanaler_frag, inflater, container);
     faneAdapter = new FaneAdapter(getActivity().getSupportFragmentManager());
     Bundle args = new Bundle();
 
