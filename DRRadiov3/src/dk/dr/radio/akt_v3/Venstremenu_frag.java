@@ -92,7 +92,7 @@ public class Venstremenu_frag extends Fragment {
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    navListView = (ListView) inflater.inflate(R.layout.navigation_frag, container, false);
+    navListView = (ListView) inflater.inflate(R.layout.venstremenu_frag, container, false);
     navListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -267,7 +267,7 @@ public class Venstremenu_frag extends Fragment {
       Fragment f;
 
       if (e.type == 4) {
-        f = new LiveKanaler_frag();
+        f = new Kanaler_frag();
       } else if (e.type == 2) {
         f = new Kanal_frag();
         b.putString(Kanal_frag.P_kode, e.data);
@@ -325,47 +325,47 @@ public class Venstremenu_frag extends Fragment {
     public Navigation_adapter(Context themedContext) {
       layoutInflater = (LayoutInflater) themedContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       aq = new AQuery(themedContext);
-      elem.add(new MenuElement(0, null, aq(R.layout.nav_elem_soeg)));
+      elem.add(new MenuElement(0, null, aq(R.layout.venstremenu_elem_soeg)));
 
-      elem.add(new MenuElement(3, null, aq(R.layout.nav_elem_overskrift)));
+      elem.add(new MenuElement(3, null, aq(R.layout.venstremenu_elem_overskrift)));
       aq.id(R.id.tekst).text(Html.fromHtml("<b>Senest lyttede</b>"));
 
-      elem.add(new MenuElement(1, null, aq(R.layout.nav_elem_adskiller_tynd)));
+      elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_adskiller_tynd)));
 
-      elem.add(new MenuElement(3, null, aq(R.layout.nav_elem_overskrift)));
+      elem.add(new MenuElement(3, null, aq(R.layout.venstremenu_elem_overskrift)));
       aq.id(R.id.tekst).text(Html.fromHtml("<b>Dine favoritprogrammer</b><br/>(2 nye udsendelser)"));
 
-      elem.add(new MenuElement(1, null, aq(R.layout.nav_elem_adskiller_tynd)));
+      elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_adskiller_tynd)));
 
-      elem.add(new MenuElement(3, null, aq(R.layout.nav_elem_overskrift)));
+      elem.add(new MenuElement(3, null, aq(R.layout.venstremenu_elem_overskrift)));
       aq.id(R.id.tekst).text(Html.fromHtml("<b>Downloadede udsendelser</b> (13)"));
 
-      elem.add(new MenuElement(1, null, aq(R.layout.nav_elem_adskiller_tyk)));
+      elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_adskiller_tyk)));
 
-      elem.add(new MenuElement(3, null, aq(R.layout.nav_elem_overskrift)));
+      elem.add(new MenuElement(3, null, aq(R.layout.venstremenu_elem_overskrift)));
       aq.id(R.id.tekst).text(Html.fromHtml("<b>Alle programmer A-Å"));
 
-      elem.add(new MenuElement(1, null, aq(R.layout.nav_elem_adskiller_tynd)));
+      elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_adskiller_tynd)));
 
-      elem.add(new MenuElement(4, null, aq(R.layout.nav_elem_overskrift)));
+      elem.add(new MenuElement(4, null, aq(R.layout.venstremenu_elem_overskrift)));
       aq.id(R.id.tekst).text(Html.fromHtml("<b>Live kanaler</b>"));
 
-      elem.add(new MenuElement(4, null, aq(R.layout.nav_elem_overskrift)));
+      elem.add(new MenuElement(4, null, aq(R.layout.venstremenu_elem_overskrift)));
       aq.id(R.id.tekst).text(Html.fromHtml("<b>Kontakt / info / om</b>"));
 
-      elem.add(new MenuElement(1, null, aq(R.layout.nav_elem_overskrift)));
+      elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_overskrift)));
       aq.id(R.id.tekst).text(Html.fromHtml("<br/><br/>(fjernes):<br/><br/><b>HØR LIVE RADIO</b>"));
-      elem.add(new MenuElement(2, "P1D", aq(R.layout.nav_elem_kanal)));
+      elem.add(new MenuElement(2, "P1D", aq(R.layout.skrald__nav_elem_kanal)));
       aq.id(R.id.billede).image(R.drawable.kanal_p1d);
-      elem.add(new MenuElement(2, "P2D", aq(R.layout.nav_elem_kanal)));
+      elem.add(new MenuElement(2, "P2D", aq(R.layout.skrald__nav_elem_kanal)));
       aq.id(R.id.billede).image(R.drawable.kanal_p2d);
-      elem.add(new MenuElement(2, "P3", aq(R.layout.nav_elem_kanal)));
+      elem.add(new MenuElement(2, "P3", aq(R.layout.skrald__nav_elem_kanal)));
       aq.id(R.id.billede).image(R.drawable.kanal_p3);
-      elem.add(new MenuElement(2, "P4D", aq(R.layout.nav_elem_kanal)));
+      elem.add(new MenuElement(2, "P4D", aq(R.layout.skrald__nav_elem_kanal)));
       aq.id(R.id.billede).image(R.drawable.kanal_p4).id(R.id.p4åbn).visible();
-      elem.add(new MenuElement(2, "P4K", aq(R.layout.nav_elem_kanaltekst)));
+      elem.add(new MenuElement(2, "P4K", aq(R.layout.skrald__nav_elem_kanaltekst)));
       aq.id(R.id.tekst).text("P4 København");
-      elem.add(new MenuElement(2, "P4S", aq(R.layout.nav_elem_kanaltekst)));
+      elem.add(new MenuElement(2, "P4S", aq(R.layout.skrald__nav_elem_kanaltekst)));
       aq.id(R.id.tekst).text("P4 Sjælland");
 
     }
