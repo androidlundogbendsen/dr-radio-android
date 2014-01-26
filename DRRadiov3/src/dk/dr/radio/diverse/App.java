@@ -108,7 +108,7 @@ public class App extends Application {
 
       // Kanalvalg. Tjek først Preferences, brug derefter JSON-filens forvalgte kanal
       //DRData.instans.aktuelKanalkode = prefs.getString(DRData.NØGLE_kanal, DRData.instans.aktuelKanalkode = DRData.instans.stamdata.json.optString("forvalgt"));
-      //DRData.instans.aktuelKanal = DRData.instans.stamdata.kanalkodeTilKanal.get(DRData.instans.aktuelKanalkode);
+      //DRData.instans.aktuelKanal = DRData.instans.stamdata.kanalFraKode.get(DRData.instans.aktuelKanalkode);
       //DRData.instans.afspiller = new Afspiller();      //String url = DRData.instans.findKanalUrlFraKode(DRData.instans.aktuelKanal);
       //DRData.instans.afspiller.setKanal(DRData.instans.aktuelKanal.longName, url);
     } catch (Exception ex) {

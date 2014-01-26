@@ -18,6 +18,8 @@
 
 package dk.dr.radio.data.stamdata;
 
+import android.content.res.Resources;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +31,7 @@ import java.util.List;
 import java.util.Set;
 
 import dk.dr.radio.data.JsonIndlaesning;
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
 public class Stamdata {
@@ -42,8 +45,8 @@ public class Stamdata {
   public List<Kanal> kanaler = new ArrayList<Kanal>();
 
 
-  public HashMap<String, Kanal> kanalkodeTilKanal = new HashMap<String, Kanal>();
-  public HashMap<String, Kanal> slugTilKanal = new HashMap<String, Kanal>();
+  public HashMap<String, Kanal> kanalFraKode = new HashMap<String, Kanal>();
+  public HashMap<String, Kanal> kanalFraSlug = new HashMap<String, Kanal>();
   /**
    * Liste over de kanaler der vises 'Spiller lige nu' med info om musiknummer på skærmen
    */
@@ -64,13 +67,16 @@ public class Stamdata {
    */
   public static Stamdata parseStamdatafil(String str) throws JSONException {
 
-    Log.d("parseStamdatafil str=\n=============" + str + "\n==================");
+    //Log.d("parseStamdatafil str=\n=============" + str + "\n==================");
 
     Stamdata d = new Stamdata();
     JSONObject json = d.json = new JSONObject(str);
 
     d.kanalkoder = JsonIndlaesning.jsonArrayTilArrayListString(json.getJSONArray("kanalkoder"));
     d.p4koder = JsonIndlaesning.jsonArrayTilArrayListString(json.getJSONArray("p4koder"));
+
+    String pn = App.instans.getPackageName();
+    Resources res = App.instans.getResources();
 
     JSONArray kanaler = json.getJSONArray("kanaler");
     int antal = kanaler.length();
@@ -83,12 +89,11 @@ public class Stamdata {
       k.rtspUrl = j.optString("rtspUrl", "");
       k.shoutcastUrl = j.optString("shoutcastUrl", "");
       k.slug = j.getString("Slug");
+      k.kanalappendis_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase(), "drawable", pn);
+      Log.d("kanalappendix_" + k.kode.toLowerCase() + "  resid=" + k.kanalappendis_resid);
       d.kanaler.add(k);
-    }
-
-    for (Kanal k : d.kanaler) {
-      d.kanalkodeTilKanal.put(k.kode, k);
-      d.slugTilKanal.put(k.slug, k);
+      d.kanalFraKode.put(k.kode, k);
+      d.kanalFraSlug.put(k.slug, k);
     }
 
     d.kanalerDerSkalViseSpillerNu.addAll(JsonIndlaesning.jsonArrayTilArrayListString(json.getJSONArray("vis_spiller_nu")));
@@ -98,12 +103,12 @@ public class Stamdata {
 
 
   public void parseAlleKanaler(String str) throws JSONException {
-    Log.d("parseAlleKanaler str=\n=============" + str + "\n==================");
+    //Log.d("parseAlleKanaler str=\n=============" + str + "\n==================");
     JSONArray alleKanaler = new JSONObject(str).getJSONArray("Data");
     int antal = alleKanaler.length();
     for (int i = 0; i < antal; i++) {
       JSONObject j = alleKanaler.getJSONObject(i);
-      Kanal k = slugTilKanal.get(j.optString("Slug"));
+      Kanal k = kanalFraSlug.get(j.optString("Slug"));
       if (k == null) continue; // Ignorer kanal
       try {
         k.json = j;
