@@ -53,7 +53,8 @@ public class Kanal_frag extends BasisFragment implements AdapterView.OnItemClick
       public void callback(String url, String json, AjaxStatus status) {
         App.sætErIGang(false);
         Log.d("XXX url " + url + "   status=" + status.getCode());
-        if (json != null) try {
+        aq.id(R.id.tom).text(url + "   status=" + status.getCode() + "\njson=" + json);
+        if (json != null && !"null".equals(json)) try {
           //successful ajax call, show status code and json content
           //App.langToast(status.getCode() + ": OK");
           opdaterListe(new JSONArray(json));

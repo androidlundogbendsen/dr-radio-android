@@ -5,6 +5,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
@@ -40,6 +41,35 @@ public class Navigation_akt extends BasisAktivitet {
     actionBar.setTitle(actionbartitel);
   }
 
+
+  /**
+   * Om tilbageknappen skal afslutte programmet eller vise venstremenuen
+   */
+  static boolean tilbageViserVenstremenu = true; // hack - static, ellers skulle den gemmes i savedInstanceState
+
+  @Override
+  public void onBackPressed() {
+    if (tilbageViserVenstremenu) {
+      navigationFrag.visMenu();
+      tilbageViserVenstremenu = false;
+    } else {
+      super.onBackPressed();
+      tilbageViserVenstremenu = true;
+    }
+  }
+
+
+  @Override
+  public boolean dispatchTouchEvent(MotionEvent ev) {
+    tilbageViserVenstremenu = true;
+    return super.dispatchTouchEvent(ev);
+  }
+
+  @Override
+  public boolean dispatchTrackballEvent(MotionEvent ev) {
+    tilbageViserVenstremenu = true;
+    return super.dispatchTrackballEvent(ev);
+  }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
