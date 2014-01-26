@@ -53,11 +53,11 @@
     </LinearLayout>
 
     <TextView
-            android:id="@+id/debug"
+            android:id="@+id/json"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Til fejlfinding"
             tools:ignore="HardcodedText"
-            android:textSize="10sp"/>
+            android:textSize="8sp"/>
 
 </LinearLayout>
