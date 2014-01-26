@@ -14,12 +14,12 @@
     For mere komplekst tomhedsindikator, brug ViewStub - se
                http://cyrilmottier.com/2011/06/20/listview-tips-tricks-1-handle-emptiness/
                 android:visibility="gone"
+            android:layout_gravity="center"
     -->
     <TextView
             android:id="@+id/tom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:text="Intet indhold"/>
 </FrameLayout>
 
