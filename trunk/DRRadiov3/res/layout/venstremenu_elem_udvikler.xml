@@ -5,9 +5,9 @@
         android:padding="16dp"
         android:layout_height="wrap_content">
 
-    <EditText
+    <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tekst"
-            android:hint="Søg efter program"/>
+            android:text="Udvikler"/>
 </LinearLayout>

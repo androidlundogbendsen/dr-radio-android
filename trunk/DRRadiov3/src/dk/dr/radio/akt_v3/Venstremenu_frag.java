@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ListView;
 
 import com.androidquery.AQuery;
@@ -84,6 +85,8 @@ public class Venstremenu_frag extends Fragment {
     if (savedInstanceState != null) {
       mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
       mFromSavedInstanceState = true;
+    } else {
+      mCurrentSelectedPosition = 9;
     }
 
     // Select either the default item (0) or the last selected item.
@@ -101,7 +104,6 @@ public class Venstremenu_frag extends Fragment {
     });
     navAdapter = new Navigation_adapter(getActionBar().getThemedContext());
     navListView.setAdapter(navAdapter);
-    //navListView.setAdapter(new ArrayAdapter(getActionBar().getThemedContext(), android.R.layout.simple_list_item_1, android.R.id.text1, new String[]{"P1", "P3"}));
     navListView.setItemChecked(mCurrentSelectedPosition, true);
     return navListView;
   }
@@ -250,6 +252,7 @@ public class Venstremenu_frag extends Fragment {
 
 
   static class Navigation_adapter extends Basisadapter {
+    public int LIVE_KANALER_INDEX;
     private final LayoutInflater layoutInflater;
     private AQuery aq;
     ArrayList<MenuElement> elem = new ArrayList<MenuElement>();
@@ -347,11 +350,21 @@ public class Venstremenu_frag extends Fragment {
 
       elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_adskiller_tynd)));
 
+      LIVE_KANALER_INDEX = elem.size();
       elem.add(new MenuElement(4, null, aq(R.layout.venstremenu_elem_overskrift)));
       aq.id(R.id.tekst).text(Html.fromHtml("<b>Live kanaler</b>"));
 
       elem.add(new MenuElement(4, null, aq(R.layout.venstremenu_elem_overskrift)));
       aq.id(R.id.tekst).text(Html.fromHtml("<b>Kontakt / info / om</b>"));
+
+      elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_udvikler)));
+      aq.id(R.id.tekst).clicked(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          App.udvikling = !App.udvikling;
+          ((CheckBox) v).setChecked(App.udvikling);
+        }
+      });
 
       elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_overskrift)));
       aq.id(R.id.tekst).text(Html.fromHtml("<br/><br/>(fjernes):<br/><br/><b>HØR LIVE RADIO</b>"));

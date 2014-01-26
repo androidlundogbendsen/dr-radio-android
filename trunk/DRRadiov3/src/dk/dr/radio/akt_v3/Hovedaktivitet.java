@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 
-import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
 public class Hovedaktivitet extends Basisaktivitet {
@@ -74,7 +73,8 @@ public class Hovedaktivitet extends Basisaktivitet {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     super.onCreateOptionsMenu(menu);
-    Log.d("XXX venstremenuFrag.isDrawerOpen()=" + venstremenuFrag.isDrawerOpen());
+    //Log.d("XXX venstremenuFrag.isDrawerOpen()=" + venstremenuFrag.isDrawerOpen());
+    //     if (venstremenuFrag != null && !venstremenuFrag.isDrawerOpen()) {
     if (!venstremenuFrag.isDrawerOpen()) {
       // Only show items in the action bar relevant to this screen
       // if the drawer is not showing. Otherwise, let the drawer

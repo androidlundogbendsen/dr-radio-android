@@ -54,7 +54,7 @@ public class App extends Application {
   private static ConnectivityManager connectivityManager;
   private static String versionName;
   public static NotificationManager notificationManager;
-  public static boolean udvikling = true;
+  public static boolean udvikling = false;
   public static Handler forgrundstråd = new Handler();
 
 
