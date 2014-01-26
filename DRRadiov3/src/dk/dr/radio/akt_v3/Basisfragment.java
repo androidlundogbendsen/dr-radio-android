@@ -19,7 +19,7 @@ import dk.dr.radio.diverse.Log;
  * @author j
  */
 //public class BasisFragment extends DialogFragment {
-public class BasisFragment extends Fragment {
+public class Basisfragment extends Fragment {
 
   protected AQuery aq;
   protected View rod;

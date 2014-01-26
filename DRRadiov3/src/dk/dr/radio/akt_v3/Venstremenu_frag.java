@@ -37,7 +37,7 @@ import dk.dr.radio.v3.R;
  * Se <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for en nærmere beskrivelse.
  */
-public class Navigation_frag extends Fragment {
+public class Venstremenu_frag extends Fragment {
 
   /**
    * Remember the position of the selected item.
@@ -64,8 +64,6 @@ public class Navigation_frag extends Fragment {
   private boolean mUserLearnedDrawer;
   private Navigation_adapter navAdapter;
 
-  public Navigation_frag() {
-  }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -251,7 +249,7 @@ public class Navigation_frag extends Fragment {
   }
 
 
-  static class Navigation_adapter extends BasisAdapter {
+  static class Navigation_adapter extends Basisadapter {
     private final LayoutInflater layoutInflater;
     private AQuery aq;
     ArrayList<MenuElement> elem = new ArrayList<MenuElement>();
@@ -269,7 +267,7 @@ public class Navigation_frag extends Fragment {
       Fragment f;
 
       if (e.type == 4) {
-        f = new KanalViewpager_frag();
+        f = new LiveKanaler_frag();
       } else if (e.type == 2) {
         f = new Kanal_frag();
         b.putString(Kanal_frag.P_kode, e.data);

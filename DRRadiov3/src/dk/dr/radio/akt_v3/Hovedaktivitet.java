@@ -10,12 +10,12 @@ import android.view.MotionEvent;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-public class Navigation_akt extends BasisAktivitet {
+public class Hovedaktivitet extends Basisaktivitet {
 
   /**
    * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
    */
-  private Navigation_frag navigationFrag;
+  private Venstremenu_frag venstremenuFrag;
 
   /**
    * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -27,16 +27,16 @@ public class Navigation_akt extends BasisAktivitet {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.navigation_akt);
 
-    navigationFrag = (Navigation_frag) getSupportFragmentManager().findFragmentById(R.id.navigation_frag);
+    venstremenuFrag = (Venstremenu_frag) getSupportFragmentManager().findFragmentById(R.id.navigation_frag);
     actionbartitel = getTitle();
 
     // Set up the drawer.
-    navigationFrag.setUp(R.id.navigation_frag, (DrawerLayout) findViewById(R.id.drawer_layout));
+    venstremenuFrag.setUp(R.id.navigation_frag, (DrawerLayout) findViewById(R.id.drawer_layout));
   }
 
   public void restoreActionBar() {
     ActionBar actionBar = getSupportActionBar();
-    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+    //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
     actionBar.setDisplayShowTitleEnabled(true);
     actionBar.setTitle(actionbartitel);
   }
@@ -50,7 +50,7 @@ public class Navigation_akt extends BasisAktivitet {
   @Override
   public void onBackPressed() {
     if (tilbageViserVenstremenu) {
-      navigationFrag.visMenu();
+      venstremenuFrag.visMenu();
       tilbageViserVenstremenu = false;
     } else {
       super.onBackPressed();
@@ -74,8 +74,8 @@ public class Navigation_akt extends BasisAktivitet {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     super.onCreateOptionsMenu(menu);
-    Log.d("XXX navigationFrag.isDrawerOpen()=" + navigationFrag.isDrawerOpen());
-    if (!navigationFrag.isDrawerOpen()) {
+    Log.d("XXX venstremenuFrag.isDrawerOpen()=" + venstremenuFrag.isDrawerOpen());
+    if (!venstremenuFrag.isDrawerOpen()) {
       // Only show items in the action bar relevant to this screen
       // if the drawer is not showing. Otherwise, let the drawer
       // decide what to show in the action bar.
@@ -100,6 +100,7 @@ public class Navigation_akt extends BasisAktivitet {
 
   public void sætTitel(String titel) {
     actionbartitel = titel;
+    restoreActionBar();
   }
 
 

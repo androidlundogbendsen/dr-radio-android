@@ -10,7 +10,7 @@ import dk.dr.radio.diverse.Log;
 /**
  * Aktivitet der instantierer og viser ét fragment.
  */
-public class VisFragment_akt extends BasisAktivitet {
+public class VisFragment_akt extends Basisaktivitet {
   public static final String KLASSE = "klasse";
 
   @Override
