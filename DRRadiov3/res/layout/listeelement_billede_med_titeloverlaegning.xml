@@ -2,7 +2,7 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/eksempel_udsendelse">
 
     <ImageButton
@@ -13,7 +13,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginTop="16dp"
             android:layout_marginLeft="16dp"
-            android:background="@color/lysegrå"
+            android:background="@color/grå10"
             android:src="@drawable/kanalvalg_spiller"/>
 
     <LinearLayout

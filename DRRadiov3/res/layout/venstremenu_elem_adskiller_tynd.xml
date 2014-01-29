@@ -5,7 +5,7 @@
         android:layout_height="wrap_content">
 
     <View
-            android:background="@color/lysegrå"
+            android:background="@color/grå10"
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_gravity="center"
