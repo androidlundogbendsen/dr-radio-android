@@ -47,12 +47,12 @@ public class Basisaktivitet extends ActionBarActivity {
   /**
    * Tillader brugeren at navigere 'op' v.hj.a. actionbaren
    */
-  public static void getActionBarSetDisplayHomeAsUpEnabledKompat(final FragmentActivity akt, final boolean b) {
-    if (akt != null && android.os.Build.VERSION.SDK_INT >= 11) { // separat klasse, for at undgå crash på tidl. versioner
+  public void getActionBarSetDisplayHomeAsUpEnabledKompat(final boolean b) {
+    if (android.os.Build.VERSION.SDK_INT >= 11) { // separat klasse, for at undgå crash på tidl. versioner
       new Runnable() {
         @SuppressLint("NewApi")
         public void run() {
-          ActionBar ab = akt.getActionBar();
+          ActionBar ab = getActionBar();
           if (ab == null) return;
           ab.setDisplayHomeAsUpEnabled(b);
         }

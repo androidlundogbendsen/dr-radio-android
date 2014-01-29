@@ -17,6 +17,7 @@ public class VisFragment_akt extends Basisaktivitet {
   public void onCreate(Bundle savedInstanceState) {
     try {
       super.onCreate(savedInstanceState);
+      super.getActionBarSetDisplayHomeAsUpEnabledKompat(true);
       FrameLayout fl = new FrameLayout(this);
       fl.setId(android.R.id.input);
       setContentView(fl);
