@@ -4,50 +4,44 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/hvid"
+        android:background="@color/grå70"
         android:padding="16dp"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
 
-    <TextView
-            android:id="@+id/tid"
+    <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="17.04"
-            android:textColor="@color/grå70"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            tools:ignore="HardcodedText"
+            android:id="@+id/start_stop_pauseknap"
+            android:src="@drawable/dri_radio_pause_hvid"
+            android:layout_gravity="center_vertical"
             />
 
     <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginLeft="16dp"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+
+        <TextView
+                android:id="@+id/kanal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="P3 Live"
+                tools:ignore="HardcodedText"
+                android:textStyle="bold"
+                android:textColor="@color/blå"/>
 
         <TextView
                 android:id="@+id/titel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="P3 Sporten"
-                tools:ignore="HardcodedText"
-                android:textStyle="bold"/>
-
-        <TextView
-                android:id="@+id/kunstner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:text="|  Polarkreis 18"
+                android:text="Smag på P3"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 tools:ignore="HardcodedText"
-                android:layout_weight="1"/>
-
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageView"
-                android:src="@drawable/dri_lyd_blaa"/>
+                android:textColor="@color/hvid"/>
 
     </LinearLayout>
 
