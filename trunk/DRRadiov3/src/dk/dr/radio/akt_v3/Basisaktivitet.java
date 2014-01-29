@@ -94,7 +94,8 @@ public class Basisaktivitet extends ActionBarActivity {
         App.kortToast("Log.udvikling = " + App.udvikling);
         return true;
       case 644:
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://javabog.dk/privat/DRRadio-debug.apk")));
+        // scp /home/j/android/dr-radio-android/DRRadiov3/out/production/DRRadiov3/DRRadiov3.apk j:javabog.dk/privat/
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://javabog.dk/privat/DRRadiov3.apk")));
         return true;
       case 645:
       case 643:

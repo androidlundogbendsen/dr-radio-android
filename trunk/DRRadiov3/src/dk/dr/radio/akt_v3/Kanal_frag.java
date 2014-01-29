@@ -17,7 +17,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,9 +30,11 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   public static String P_kode = "kanalkode";
   private ListView listView;
-  private ArrayList<JSONObject> liste = new ArrayList<JSONObject>();
   private String kanalkode;
   private String url;
+  private ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
+  private Date nu = new Date();
+  private int aktuelUdsendelseIndex;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -77,21 +78,33 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   private void opdaterListe(JSONArray json) {
     try {
-      Log.d("opdaterListe " + json.toString(2));
-      liste = new ArrayList<JSONObject>();
-      JSONArray jliste = json;//.optJSONArray("Data");
-//      Log.d(jliste.toString(2));
-      for (int n = 0; n < jliste.length(); n++) {
-        JSONObject o = jliste.getJSONObject(n);
-        if (n == 1) {
-          o.put("type", 1);
-          o.put("procent_færdig", (int) (Math.random() * 80 + 10));
-        }
-        liste.add(o);
+      //Log.d("opdaterListe " + json.toString(2));
+      nu.setTime(System.currentTimeMillis()); // TODO kompenser for forskelle mellem telefonens ur og serverens ur
+      aktuelUdsendelseIndex = -1;
+      String nuDatoStr = datoformat.format(nu);
+      for (int n = 0; n < json.length(); n++) {
+        JSONObject o = json.getJSONObject(n);
+        Udsendelse u = new Udsendelse();
+        u.json = o;
+        u.startTid = DrJson.servertidsformat.parse(o.optString(DrJson.StartTime.name()));
+        u.startTidKl = klokkenformat.format(u.startTid);
+        String datoStr = datoformat.format(u.startTid);
+        if (!datoStr.equals(nuDatoStr)) u.startTidKl += " - " + datoStr;
+        u.slutTid = DrJson.servertidsformat.parse(o.optString(DrJson.EndTime.name()));
+        u.titel = o.optString(DrJson.Title.name());
+        u.beskrivelse = o.optString(DrJson.Description.name());
+        u.slug = o.optString(DrJson.Slug.name());
+        u.programserieSlug = o.optString(DrJson.SeriesSlug.name());
+        u.urn = o.optString(DrJson.Urn.name());
+        Log.d("XXXXXXX " + u.startTid.before(nu) + nu.before(u.slutTid) + "  " + u);
+        //if (u.startTid.before(nu) && nu.before(u.slutTid)) aktuelUdsendelseIndex = n;
+        if (u.startTid.before(nu)) aktuelUdsendelseIndex = n;
+        uliste.add(u);
       }
     } catch (Exception e1) {
       Log.rapporterFejl(e1);
     }
+    App.kortToast("aktuelUdsendelseIndex=" + aktuelUdsendelseIndex);
     adapter.notifyDataSetChanged();
   }
 
@@ -99,7 +112,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   private BaseAdapter adapter = new Basisadapter() {
     @Override
     public int getCount() {
-      return liste.size();
+      return uliste.size();
     }
 
     @Override
@@ -107,76 +120,42 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       return 3;
     }
 
+
     @Override
     public int getItemViewType(int position) {
-      return liste.get(position).optInt("type", 0);
+      if (position == 0) return 1;
+      if (position == aktuelUdsendelseIndex) return 2;
+      return 0;
     }
 
-    /*
-http://asset.dr.dk/imagescaler/?file=%2Fmu%2Fbar%2F52dfef5ca11f9d0980776171&w=300&h=169&scaleAfter=crop&server=www.dr.dk
-http://www.dr.dk/mu/bar/4f9f92c8860d9a1804f0a119?width=200&height=200
-http://www.dr.dk/mu/bar/52dfef5ca11f9d0980776171?width=200&height=200
-
-http://www.dr.dk/mu/bar/4f3b88f8860d9a33ccfdaec9?width=200&height=200
-
-               {
-                  "Urn" : "urn:dr:mu:programcard:52cc9abd6187a213f89addf1",
-                  "Surround" : false,
-                  "HasLatest" : true,
-                  "Title" : "VinterMorgen",
-                  "SeriesSlug" : "vintermorgen",
-                  "Rerun" : false,
-                  "FirstPartOid" : 245310732813,
-                  "StartTime" : "2014-01-16T06:04:00+01:00",
-                  "Slug" : "vintermorgen-16",
-                  "TransmissionOid" : 245310731812,
-                  "Watchable" : true,
-                  "Widescreen" : false,
-                  "HD" : false,
-                  "EndTime" : "2014-01-16T09:04:00+01:00",
-                               2014-01-26T21:31:08+0100
-                  "Episode" : 0,
-                  "Description" : "- musik, nyheder, journalistik, satire og sport starter den nye dag.\nVært: Nicholas Kawamura."
-               },
-             */
     @Override
     public View getView(int position, View v, ViewGroup parent) {
-      JSONObject d = liste.get(position);
-      int type = d.optInt("type", 0);
+      Udsendelse u = uliste.get(position);
+      int type = getItemViewType(position);
       if (v == null)
         v = getLayoutInflater(null).inflate(App.udvikling ? R.layout.listeelement_udvikler : type == 0 ? R.layout.listeelement_tid_titel_kunstner : R.layout.listeelement_billede_med_titeloverlaegning, parent, false);
       AQuery a = new AQuery(v);
-      a.id(R.id.titel).text(d.optString(DrJson.Title.name()));
-      a.id(R.id.beskrivelse).text(d.optString(DrJson.Description.name()));
-
-
-      try {
-        Date startTid = DrJson.servertidsformat.parse(d.optString(DrJson.StartTime.name()));
-        a.id(R.id.tid).visible().text(klokkenformat.format(startTid));
-      } catch (ParseException e) {
-        e.printStackTrace();
-        a.id(R.id.tid).gone();
-      }
-
+      a.id(R.id.titel).text(u.titel).typeface(App.skrift_fed);
+      a.id(R.id.beskrivelse).text(u.beskrivelse);
+      a.id(R.id.tid).visible().text(u.startTidKl).typeface(App.skrift_normal);
       a.id(R.id.kunstner).gone();
 
       if (App.udvikling) {
-        a.id(R.id.slug).text(d.optString(DrJson.Slug.name()));
-        a.id(R.id.serieslug).text(d.optString(DrJson.SeriesSlug.name()));
-        a.id(R.id.json).text(d.toString());
+        a.id(R.id.json).text(u.json.toString());
       }
       return v;
     }
   };
 
   public static final DateFormat klokkenformat = new SimpleDateFormat("HH:mm");
+  public static final DateFormat datoformat = new SimpleDateFormat("d. LLL. yyyy");
 
   @Override
   public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
-    JSONObject d = liste.get(position);
-    String programserieSlug = d.optString(DrJson.SeriesSlug.name());
-    if (programserieSlug.length() > 0) {
-      startActivity(new Intent(getActivity(), VisFragment_akt.class).putExtra(VisFragment_akt.KLASSE, Programserie_frag.class.getName()).putExtra(Programserie_frag.P_kode, programserieSlug));
+    Udsendelse u = uliste.get(position);
+    if (u.programserieSlug.length() > 0) {
+      startActivity(new Intent(getActivity(), VisFragment_akt.class).
+          putExtra(VisFragment_akt.KLASSE, Programserie_frag.class.getName()).putExtra(Programserie_frag.P_kode, u.programserieSlug));
     }
   }
 }

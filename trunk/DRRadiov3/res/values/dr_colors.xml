@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="grå">#666666</color>
-    <color name="mørkegrå">#333333</color>
-    <!--
-    <color name="lysegrå">#CCCCCC</color>
-    -->
-    <color name="lysegrå">#E5E5E5</color>
     <color name="hvid">#ffffff</color>
+    <color name="grå10">#E5E5E5</color>
+    <color name="grå20">#CCCCCC</color>
+    <color name="grå40">#999999</color>
+    <color name="grå50">#808080</color>
+    <color name="grå60">#666666</color>
+    <color name="grå70">#4d4d4d</color>
+    <color name="grå80">#333333</color>
     <color name="sort">#000000</color>
-
 </resources>

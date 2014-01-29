@@ -23,6 +23,7 @@ package dk.dr.radio.diverse;
  * @author j
  */
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.app.NotificationManager;
@@ -30,6 +31,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -56,6 +58,8 @@ public class App extends Application {
   public static NotificationManager notificationManager;
   public static boolean udvikling = false;
   public static Handler forgrundstråd = new Handler();
+  public static Typeface skrift_normal;
+  public static Typeface skrift_fed;
 
 
   @Override
@@ -74,6 +78,7 @@ public class App extends Application {
     }
     try {
       Class.forName("android.os.AsyncTask"); // Fix for http://code.google.com/p/android/issues/detail?id=20915
+      //noinspection ConstantConditions
       App.versionName = App.instans.getPackageManager().getPackageInfo(App.instans.getPackageName(), PackageManager.GET_ACTIVITIES).versionName;
       if (Log.EMULATOR) App.versionName += " UDV";
       App.versionName += "/" + Build.MODEL + " " + Build.PRODUCT;
@@ -114,6 +119,15 @@ public class App extends Application {
     } catch (Exception ex) {
       // TODO popop-advarsel til bruger om intern fejl og rapporter til udvikler-dialog
       Log.rapporterFejl(ex);
+    }
+
+    try { // DRs skrifttyper er ikke offentliggjort i SVN, derfor kan følgende fejle:
+      skrift_normal = Typeface.createFromAsset(getAssets(), "Gibson-Regular.otf");
+      skrift_fed = Typeface.createFromAsset(getAssets(), "Gibson-SemiBold.otf");
+    } catch (Exception e) {
+      Log.e("DRs skrifttyper er ikke tilgængelige", e);
+      skrift_normal = Typeface.DEFAULT;
+      skrift_fed = Typeface.DEFAULT_BOLD;
     }
   }
 
@@ -202,8 +216,7 @@ public class App extends Application {
 
     if (vedhæftning != null) try {
       String xmlFilename = "programlog.txt";
-      //noinspection AccessStaticViaInstance
-      FileOutputStream fos = akt.openFileOutput(xmlFilename, akt.MODE_WORLD_READABLE);
+      @SuppressLint("WorldReadableFiles") FileOutputStream fos = akt.openFileOutput(xmlFilename, akt.MODE_WORLD_READABLE);
       fos.write(vedhæftning.getBytes());
       fos.close();
       Uri uri = Uri.fromFile(new File(akt.getFilesDir().getAbsolutePath(), xmlFilename));
