@@ -369,13 +369,13 @@ public class Venstremenu_frag extends Fragment {
       elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_overskrift)));
       aq.id(R.id.tekst).text(Html.fromHtml("<br/><br/>(fjernes):<br/><br/><b>HØR LIVE RADIO</b>"));
       elem.add(new MenuElement(2, "P1D", aq(R.layout.skrald__nav_elem_kanal)));
-      aq.id(R.id.billede).image(R.drawable.kanal_p1d);
+      aq.id(R.id.billede).image(R.drawable.skrald__kanal_p1d);
       elem.add(new MenuElement(2, "P2D", aq(R.layout.skrald__nav_elem_kanal)));
-      aq.id(R.id.billede).image(R.drawable.kanal_p2d);
+      aq.id(R.id.billede).image(R.drawable.skrald__kanal_p2d);
       elem.add(new MenuElement(2, "P3", aq(R.layout.skrald__nav_elem_kanal)));
-      aq.id(R.id.billede).image(R.drawable.kanal_p3);
+      aq.id(R.id.billede).image(R.drawable.skrald__kanal_p3);
       elem.add(new MenuElement(2, "P4D", aq(R.layout.skrald__nav_elem_kanal)));
-      aq.id(R.id.billede).image(R.drawable.kanal_p4).id(R.id.p4åbn).visible();
+      aq.id(R.id.billede).image(R.drawable.skrald__kanal_p4).id(R.id.p4åbn).visible();
       elem.add(new MenuElement(2, "P4K", aq(R.layout.skrald__nav_elem_kanaltekst)));
       aq.id(R.id.tekst).text("P4 København");
       elem.add(new MenuElement(2, "P4S", aq(R.layout.skrald__nav_elem_kanaltekst)));

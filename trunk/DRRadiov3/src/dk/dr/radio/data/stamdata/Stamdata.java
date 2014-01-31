@@ -26,11 +26,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import dk.dr.radio.data.JsonIndlaesning;
+import dk.dr.radio.data.Diverse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
@@ -38,24 +36,27 @@ public class Stamdata {
   /**
    * Grunddata
    */
+  private JSONObject android_json;
   public JSONObject json;
 
   public List<String> kanalkoder = new ArrayList<String>();
   public List<String> p4koder = new ArrayList<String>();
   public List<Kanal> kanaler = new ArrayList<Kanal>();
+  public Kanal forvalgt;
 
 
   public HashMap<String, Kanal> kanalFraKode = new HashMap<String, Kanal>();
-  public HashMap<String, Kanal> kanalFraSlug = new HashMap<String, Kanal>();
-  /**
-   * Liste over de kanaler der vises 'Spiller lige nu' med info om musiknummer på skærmen
-   */
-  public Set<String> kanalerDerSkalViseSpillerNu = new HashSet<String>();
+  public HashMap<String, Kanal> kanalFraUrn = new HashMap<String, Kanal>();
+  private HashMap<String, Kanal> kanalFraLogonøgle = new HashMap<String, Kanal>();
+  ;
 
 
   private void fjernKanalMedFejl(Kanal k) {
     kanaler.remove(k);
     kanalkoder.remove(k.kode);
+    p4koder.remove(k.kode);
+    kanalFraKode.remove(k.kode);
+    kanalFraUrn.remove(k.urn);
   }
 
 
@@ -65,15 +66,88 @@ public class Stamdata {
    * @throws java.io.IOException hvis der er et problem med netværk
    *                             eller parsning (dvs interne fejl af forskellig art som bør rapporteres til udvikler)
    */
-  public static Stamdata parseStamdatafil(String str) throws JSONException {
+  public static Stamdata parseAndroidStamdata(String str) throws JSONException {
+    Stamdata d = new Stamdata();
+    JSONObject json = d.android_json = new JSONObject(str);
 
-    //Log.d("parseStamdatafil str=\n=============" + str + "\n==================");
+
+    return d;
+  }
+
+  private void parseKanaler(JSONArray jsonArray, boolean underkanal) throws JSONException {
+
+    String pn = App.instans.getPackageName();
+    Resources res = App.instans.getResources();
+
+    int antal = jsonArray.length();
+    for (int i = 0; i < antal; i++) {
+      JSONObject j = jsonArray.getJSONObject(i);
+      Kanal k = new Kanal();
+      k.kode = j.getString("scheduleIdent");
+      k.navn = j.getString("title");
+      k.lognøgle = j.getString("logo");
+      k.urn = j.getString("urn");
+      k.kanalappendis_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase(), "drawable", pn);
+      Log.d("kanalappendix_" + k.kode.toLowerCase() + "  resid=" + k.kanalappendis_resid);
+      kanaler.add(k);
+      if (underkanal) p4koder.add(k.kode);
+      else kanalkoder.add(k.kode);
+      kanalFraKode.put(k.kode, k);
+      kanalFraUrn.put(k.urn, k);
+      kanalFraLogonøgle.put(k.lognøgle, k);
+      if (j.optBoolean("isDefault")) forvalgt = k;
+
+      JSONArray underkanaler = j.optJSONArray("channels");
+      if (underkanaler != null) parseKanaler(underkanaler, true);
+    }
+  }
+
+  public void parseFællesStamdata(String str) throws JSONException {
+    Stamdata d = this;
+    JSONObject json = d.json = new JSONObject(str);
+
+    parseKanaler(json.getJSONArray("channels"), false);
+    if (forvalgt == null) forvalgt = kanaler.get(2); // Det er nok P3 :-)
+
+    JSONArray logoer = json.getJSONArray("logos");
+    int antal = logoer.length();
+    for (int i = 0; i < antal; i++) {
+      JSONObject j = logoer.getJSONObject(i);
+      Kanal k = kanalFraLogonøgle.get(j.getString("ident"));
+      k.logoUrl = j.optString("image");
+      k.logoUrl2 = j.optString("image@2x");
+      // http://www.dr.dk/tjenester/mu-apps/schedule/P3 - svarer til v3_kanalside__p3.json
+      //k.kanalside = "http://www.dr.dk/tjenester/mu-apps/schedule/" + k.kode;
+
+      // http://www.dr.dk/tjenester/mu-apps/channel?urn=urn:dr:mu:bundle:4f3b8926860d9a33ccfdafb9&includeStreams=true
+      //k.kanalside = "http://www.dr.dk/tjenester/mu-apps/channel?urn=" + k.urn+"&includeStreams=true";
+    }
+
+  }
+
+
+  public void hentSupplerendeData() {
+    for (Kanal k : kanaler) {
+
+    }
+  }
+
+
+  /**
+   * Henter stamdata (faste data)
+   *
+   * @throws java.io.IOException hvis der er et problem med netværk
+   *                             eller parsning (dvs interne fejl af forskellig art som bør rapporteres til udvikler)
+   */
+  public static Stamdata skrald__parseStamdatafil(String str) throws JSONException {
+
+    //Log.d("xxx_parseStamdatafil str=\n=============" + str + "\n==================");
 
     Stamdata d = new Stamdata();
     JSONObject json = d.json = new JSONObject(str);
 
-    d.kanalkoder = JsonIndlaesning.jsonArrayTilArrayListString(json.getJSONArray("kanalkoder"));
-    d.p4koder = JsonIndlaesning.jsonArrayTilArrayListString(json.getJSONArray("p4koder"));
+    d.kanalkoder = Diverse.jsonArrayTilArrayListString(json.getJSONArray("kanalkoder"));
+    d.p4koder = Diverse.jsonArrayTilArrayListString(json.getJSONArray("p4koder"));
 
     String pn = App.instans.getPackageName();
     Resources res = App.instans.getResources();
@@ -88,31 +162,29 @@ public class Stamdata {
       k.aacUrl = j.optString("aacUrl", "");
       k.rtspUrl = j.optString("rtspUrl", "");
       k.shoutcastUrl = j.optString("shoutcastUrl", "");
-      k.slug = j.getString("Slug");
+      k.urn = j.getString("Slug");
       k.kanalappendis_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase(), "drawable", pn);
       Log.d("kanalappendix_" + k.kode.toLowerCase() + "  resid=" + k.kanalappendis_resid);
       d.kanaler.add(k);
       d.kanalFraKode.put(k.kode, k);
-      d.kanalFraSlug.put(k.slug, k);
+      d.kanalFraUrn.put(k.urn, k);
     }
-
-    d.kanalerDerSkalViseSpillerNu.addAll(JsonIndlaesning.jsonArrayTilArrayListString(json.getJSONArray("vis_spiller_nu")));
 
     return d;
   }
 
 
-  public void parseAlleKanaler(String str) throws JSONException {
-    //Log.d("parseAlleKanaler str=\n=============" + str + "\n==================");
+  public void skrald__parseAlleKanaler(String str) throws JSONException {
+    //Log.d("skrald_parseAlleKanaler str=\n=============" + str + "\n==================");
     JSONArray alleKanaler = new JSONObject(str).getJSONArray("Data");
     int antal = alleKanaler.length();
     for (int i = 0; i < antal; i++) {
       JSONObject j = alleKanaler.getJSONObject(i);
-      Kanal k = kanalFraSlug.get(j.optString("Slug"));
+      Kanal k = kanalFraUrn.get(j.optString("Slug"));
       if (k == null) continue; // Ignorer kanal
       try {
         k.json = j;
-        Log.d(k.kode + " '" + k.navn + "' : slug=" + k.slug + "  '" + j.optString("Title"));
+        Log.d(k.kode + " '" + k.navn + "' : urn=" + k.urn + "  '" + j.optString("Title"));
         JSONArray servere = j.optJSONArray("StreamingServers");
         if (servere != null) for (int n = 0; n < servere.length(); n++) {
           JSONObject s = servere.getJSONObject(n);
@@ -120,7 +192,7 @@ public class Stamdata {
           k.lydUrl.put(streamtype, s);
           Log.d(k.kode + " '" + streamtype + "' : " + s);
         }
-        k.kanalside = "http://www.dr.dk/tjenester/mu-apps/schedule/" + k.kode;
+        //k.kanalside = "http://www.dr.dk/tjenester/mu-apps/schedule/" + k.kode;
       } catch (Exception e) {
         Log.e(e);
         fjernKanalMedFejl(k);

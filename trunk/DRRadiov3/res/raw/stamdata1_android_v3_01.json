@@ -4,6 +4,9 @@
 
         "alleKanalerUrl" : "http://www.dr.dk/mu/Bundle?BundleType=%22Channel%22&DrChannel=true&Dirty=true&ChannelType=%22RADIO%22&limit=100",
 
+        "stamdata_fælles" : "http://www.dr.dk/tjenester/iphone/radio/settings/iphone200c.json",
+
+
         "forvalgt": "P3",
 
         "kanalkoder": ["P1D", "P2D", "P3", "P4F", "P5D", "P6B", "P7M", "P8J", "RAM", "DRM", "NEWS"],

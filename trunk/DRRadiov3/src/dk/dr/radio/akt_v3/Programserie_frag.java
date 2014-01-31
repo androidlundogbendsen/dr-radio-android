@@ -17,7 +17,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import dk.dr.radio.data.DrJson;
+import dk.dr.radio.data.DRJson;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
@@ -139,10 +139,10 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
       if (v == null) v = getLayoutInflater(null).inflate(R.layout.listeelement_udvikler, parent, false);
       AQuery a = new AQuery(v);
       JSONObject d = liste.get(position);
-      a.id(R.id.titel).text(d.optString(DrJson.Title.name()));
-      a.id(R.id.beskrivelse).text(d.optString(DrJson.Description.name()));
-      a.id(R.id.slug).text(d.optString(DrJson.Slug.name()));
-      a.id(R.id.serieslug).text(d.optString(DrJson.SeriesSlug.name()));
+      a.id(R.id.titel).text(d.optString(DRJson.Title.name()));
+      a.id(R.id.beskrivelse).text(d.optString(DRJson.Description.name()));
+      a.id(R.id.slug).text(d.optString(DRJson.Slug.name()));
+      a.id(R.id.serieslug).text(d.optString(DRJson.SeriesSlug.name()));
       if (App.udvikling) a.id(R.id.json).text(d.toString());
       return v;
     }
@@ -152,7 +152,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
   @Override
   public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
     JSONObject d = liste.get(position);
-    String slug = d.optString(DrJson.Slug.name());
+    String slug = d.optString(DRJson.Slug.name());
     if (slug.length() > 0) {
 //      startActivity(new Intent(getActivity(), VisFragment_akt.class).putExtra(VisFragment_akt.KLASSE));
     }

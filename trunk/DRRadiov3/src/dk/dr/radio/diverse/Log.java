@@ -22,7 +22,6 @@ import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.os.Build;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -36,7 +35,6 @@ import com.bugsense.trace.BugSenseHandler;
  */
 public class Log {
   public static final String TAG = "DRRadio";
-  public static final boolean EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator"); // false;
 
   private static final StringBuilder log = new StringBuilder(18000);
 
@@ -68,8 +66,12 @@ public class Log {
    */
   public static void d(Object o) {
     String s = String.valueOf(o);
-    android.util.Log.d(TAG, s);
     logappend(s);
+    if (App.instans == null) {
+      System.out.println(o);
+      return; // Hop ud hvis vi ikke kører i en Android VM
+    }
+    android.util.Log.d(TAG, s);
   }
 
   public static void e(Exception e) {
@@ -77,6 +79,11 @@ public class Log {
   }
 
   public static void e(String tekst, Exception e) {
+    if (App.instans == null) {
+      System.err.println(tekst);
+      e.printStackTrace();
+      return; // Hop ud hvis vi ikke kører i en Android VM
+    }
     android.util.Log.e(TAG, tekst, e);
     //e.printStackTrace();
     logappend(android.util.Log.getStackTraceString(e));
@@ -84,13 +91,13 @@ public class Log {
 
 
   public static void rapporterFejl(final Exception e) {
-    if (!EMULATOR) BugSenseHandler.sendException(e);
+    if (!App.EMULATOR) BugSenseHandler.sendException(e);
     Log.e(e);
   }
 
 
   public static void rapporterOgvisFejl(final Activity akt, final Exception e) {
-    if (!EMULATOR) BugSenseHandler.sendException(e);
+    if (!App.EMULATOR) BugSenseHandler.sendException(e);
     Log.e(e);
 
     Builder ab = new Builder(akt);

@@ -64,12 +64,12 @@ public class Basisaktivitet extends ActionBarActivity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     Log.d("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-    if (App.udvikling) {
-      menu.add(0, 642, 0, "Udvikler");
-      menu.add(0, 643, 0, "Log");
-      menu.add(0, 644, 0, "Hent nyeste udvikler-version");
-      menu.add(0, 646, 0, "Send fejlrapport");
-    }
+    //if (App.udvikling) {
+    menu.add(0, 642, 0, "Udvikler");
+    menu.add(0, 643, 0, "Log");
+    menu.add(0, 644, 0, "Hent nyeste udvikler-version");
+    menu.add(0, 646, 0, "Send fejlrapport");
+    //}
     return super.onCreateOptionsMenu(menu);
   }
 

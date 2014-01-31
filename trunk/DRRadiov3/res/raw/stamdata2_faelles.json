@@ -1,0 +1,233 @@
+{
+    "fetchInterval": 1800,
+    "betaInfo": "Vælg kanal i menuen til højre.\n\nHvis du oplever fejl med afspilning o.l., så vil vi meget gerne have feedback.\n\nVed indsending af feedback vil du blive spurgt om app'en må få adgang til din lokation. Det vil hjælpe os meget, hvis du siger ja til dette.",
+    "serviceInfo": "",
+    "language": {},
+    "logos": [
+        {
+            "ident": "dr.dk/mas/whatson/channel/P1D",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P1.png",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P1@2x.png"
+        },
+        {
+            "ident": "dr.dk/mas/whatson/channel/P2D",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P2.png",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P2@2x.png"
+        },
+        {
+            "ident": "dr.dk/mas/whatson/channel/P3",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P3.png",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P3@2x.png"
+        },
+        {
+            "ident": "dr.dk/mas/whatson/channel/P4F",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4.png",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4@2x.png"
+        },
+        {
+            "ident": "dr.dk/mas/whatson/channel/RØ4",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-Bornholm.png",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-Bornholm@2x.png"
+        },
+        {
+            "ident": "dr.dk/mas/whatson/channel/ES4",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-Esbjerg.png",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-Esbjerg@2x.png"
+        },
+        {
+            "ident": "dr.dk/mas/whatson/channel/OD4",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-Fyn.png",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-Fyn@2x.png"
+        },
+        {
+            "ident": "dr.dk/mas/whatson/channel/KH4",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-Kbh.png",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-Kbh@2x.png"
+        },
+        {
+            "ident": "dr.dk/mas/whatson/channel/HO4",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-MidtVest.png",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-MidtVest@2x.png"
+        },
+        {
+            "ident": "dr.dk/mas/whatson/channel/ÅL4",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-Nordjylland.png",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-Nordjylland@2x.png"
+        },
+        {
+            "ident": "dr.dk/mas/whatson/channel/NV4",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-Sjaelland.png",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-Sjaelland@2x.png"
+        },
+        {
+            "ident": "dr.dk/mas/whatson/channel/ÅB4",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-Syd.png",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-Syd@2x.png"
+        },
+        {
+            "ident": "dr.dk/mas/whatson/channel/TR4",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-Trekanten.png",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-Trekanten@2x.png"
+        },
+        {
+            "ident": "dr.dk/mas/whatson/channel/ÅR4",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-Oestjylland.png",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P4-Oestjylland@2x.png"
+        },
+        {
+            "ident": "dr.dk/mas/whatson/channel/P5D",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P5.png",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P5@2x.png"
+        },
+        {
+            "ident": "dr.dk/mas/whatson/channel/P6B",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P6.jpg",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P6@2x.jpg"
+        },
+        {
+            "ident": "dr.dk/mas/whatson/channel/P7M",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P7.jpg",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P7@2x.jpg"
+        },
+        {
+            "ident": "dr.dk/mas/whatson/channel/P8J",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P8.jpg",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P8@2x.jpg"
+        },
+        {
+            "ident": "dr.dk/mas/whatson/channel/DRM",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/MAMA.png",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/MAMA@2x.png"
+        },
+        {
+            "ident": "dr.dk/mas/whatson/channel/RAM",
+            "image": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/RAM.png",
+            "image@2x": "http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/RAM@2x.png"
+        }
+    ],
+    "channels": [
+        {
+            "title": "DR P1",
+            "logo": "dr.dk/mas/whatson/channel/P1D",
+            "scheduleIdent": "P1D",
+            "urn": "urn:dr:mu:bundle:4f3b8918860d9a33ccfdaf4d"
+        },
+        {
+            "title": "DR P2",
+            "logo": "dr.dk/mas/whatson/channel/P2D",
+            "scheduleIdent": "P2D",
+            "urn": "urn:dr:mu:bundle:4f3b8919860d9a33ccfdaf54"
+        },
+        {
+            "title": "DR P3",
+            "logo": "dr.dk/mas/whatson/channel/P3",
+            "scheduleIdent": "P3",
+            "urn": "urn:dr:mu:bundle:4f3b891b860d9a33ccfdaf74",
+            "isDefault": true
+        },
+        {
+            "title": "DR P4",
+            "logo": "dr.dk/mas/whatson/channel/P4F",
+            "scheduleIdent": "P4F",
+            "urn": "urn:dr:mu:bundle:4f3b8920860d9a33ccfdaf7c",
+            "channels": [
+                {
+                    "title": "DR P4 Bornholm",
+                    "logo": "dr.dk/mas/whatson/channel/RØ4",
+                    "scheduleIdent": "RØ4",
+                    "urn": "urn:dr:mu:bundle:4f3b892b860d9a33ccfdafd2"
+                },
+                {
+                    "title": "DR P4 Esbjerg",
+                    "logo": "dr.dk/mas/whatson/channel/ES4",
+                    "scheduleIdent": "ES4",
+                    "urn": "urn:dr:mu:bundle:4f3b88fe860d9a33ccfdaf06"
+                },
+                {
+                    "title": "DR P4 Fyn",
+                    "logo": "dr.dk/mas/whatson/channel/OD4",
+                    "scheduleIdent": "OD4",
+                    "urn": "urn:dr:mu:bundle:4f3b8911860d9a33ccfdaf41"
+                },
+                {
+                    "title": "DR P4 København",
+                    "logo": "dr.dk/mas/whatson/channel/KH4",
+                    "scheduleIdent": "KH4",
+                    "urn": "urn:dr:mu:bundle:4f3b890a860d9a33ccfdaf39"
+                },
+                {
+                    "title": "DR P4 Midt & Vest",
+                    "logo": "dr.dk/mas/whatson/channel/HO4",
+                    "scheduleIdent": "HO4",
+                    "urn": "urn:dr:mu:bundle:4f3b8907860d9a33ccfdaf34"
+                },
+                {
+                    "title": "DR P4 Nordjylland",
+                    "logo": "dr.dk/mas/whatson/channel/ÅL4",
+                    "scheduleIdent": "RØ4",
+                    "urn": "urn:dr:mu:bundle:4f3b8937860d9a33ccfdafdc"
+                },
+                {
+                    "title": "DR P4 Sjælland",
+                    "logo": "dr.dk/mas/whatson/channel/NV4",
+                    "scheduleIdent": "RØ4",
+                    "urn": "urn:dr:mu:bundle:4f3b890d860d9a33ccfdaf3e"
+                },
+                {
+                    "title": "DR P4 Syd",
+                    "logo": "dr.dk/mas/whatson/channel/ÅB4",
+                    "scheduleIdent": "ÅB4",
+                    "urn": "urn:dr:mu:bundle:4f3b8934860d9a33ccfdafd9"
+                },
+                {
+                    "title": "DR P4 Trekanten",
+                    "logo": "dr.dk/mas/whatson/channel/TR4",
+                    "scheduleIdent": "RØ4",
+                    "urn": "urn:dr:mu:bundle:4f3b892f860d9a33ccfdafd7"
+                },
+                {
+                    "title": "DR P4 Østjylland",
+                    "logo": "dr.dk/mas/whatson/channel/ÅR4",
+                    "scheduleIdent": "RØ4",
+                    "urn": "urn:dr:mu:bundle:4f3b893a860d9a33ccfdafdf"
+                }
+            ]
+        },
+        {
+            "title": "DR P5",
+            "logo": "dr.dk/mas/whatson/channel/P5D",
+            "scheduleIdent": "P5D",
+            "urn": "urn:dr:mu:bundle:4f3b8922860d9a33ccfdaf96"
+        },
+        {
+            "title": "DR P6 BEAT",
+            "logo": "dr.dk/mas/whatson/channel/P6B",
+            "scheduleIdent": "P6B",
+            "urn": "urn:dr:mu:bundle:4f3b8922860d9a33ccfdaf9f"
+        },
+        {
+            "title": "DR P7 MIX",
+            "logo": "dr.dk/mas/whatson/channel/P7M",
+            "scheduleIdent": "P7M",
+            "urn": "urn:dr:mu:bundle:4f3b8924860d9a33ccfdafa9"
+        },
+        {
+            "title": "DR P8 JAZZ",
+            "logo": "dr.dk/mas/whatson/channel/P8J",
+            "scheduleIdent": "P8J",
+            "urn": "urn:dr:mu:bundle:4f3b8926860d9a33ccfdafb9"
+        },
+        {
+            "title": "DR MAMA",
+            "logo": "dr.dk/mas/whatson/channel/DRM",
+            "scheduleIdent": "DRM",
+            "urn": "urn:dr:mu:bundle:4f3b88f8860d9a33ccfdaeca"
+        },
+        {
+            "title": "DR Ramasjang/Ultra Radio",
+            "logo": "dr.dk/mas/whatson/channel/RAM",
+            "scheduleIdent": "RAM",
+            "urn": "urn:dr:mu:bundle:4f3b8928860d9a33ccfdafcc"
+        }
+    ]
+}

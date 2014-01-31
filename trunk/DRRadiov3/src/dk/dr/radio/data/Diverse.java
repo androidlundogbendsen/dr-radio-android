@@ -18,16 +18,6 @@
 
 package dk.dr.radio.data;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -37,46 +27,32 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import dk.dr.radio.diverse.Log;
 
 
-public class JsonIndlaesning {
+public class Diverse {
 
 
-  private static HttpClient httpClient;
-
-  public static String hentUrlSomStreng(String url) throws IOException {
-    // AndroidHttpClient er først defineret fra Android 2.2
-    //if (httpClient == null) httpClient = android.net.http.AndroidHttpClient.newInstance("Android DRRadio");
-    if (httpClient == null) {
-      HttpParams params = new BasicHttpParams();
-      HttpConnectionParams.setConnectionTimeout(params, 15 * 1000);
-      HttpConnectionParams.setSoTimeout(params, 15 * 1000);
-      HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-      HttpProtocolParams.setContentCharset(params, HTTP.DEFAULT_CONTENT_CHARSET);
-      //HttpProtocolParams.setUseExpectContinue(params, true);
-      HttpProtocolParams.setUserAgent(params, "Android DRRadio/1.x");
-      httpClient = new DefaultHttpClient(params);
+  /**
+   * Tjek for om vi er på et netværk der kræver login eller lignende.
+   * Se 'Handling Network Sign-On' i http://developer.android.com/reference/java/net/HttpHttpURLConnection.html
+   */
+  private static void tjekOmdirigering(URL u, HttpURLConnection urlConnection) throws IOException {
+    URL u2 = urlConnection.getURL();
+    if (!u.getHost().equals(u2.getHost())) {
+      // Vi blev omdirigeret
+      Log.d("tjekOmdirigering " + u);
+      Log.d("tjekOmdirigering " + u2);
+      //Log.rapporterFejl(omdirigeringsfejl);
+      throw new UnknownHostException("Der blev omdirigeret fra " + u.getHost() + " til " + u2.getHost());
     }
-    //dt("");
-    Log.d("Henter " + url);
-    //Log.e(new Exception("Henter "+url));
-    //InputStream is = new URL(url).openStream();
-
-    HttpGet c = new HttpGet(url);
-    HttpResponse response = httpClient.execute(c);
-    InputStream is = response.getEntity().getContent();
-
-    String jsondata = læsInputStreamSomStreng(is);
-    //Log.d("Hentede "+url+" på "+dt("hente "+url));
-
-    // frederik: GratisDanmark fix: Strip the file of XML tags that might ruin the JSON format
-    jsondata.replaceAll("<[^>]*>", "");
-
-    return jsondata;
   }
+
 
   public static String læsInputStreamSomStreng(InputStream is) throws IOException, UnsupportedEncodingException {
 
@@ -114,5 +90,24 @@ public class JsonIndlaesning {
       res.add(j.getString(i));
     }
     return res;
+  }
+
+
+  public static String hentUrlSomStreng(String url) throws IOException {
+    Log.d("hentUrlSomStreng lgd=" + url.length() + "  " + url);
+
+    URL u = new URL(url);
+    HttpURLConnection urlConnection = (HttpURLConnection) u.openConnection();
+    urlConnection.setConnectTimeout(15000);
+    urlConnection.setReadTimeout(90 * 1000);   // 1 1/2 minut
+    urlConnection.connect(); // http://stackoverflow.com/questions/8179658/urlconnection-getcontent-return-null
+    InputStream is = urlConnection.getInputStream();
+    Log.d("åbnGETURLConnection url.length()=" + url.length() + "  is=" + is + "  is.available()=" + is.available());
+    if (urlConnection.getResponseCode() != 200)
+      throw new IOException("HTTP-svar var " + urlConnection.getResponseCode() + " " + urlConnection.getResponseMessage() + " for " + u);
+
+    tjekOmdirigering(u, urlConnection);
+
+    return læsInputStreamSomStreng(is);
   }
 }

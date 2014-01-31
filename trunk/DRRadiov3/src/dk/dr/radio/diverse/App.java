@@ -42,22 +42,22 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 
 import dk.dr.radio.akt_v3.Basisaktivitet;
 import dk.dr.radio.data.DRData;
-import dk.dr.radio.data.JsonIndlaesning;
+import dk.dr.radio.data.Diverse;
 import dk.dr.radio.data.stamdata.Stamdata;
 import dk.dr.radio.v3.R;
 
 public class App extends Application {
+  public static boolean EMULATOR = true;
   public static App instans;
   public static SharedPreferences prefs;
   private static ConnectivityManager connectivityManager;
   private static String versionName;
   public static NotificationManager notificationManager;
   public static boolean udvikling = false;
-  public static Handler forgrundstråd = new Handler();
+  public static Handler forgrundstråd;
   public static Typeface skrift_normal;
   public static Typeface skrift_fed;
 
@@ -68,6 +68,8 @@ public class App extends Application {
     super.onCreate();
 
     instans = this;
+    EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator");
+    forgrundstråd = new Handler();
     connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -80,7 +82,7 @@ public class App extends Application {
       Class.forName("android.os.AsyncTask"); // Fix for http://code.google.com/p/android/issues/detail?id=20915
       //noinspection ConstantConditions
       App.versionName = App.instans.getPackageManager().getPackageInfo(App.instans.getPackageName(), PackageManager.GET_ACTIVITIES).versionName;
-      if (Log.EMULATOR) App.versionName += " UDV";
+      if (EMULATOR) App.versionName += " UDV";
       App.versionName += "/" + Build.MODEL + " " + Build.PRODUCT;
     } catch (Exception e) {
       Log.rapporterFejl(e);
@@ -88,34 +90,32 @@ public class App extends Application {
 
 
     try {
-      DRData.instans = new DRData();
+      DRData i = DRData.instans = new DRData();
+      i.stamdata = Stamdata.parseAndroidStamdata(Diverse.læsInputStreamSomStreng(getResources().openRawResource(R.raw.stamdata1_android_v3_01)));
+      i.stamdata.parseFællesStamdata(Diverse.læsInputStreamSomStreng(getResources().openRawResource(R.raw.stamdata2_faelles)));
+      i.stamdata.hentSupplerendeData();
 
+      /*
       // indlæs stamdata fra Prefs hvis de findes
       String stamdatastr = prefs.getString(DRData.STAMDATA_URL, null);
 
       if (stamdatastr == null) {
         // Indlæs fra raw this vi ikke har nogle cachede stamdata i prefs
-        InputStream is = getResources().openRawResource(R.raw.stamdata_android_v3_01);
-        stamdatastr = JsonIndlaesning.læsInputStreamSomStreng(is);
+        InputStream is = getResources().openRawResource(R.raw.stamdata1_android_v3_01);
+        stamdatastr = Diverse.læsInputStreamSomStreng(is);
       }
 
-      DRData.instans.stamdata = Stamdata.parseStamdatafil(stamdatastr);
+      DRData.instans.stamdata = Stamdata.xxx_parseStamdatafil(stamdatastr);
       String alleKanalerUrl = DRData.instans.stamdata.json.getString("alleKanalerUrl");
 
       String alleKanalerStr = prefs.getString(alleKanalerUrl, null);
       if (alleKanalerStr == null) {
         // Indlæs fra raw this vi ikke har nogle cachede stamdata i prefs
-        InputStream is = getResources().openRawResource(R.raw.v3_alle_kanaler);
-        alleKanalerStr = JsonIndlaesning.læsInputStreamSomStreng(is);
+        InputStream is = getResources().openRawResource(R.raw.skrald__alle_kanaler);
+        alleKanalerStr = Diverse.læsInputStreamSomStreng(is);
       }
-      DRData.instans.stamdata.parseAlleKanaler(alleKanalerStr);
-
-
-      // Kanalvalg. Tjek først Preferences, brug derefter JSON-filens forvalgte kanal
-      //DRData.instans.aktuelKanalkode = prefs.getString(DRData.NØGLE_kanal, DRData.instans.aktuelKanalkode = DRData.instans.stamdata.json.optString("forvalgt"));
-      //DRData.instans.aktuelKanal = DRData.instans.stamdata.kanalFraKode.get(DRData.instans.aktuelKanalkode);
-      //DRData.instans.afspiller = new Afspiller();      //String url = DRData.instans.findKanalUrlFraKode(DRData.instans.aktuelKanal);
-      //DRData.instans.afspiller.setKanal(DRData.instans.aktuelKanal.longName, url);
+      DRData.instans.stamdata.skrald_parseAlleKanaler(alleKanalerStr);
+      */
     } catch (Exception ex) {
       // TODO popop-advarsel til bruger om intern fejl og rapporter til udvikler-dialog
       Log.rapporterFejl(ex);
@@ -142,8 +142,8 @@ public class App extends Application {
   }
 
 
-  public static Basisaktivitet aktivitetIForgrunden = null;
-  public static Basisaktivitet senesteAktivitetIForgrunden = null;
+  public static Activity aktivitetIForgrunden = null;
+  public static Activity senesteAktivitetIForgrunden = null;
   private static int erIGang = 0;
 
   public static void sætErIGang(boolean netværkErIGang) {
@@ -202,7 +202,7 @@ public class App extends Application {
   public static void kontakt(Activity akt, String emne, String txt, String vedhæftning) {
     String[] modtagere;
     try {
-      modtagere = JsonIndlaesning.jsonArrayTilArrayListString(DRData.instans.stamdata.json.getJSONArray("feedback_modtagere")).toArray(new String[0]);
+      modtagere = Diverse.jsonArrayTilArrayListString(DRData.instans.stamdata.json.getJSONArray("feedback_modtagere")).toArray(new String[0]);
     } catch (Exception ex) {
       Log.e("JSONParsning af feedback_modtagere", ex);
       modtagere = new String[]{"MIKP@dr.dk", "fraa@dr.dk", "jacob.nordfalk@gmail.com"};
