@@ -27,4 +27,47 @@
             <item name="android:colorBackground">@color/hvid</item>
         </style>
     -->
+
+
+    <!-- the theme applied to the application or activity -->
+    <style name="CustomActionBarTheme"
+           parent="@style/Theme.AppCompat.Light">
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:actionBarTabTextStyle">@style/TabTextStyle</item>
+        <item name="android:actionMenuTextColor">@color/grå80</item>
+
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="actionBarTabTextStyle">@style/TabTextStyle</item>
+        <item name="actionMenuTextColor">@color/grå80</item>
+    </style>
+
+    <!-- general styles for the action bar -->
+    <style name="MyActionBar"
+           parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:titleTextStyle">@style/TitleTextStyle</item>
+        <item name="android:background">@color/actionbar_baggrund</item>
+        <item name="android:backgroundStacked">@color/actionbar_kanaler_baggrund</item>
+        <item name="android:backgroundSplit">@color/actionbar_kanaler_baggrund</item>
+
+        <!-- Support library compatibility -->
+        <item name="titleTextStyle">@style/TitleTextStyle</item>
+        <item name="background">@color/actionbar_baggrund</item>
+        <item name="backgroundStacked">@color/actionbar_kanaler_baggrund</item>
+        <item name="backgroundSplit">@color/actionbar_kanaler_baggrund</item>
+    </style>
+
+    <!-- action bar title text -->
+    <style name="TitleTextStyle"
+           parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/hvid</item>
+    </style>
+
+    <!-- action bar tab text -->
+    <style name="TabTextStyle"
+           parent="@style/Widget.AppCompat.ActionBar.TabText">
+        <item name="android:textColor">@color/sort</item>
+    </style>
+
+
 </resources>

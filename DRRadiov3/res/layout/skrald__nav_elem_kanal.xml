@@ -20,7 +20,7 @@
             android:layout_height="50dp"
             android:layout_gravity="left|center_vertical"
             android:scaleType="fitStart"
-            android:src="@drawable/kanal_p1d"
+            android:src="@drawable/skrald__kanal_p1d"
             />
 
     <ImageView

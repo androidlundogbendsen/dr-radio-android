@@ -11,6 +11,9 @@ import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import com.androidquery.AQuery;
 
 import java.util.ArrayList;
 
@@ -56,8 +59,16 @@ public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener
         continue;
       }
       ActionBar.Tab fane = actionBar.newTab();
-      if (k.kanalappendis_resid > 0) fane.setIcon(k.kanalappendis_resid);
-      else fane.setText(k.navn); // Intet ikon, så vis tekst - burde ikke ske
+      /*
+        if (k.kanalappendis_resid > 0) fane.setIcon(k.kanalappendis_resid);
+        else fane.setText(k.navn); // Intet ikon, så vis tekst - burde ikke ske
+       */
+      if (k.logoUrl.length() > 0) {
+        ImageView iv = new ImageView(getActivity());
+        //new AQuery(iv).image("http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P1.png");
+        new AQuery(iv).image(k.logoUrl2);
+        fane.setCustomView(iv);
+      } else fane.setText(k.navn); // Intet ikon, så vis tekst - burde ikke ske
       fane.setTabListener(this);
       actionBar.addTab(fane);
     }

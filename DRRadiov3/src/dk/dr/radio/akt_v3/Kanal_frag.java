@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import dk.dr.radio.data.DrJson;
+import dk.dr.radio.data.DRJson;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
@@ -46,7 +46,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     url = "http://www.dr.dk/tjenester/mu-apps/schedule/" + kanalkode;  // svarer til v3_kanalside__p3.json
     Log.d("XXX url=" + url);
     App.sætErIGang(true);
-    new AQuery(App.instans).ajax(url, String.class, 60000, new AjaxCallback<String>() {
+    new AQuery(getActivity()).ajax(url, String.class, 60000, new AjaxCallback<String>() {
       @Override
       public void callback(String url, String json, AjaxStatus status) {
         App.sætErIGang(false);
@@ -86,16 +86,16 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         JSONObject o = json.getJSONObject(n);
         Udsendelse u = new Udsendelse();
         u.json = o;
-        u.startTid = DrJson.servertidsformat.parse(o.optString(DrJson.StartTime.name()));
+        u.startTid = DRJson.servertidsformat.parse(o.optString(DRJson.StartTime.name()));
         u.startTidKl = klokkenformat.format(u.startTid);
         String datoStr = datoformat.format(u.startTid);
         if (!datoStr.equals(nuDatoStr)) u.startTidKl += " - " + datoStr;
-        u.slutTid = DrJson.servertidsformat.parse(o.optString(DrJson.EndTime.name()));
-        u.titel = o.optString(DrJson.Title.name());
-        u.beskrivelse = o.optString(DrJson.Description.name());
-        u.slug = o.optString(DrJson.Slug.name());
-        u.programserieSlug = o.optString(DrJson.SeriesSlug.name());
-        u.urn = o.optString(DrJson.Urn.name());
+        u.slutTid = DRJson.servertidsformat.parse(o.optString(DRJson.EndTime.name()));
+        u.titel = o.optString(DRJson.Title.name());
+        u.beskrivelse = o.optString(DRJson.Description.name());
+        u.slug = o.optString(DRJson.Slug.name());
+        u.programserieSlug = o.optString(DRJson.SeriesSlug.name());
+        u.urn = o.optString(DRJson.Urn.name());
         Log.d("XXXXXXX " + u.startTid.before(nu) + nu.before(u.slutTid) + "  " + u);
         //if (u.startTid.before(nu) && nu.before(u.slutTid)) aktuelUdsendelseIndex = n;
         if (u.startTid.before(nu)) aktuelUdsendelseIndex = n;

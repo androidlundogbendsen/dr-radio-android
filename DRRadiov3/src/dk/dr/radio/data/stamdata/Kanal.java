@@ -26,12 +26,13 @@ public class Kanal {
 
   public String kode;
   public String navn;
+
   public String shoutcastUrl;
   public String aacUrl;
   public String rtspUrl;
 
 
-  public String slug;
+  public String urn;
   public JSONObject json;
   public HashMap<String, JSONObject> lydUrl = new HashMap<String, JSONObject>();
 
@@ -42,6 +43,14 @@ public class Kanal {
    * Tilføj /1, /2, …  i URL for at se senere. /7 er max.
    * Se tidligere med /-1 , /-2 etc
    */
-  public String kanalside;
+  //public String kanalside;
   public int kanalappendis_resid;
+  public String lognøgle = "";
+  public String logoUrl = "";
+  public String logoUrl2 = "";
+
+  @Override
+  public String toString() {
+    return kode + "/" + navn + "/" + logoUrl;
+  }
 }

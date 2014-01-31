@@ -9,7 +9,7 @@ import java.util.Date;
  * Navne for formater der er i DRs JSON-feeds
  * Created by j on 19-01-14.
  */
-public enum DrJson {
+public enum DRJson {
   /*
      {
         "Urn" : "urn:dr:mu:programcard:52cc9ac66187a213f89ade03",
