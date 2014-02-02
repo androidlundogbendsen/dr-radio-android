@@ -26,7 +26,7 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClickListener {
+public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnItemClickListener {
 
   public static String P_kode = "kanalkode";
   private ListView listView;
@@ -41,12 +41,12 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     super.onCreate(savedInstanceState);
     //setRetainInstance(true);
 
-    //String url = "http://www.dr.dk/mu/Bundle?BundleType=%22Channel%22&DrChannel=true&ChannelType=%22RADIO%22&limit=100";
     kanalkode = getArguments().getString(P_kode);
     url = "http://www.dr.dk/tjenester/mu-apps/schedule/" + kanalkode;  // svarer til v3_kanalside__p3.json
     Log.d("XXX url=" + url);
     App.sætErIGang(true);
-    new AQuery(getActivity()).ajax(url, String.class, 60000, new AjaxCallback<String>() {
+    //new AQuery(getActivity()).ajax(url, String.class, 60000, new AjaxCallback<String>() {
+    new AQuery(getActivity()).ajax(url, String.class, 8 * 60 * 60 * 1000, new AjaxCallback<String>() {
       @Override
       public void callback(String url, String json, AjaxStatus status) {
         App.sætErIGang(false);
@@ -80,6 +80,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     try {
       //Log.d("opdaterListe " + json.toString(2));
       nu.setTime(System.currentTimeMillis()); // TODO kompenser for forskelle mellem telefonens ur og serverens ur
+      Log.d("XXXXXXX " + kanalkode + "  nu=" + nu);
       aktuelUdsendelseIndex = -1;
       String nuDatoStr = datoformat.format(nu);
       for (int n = 0; n < json.length(); n++) {
@@ -96,7 +97,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         u.slug = o.optString(DRJson.Slug.name());
         u.programserieSlug = o.optString(DRJson.SeriesSlug.name());
         u.urn = o.optString(DRJson.Urn.name());
-        Log.d("XXXXXXX " + u.startTid.before(nu) + nu.before(u.slutTid) + "  " + u);
+        Log.d(n + " XXXXXXX " + kanalkode + u.startTid.before(nu) + nu.before(u.slutTid) + "  " + u);
         //if (u.startTid.before(nu) && nu.before(u.slutTid)) aktuelUdsendelseIndex = n;
         if (u.startTid.before(nu)) aktuelUdsendelseIndex = n;
         uliste.add(u);
@@ -104,8 +105,16 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     } catch (Exception e1) {
       Log.rapporterFejl(e1);
     }
-    App.kortToast("aktuelUdsendelseIndex=" + aktuelUdsendelseIndex);
+    Log.d("XXXXXXX " + kanalkode + "  aktuelUdsendelseIndex=" + aktuelUdsendelseIndex);
     adapter.notifyDataSetChanged();
+    visAktuelUdsendelse();
+  }
+
+  private void visAktuelUdsendelse() {
+    if (listView == null) return;
+    if (adapter == null) return;
+    int topmargen = getResources().getDimensionPixelOffset(R.dimen.kanalvisning_aktuelUdsendelse_topmargen);
+    listView.setSelectionFromTop(aktuelUdsendelseIndex, topmargen);
   }
 
 
@@ -123,7 +132,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
     @Override
     public int getItemViewType(int position) {
-      if (position == 0) return 1;
+      //if (position == 0) return 1;
       if (position == aktuelUdsendelseIndex) return 2;
       return 0;
     }
@@ -133,12 +142,12 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       Udsendelse u = uliste.get(position);
       int type = getItemViewType(position);
       if (v == null)
-        v = getLayoutInflater(null).inflate(App.udvikling ? R.layout.listeelement_udvikler : type == 0 ? R.layout.listeelement_tid_titel_kunstner : R.layout.listeelement_billede_med_titeloverlaegning, parent, false);
+        v = getLayoutInflater(null).inflate(type == 0 ? R.layout.listeelement_tid_titel_kunstner : R.layout.listeelement_billede_med_titeloverlaegning, parent, false);
       AQuery a = new AQuery(v);
       a.id(R.id.titel).text(u.titel).typeface(App.skrift_fed);
       a.id(R.id.beskrivelse).text(u.beskrivelse);
       a.id(R.id.tid).visible().text(u.startTidKl).typeface(App.skrift_normal);
-      a.id(R.id.kunstner).gone();
+      a.id(R.id.kunstner).text("");
 
       if (App.udvikling) {
         a.id(R.id.json).text(u.json.toString());

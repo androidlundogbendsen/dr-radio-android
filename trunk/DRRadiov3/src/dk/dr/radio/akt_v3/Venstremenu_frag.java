@@ -272,12 +272,12 @@ public class Venstremenu_frag extends Fragment {
       if (e.type == 4) {
         f = new Kanaler_frag();
       } else if (e.type == 2) {
-        f = new Kanal_frag();
-        b.putString(Kanal_frag.P_kode, e.data);
+        f = new Kanalvisning_frag();
+        b.putString(Kanalvisning_frag.P_kode, e.data);
       } else {
         App.kortToast("Ikke implementeret");
-        f = new Kanal_frag();
-        b.putString(Kanal_frag.P_kode, "P3");
+        f = new Kanalvisning_frag();
+        b.putString(Kanalvisning_frag.P_kode, "P3");
       }
 
       f.setArguments(b);

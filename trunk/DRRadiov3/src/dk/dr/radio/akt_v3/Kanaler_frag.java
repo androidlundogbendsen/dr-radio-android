@@ -40,7 +40,7 @@ public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener
     Log.d("xxx DRData.instans.stamdata.kanalkoder=" + DRData.instans.stamdata.kanalkoder);
 
     for (String kode : DRData.instans.stamdata.kanalkoder) {
-      faneAdapter.tilføj(kode, new Kanal_frag(), putString(args, Kanal_frag.P_kode, kode));
+      faneAdapter.tilføj(kode, new Kanalvisning_frag(), putString(args, Kanalvisning_frag.P_kode, kode));
     }
 
     viewPager = (ViewPager) findViewById(R.id.pager);
@@ -63,7 +63,7 @@ public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener
         if (k.kanalappendis_resid > 0) fane.setIcon(k.kanalappendis_resid);
         else fane.setText(k.navn); // Intet ikon, så vis tekst - burde ikke ske
        */
-      if (k.logoUrl.length() > 0) {
+      if (k.logoUrl2.length() > 0) {
         ImageView iv = new ImageView(getActivity());
         //new AQuery(iv).image("http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P1.png");
         new AQuery(iv).image(k.logoUrl2);

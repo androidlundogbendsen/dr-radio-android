@@ -5,7 +5,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/grå70"
-        android:padding="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:orientation="horizontal">
 
 
