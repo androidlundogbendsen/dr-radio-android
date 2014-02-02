@@ -14,6 +14,7 @@ import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
@@ -153,7 +154,11 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       a.id(R.id.højttalerikon).clicked(new UdsendelseClickListener(u));
 
       if (App.udvikling) {
-        a.id(R.id.json).text(u.json.toString());
+        try {
+          Log.d(u.json.toString(2));
+        } catch (JSONException e) {
+          e.printStackTrace();
+        }
       }
       return v;
     }
