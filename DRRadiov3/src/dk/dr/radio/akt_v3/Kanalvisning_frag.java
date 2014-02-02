@@ -38,6 +38,8 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
   private Date nu = new Date();
   private int aktuelUdsendelseIndex;
   private Kanal kanal;
+  protected AQuery aq;
+  protected View rod;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -67,7 +69,9 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    setContentView(R.layout.kanal_frag, inflater, container);
+    Log.d("Viser fragment " + this);
+    rod = inflater.inflate(R.layout.kanal_frag, container, false);
+    aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
     listView.setEmptyView(aq.id(R.id.tom).getView());
     return rod;
@@ -185,6 +189,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
 
     @Override
     public void onClick(View v) {
+      DRData.instans.aktuelKanal = kanal;
       DRData.instans.afspiller.setKanal(kanal.lydUrl.get(null));
       DRData.instans.afspiller.startAfspilning();
     }

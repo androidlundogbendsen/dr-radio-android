@@ -29,8 +29,8 @@ import android.widget.RemoteViews;
 
 import java.util.Arrays;
 
-import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.afspilning.AfspillerReciever;
+import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.akt_v3.Hovedaktivitet;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.v3.R;
@@ -50,9 +50,7 @@ public class AfspillerWidget extends AppWidgetProvider {
    */
   @Override
   public void onUpdate(Context ctx, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-
     Log.d(this + " onUpdate (levende ikon oprettet) - appWidgetIds = " + Arrays.toString(appWidgetIds));
-
     // for sørge for at vores knapper får tilknyttet intentsne
     opdaterUdseende(ctx, appWidgetManager, appWidgetIds[0]);
   }
@@ -71,7 +69,6 @@ public class AfspillerWidget extends AppWidgetProvider {
     RemoteViews remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspillerwidget);
 
     Intent startStopI = new Intent(App.instans, AfspillerReciever.class);
-    startStopI.putExtra("flag", Afspiller.WIDGET_START_ELLER_STOP);
     PendingIntent pi = PendingIntent.getBroadcast(App.instans, 0, startStopI, PendingIntent.FLAG_UPDATE_CURRENT);
     remoteViews.setOnClickPendingIntent(R.id.startStopKnap, pi);
 
@@ -101,15 +98,15 @@ public class AfspillerWidget extends AppWidgetProvider {
       }
 
 
-      int afspillerstatus = DRData.instans.afspiller.getAfspillerstatus();
+      Status afspillerstatus = DRData.instans.afspiller.getAfspillerstatus();
 
-      if (afspillerstatus == Afspiller.STATUS_STOPPET) {
+      if (afspillerstatus == Status.STOPPET) {
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.widget_afspilning_start);
         remoteViews.setViewVisibility(R.id.progressbar, View.INVISIBLE);
-      } else if (afspillerstatus == Afspiller.STATUS_FORBINDER) {
+      } else if (afspillerstatus == Status.FORBINDER) {
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.widget_afspilning_stop);
         remoteViews.setViewVisibility(R.id.progressbar, View.VISIBLE);
-      } else if (afspillerstatus == Afspiller.STATUS_SPILLER) {
+      } else if (afspillerstatus == Status.SPILLER) {
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.widget_afspilning_stop);
         remoteViews.setViewVisibility(R.id.progressbar, View.INVISIBLE);
       } else {

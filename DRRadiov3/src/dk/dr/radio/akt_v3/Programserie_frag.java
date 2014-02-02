@@ -30,6 +30,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
   private String kanalkode;
   private String url;
   private JSONObject data;
+  private AQuery aq;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -60,7 +61,9 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    setContentView(R.layout.kanal_frag, inflater, container);
+    Log.d("Viser fragment " + this);
+    View rod = inflater.inflate(R.layout.kanal_frag, container, false);
+    aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
     listView.setEmptyView(aq.id(R.id.tom).getView());
     return rod;

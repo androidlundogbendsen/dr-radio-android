@@ -42,13 +42,10 @@ public class AfspillerReciever extends BroadcastReceiver {
       int flag = intent.getIntExtra("flag", 0);
       Log.d("AfspillerReciever onReceive(" + intent + ") flag " + flag + " afspillerstatus =" + DRData.instans.afspiller.afspillerstatus);
 
-
-      if (flag == Afspiller.WIDGET_START_ELLER_STOP) {
-        if (DRData.instans.afspiller.afspillerstatus == Afspiller.STATUS_STOPPET) {
-          DRData.instans.afspiller.startAfspilning();
-        } else {
-          DRData.instans.afspiller.stopAfspilning();
-        }
+      if (DRData.instans.afspiller.afspillerstatus == Status.STOPPET) {
+        DRData.instans.afspiller.startAfspilning();
+      } else {
+        DRData.instans.afspiller.stopAfspilning();
       }
 
     } catch (Exception ex) {
