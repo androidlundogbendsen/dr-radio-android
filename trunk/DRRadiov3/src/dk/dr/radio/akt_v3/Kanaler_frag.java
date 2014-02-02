@@ -27,12 +27,16 @@ import static dk.dr.radio.akt_v3.Basisaktivitet.putString;
 public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener {
 
 
+  protected AQuery aq;
+  protected View rod;
   private FaneAdapter faneAdapter;
   private ViewPager viewPager;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    setContentView(R.layout.kanaler_frag, inflater, container);
+    Log.d("Viser fragment " + this);
+    rod = inflater.inflate(R.layout.kanaler_frag, container, false);
+    aq = new AQuery(rod);
     faneAdapter = new FaneAdapter(getActivity().getSupportFragmentManager());
     Bundle args = new Bundle();
 
@@ -43,7 +47,7 @@ public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener
       faneAdapter.tilføj(kode, new Kanalvisning_frag(), putString(args, Kanalvisning_frag.P_kode, kode));
     }
 
-    viewPager = (ViewPager) findViewById(R.id.pager);
+    viewPager = (ViewPager) rod.findViewById(R.id.pager);
     viewPager.setAdapter(faneAdapter);
 
 

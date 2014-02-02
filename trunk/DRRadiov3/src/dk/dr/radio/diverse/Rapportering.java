@@ -18,12 +18,10 @@
 
 package dk.dr.radio.diverse;
 
-import dk.dr.radio.afspilning.AfspillerListener;
-
 /**
  * @author j
  */
-public class Rapportering implements AfspillerListener {
+public class Rapportering implements Runnable {
 
   //  rapportering_sidsteonAfspilningStartet = System.currentTimeMillis();
 
@@ -53,4 +51,8 @@ public class Rapportering implements AfspillerListener {
     if (bufferProcent > 0 && afspilningFaktiskStartet > 0) nulstil();
   }
 
+  @Override
+  public void run() {
+
+  }
 }

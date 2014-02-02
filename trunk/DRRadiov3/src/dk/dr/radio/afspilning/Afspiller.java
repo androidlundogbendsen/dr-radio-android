@@ -61,17 +61,14 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
   //public static final int WIDGET_HENT_INFO = 10;
   public static final int WIDGET_START_ELLER_STOP = 11;
 
-  public static final int STATUS_STOPPET = 1;
-  public static final int STATUS_FORBINDER = 2;
-  public static final int STATUS_SPILLER = 3;
-  public int afspillerstatus = STATUS_STOPPET;
+  public Status afspillerstatus = Status.STOPPET;
 
   private MediaPlayer mediaPlayer;
-  private List<AfspillerListener> observatører = new ArrayList<AfspillerListener>();
+  public List<Runnable> observatører = new ArrayList<Runnable>();
+  public List<Runnable> forbindelseobservatører = new ArrayList<Runnable>();
 
-  public String kanalUrl;
-  //private Udsendelse aktuelUdsendelse;
-  //private String PROGRAMNAVN = "Radio";
+  private String lydUrl;
+  private int forbinderProcent;
 
   private static void sætMediaPlayerLytter(MediaPlayer mediaPlayer, Afspiller lytter) {
     mediaPlayer.setOnCompletionListener(lytter);
@@ -82,11 +79,8 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
     mediaPlayer.setOnSeekCompleteListener(lytter);
     if (lytter != null && App.prefs.getBoolean(NØGLEholdSkærmTændt, false)) {
       mediaPlayer.setWakeMode(App.instans, PowerManager.SCREEN_DIM_WAKE_LOCK);
-      //DRData.langToast("holdSkærmTændt");
     }
   }
-
-  //private Notification notification;
 
   static final String NØGLEholdSkærmTændt = "holdSkærmTændt";
   private WifiLock wifilock = null;
@@ -101,7 +95,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
     // Indlæs gamle værdier så vi har nogle...
     // Fjernet. Skulle ikke være nødvendigt. Jacob 22/10-2011
     // kanalNavn = p.getString("kanalNavn", "P1");
-    // kanalUrl = p.getString("kanalUrl", "rtsp://live-rtsp.dr.dk/rtplive/_definst_/Channel5_LQ.stream");
+    // lydUrl = p.getString("lydUrl", "rtsp://live-rtsp.dr.dk/rtplive/_definst_/Channel5_LQ.stream");
 
     // Gem værdi hvis den ikke findes, sådan at indstillingsskærm viser det rigtige
     if (!App.prefs.contains(NØGLEholdSkærmTændt)) {
@@ -121,12 +115,12 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
   private long onErrorTællerNultid;
 
   public void startAfspilning() {
-    Log.d("startAfspilning() " + kanalUrl);
+    Log.d("startAfspilning() " + lydUrl);
 
     onErrorTæller = 0;
     onErrorTællerNultid = System.currentTimeMillis();
 
-    if (afspillerstatus == STATUS_STOPPET) {
+    if (afspillerstatus == Status.STOPPET) {
       //opdaterNotification();
       // Start afspillerservicen så programmet ikke bliver lukket
       // når det kører i baggrunden under afspilning
@@ -150,9 +144,9 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
   }
 
   synchronized private void startAfspilningIntern() {
-    Log.d("mediaPlayer.setDataSource( " + kanalUrl);
+    Log.d("mediaPlayer.setDataSource( " + lydUrl);
 
-    afspillerstatus = STATUS_FORBINDER;
+    afspillerstatus = Status.FORBINDER;
     sendOnAfspilningForbinder(-1);
     opdaterWidgets();
     handler.removeCallbacks(startAfspilningIntern);
@@ -163,12 +157,12 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
       public void run() {
         Log.d("mediaPlayer.setDataSource() start");
         try {
-          mediaPlayer.setDataSource(kanalUrl);
+          mediaPlayer.setDataSource(lydUrl);
           Log.d("mediaPlayer.setDataSource() slut");
           mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
           mediaPlayer.prepareAsync();
         } catch (Exception ex) {
-          //ex = new Exception("spiller "+kanalNavn+" "+kanalUrl, ex);
+          //ex = new Exception("spiller "+kanalNavn+" "+lydUrl, ex);
           //Log.kritiskFejlStille(ex);
           handler.post(new Runnable() {
             public void run() { // Stop afspilleren fra forgrundstråden. Jacob 14/11
@@ -204,7 +198,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
     mediaPlayer = new MediaPlayer();
     sætMediaPlayerLytter(mediaPlayer, this); // registrér lyttere på den nye instans
 
-    afspillerstatus = STATUS_STOPPET;
+    afspillerstatus = Status.STOPPET;
     opdaterWidgets();
 
     //if (notification != null) notificationManager.cancelAll();
@@ -216,63 +210,26 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
       Log.rapporterFejl(e);
     } // TODO fjern try/catch
     // Informer evt aktivitet der lytter
-    for (AfspillerListener observatør : observatører) {
-      observatør.onAfspilningStoppet();
+    for (Runnable observatør : observatører) {
+      observatør.run();
     }
-  }
-
-
-  /**
-   * Sætter notification i toppen af skærmen
-   * <p/>
-   * private void opdaterNotification() {
-   * if (notification == null) {
-   * notification = new Notification(R.drawable.notifikation_ikon, null, 0);
-   * <p/>
-   * // PendingIntent er til at pege på aktiviteten der skal startes hvis brugeren vælger notifikationen
-   * notification.contentIntent = PendingIntent.getActivity(DRData.appCtx, 0, new Intent(DRData.appCtx, Afspilning_akt.class), 0);
-   * notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT);
-   * }
-   * <p/>
-   * notification.setLatestEventInfo(DRData.appCtx, PROGRAMNAVN, kanalNavn, notification.contentIntent);
-   * notificationManager.notify(NOTIFIKATION_ID, notification);
-   * }
-   */
-
-
-  public void addAfspillerListener(AfspillerListener lytter) {
-    if (!observatører.contains(lytter)) {
-      observatører.add(lytter);
-      // Informer lytteren om aktuel status
-      if (afspillerstatus == STATUS_FORBINDER) {
-        lytter.onAfspilningForbinder(-1);
-      } else if (afspillerstatus == STATUS_STOPPET) {
-        lytter.onAfspilningStoppet();
-      } else {
-        lytter.onAfspilningStartet();
-      }
-    }
-  }
-
-  public void removeAfspillerListener(AfspillerListener lytter) {
-    observatører.remove(lytter);
   }
 
 
   public void setKanal(String url) {
 
-    kanalUrl = url;
+    lydUrl = url;
 
     // Fjernet. Skulle ikke være nødvendigt. Jacob 22/10-2011
     /*
     PreferenceManager.getDefaultSharedPreferences(DRData.appCtx).edit()
             .putString("kanalNavn", kanalNavn)
-            .putString("kanalUrl", kanalUrl)
+            .putString("lydUrl", lydUrl)
             .commit();
      */
 
 
-    if ((afspillerstatus == STATUS_SPILLER) || (afspillerstatus == STATUS_FORBINDER)) {
+    if ((afspillerstatus == Status.SPILLER) || (afspillerstatus == Status.FORBINDER)) {
       stopAfspilning();
       try {
         startAfspilning();
@@ -295,7 +252,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
   }
 
 
-  public int getAfspillerstatus() {
+  public Status getAfspillerstatus() {
     return afspillerstatus;
   }
 
@@ -305,11 +262,11 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
   //
   public void onPrepared(MediaPlayer mp) {
     Log.d("onPrepared");
-    afspillerstatus = STATUS_SPILLER; //No longer buffering
+    afspillerstatus = Status.SPILLER; //No longer buffering
     if (observatører != null) {
       opdaterWidgets();
-      for (AfspillerListener observer : observatører) {
-        observer.onAfspilningStartet();
+      for (Runnable observer : observatører) {
+        observer.run();
       }
     }
     // Det ser ud til kaldet til start() kan tage lang tid på Android 4.1 Jelly Bean
@@ -327,7 +284,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
     Log.d("AfspillerService onCompletion!");
     // Hvis forbindelsen mistes kommer der en onCompletion() og vi er derfor
     // nødt til at genstarte, medmindre brugeren trykkede stop
-    if (afspillerstatus == STATUS_SPILLER) {
+    if (afspillerstatus == Status.SPILLER) {
       Log.d("Genstarter afspilning!");
       mediaPlayer.stop();
       // mediaPlayer.reset();
@@ -381,7 +338,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
     // Iflg http://developer.android.com/guide/topics/media/index.html :
     // "It's important to remember that when an error occurs, the MediaPlayer moves to the Error
     //  state and you must reset it before you can use it again."
-    if (afspillerstatus == STATUS_SPILLER || afspillerstatus == STATUS_FORBINDER) {
+    if (afspillerstatus == Status.SPILLER || afspillerstatus == Status.FORBINDER) {
 
 
       // Hvis der har været
@@ -411,8 +368,9 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
   }
 
   private void sendOnAfspilningForbinder(int procent) {
-    for (AfspillerListener observer : observatører) {
-      observer.onAfspilningForbinder(procent);
+    forbinderProcent = procent;
+    for (Runnable observer : forbindelseobservatører) {
+      observer.run();
     }
   }
 
@@ -428,4 +386,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
   }
 
 
+  public int getForbinderProcent() {
+    return forbinderProcent;
+  }
 }

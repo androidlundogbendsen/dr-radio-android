@@ -22,6 +22,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
 import dk.dr.radio.afspilning.Afspiller;
+import dk.dr.radio.afspilning.Status;
 
 
 /*
@@ -29,36 +30,36 @@ import dk.dr.radio.afspilning.Afspiller;
  */
 public class Opkaldshaandtering extends PhoneStateListener {
 
-  private Afspiller service;
+  private Afspiller afspiller;
   private boolean venterPåKaldetAfsluttes;
 
-  public Opkaldshaandtering(Afspiller service) {
-    this.service = service;
+  public Opkaldshaandtering(Afspiller afspiller) {
+    this.afspiller = afspiller;
   }
 
   @Override
   public void onCallStateChanged(int state, String incomingNumber) {
-    int afspilningsstatus = service.getAfspillerstatus();
+    Status afspilningsstatus = afspiller.getAfspillerstatus();
     switch (state) {
       case TelephonyManager.CALL_STATE_OFFHOOK:
         Log.d("Offhook state detected");
-        if (afspilningsstatus != Afspiller.STATUS_STOPPET) {
+        if (afspilningsstatus != Status.STOPPET) {
           venterPåKaldetAfsluttes = true;
-          service.stopAfspilning();
+          afspiller.stopAfspilning();
         }
         break;
       case TelephonyManager.CALL_STATE_RINGING:
         Log.d("Ringing detected");
-        if (afspilningsstatus != Afspiller.STATUS_STOPPET) {
+        if (afspilningsstatus != Status.STOPPET) {
           venterPåKaldetAfsluttes = true;
-          service.stopAfspilning();
+          afspiller.stopAfspilning();
         }
         break;
       case TelephonyManager.CALL_STATE_IDLE:
         Log.d("Idle state detected");
         if (venterPåKaldetAfsluttes) {
           try {
-            service.startAfspilning();
+            afspiller.startAfspilning();
           } catch (Exception e) {
             Log.e(e);
           }

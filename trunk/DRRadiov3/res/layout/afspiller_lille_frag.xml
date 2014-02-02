@@ -23,6 +23,7 @@
     <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_marginLeft="16dp"
             android:layout_gravity="center_vertical"
             android:orientation="vertical">
@@ -47,5 +48,11 @@
                 android:textColor="@color/hvid"/>
 
     </LinearLayout>
+
+    <ProgressBar
+            android:id="@+id/progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
 
 </LinearLayout>
