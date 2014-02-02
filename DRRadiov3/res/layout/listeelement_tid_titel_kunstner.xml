@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:scaleType="centerInside"
-                android:id="@+id/imageView"
+                android:id="@+id/højttalerikon"
                 android:src="@drawable/dri_lyd2_blaa"/>
 
     </LinearLayout>

@@ -18,11 +18,15 @@
 
 package dk.dr.radio.data;
 
+import java.io.File;
 import java.io.FileInputStream;
 
+import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.data.stamdata.Stamdata;
+import dk.dr.radio.diverse.FilCache;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.Rapportering;
 
 /**
  * Det centrale objekt som alt andet bruger til
@@ -33,13 +37,17 @@ public class DRData {
   public static final String STAMDATA_URL = "http://javabog.dk/privat/stamdata_android_v3_013_01.json";
 
   public Stamdata stamdata;
+  public Afspiller afspiller;
+  public Kanal aktuelKanal;
 
+  public final Rapportering rapportering = new Rapportering();
 
   /**
    * Til afprøvning
    */
   public static void main(String[] a) throws Exception {
     DRData i = new DRData();
+    FilCache.init(new File("/tmp/drradio-cache"));
 
 //    i.stamdata = Stamdata.xxx_parseStamdatafil(Diverse.læsInputStreamSomStreng(new FileInputStream("res/raw/stamdata1_android_v3_01.json")));
 //    i.stamdata.skrald_parseAlleKanaler(Diverse.læsInputStreamSomStreng(new FileInputStream("res/raw/skrald__alle_kanaler.json")));

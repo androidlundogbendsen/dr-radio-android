@@ -34,7 +34,7 @@ public class Kanal {
 
   public String urn;
   public JSONObject json;
-  public HashMap<String, JSONObject> lydUrl = new HashMap<String, JSONObject>();
+  public HashMap<String, String> lydUrl = new HashMap<String, String>();
 
   /**
    * Eksemlelvis v3_kanalside__p3.json
@@ -48,6 +48,7 @@ public class Kanal {
   public String lognøgle = "";
   public String logoUrl = "";
   public String logoUrl2 = "";
+  public String slug;
 
   @Override
   public String toString() {

@@ -21,28 +21,30 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
+import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
 public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnItemClickListener {
 
-  public static String P_kode = "kanalkode";
+  public static String P_kode = "kanal.kode";
   private ListView listView;
-  private String kanalkode;
   private String url;
   private ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
   private Date nu = new Date();
   private int aktuelUdsendelseIndex;
+  private Kanal kanal;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     //setRetainInstance(true);
 
-    kanalkode = getArguments().getString(P_kode);
-    url = "http://www.dr.dk/tjenester/mu-apps/schedule/" + kanalkode;  // svarer til v3_kanalside__p3.json
+    kanal = DRData.instans.stamdata.kanalFraKode.get(getArguments().getString(P_kode));
+    url = "http://www.dr.dk/tjenester/mu-apps/schedule/" + kanal.kode;  // svarer til v3_kanalside__p3.json
     Log.d("XXX url=" + url);
     App.sætErIGang(true);
     //new AQuery(getActivity()).ajax(url, String.class, 60000, new AjaxCallback<String>() {
@@ -80,7 +82,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     try {
       //Log.d("opdaterListe " + json.toString(2));
       nu.setTime(System.currentTimeMillis()); // TODO kompenser for forskelle mellem telefonens ur og serverens ur
-      Log.d("XXXXXXX " + kanalkode + "  nu=" + nu);
+      Log.d("XXXXXXX " + kanal.kode + "  nu=" + nu);
       aktuelUdsendelseIndex = -1;
       String nuDatoStr = datoformat.format(nu);
       for (int n = 0; n < json.length(); n++) {
@@ -97,7 +99,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
         u.slug = o.optString(DRJson.Slug.name());
         u.programserieSlug = o.optString(DRJson.SeriesSlug.name());
         u.urn = o.optString(DRJson.Urn.name());
-        Log.d(n + " XXXXXXX " + kanalkode + u.startTid.before(nu) + nu.before(u.slutTid) + "  " + u);
+        Log.d(n + " XXXXXXX " + kanal.kode + u.startTid.before(nu) + nu.before(u.slutTid) + "  " + u);
         //if (u.startTid.before(nu) && nu.before(u.slutTid)) aktuelUdsendelseIndex = n;
         if (u.startTid.before(nu)) aktuelUdsendelseIndex = n;
         uliste.add(u);
@@ -105,7 +107,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     } catch (Exception e1) {
       Log.rapporterFejl(e1);
     }
-    Log.d("XXXXXXX " + kanalkode + "  aktuelUdsendelseIndex=" + aktuelUdsendelseIndex);
+    Log.d("XXXXXXX " + kanal.kode + "  aktuelUdsendelseIndex=" + aktuelUdsendelseIndex);
     adapter.notifyDataSetChanged();
     visAktuelUdsendelse();
   }
@@ -148,6 +150,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       a.id(R.id.beskrivelse).text(u.beskrivelse);
       a.id(R.id.tid).visible().text(u.startTidKl).typeface(App.skrift_normal);
       a.id(R.id.kunstner).text("");
+      a.id(R.id.højttalerikon).clicked(new UdsendelseClickListener(u));
 
       if (App.udvikling) {
         a.id(R.id.json).text(u.json.toString());
@@ -165,6 +168,20 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     if (u.programserieSlug.length() > 0) {
       startActivity(new Intent(getActivity(), VisFragment_akt.class).
           putExtra(VisFragment_akt.KLASSE, Programserie_frag.class.getName()).putExtra(Programserie_frag.P_kode, u.programserieSlug));
+    }
+  }
+
+  private class UdsendelseClickListener implements View.OnClickListener {
+    private final Udsendelse u;
+
+    public UdsendelseClickListener(Udsendelse u) {
+      this.u = u;
+    }
+
+    @Override
+    public void onClick(View v) {
+      DRData.instans.afspiller.setKanal(kanal.lydUrl.get(null));
+      DRData.instans.afspiller.startAfspilning();
     }
   }
 }

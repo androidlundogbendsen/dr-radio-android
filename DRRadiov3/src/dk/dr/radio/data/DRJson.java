@@ -35,7 +35,9 @@ public enum DRJson {
   SeriesSlug, // unik ID for en programserie
   Urn,        // en anden slags unik ID
   Title, Description,
-  StartTime, EndTime,;
+  StartTime, EndTime,
+  Streams,
+  Uri, Quality;
 
 
   /**
