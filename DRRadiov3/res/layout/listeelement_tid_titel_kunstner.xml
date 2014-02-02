@@ -45,9 +45,10 @@
 
         <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
                 android:id="@+id/imageView"
-                android:src="@drawable/dri_lyd_blaa"/>
+                android:src="@drawable/dri_lyd2_blaa"/>
 
     </LinearLayout>
 
