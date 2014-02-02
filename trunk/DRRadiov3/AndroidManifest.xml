@@ -35,6 +35,61 @@
             </intent-filter>
         </activity>
         <activity android:name="dk.dr.radio.akt_v3.VisFragment_akt"/>
+
+
+        <activity
+                android:name="dk.dr.radio.akt.Om_DRRadio_akt"
+                android:label="Om DR Radio">
+        </activity>
+
+
+        <activity
+                android:name="dk.dr.radio.akt.Indstillinger_akt"
+                android:label="DR Radio Indstillinger">
+            <!-- Gør aktivitet synlig i forbindelse med at brugeren gennemser sit dataforbrug -->
+            <intent-filter>
+                <action android:name="android.intent.action.MANAGE_NETWORK_USAGE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <!--
+         * Tidligere AfspillerService - service-del der sørger for at app'en
+         * bliver i hukommelsen mens der spilles lyd
+        -->
+        <service android:name="dk.dr.radio.afspilning.HoldAppIHukommelsenService"/>
+
+
+        <!--
+     * BroadcastReceiver som aktiverer afspilleren og evt instantierer den.
+     * I tilfælde af at processen har været smidt ud af hukommelsen er dette
+     * her faktisk den første kode der køres, derfor er et fuldt
+        -->
+        <receiver android:name="dk.dr.radio.afspilning.AfspillerReciever"/>
+
+
+        <!-- Til håndtering af knapper på fjernbetjening (f.eks. på Bluetooth headset.)
+             Mangler: God håndtering i tråd med forslag i
+             http://android-developers.blogspot.com/2010/06/allowing-applications-to-play-nicer.html
+        -->
+        <receiver android:name="dk.dr.radio.diverse.MediabuttonReceiver">
+            <intent-filter android:priority="1">
+                <action android:name="android.intent.action.MEDIA_BUTTON"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+                android:name="dk.dr.radio.diverse.AfspillerWidget"
+                android:label="DR Radio">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                    android:name="android.appwidget.provider"
+                    android:resource="@xml/afspiller_widgetinfo"/>
+        </receiver>
+
+
     </application>
 
 </manifest>

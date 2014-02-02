@@ -35,6 +35,7 @@ import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -43,6 +44,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.akt_v3.Basisaktivitet;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Diverse;
@@ -88,13 +90,23 @@ public class App extends Application {
       Log.rapporterFejl(e);
     }
 
+    FilCache.init(getCacheDir());
 
     try {
-      DRData i = DRData.instans = new DRData();
+      final DRData i = DRData.instans = new DRData();
       i.stamdata = Stamdata.parseAndroidStamdata(Diverse.læsInputStreamSomStreng(getResources().openRawResource(R.raw.stamdata1_android_v3_01)));
       i.stamdata.parseFællesStamdata(Diverse.læsInputStreamSomStreng(getResources().openRawResource(R.raw.stamdata2_faelles)));
-      i.stamdata.hentSupplerendeData();
+      i.aktuelKanal = i.stamdata.forvalgtKanal;
 
+      new AsyncTask() {
+        @Override
+        protected Object doInBackground(Object[] params) {
+          i.stamdata.hentSupplerendeData();
+          return null;
+        }
+      }.execute();
+
+      DRData.instans.afspiller = new Afspiller();
       /*
       // indlæs stamdata fra Prefs hvis de findes
       String stamdatastr = prefs.getString(DRData.STAMDATA_URL, null);
@@ -205,7 +217,7 @@ public class App extends Application {
       modtagere = Diverse.jsonArrayTilArrayListString(DRData.instans.stamdata.json.getJSONArray("feedback_modtagere")).toArray(new String[0]);
     } catch (Exception ex) {
       Log.e("JSONParsning af feedback_modtagere", ex);
-      modtagere = new String[]{"MIKP@dr.dk", "fraa@dr.dk", "jacob.nordfalk@gmail.com"};
+      modtagere = new String[]{"jacob.nordfalk@gmail.com"};
     }
 
     Intent i = new Intent(Intent.ACTION_SEND);

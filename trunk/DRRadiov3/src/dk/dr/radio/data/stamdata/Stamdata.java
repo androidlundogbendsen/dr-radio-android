@@ -24,12 +24,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Diverse;
 import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.FilCache;
 import dk.dr.radio.diverse.Log;
 
 public class Stamdata {
@@ -42,7 +45,7 @@ public class Stamdata {
   public List<String> kanalkoder = new ArrayList<String>();
   public List<String> p4koder = new ArrayList<String>();
   public List<Kanal> kanaler = new ArrayList<Kanal>();
-  public Kanal forvalgt;
+  public Kanal forvalgtKanal;
 
 
   public HashMap<String, Kanal> kanalFraKode = new HashMap<String, Kanal>();
@@ -76,8 +79,6 @@ public class Stamdata {
 
   private void parseKanaler(JSONArray jsonArray, boolean underkanal) throws JSONException {
 
-    String pn = App.instans.getPackageName();
-    Resources res = App.instans.getResources();
 
     int antal = jsonArray.length();
     for (int i = 0; i < antal; i++) {
@@ -87,15 +88,13 @@ public class Stamdata {
       k.navn = j.getString("title");
       k.lognøgle = j.getString("logo");
       k.urn = j.getString("urn");
-      k.kanalappendis_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase(), "drawable", pn);
-      Log.d("kanalappendix_" + k.kode.toLowerCase() + "  resid=" + k.kanalappendis_resid);
       kanaler.add(k);
       if (underkanal) p4koder.add(k.kode);
       else kanalkoder.add(k.kode);
       kanalFraKode.put(k.kode, k);
       kanalFraUrn.put(k.urn, k);
       kanalFraLogonøgle.put(k.lognøgle, k);
-      if (j.optBoolean("isDefault")) forvalgt = k;
+      if (j.optBoolean("isDefault")) forvalgtKanal = k;
 
       JSONArray underkanaler = j.optJSONArray("channels");
       if (underkanaler != null) parseKanaler(underkanaler, true);
@@ -107,7 +106,7 @@ public class Stamdata {
     JSONObject json = d.json = new JSONObject(str);
 
     parseKanaler(json.getJSONArray("channels"), false);
-    if (forvalgt == null) forvalgt = kanaler.get(2); // Det er nok P3 :-)
+    if (forvalgtKanal == null) forvalgtKanal = kanaler.get(2); // Det er nok P3 :-)
 
     JSONArray logoer = json.getJSONArray("logos");
     int antal = logoer.length();
@@ -127,9 +126,25 @@ public class Stamdata {
 
 
   public void hentSupplerendeData() {
-    for (Kanal k : kanaler) {
+    for (Kanal k : kanaler)
+      try {
+        String url = "http://www.dr.dk/tjenester/mu-apps/channel?urn=" + k.urn + "&includeStreams=true";
+        String data = Diverse.læsInputStreamSomStreng(new FileInputStream(FilCache.hentFil(url, false, true, 1000 * 60 * 60 * 24 * 7)));
+        JSONObject o = new JSONObject(data);
+        k.slug = o.getString(DRJson.Slug.name());
+        JSONArray sa = o.getJSONArray(DRJson.Streams.name());
+        for (int n = 0; n < sa.length(); n++) {
+          JSONObject s = sa.getJSONObject(n);
+          String lydUrl = s.getString(DRJson.Uri.name());
+          k.lydUrl.put(null, lydUrl);
+          k.lydUrl.put(s.getString(DRJson.Quality.name()), lydUrl);
+        }
+        Log.d(k.kode + " k.lydUrl=" + k.lydUrl);
 
-    }
+      } catch (Exception e) {
+        Log.e(e);
+      }
+    ;
   }
 
 
@@ -189,7 +204,7 @@ public class Stamdata {
         if (servere != null) for (int n = 0; n < servere.length(); n++) {
           JSONObject s = servere.getJSONObject(n);
           String streamtype = s.optString("LinkType");
-          k.lydUrl.put(streamtype, s);
+          //k.lydUrl.put(streamtype, s);
           Log.d(k.kode + " '" + streamtype + "' : " + s);
         }
         //k.kanalside = "http://www.dr.dk/tjenester/mu-apps/schedule/" + k.kode;

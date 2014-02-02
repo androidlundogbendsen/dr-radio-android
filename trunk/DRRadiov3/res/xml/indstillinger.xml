@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+            android:key="lydkvalitet"
+            android:title="Lydkvalitet"
+            android:defaultValue="standard"
+            android:summary="Standard er 64kbps (MP3 dog 96kbps) og bruger ca. 1/2 MB data pr. minut.\nHøj kvalitet bruger ca. 1 1/2 MB/minut"
+            android:entries="@array/lydkvalitet_tekst"
+            android:entryValues="@array/lydkvalitet_kode"/>
+
+    <ListPreference
+            android:title="Format"
+            android:summary="Hvis det forvalgte format ikke virker kan du prøve et andet"
+            android:key="lydformat"
+            android:defaultValue="shoutcast"
+            android:entries="@array/lydformat_tekst"
+            android:entryValues="@array/lydformat_kode"/>
+
+    <CheckBoxPreference
+            android:key="startAfspilningMedDetSammme"
+            android:title="Start automatisk"
+            android:defaultValue="false"
+            android:summary="Start afspilling automatisk, når appen åbnes"/>
+
+
+    <CheckBoxPreference
+            android:key="wifilås" android:title="Hold wifi tændt"
+            android:defaultValue="true" android:summaryOn="Undlad at skrue ned for wifi (bruger mere batteri)"
+            android:summaryOff="Tillad enheden at skrue ned for wifi. Kan forårsage at afspilningen hakker."/>
+
+    <CheckBoxPreference
+            android:key="holdSkærmTændt"
+            android:title="Hold skærmen tændt"
+            android:defaultValue="false"
+            android:summary="Hakker afspilningen når skærmen er slukket så prøv at krydse af her (bruger mere batteri). Nødvendigt på XPeria Play."/>
+
+
+    <!--
+        <CheckBoxPreference android:key="udvikler" android:title="Udvikler"
+            android:defaultValue="false" android:summaryOff=""
+        android:summaryOn="Til udviklere og fejlfinding. Appen skal genstartes før det træder i kraft" />
+
+     />
+
+        <CheckBoxPreference android:key="udvikler" android:title="Udvikler"
+            android:defaultValue="false" android:summaryOff=""
+        android:summaryOn="Til udviklere og fejlfinding. Appen skal genstartes før det træder i kraft" />
+        -->
+
+    <!-- 	<EditTextPreference android:key="udviklerKontakt" android:title="Kontakt"
+        android:summary="Skriv din e-postadresse hvis du vil kunne kontaktes i forbindelse
+        med udvikling" android:defaultValue="" /> -->
+
+    <!-- <CheckBoxPreference android:key="lukAfspillerServiceVedAfslutning"
+        android:title="Når programmet lukkes" android:defaultValue="false" android:summaryOff="Fortsæt
+        afspilning af radio" android:summaryOn="Stop afspilning (fungerer ikke med
+        levende ikoner/widget)" /> -->
+
+</PreferenceScreen>
