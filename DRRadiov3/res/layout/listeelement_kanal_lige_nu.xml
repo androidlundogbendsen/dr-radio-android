@@ -5,43 +5,64 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:orientation="vertical"
-        android:weightSum="1">
+        android:orientation="vertical">
 
     <include
             layout="@layout/listeelement_billede_med_titeloverlaegning"
             android:id="@+id/include"
             android:layout_width="match_parent"
-            android:layout_height="200dp"/>
+            android:layout_height="wrap_content"/>
 
 
-    <LinearLayout
+    <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+                android:id="@+id/tidsbjælke"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:id="@+id/starttidbjælke"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="74"
+                    android:background="@color/grå60"/>
+
+            <TextView
+                    android:id="@+id/slutttidbjælke"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="26"
+                    android:textColor="@color/hvid"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:background="@color/grå10"/>
+
+        </LinearLayout>
+
 
         <TextView
-                android:id="@+id/tid"
+                android:id="@+id/startid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="74"
                 android:text="16.10"
                 android:textColor="@color/hvid"
+                android:layout_gravity="left"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:background="@color/grå60"
                 tools:ignore="HardcodedText"/>
 
         <TextView
                 android:id="@+id/slutttid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="26"
                 android:text="16.30"
+                android:layout_gravity="right"
                 android:textColor="@color/hvid"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:background="@color/grå10"
                 tools:ignore="HardcodedText"/>
+    </FrameLayout>
 
-    </LinearLayout>
 
 </LinearLayout>

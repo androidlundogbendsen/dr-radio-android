@@ -4,13 +4,12 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/hvid"
         android:padding="16dp"
         android:orientation="vertical">
 
 
     <TextView
-            android:id="@+id/tid"
+            android:id="@+id/startid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="17.04"

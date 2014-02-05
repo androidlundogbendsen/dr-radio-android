@@ -18,6 +18,7 @@ public class Udsendelse {
   public String startTidKl;
   public String beskrivelse;
   public Date slutTid;
+  public String slutTidKl;
 
   @Override
   public String toString() {

@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
@@ -29,7 +31,7 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnItemClickListener {
+public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnItemClickListener, Runnable {
 
   public static String P_kode = "kanal.kode";
   private ListView listView;
@@ -51,7 +53,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     Log.d("XXX url=" + url);
     App.sætErIGang(true);
     //new AQuery(getActivity()).ajax(url, String.class, 60000, new AjaxCallback<String>() {
-    new AQuery(getActivity()).ajax(url, String.class, 8 * 60 * 60 * 1000, new AjaxCallback<String>() {
+    new AQuery(getActivity()).ajax(url, String.class, 1 * 60 * 60 * 1000, new AjaxCallback<String>() {
       @Override
       public void callback(String url, String json, AjaxStatus status) {
         App.sætErIGang(false);
@@ -77,11 +79,26 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     return rod;
   }
 
+
   @Override
   public void onResume() {
     super.onResume();
     ((Hovedaktivitet) getActivity()).sætTitel(getArguments().getString(P_kode));
+    App.forgrundstråd.postDelayed(this, 50);
   }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    App.forgrundstråd.removeCallbacks(this);
+  }
+
+  @Override
+  public void run() {
+    App.forgrundstråd.postDelayed(this, 5000);
+    opdaterAktuelUdsendelse();
+  }
+
 
   private void opdaterListe(JSONArray json) {
     try {
@@ -96,9 +113,13 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
         u.json = o;
         u.startTid = DRJson.servertidsformat.parse(o.optString(DRJson.StartTime.name()));
         u.startTidKl = klokkenformat.format(u.startTid);
+        u.slutTid = DRJson.servertidsformat.parse(o.optString(DRJson.EndTime.name()));
+
+        u.slutTidKl = klokkenformat.format(u.slutTid);
         String datoStr = datoformat.format(u.startTid);
         if (!datoStr.equals(nuDatoStr)) u.startTidKl += " - " + datoStr;
-        u.slutTid = DRJson.servertidsformat.parse(o.optString(DRJson.EndTime.name()));
+
+
         u.titel = o.optString(DRJson.Title.name());
         u.beskrivelse = o.optString(DRJson.Description.name());
         u.slug = o.optString(DRJson.Slug.name());
@@ -125,6 +146,21 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
   }
 
 
+  /**
+   * Viewholder designmønster - hold direkte referencer til de views og objekter der bruges hele tiden
+   */
+  private static class Viewholder {
+    public AQuery aq;
+    public TextView titel;
+    public TextView startid;
+    public Udsendelse udsendelse;
+    public TextView sluttid;
+    public View starttidbjælke;
+    public View slutttidbjælke;
+  }
+
+  private Viewholder aktuelUdsendelseViewholder;
+
   private BaseAdapter adapter = new Basisadapter() {
     @Override
     public int getCount() {
@@ -136,27 +172,45 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       return 3;
     }
 
-
     @Override
     public int getItemViewType(int position) {
       //if (position == 0) return 1;
-      if (position == aktuelUdsendelseIndex) return 2;
-      return 0;
+      if (position == aktuelUdsendelseIndex) return AKTUEL;
+      return NORMAL;
     }
+
+    public static final int NORMAL = 0;
+    public static final int AKTUEL = 2;
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
-      Udsendelse u = uliste.get(position);
+      Viewholder vh;
+      AQuery a;
       int type = getItemViewType(position);
-      if (v == null)
-        v = getLayoutInflater(null).inflate(type == 0 ? R.layout.listeelement_tid_titel_kunstner : R.layout.listeelement_billede_med_titeloverlaegning, parent, false);
-      AQuery a = new AQuery(v);
-      a.id(R.id.titel).text(u.titel).typeface(App.skrift_fed);
-      a.id(R.id.beskrivelse).text(u.beskrivelse);
-      a.id(R.id.tid).visible().text(u.startTidKl).typeface(App.skrift_normal);
-      a.id(R.id.kunstner).text("");
-      a.id(R.id.højttalerikon).clicked(new UdsendelseClickListener(u));
+      if (v == null) {
+        v = getLayoutInflater(null).inflate(type == NORMAL ? R.layout.listeelement_tid_titel_kunstner : R.layout.listeelement_kanal_lige_nu, parent, false);
+        vh = new Viewholder();
+        a = vh.aq = new AQuery(v);
+        vh.titel = a.id(R.id.titel).typeface(App.skrift_fed).getTextView();
+        vh.startid = a.id(R.id.startid).typeface(App.skrift_normal).getTextView();
+        vh.sluttid = a.id(R.id.slutttid).typeface(App.skrift_normal).getTextView();
+        vh.starttidbjælke = a.id(R.id.starttidbjælke).getView();
+        vh.slutttidbjælke = a.id(R.id.slutttidbjælke).getView();
+        a.id(R.id.højttalerikon).clicked(new UdsendelseClickListener(vh));
+        a.id(R.id.kunstner).text("");
+        v.setTag(vh);
+      } else {
+        vh = (Viewholder) v.getTag();
+        a = vh.aq;
+      }
+      Udsendelse u = uliste.get(position);
+      // Opdatér viewholderens data
+      vh.udsendelse = u;
+      vh.titel.setText(u.titel);
+      vh.startid.setText(u.startTidKl);
 
+      // Til udvikling
+      a.id(R.id.beskrivelse).text(u.beskrivelse);
       if (App.udvikling) {
         try {
           Log.d(u.json.toString(2));
@@ -167,6 +221,27 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       return v;
     }
   };
+
+  private void opdaterAktuelUdsendelse() {
+    if (aktuelUdsendelseViewholder == null) return;
+    try {
+      Viewholder vh = aktuelUdsendelseViewholder;
+      Udsendelse u = vh.udsendelse;
+      long passeret = nu.getTime() - u.startTid.getTime();
+      long længde = u.slutTid.getTime() - u.startTid.getTime();
+      int passeretPct = længde > 0 ? (int) (passeret * 100 / længde) : 0;
+      Log.d(kanal.kode + " passeretPct=" + passeretPct + " af længde=" + længde);
+      AQuery a = aktuelUdsendelseViewholder.aq;
+      LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) vh.starttidbjælke.getLayoutParams();
+      lp.weight = passeretPct;
+      vh.starttidbjælke.setLayoutParams(lp);
+
+      lp = (LinearLayout.LayoutParams) vh.slutttidbjælke.getLayoutParams();
+      lp.weight = 100 - passeretPct;
+      vh.slutttidbjælke.setLayoutParams(lp);
+    } catch (Exception e) {
+      Log.rapporterFejl(e); }
+  }
 
   public static final DateFormat klokkenformat = new SimpleDateFormat("HH:mm");
   public static final DateFormat datoformat = new SimpleDateFormat("d. LLL. yyyy");
@@ -181,16 +256,17 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
   }
 
   private class UdsendelseClickListener implements View.OnClickListener {
-    private final Udsendelse u;
 
-    public UdsendelseClickListener(Udsendelse u) {
-      this.u = u;
+    private final Viewholder viewHolder;
+
+    public UdsendelseClickListener(Viewholder vh) {
+      viewHolder = vh;
     }
 
     @Override
     public void onClick(View v) {
       DRData.instans.aktuelKanal = kanal;
-      DRData.instans.afspiller.setKanal(kanal.lydUrl.get(null));
+      DRData.instans.afspiller.setUrl(kanal.lydUrl.get(null));
       DRData.instans.afspiller.startAfspilning();
     }
   }

@@ -216,7 +216,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
   }
 
 
-  public void setKanal(String url) {
+  public void setUrl(String url) {
 
     lydUrl = url;
 
@@ -240,6 +240,10 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
     opdaterWidgets();
   }
 
+
+  public String getUrl() {
+    return lydUrl;
+  }
 
   private void opdaterWidgets() {
 
