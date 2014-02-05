@@ -209,6 +209,13 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       vh.titel.setText(u.titel);
       vh.startid.setText(u.startTidKl);
 
+      if (getItemViewType(position) == AKTUEL) {
+        aktuelUdsendelseViewholder = vh;
+        //a.id(R.id.billede).image("http://asset.dr.dk/imagescaler/?file=/mu/programcard/imageuri/radioavis-24907&w=300&h=169&scaleAfter=crop");
+        a.id(R.id.billede).image("http://asset.dr.dk/imagescaler/?file=/mu/programcard/imageuri/" + u.slug + "&w=300&h=169&scaleAfter=crop");
+        v.setBackgroundColor(getResources().getColor(R.color.hvid));
+      }
+
       // Til udvikling
       a.id(R.id.beskrivelse).text(u.beskrivelse);
       if (App.udvikling) {
@@ -265,8 +272,13 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
 
     @Override
     public void onClick(View v) {
-      DRData.instans.aktuelKanal = kanal;
-      DRData.instans.afspiller.setUrl(kanal.lydUrl.get(null));
+      if (aktuelUdsendelseViewholder == viewHolder) {
+        DRData.instans.aktuelKanal = kanal;
+        DRData.instans.afspiller.setUrl(kanal.lydUrl.get(null));
+      } else {
+        url = "http://www.dr.dk/tjenester/mu-apps/program/" + viewHolder.udsendelse.slug + "?type=radio&includeStreams=true";
+
+      }
       DRData.instans.afspiller.startAfspilning();
     }
   }
