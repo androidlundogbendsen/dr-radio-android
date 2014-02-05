@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.androidquery.AQuery;
 
+import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
@@ -68,6 +70,8 @@ public class Basisaktivitet extends ActionBarActivity {
     menu.add(0, 642, 0, "Udvikler");
     menu.add(0, 643, 0, "Log");
     menu.add(0, 644, 0, "Hent nyeste udvikler-version");
+    menu.add(0, 645, 0, "Del lyd 1");
+    menu.add(0, 1645, 0, "Del lyd 2");
     menu.add(0, 646, 0, "Send fejlrapport");
     //}
     return super.onCreateOptionsMenu(menu);
@@ -98,6 +102,10 @@ public class Basisaktivitet extends ActionBarActivity {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://javabog.dk/privat/DRRadiov3.apk")));
         return true;
       case 645:
+        startActivity(new Intent(MediaStore.INTENT_ACTION_MUSIC_PLAYER));
+        return true;
+      case 1643:
+        startActivity(new Intent(android.content.Intent.ACTION_VIEW).setDataAndType(Uri.parse(DRData.instans.afspiller.getUrl()), "audio/*"));
       case 643:
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         TextView tv = new TextView(this);

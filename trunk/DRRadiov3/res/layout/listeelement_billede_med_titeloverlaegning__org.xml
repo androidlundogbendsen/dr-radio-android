@@ -1,40 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:descendantFocusability="blocksDescendants"
+        android:background="@drawable/eksempel_udsendelse"
         >
-
-
-    <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:id="@+id/imageView"
-            android:src="@drawable/eksempel_udsendelse"/>
-
     <!--
-                android:descendantFocusability="blocksDescendants"
-                gør at knappen her ikke tager fokus for hele listeelementet
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@color/grå60"
+                android:background="@drawable/runde_hjoerner"
     -->
+
 
     <ImageButton
             android:id="@+id/højttalerikon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
             android:layout_marginTop="16dp"
             android:layout_marginLeft="16dp"
             android:src="@drawable/dri_lyd_hvid"/>
 
-
     <LinearLayout
             android:id="@+id/lige_nu_og_titel_ll"
-            android:layout_gravity="left|bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
             android:orientation="vertical"
-            android:layout_marginLeft="8dp">
+            >
 
         <TextView
                 android:id="@+id/lige_nu"
@@ -45,11 +43,7 @@
                 android:background="@color/sort"
                 android:textColor="#26b7c8"
                 android:gravity="center_vertical|center_horizontal"
-                android:paddingTop="4dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:paddingBottom="0dp"
-                />
+                android:padding="8dp"/>
 
         <TextView
                 android:id="@+id/titel"
@@ -61,13 +55,7 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:gravity="center_vertical"
                 android:textStyle="bold"
-                android:paddingTop="0dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:paddingBottom="0dp"
-                android:layout_marginBottom="8dp"/>
-        />
+                android:padding="8dp"/>
 
     </LinearLayout>
-
-</FrameLayout>
+</RelativeLayout>

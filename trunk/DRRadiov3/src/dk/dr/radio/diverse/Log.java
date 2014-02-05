@@ -90,9 +90,12 @@ public class Log {
   }
 
 
+  static int fejlRapporteret = 0;
+
   public static void rapporterFejl(final Exception e) {
-    if (!App.EMULATOR) BugSenseHandler.sendException(e);
     Log.e(e);
+    if (fejlRapporteret++ > 10) return; // rapportér ikke mere end 10 fejl per kørsel
+    if (!App.EMULATOR) BugSenseHandler.sendException(e);
   }
 
 

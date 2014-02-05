@@ -130,6 +130,6 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
     aktueltLydformat = nytLydformat;
     DRData drdata = DRData.instans;
     //String url = drdata.findKanalUrlFraKode(drdata.aktuelKanal);
-    //drdata.afspiller.setKanal(drdata.aktuelKanal.longName, url);
+    //drdata.afspiller.setUrl(drdata.aktuelKanal.longName, url);
   }
 }
