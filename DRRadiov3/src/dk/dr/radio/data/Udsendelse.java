@@ -1,4 +1,4 @@
-package dk.dr.radio.akt_v3;
+package dk.dr.radio.data;
 
 import org.json.JSONObject;
 

@@ -17,15 +17,12 @@ import com.androidquery.callback.AjaxStatus;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 import dk.dr.radio.data.DRData;
-import dk.dr.radio.data.DRJson;
+import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
@@ -35,9 +32,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
 
   public static String P_kode = "kanal.kode";
   private ListView listView;
-  private String url;
   private ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
-  private Date nu = new Date();
   private int aktuelUdsendelseIndex;
   private Kanal kanal;
   protected AQuery aq;
@@ -49,17 +44,17 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     //setRetainInstance(true);
 
     kanal = DRData.instans.stamdata.kanalFraKode.get(getArguments().getString(P_kode));
-    url = "http://www.dr.dk/tjenester/mu-apps/schedule/" + kanal.kode;  // svarer til v3_kanalside__p3.json
+    String url = kanal.getSendeplanUrl();
     Log.d("XXX url=" + url);
     App.sætErIGang(true);
-    //new AQuery(getActivity()).ajax(url, String.class, 60000, new AjaxCallback<String>() {
     new AQuery(getActivity()).ajax(url, String.class, 1 * 60 * 60 * 1000, new AjaxCallback<String>() {
       @Override
       public void callback(String url, String json, AjaxStatus status) {
         App.sætErIGang(false);
         Log.d("XXX url " + url + "   status=" + status.getCode());
         if (json != null && !"null".equals(json)) try {
-          opdaterListe(new JSONArray(json));
+          kanal.parsUdsendelser(new JSONArray(json), 0);
+          opdaterListe(kanal.udsendelser);
           return;
         } catch (Exception e) {
           Log.d("Parsefejl: " + e + " for json=" + json);
@@ -100,36 +95,20 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
   }
 
 
-  private void opdaterListe(JSONArray json) {
+  private void opdaterListe(ArrayList<Udsendelse> nyuliste) {
     try {
       //Log.d("opdaterListe " + json.toString(2));
-      nu.setTime(System.currentTimeMillis()); // TODO kompenser for forskelle mellem telefonens ur og serverens ur
+      Date nu = new Date(); // TODO kompenser for forskelle mellem telefonens ur og serverens ur
       Log.d("XXXXXXX " + kanal.kode + "  nu=" + nu);
       aktuelUdsendelseIndex = -1;
-      String nuDatoStr = datoformat.format(nu);
-      for (int n = 0; n < json.length(); n++) {
-        JSONObject o = json.getJSONObject(n);
-        Udsendelse u = new Udsendelse();
-        u.json = o;
-        u.startTid = DRJson.servertidsformat.parse(o.optString(DRJson.StartTime.name()));
-        u.startTidKl = klokkenformat.format(u.startTid);
-        u.slutTid = DRJson.servertidsformat.parse(o.optString(DRJson.EndTime.name()));
-
-        u.slutTidKl = klokkenformat.format(u.slutTid);
-        String datoStr = datoformat.format(u.startTid);
-        if (!datoStr.equals(nuDatoStr)) u.startTidKl += " - " + datoStr;
-
-
-        u.titel = o.optString(DRJson.Title.name());
-        u.beskrivelse = o.optString(DRJson.Description.name());
-        u.slug = o.optString(DRJson.Slug.name());
-        u.programserieSlug = o.optString(DRJson.SeriesSlug.name());
-        u.urn = o.optString(DRJson.Urn.name());
+      this.uliste = nyuliste;
+      for (int n = 0; n < uliste.size(); n++) {
+        Udsendelse u = uliste.get(n);
         Log.d(n + " XXXXXXX " + kanal.kode + u.startTid.before(nu) + nu.before(u.slutTid) + "  " + u);
         //if (u.startTid.before(nu) && nu.before(u.slutTid)) aktuelUdsendelseIndex = n;
         if (u.startTid.before(nu)) aktuelUdsendelseIndex = n;
-        uliste.add(u);
       }
+
     } catch (Exception e1) {
       Log.rapporterFejl(e1);
     }
@@ -137,6 +116,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     adapter.notifyDataSetChanged();
     visAktuelUdsendelse();
   }
+
 
   private void visAktuelUdsendelse() {
     if (listView == null) return;
@@ -227,6 +207,11 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
         int højde = 9 * x;
         int firkant = 3 * x;
         a.id(R.id.billede).image("http://asset.dr.dk/imagescaler/?file=/mu/programcard/imageuri/" + u.slug + "&w=" + bredde + "&h=" + højde + "&scaleAfter=crop");
+
+        // http://www.dr.dk/tjenester/mu-apps/playlist/monte-carlo-352/p3
+        String url = kanal.getPlaylisteUrl(u);
+        Log.d("YYYYYYYY " + url);
+
         a.id(R.id.kunstnerbillede).image("http://asset.dr.dk/imagescaler/?host=api.discogs.com&path=/image/A-455304-1340627060-2526.jpeg&h=" + firkant + "&w=" + firkant + "&scaleafter=crop");
         a.id(R.id.senest_spillet).typeface(App.skrift_normal); // ???
         v.setBackgroundColor(getResources().getColor(R.color.hvid));
@@ -250,7 +235,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     try {
       Viewholder vh = aktuelUdsendelseViewholder;
       Udsendelse u = vh.udsendelse;
-      long passeret = nu.getTime() - u.startTid.getTime();
+      long passeret = System.currentTimeMillis() - u.startTid.getTime(); // TODO kompenser for forskelle mellem telefonens ur og serverens ur
       long længde = u.slutTid.getTime() - u.startTid.getTime();
       int passeretPct = længde > 0 ? (int) (passeret * 100 / længde) : 0;
       Log.d(kanal.kode + " passeretPct=" + passeretPct + " af længde=" + længde);
@@ -266,8 +251,6 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       Log.rapporterFejl(e); }
   }
 
-  public static final DateFormat klokkenformat = new SimpleDateFormat("HH:mm");
-  public static final DateFormat datoformat = new SimpleDateFormat("d. LLL. yyyy");
 
   @Override
   public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
@@ -292,7 +275,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
         DRData.instans.aktuelKanal = kanal;
         DRData.instans.afspiller.setUrl(kanal.lydUrl.get(null));
       } else {
-        url = "http://www.dr.dk/tjenester/mu-apps/program/" + viewHolder.udsendelse.slug + "?type=radio&includeStreams=true";
+        String url = "http://www.dr.dk/tjenester/mu-apps/program/" + viewHolder.udsendelse.slug + "?type=radio&includeStreams=true";
 
       }
       DRData.instans.afspiller.startAfspilning();

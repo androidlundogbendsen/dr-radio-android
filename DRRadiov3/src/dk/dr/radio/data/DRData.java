@@ -55,7 +55,7 @@ public class DRData {
 
     i.stamdata = Stamdata.parseAndroidStamdata(Diverse.læsInputStreamSomStreng(new FileInputStream("res/raw/stamdata1_android_v3_01.json")));
     i.stamdata.parseFællesStamdata(Diverse.læsInputStreamSomStreng(new FileInputStream("res/raw/stamdata2_faelles.json")));
-    i.stamdata.hentSupplerendeData();
+    i.stamdata.hentSupplerendeDataBg();
 
 //    Log.d(i.stamdata.kanaler);
     for (Kanal k : i.stamdata.kanaler)
