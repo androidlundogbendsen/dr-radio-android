@@ -72,7 +72,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     Log.d("Viser fragment " + this);
-    rod = inflater.inflate(R.layout.kanal_frag, container, false);
+    rod = inflater.inflate(R.layout.kanalvisning_frag, container, false);
     aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
     listView.setEmptyView(aq.id(R.id.tom).getView());
@@ -188,7 +188,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       AQuery a;
       int type = getItemViewType(position);
       if (v == null) {
-        v = getLayoutInflater(null).inflate(type == NORMAL ? R.layout.listeelement_tid_titel_kunstner : R.layout.listeelement_kanal_lige_nu, parent, false);
+        v = getLayoutInflater(null).inflate(type == AKTUEL ? R.layout.kanalvisning_listeelement_aktuel : R.layout.kanalvisning_listeelement_tid_titel_kunstner, parent, false);
         vh = new Viewholder();
         a = vh.aq = new AQuery(v);
         vh.titel = a.id(R.id.titel).typeface(App.skrift_fed).getTextView();
@@ -196,8 +196,9 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
         vh.sluttid = a.id(R.id.slutttid).typeface(App.skrift_normal).getTextView();
         vh.starttidbjælke = a.id(R.id.starttidbjælke).getView();
         vh.slutttidbjælke = a.id(R.id.slutttidbjælke).getView();
-        a.id(R.id.højttalerikon).clicked(new UdsendelseClickListener(vh));
-        a.id(R.id.kunstner).text("");
+        //a.id(R.id.højttalerikon).clicked(new UdsendelseClickListener(vh));
+        a.id(R.id.højttalerikon).gone();
+        a.id(R.id.kunstner).text(""); // ikke .gone() - skal skubbe højttalerikon ud til venstre
         v.setTag(vh);
       } else {
         vh = (Viewholder) v.getTag();
@@ -211,8 +212,23 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
 
       if (getItemViewType(position) == AKTUEL) {
         aktuelUdsendelseViewholder = vh;
+        /*
         //a.id(R.id.billede).image("http://asset.dr.dk/imagescaler/?file=/mu/programcard/imageuri/radioavis-24907&w=300&h=169&scaleAfter=crop");
-        a.id(R.id.billede).image("http://asset.dr.dk/imagescaler/?file=/mu/programcard/imageuri/" + u.slug + "&w=300&h=169&scaleAfter=crop");
+
+        Forhold
+        16/9/3
+
+        bredde=16*x
+        højde=9*x
+        firkant=3*x
+         */
+        int x = 20;
+        int bredde = 16 * x;
+        int højde = 9 * x;
+        int firkant = 3 * x;
+        a.id(R.id.billede).image("http://asset.dr.dk/imagescaler/?file=/mu/programcard/imageuri/" + u.slug + "&w=" + bredde + "&h=" + højde + "&scaleAfter=crop");
+        a.id(R.id.kunstnerbillede).image("http://asset.dr.dk/imagescaler/?host=api.discogs.com&path=/image/A-455304-1340627060-2526.jpeg&h=" + firkant + "&w=" + firkant + "&scaleafter=crop");
+        a.id(R.id.senest_spillet).typeface(App.skrift_normal); // ???
         v.setBackgroundColor(getResources().getColor(R.color.hvid));
       }
 
