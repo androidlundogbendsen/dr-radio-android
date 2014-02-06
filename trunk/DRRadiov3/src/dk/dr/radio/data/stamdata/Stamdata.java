@@ -125,26 +125,30 @@ public class Stamdata {
   }
 
 
-  public void hentSupplerendeData() {
+  public void hentSupplerendeDataBg() {
     for (Kanal k : kanaler)
       try {
         String url = "http://www.dr.dk/tjenester/mu-apps/channel?urn=" + k.urn + "&includeStreams=true";
         String data = Diverse.læsInputStreamSomStreng(new FileInputStream(FilCache.hentFil(url, false, true, 1000 * 60 * 60 * 24 * 7)));
         JSONObject o = new JSONObject(data);
         k.slug = o.getString(DRJson.Slug.name());
-        JSONArray sa = o.getJSONArray(DRJson.Streams.name());
-        for (int n = 0; n < sa.length(); n++) {
-          JSONObject s = sa.getJSONObject(n);
-          String lydUrl = s.getString(DRJson.Uri.name());
-          k.lydUrl.put(null, lydUrl);
-          k.lydUrl.put(s.getString(DRJson.Quality.name()), lydUrl);
-        }
+        k.lydUrl = parsLyddata(o.getJSONArray(DRJson.Streams.name()));
         Log.d(k.kode + " k.lydUrl=" + k.lydUrl);
-
       } catch (Exception e) {
         Log.e(e);
       }
     ;
+  }
+
+  private static HashMap<String, String> parsLyddata(JSONArray sa) throws JSONException {
+    HashMap<String, String> lydData = new HashMap<String, String>();
+    for (int n = 0; n < sa.length(); n++) {
+      JSONObject s = sa.getJSONObject(n);
+      String lydUrl = s.getString(DRJson.Uri.name());
+      lydData.put(null, lydUrl);
+      lydData.put(s.getString(DRJson.Quality.name()), lydUrl);
+    }
+    return null;
   }
 
 

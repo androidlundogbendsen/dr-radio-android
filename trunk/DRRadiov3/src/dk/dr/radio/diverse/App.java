@@ -101,7 +101,7 @@ public class App extends Application {
       new AsyncTask() {
         @Override
         protected Object doInBackground(Object[] params) {
-          i.stamdata.hentSupplerendeData();
+          i.stamdata.hentSupplerendeDataBg();
           return null;
         }
       }.execute();
