@@ -92,7 +92,7 @@ public class FilCache {
         if (cacheFil.exists()) {
           if (brugLokalTid) {
             if (nu - cacheFil.lastModified() < maxAlder) {
-              log("Lokal fil er nyere end maxAlder, så den bruger vi");
+              //log("Lokal fil er nyere end maxAlder, så den bruger vi");
               return cacheFilnavn;
             }
           } else {
