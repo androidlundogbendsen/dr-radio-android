@@ -1,10 +1,13 @@
 package dk.dr.radio.akt;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -91,9 +94,16 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
   @Override
   public void onClick(View v) {
     if (udsendelse.streams == null || udsendelse.streams.size() == 0) return;
-    DRData.instans.aktuelKanal = kanal;
-    DRData.instans.afspiller.setUrl(udsendelse.streams.get(0).url);
-    DRData.instans.afspiller.startAfspilning();
+    new AlertDialog.Builder(getActivity())
+//        .setAdapter(new ArrayAdapter(getActivity(), android.R.layout.select_dialog_singlechoice, kanal.streams), new DialogInterface.OnClickListener() {
+        .setAdapter(new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, udsendelse.streams), new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            DRData.instans.aktuelKanal = kanal;
+            DRData.instans.afspiller.setUrl(udsendelse.streams.get(which).url);
+            DRData.instans.afspiller.startAfspilning();
+          }
+        }).show();
   }
 
 

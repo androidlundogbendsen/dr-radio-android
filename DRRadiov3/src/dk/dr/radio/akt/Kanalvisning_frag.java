@@ -1,11 +1,14 @@
 package dk.dr.radio.akt;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -283,9 +286,21 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
 
   @Override
   public void onClick(View v) {
+    new AlertDialog.Builder(getActivity())
+//        .setAdapter(new ArrayAdapter(getActivity(), android.R.layout.select_dialog_singlechoice, kanal.streams), new DialogInterface.OnClickListener() {
+        .setAdapter(new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, kanal.streams), new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            DRData.instans.aktuelKanal = kanal;
+            DRData.instans.afspiller.setUrl(kanal.streams.get(which).url);
+            DRData.instans.afspiller.startAfspilning();
+          }
+        }).show();
+    /*
     DRData.instans.aktuelKanal = kanal;
     DRData.instans.afspiller.setUrl(kanal.streams.get(0).url);
     DRData.instans.afspiller.startAfspilning();
+    */
   }
 
   @Override
@@ -295,7 +310,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     else startActivity(new Intent(getActivity(), VisFragment_akt.class).putExtras(getArguments())  // Kanalkode
           .putExtra(VisFragment_akt.KLASSE, Udsendelse_frag.class.getName()).putExtra(DRJson.Slug.name(), liste.get(position).slug)); // Udsenselses-ID
   }
-
+/*
   private class UdsendelseClickListener implements View.OnClickListener {
 
     private final Viewholder viewHolder;
@@ -316,5 +331,6 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       DRData.instans.afspiller.startAfspilning();
     }
   }
+  */
 }
 

@@ -86,7 +86,7 @@ public class DRData {
 
   private static String hent(String url) throws IOException {
     //String data = Diverse.læsStreng(new FileInputStream(FilCache.hentFil(url, false, true, 1000 * 60 * 60 * 24 * 7)));
-    String data = Diverse.læsStreng(new FileInputStream(FilCache.hentFil(url, false, true, 1000 * 60)));
+    String data = Diverse.læsStreng(new FileInputStream(FilCache.hentFil(url, false, true, 1000 * 60 * 60)));
     //Log.d(data);
     return data;
 
