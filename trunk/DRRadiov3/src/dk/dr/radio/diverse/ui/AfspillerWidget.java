@@ -104,22 +104,22 @@ public class AfspillerWidget extends AppWidgetProvider {
 
       if (afspillerstatus == Status.STOPPET) {
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.widget_afspilning_start);
-        remoteViews.setViewVisibility(R.id.progressbar, View.INVISIBLE);
+        remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
       } else if (afspillerstatus == Status.FORBINDER) {
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.widget_afspilning_stop);
-        remoteViews.setViewVisibility(R.id.progressbar, View.VISIBLE);
+        remoteViews.setViewVisibility(R.id.progressBar, View.VISIBLE);
       } else if (afspillerstatus == Status.SPILLER) {
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.widget_afspilning_stop);
-        remoteViews.setViewVisibility(R.id.progressbar, View.INVISIBLE);
+        remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
       } else {
         Log.e(new Exception("Ugyldig afspillerstatus: " + afspillerstatus));
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.kanalvalg_minus);
-        remoteViews.setViewVisibility(R.id.progressbar, View.INVISIBLE);
+        remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
       }
     } else {
       // Ingen instans eller service oprettet - dvs afspiller kører ikke
       remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.widget_afspilning_start);
-      remoteViews.setViewVisibility(R.id.progressbar, View.INVISIBLE);
+      remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
       remoteViews.setViewVisibility(R.id.kanalnavn, View.GONE);
       remoteViews.setViewVisibility(R.id.billede, View.GONE);
       // Vis P3 i mangel af info om valgt kanal??

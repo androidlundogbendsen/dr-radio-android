@@ -35,7 +35,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     View rod = inflater.inflate(R.layout.afspiller_lille_frag, container, false);
     aq = new AQuery(rod);
     start_stop_pauseknap = aq.id(R.id.start_stop_pauseknap).clicked(this).getImageView();
-    progressbar = aq.id(R.id.progressbar).getProgressBar();
+    progressbar = aq.id(R.id.progressBar).getProgressBar();
     kanal = aq.id(R.id.kanal).getTextView();
     titel = aq.id(R.id.titel).getTextView();
     DRData.instans.afspiller.observatører.add(this);
