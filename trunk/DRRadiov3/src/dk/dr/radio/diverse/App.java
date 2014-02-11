@@ -45,10 +45,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import dk.dr.radio.afspilning.Afspiller;
-import dk.dr.radio.akt_v3.Basisaktivitet;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Diverse;
 import dk.dr.radio.data.stamdata.Stamdata;
+import dk.dr.radio.diverse.ui.Basisaktivitet;
 import dk.dr.radio.v3.R;
 
 public class App extends Application {

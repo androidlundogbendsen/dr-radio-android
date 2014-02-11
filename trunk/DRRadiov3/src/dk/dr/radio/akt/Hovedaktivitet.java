@@ -1,4 +1,4 @@
-package dk.dr.radio.akt_v3;
+package dk.dr.radio.akt;
 
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 
+import dk.dr.radio.diverse.ui.Basisaktivitet;
 import dk.dr.radio.v3.R;
 
 public class Hovedaktivitet extends Basisaktivitet {

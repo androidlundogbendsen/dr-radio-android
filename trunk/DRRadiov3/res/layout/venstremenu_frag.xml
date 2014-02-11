@@ -6,4 +6,4 @@
           android:divider="@android:color/transparent"
           android:dividerHeight="0dp"
           android:background="@color/hvid"
-          tools:context="com.example.dk.dr.radio.akt_v3.Venstremenu_frag"/>
+          tools:context="com.example.dk.dr.radio.akt.Venstremenu_frag"/>
