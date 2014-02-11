@@ -94,8 +94,8 @@ public class App extends Application {
 
     try {
       final DRData i = DRData.instans = new DRData();
-      i.stamdata = Stamdata.parseAndroidStamdata(Diverse.læsInputStreamSomStreng(getResources().openRawResource(R.raw.stamdata1_android_v3_01)));
-      i.stamdata.parseFællesStamdata(Diverse.læsInputStreamSomStreng(getResources().openRawResource(R.raw.stamdata2_faelles)));
+      i.stamdata = Stamdata.parseAndroidStamdata(Diverse.læsStreng(getResources().openRawResource(R.raw.stamdata1_android_v3_01)));
+      i.stamdata.parseFællesStamdata(Diverse.læsStreng(getResources().openRawResource(R.raw.stamdata2_faelles)));
       i.aktuelKanal = i.stamdata.forvalgtKanal;
 
       new AsyncTask() {
@@ -114,7 +114,7 @@ public class App extends Application {
       if (stamdatastr == null) {
         // Indlæs fra raw this vi ikke har nogle cachede stamdata i prefs
         InputStream is = getResources().openRawResource(R.raw.stamdata1_android_v3_01);
-        stamdatastr = Diverse.læsInputStreamSomStreng(is);
+        stamdatastr = Diverse.læsStreng(is);
       }
 
       DRData.instans.stamdata = Stamdata.xxx_parseStamdatafil(stamdatastr);
@@ -124,7 +124,7 @@ public class App extends Application {
       if (alleKanalerStr == null) {
         // Indlæs fra raw this vi ikke har nogle cachede stamdata i prefs
         InputStream is = getResources().openRawResource(R.raw.skrald__alle_kanaler);
-        alleKanalerStr = Diverse.læsInputStreamSomStreng(is);
+        alleKanalerStr = Diverse.læsStreng(is);
       }
       DRData.instans.stamdata.skrald_parseAlleKanaler(alleKanalerStr);
       */

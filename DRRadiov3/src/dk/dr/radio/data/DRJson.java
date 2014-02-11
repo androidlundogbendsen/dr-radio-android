@@ -1,43 +1,64 @@
 package dk.dr.radio.data;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+
+import dk.dr.radio.data.stamdata.Kanal;
+import dk.dr.radio.diverse.Log;
 
 /**
  * Navne for formater der er i DRs JSON-feeds
  * Created by j on 19-01-14.
  */
 public enum DRJson {
-  /*
-     {
-        "Urn" : "urn:dr:mu:programcard:52cc9ac66187a213f89ade03",
-        "Surround" : false,
-        "HasLatest" : true,
-        "Title" : "P3 med Mathias Buch Jensen",
-        "SeriesSlug" : "p3-med-mathias-buch-jensen",
-        "Rerun" : false,
-        "FirstPartOid" : 245273145813,
-        "StartTime" : "2014-01-16T14:04:00+01:00",
-        "Slug" : "p3-med-mathias-buch-jensen-14",
-        "TransmissionOid" : 245273144812,
-        "Watchable" : false,
-        "Widescreen" : false,
-        "HD" : false,
-        "EndTime" : "2014-01-16T15:04:00+01:00",
-        "Episode" : 0,
-        "Description" : ""
-     },
-
-     */
   Slug,       // unik ID for en udsendelse eller kanal
   SeriesSlug, // unik ID for en programserie
   Urn,        // en anden slags unik ID
   Title, Description,
   StartTime, EndTime,
   Streams,
-  Uri, Quality;
+  Uri, Played, Artist, Image,
+  Type, Kind, Quality, Kbps;  // til streams - se enumsne herunder
+
+  public enum StreamType {
+    //Unknown = -1,
+    Streaming,
+    IOS,
+    Android,
+    HDS,
+    HLS,
+    HLS_med_probe_og_fast_understream,
+    HLS_byg_selv_m3u8_fil,;
+    static StreamType[] v = values();
+
+  }
+
+  public enum StreamKind {
+    Audio,
+    Video;
+    static StreamKind[] v = values();
+  }
+
+  public enum StreamQuality {
+    High,
+    Medium,
+    Low,
+    Variable;
+    static StreamQuality[] v = values();
+  }
+
+  public enum StreamConnection {
+    Wifi,
+    Mobile;
+    static StreamConnection[] v = values();
+  }
 
 
   /**
@@ -51,4 +72,51 @@ public enum DRJson {
   }
 
 
+  /*
+  Title: "Back to life",
+  Artist: "Soul II Soul",
+  DetailId: "2213875-1-1",
+  Image: "http://api.discogs.com/image/A-4970-1339439274-8053.jpeg",
+  ScaledImage: "http://asset.dr.dk/discoImages/?discoserver=api.discogs.com&file=%2fimage%2fA-4970-1339439274-8053.jpeg&h=400&w=400&scaleafter=crop&quality=85",
+  Played: "2014-02-06T15:58:33",
+  OffsetMs: 6873000
+   */
+  public static ArrayList<Playlisteelement> parsePlayliste(JSONArray jsonArray) throws JSONException, ParseException {
+    ArrayList<Playlisteelement> liste = new ArrayList<Playlisteelement>();
+    for (int n = 0; n < jsonArray.length(); n++) {
+      JSONObject o = jsonArray.getJSONObject(n);
+      Playlisteelement u = new Playlisteelement();
+      u.titel = o.optString(DRJson.Title.name());
+      u.kunstner = o.optString(DRJson.Artist.name());
+      u.billedeUrl = (String) o.get(DRJson.Image.name());
+      u.startTid = DRJson.servertidsformat.parse(o.optString(DRJson.Played.name()));
+      u.startTidKl = Kanal.klokkenformat.format(u.startTid);
+      liste.add(u);
+    }
+    return liste;
+  }
+
+
+  public static ArrayList<Lydstream> parsStreams(JSONArray jsonArray) throws JSONException {
+    ArrayList<Lydstream> lydData = new ArrayList<Lydstream>();
+    for (int n = 0; n < jsonArray.length(); n++)
+      try {
+        JSONObject o = jsonArray.getJSONObject(n);
+        Log.d("streamjson=" + o.toString());
+        Lydstream l = new Lydstream();
+        l.url = o.getString(DRJson.Uri.name());
+        if (l.url.startsWith("rtmp:")) continue; // Adobe Real-Time Messaging Protocol til Flash
+        l.type = StreamType.values()[o.getInt(Type.name())];
+        l.kind = StreamKind.values()[o.getInt(Kind.name())];
+        if (l.type == StreamType.HDS) continue; // Adobe HDS - HTTP Dynamic Streaming
+        if (l.type == StreamType.IOS) continue; // Gamle HLS streams der ikke virker på Android
+        if (l.kind != StreamKind.Audio) continue;
+        l.kvalitet = StreamQuality.values()[o.getInt(Quality.name())];
+        lydData.add(l);
+        Log.d("lydstream=" + l);
+      } catch (Exception e) {
+        Log.e(e);
+      }
+    return lydData;
+  }
 }
