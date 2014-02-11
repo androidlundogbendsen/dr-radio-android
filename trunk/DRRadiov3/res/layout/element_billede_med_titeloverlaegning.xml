@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:descendantFocusability="blocksDescendants"
         >
 
 
@@ -14,10 +16,6 @@
             android:id="@+id/billede"
             android:src="@drawable/eksempel_udsendelse"/>
 
-    <!--
-                android:descendantFocusability="blocksDescendants"
-                gør at knappen her ikke tager fokus for hele listeelementet
-    -->
 
     <ImageButton
             android:id="@+id/højttalerikon"

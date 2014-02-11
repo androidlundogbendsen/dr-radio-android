@@ -20,6 +20,11 @@ public class FilCache {
   private static String lagerDir;
   public static int byteHentetOverNetværk = 0;
 
+  /**
+   * I fald telefonens ud går forkert kan det ses her - alle HTTP-svar bliver jo stemplet med servertiden
+   */
+  public static long serverkorrektionTilKlienttidMs = 0;
+
 
   private static void log(String tekst) {
     Log.d("FilCache:" + tekst);
@@ -142,13 +147,23 @@ public class FilCache {
         if (App.udvikling) log("Henter " + url + " og gemmer i " + cacheFilnavn);
         InputStream is = httpForb.getInputStream();
         FileOutputStream fos = new FileOutputStream(cacheFilnavn + "_tmp");
+        {
+          long servertid = httpForb.getHeaderFieldDate("Date", 0);
+          if (servertid > 0) {
+            long serverkorrektionTilKlienttidMs2 = servertid - System.currentTimeMillis();
+            if (Math.abs(serverkorrektionTilKlienttidMs - serverkorrektionTilKlienttidMs2) > 10000) {
+              log("SERVERTID korrigerer tid - serverkorrektionTilKlienttidMs=" + serverkorrektionTilKlienttidMs2);
+              serverkorrektionTilKlienttidMs = serverkorrektionTilKlienttidMs2;
+            }
+          }
+        }
         String indkodning = httpForb.getHeaderField("Content-Encoding");
         Log.d("indkodning: " + indkodning);
         if ("gzip".equals(indkodning)) {
           is = new GZIPInputStream(is); // Pak data ud
         }
         kopierOgLuk(is, fos);
-        Log.d(httpForb.getHeaderField("Content-Length") + " blev til " + new File(cacheFilnavn).length());
+        if (App.udvikling) log(httpForb.getHeaderField("Content-Length") + " blev til " + new File(cacheFilnavn).length());
         cacheFil.delete();
         new File(cacheFilnavn + "_tmp").renameTo(cacheFil);
 

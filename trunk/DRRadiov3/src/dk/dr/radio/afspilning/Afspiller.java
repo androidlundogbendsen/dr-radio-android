@@ -217,7 +217,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
 
 
   public void setUrl(String url) {
-
+    if (App.udvikling) App.kortToast("Spiller:\n" + url);
     lydUrl = url;
 
     // Fjernet. Skulle ikke være nødvendigt. Jacob 22/10-2011

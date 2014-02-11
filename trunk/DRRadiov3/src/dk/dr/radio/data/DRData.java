@@ -49,17 +49,19 @@ public class DRData {
     DRData i = new DRData();
     FilCache.init(new File("/tmp/drradio-cache"));
 
-//    i.stamdata = Stamdata.xxx_parseStamdatafil(Diverse.læsInputStreamSomStreng(new FileInputStream("res/raw/stamdata1_android_v3_01.json")));
-//    i.stamdata.skrald_parseAlleKanaler(Diverse.læsInputStreamSomStreng(new FileInputStream("res/raw/skrald__alle_kanaler.json")));
+//    i.stamdata = Stamdata.xxx_parseStamdatafil(Diverse.læsStreng(new FileInputStream("res/raw/stamdata1_android_v3_01.json")));
+//    i.stamdata.skrald_parseAlleKanaler(Diverse.læsStreng(new FileInputStream("res/raw/skrald__alle_kanaler.json")));
 
 
-    i.stamdata = Stamdata.parseAndroidStamdata(Diverse.læsInputStreamSomStreng(new FileInputStream("res/raw/stamdata1_android_v3_01.json")));
-    i.stamdata.parseFællesStamdata(Diverse.læsInputStreamSomStreng(new FileInputStream("res/raw/stamdata2_faelles.json")));
+    i.stamdata = Stamdata.parseAndroidStamdata(Diverse.læsStreng(new FileInputStream("res/raw/stamdata1_android_v3_01.json")));
+    i.stamdata.parseFællesStamdata(Diverse.læsStreng(new FileInputStream("res/raw/stamdata2_faelles.json")));
     i.stamdata.hentSupplerendeDataBg();
 
 //    Log.d(i.stamdata.kanaler);
-    for (Kanal k : i.stamdata.kanaler)
+    for (Kanal k : i.stamdata.kanaler) {
       Log.d("k = " + k);
+
+    }
 
 
   }

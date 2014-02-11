@@ -27,7 +27,6 @@
                 android:id="@+id/titel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="P3 Sporten"
                 tools:ignore="HardcodedText"
                 android:textStyle="bold"/>
@@ -37,8 +36,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
+                android:singleLine="true"
                 android:text="|  Polarkreis 18"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 tools:ignore="HardcodedText"
                 android:layout_weight="1"/>
 

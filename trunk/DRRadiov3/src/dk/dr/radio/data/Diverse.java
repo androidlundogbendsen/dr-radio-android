@@ -54,7 +54,7 @@ public class Diverse {
   }
 
 
-  public static String læsInputStreamSomStreng(InputStream is) throws IOException, UnsupportedEncodingException {
+  public static String læsStreng(InputStream is) throws IOException, UnsupportedEncodingException {
 
     // Det kan være nødvendigt at hoppe over BOM mark - se http://android.forums.wordpress.org/topic/xml-pull-error?replies=2
     //is.read(); is.read(); is.read(); // - dette virker kun hvis der ALTID er en BOM
@@ -108,6 +108,6 @@ public class Diverse {
 
     tjekOmdirigering(u, urlConnection);
 
-    return læsInputStreamSomStreng(is);
+    return læsStreng(is);
   }
 }

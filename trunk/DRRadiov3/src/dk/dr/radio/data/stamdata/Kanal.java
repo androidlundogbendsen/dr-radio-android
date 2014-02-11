@@ -27,11 +27,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import dk.dr.radio.data.DRJson;
+import dk.dr.radio.data.Lydstream;
 import dk.dr.radio.data.Udsendelse;
 
 public class Kanal {
@@ -40,14 +40,8 @@ public class Kanal {
   public String slug; // p3
   public String navn;
 
-  public String shoutcastUrl;
-  public String aacUrl;
-  public String rtspUrl;
-
-
   public String urn;
   public JSONObject json;
-  public HashMap<String, String> lydUrl = new HashMap<String, String>();
 
   /**
    * Eksemlelvis v3_kanalside__p3.json
@@ -62,26 +56,24 @@ public class Kanal {
   public String logoUrl = "";
   public String logoUrl2 = "";
   public ArrayList<Udsendelse> udsendelser = new ArrayList<Udsendelse>();
-  private SortedMap<Integer, ArrayList<Udsendelse>> udsendelserPerDag = new TreeMap<Integer, ArrayList<Udsendelse>>();
+  public SortedMap<Integer, ArrayList<Udsendelse>> udsendelserPerDag = new TreeMap<Integer, ArrayList<Udsendelse>>();
+  public ArrayList<Lydstream> streams;
 
   @Override
   public String toString() {
     return kode + "/" + navn + "/" + logoUrl;
   }
 
-  public String getSendeplanUrl() {
-    return "http://www.dr.dk/tjenester/mu-apps/schedule/" + kode;  // svarer til v3_kanalside__p3.json;
-  }
-
 
   public static final DateFormat klokkenformat = new SimpleDateFormat("HH:mm");
-  public static final DateFormat datoformat = new SimpleDateFormat("d. LLL. yyyy");
+  public static final DateFormat datoformat = new SimpleDateFormat("d. MMM. yyyy");
 
-  public void parsUdsendelser(JSONArray json, int dag) throws JSONException, ParseException {
+
+  public void parsUdsendelser(JSONArray jsonArray, int dag) throws JSONException, ParseException {
     String nuDatoStr = datoformat.format(new Date());
     ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
-    for (int n = 0; n < json.length(); n++) {
-      JSONObject o = json.getJSONObject(n);
+    for (int n = 0; n < jsonArray.length(); n++) {
+      JSONObject o = jsonArray.getJSONObject(n);
       Udsendelse u = new Udsendelse();
       u.json = o;
       u.startTid = DRJson.servertidsformat.parse(o.optString(DRJson.StartTime.name()));
@@ -102,8 +94,25 @@ public class Kanal {
     for (ArrayList<Udsendelse> ul : udsendelserPerDag.values()) udsendelser.addAll(ul);
   }
 
+
+  public String getStreamsUrl() {
+    return "http://www.dr.dk/tjenester/mu-apps/channel?includeStreams=true&urn=" + urn;
+  }
+
+
+  public String getUdsendelserUrl() {
+    return "http://www.dr.dk/tjenester/mu-apps/schedule/" + kode;  // svarer til v3_kanalside__p3.json;
+  }
+
   public String getPlaylisteUrl(Udsendelse u) {
     // http://www.dr.dk/tjenester/mu-apps/playlist/monte-carlo-352/p3
     return "http://www.dr.dk/tjenester/mu-apps/playlist/" + u.slug + "/" + slug;
+  }
+
+  public Udsendelse findUdsendelseFraSlug(String slug) {
+    for (Udsendelse u : udsendelser) {
+      if (u.slug.equals(slug)) return u;
+    }
+    return null;
   }
 }
