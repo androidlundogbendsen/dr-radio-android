@@ -6,7 +6,7 @@ package dk.dr.radio.data;
 public class Lydstream {
   public String url;
   public DRJson.StreamType type;
-  public DRJson.StreamKind kind;
+  //public DRJson.StreamKind kind;
   public DRJson.StreamQuality kvalitet;
 
   @Override

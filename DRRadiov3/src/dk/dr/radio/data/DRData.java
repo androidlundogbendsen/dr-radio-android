@@ -18,8 +18,12 @@
 
 package dk.dr.radio.data;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 
 import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.data.stamdata.Kanal;
@@ -58,11 +62,33 @@ public class DRData {
     i.stamdata.hentSupplerendeDataBg();
 
 //    Log.d(i.stamdata.kanaler);
-    for (Kanal k : i.stamdata.kanaler) {
-      Log.d("k = " + k);
+    int n = 0;
+    for (Kanal kanal : i.stamdata.kanaler) {
+      Log.d("\n\nkanal = " + kanal);
+      kanal.parsUdsendelser(new JSONArray(hent(kanal.getUdsendelserUrl())), 0);
+      kanal.parsUdsendelser(new JSONArray(hent(kanal.getUdsendelserUrl() + "/-1")), -1);
+      kanal.parsUdsendelser(new JSONArray(hent(kanal.getUdsendelserUrl() + "/1")), 1);
+      for (Udsendelse u : kanal.udsendelser) {
+        Log.d("\nudsendelse = " + u);
+        JSONObject obj = new JSONObject(hent(u.getStreamsUrl()));
+        //Log.d(obj.toString(2));
+        u.streams = DRJson.parsStreams(obj.getJSONArray(DRJson.Streams.name()));
+        if (u.streams.size() == 0) Log.d("Ingen lydstreams");
 
+        u.playliste = DRJson.parsePlayliste(new JSONArray(hent(kanal.getPlaylisteUrl(u))));
+        Log.d("u.playliste= " + u.playliste);
+      }
+      break;
     }
 
+
+  }
+
+  private static String hent(String url) throws IOException {
+    //String data = Diverse.læsStreng(new FileInputStream(FilCache.hentFil(url, false, true, 1000 * 60 * 60 * 24 * 7)));
+    String data = Diverse.læsStreng(new FileInputStream(FilCache.hentFil(url, false, true, 1000 * 60)));
+    //Log.d(data);
+    return data;
 
   }
 

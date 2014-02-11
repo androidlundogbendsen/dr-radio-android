@@ -28,14 +28,14 @@ public enum DRJson {
   Type, Kind, Quality, Kbps;  // til streams - se enumsne herunder
 
   public enum StreamType {
-    //Unknown = -1,
-    Streaming,
-    IOS,
-    Android,
-    HDS,
-    HLS,
+    Shoutcast, // 0 tidligere 'Streaming'
+    HLS_fra_DRs_servere,  // 1 tidligere 'IOS' - virker p.t. ikke på Android
+    RTSP, // 2 tidligere 'Android' - udfases
+    HDS, // 3 Adobe  HTTP Dynamic Streaming
+    HLS_fra_Akamai, // 4 oprindeligt 'HLS'
     HLS_med_probe_og_fast_understream,
-    HLS_byg_selv_m3u8_fil,;
+    HLS_byg_selv_m3u8_fil,
+    Ukendt;  // = -1 i JSON-svar
     static StreamType[] v = values();
 
   }
@@ -88,7 +88,7 @@ public enum DRJson {
       Playlisteelement u = new Playlisteelement();
       u.titel = o.optString(DRJson.Title.name());
       u.kunstner = o.optString(DRJson.Artist.name());
-      u.billedeUrl = (String) o.get(DRJson.Image.name());
+      u.billedeUrl = o.optString(DRJson.Image.name());
       u.startTid = DRJson.servertidsformat.parse(o.optString(DRJson.Played.name()));
       u.startTidKl = Kanal.klokkenformat.format(u.startTid);
       liste.add(u);
@@ -102,15 +102,15 @@ public enum DRJson {
     for (int n = 0; n < jsonArray.length(); n++)
       try {
         JSONObject o = jsonArray.getJSONObject(n);
-        Log.d("streamjson=" + o.toString());
+        //Log.d("streamjson=" + o.toString());
         Lydstream l = new Lydstream();
         l.url = o.getString(DRJson.Uri.name());
-        if (l.url.startsWith("rtmp:")) continue; // Adobe Real-Time Messaging Protocol til Flash
-        l.type = StreamType.values()[o.getInt(Type.name())];
-        l.kind = StreamKind.values()[o.getInt(Kind.name())];
-        if (l.type == StreamType.HDS) continue; // Adobe HDS - HTTP Dynamic Streaming
-        if (l.type == StreamType.IOS) continue; // Gamle HLS streams der ikke virker på Android
-        if (l.kind != StreamKind.Audio) continue;
+        if (l.url.startsWith("rtmp:")) continue; // Skip Adobe Real-Time Messaging Protocol til Flash
+        int type = o.getInt(Type.name());
+        l.type = type < 0 ? StreamType.Ukendt : StreamType.values()[type];
+        if (l.type == StreamType.HDS) continue; // Skip Adobe HDS - HTTP Dynamic Streaming
+        //if (l.type == StreamType.IOS) continue; // Gamle HLS streams der ikke virker på Android
+        if (o.getInt(Kind.name()) != StreamKind.Audio.ordinal()) continue;
         l.kvalitet = StreamQuality.values()[o.getInt(Quality.name())];
         lydData.add(l);
         Log.d("lydstream=" + l);
