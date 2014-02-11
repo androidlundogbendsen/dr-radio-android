@@ -1,4 +1,4 @@
-package dk.dr.radio.akt_v3;
+package dk.dr.radio.akt;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,6 +29,9 @@ import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.FilCache;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.ui.Basisadapter;
+import dk.dr.radio.diverse.ui.Basisfragment;
+import dk.dr.radio.diverse.ui.VisFragment_akt;
 import dk.dr.radio.v3.R;
 
 public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnItemClickListener, View.OnClickListener, Runnable {
@@ -274,7 +277,8 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       lp.weight = 100 - passeretPct;
       vh.slutttidbjælke.setLayoutParams(lp);
     } catch (Exception e) {
-      Log.rapporterFejl(e); }
+      Log.rapporterFejl(e);
+    }
   }
 
   @Override

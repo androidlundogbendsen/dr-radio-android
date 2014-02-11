@@ -1,4 +1,4 @@
-package dk.dr.radio.akt_v3;
+package dk.dr.radio.akt;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -29,6 +29,7 @@ import com.androidquery.AQuery;
 import java.util.ArrayList;
 
 import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.ui.Basisadapter;
 import dk.dr.radio.v3.R;
 
 ;

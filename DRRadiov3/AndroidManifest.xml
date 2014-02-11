@@ -4,7 +4,7 @@
           android:versionCode="1"
           android:versionName="0.0.1 afspiller">
 
-<uses-sdk
+    <uses-sdk
             android:minSdkVersion="9"
             android:targetSdkVersion="19"/>
 
@@ -29,24 +29,24 @@
                     android:theme="@style/AppTheme"
                     -->
         <activity
-                android:name="dk.dr.radio.akt_v3.Hovedaktivitet"
+                android:name="dk.dr.radio.akt.Hovedaktivitet"
                 android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="dk.dr.radio.akt_v3.VisFragment_akt"/>
+        <activity android:name="dk.dr.radio.diverse.ui.VisFragment_akt"/>
 
 
         <activity
-                android:name="dk.dr.radio.akt.Om_DRRadio_akt"
+                android:name="dk.dr.radio.skrald.Om_DRRadio_akt"
                 android:label="Om DR Radio">
         </activity>
 
 
         <activity
-                android:name="dk.dr.radio.akt.Indstillinger_akt"
+                android:name="dk.dr.radio.skrald.Indstillinger_akt"
                 android:label="DR Radio Indstillinger">
             <!-- Gør aktivitet synlig i forbindelse med at brugeren gennemser sit dataforbrug -->
             <intent-filter>
@@ -81,7 +81,7 @@
         </receiver>
 
         <receiver
-                android:name="dk.dr.radio.diverse.AfspillerWidget"
+                android:name="dk.dr.radio.diverse.ui.AfspillerWidget"
                 android:label="DR Radio">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>

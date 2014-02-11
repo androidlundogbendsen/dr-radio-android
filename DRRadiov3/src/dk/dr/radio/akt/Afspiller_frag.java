@@ -1,4 +1,4 @@
-package dk.dr.radio.akt_v3;
+package dk.dr.radio.akt;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +13,7 @@ import com.androidquery.AQuery;
 import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.ui.Basisfragment;
 import dk.dr.radio.v3.R;
 
 public class Afspiller_frag extends Basisfragment implements Runnable, View.OnClickListener {

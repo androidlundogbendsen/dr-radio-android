@@ -1,4 +1,4 @@
-package dk.dr.radio.akt_v3;
+package dk.dr.radio.diverse.ui;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -77,7 +77,7 @@ public class Basisaktivitet extends ActionBarActivity {
     return super.onCreateOptionsMenu(menu);
   }
 
-  protected static Bundle putString(Bundle args, String key, String value) {
+  public static Bundle putString(Bundle args, String key, String value) {
     args = new Bundle(args);
     args.putString(key, value);
     return args;

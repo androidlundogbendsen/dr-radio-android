@@ -1,4 +1,4 @@
-package dk.dr.radio.akt_v3;
+package dk.dr.radio.akt;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,6 +25,8 @@ import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.ui.Basisadapter;
+import dk.dr.radio.diverse.ui.Basisfragment;
 import dk.dr.radio.v3.R;
 
 public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItemClickListener, View.OnClickListener {

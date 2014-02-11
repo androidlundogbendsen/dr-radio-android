@@ -1,4 +1,4 @@
-package dk.dr.radio.akt_v3;
+package dk.dr.radio.akt;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -20,9 +20,10 @@ import java.util.ArrayList;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.ui.Basisfragment;
 import dk.dr.radio.v3.R;
 
-import static dk.dr.radio.akt_v3.Basisaktivitet.putString;
+import static dk.dr.radio.diverse.ui.Basisaktivitet.putString;
 
 public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener {
 

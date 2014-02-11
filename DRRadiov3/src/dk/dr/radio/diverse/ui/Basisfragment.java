@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package dk.dr.radio.akt_v3;
+package dk.dr.radio.diverse.ui;
 
 import android.support.v4.app.Fragment;
 
@@ -29,9 +29,9 @@ bredde=16*x
 højde=9*x
 firkant=3*x
  */ int x = 20;
-  int bredde = 16 * x;
-  int højde = 9 * x;
-  int firkant = 3 * x;
+  public int bredde = 16 * x;
+  public int højde = 9 * x;
+  public int firkant = 3 * x;
 
 
   public static String skalérBilledeUrl(String u, int bredde, int højde) {

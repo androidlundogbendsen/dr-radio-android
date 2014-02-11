@@ -16,7 +16,7 @@
 
  */
 
-package dk.dr.radio.diverse;
+package dk.dr.radio.diverse.ui;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -31,8 +31,10 @@ import java.util.Arrays;
 
 import dk.dr.radio.afspilning.AfspillerReciever;
 import dk.dr.radio.afspilning.Status;
-import dk.dr.radio.akt_v3.Hovedaktivitet;
+import dk.dr.radio.akt.Hovedaktivitet;
 import dk.dr.radio.data.DRData;
+import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
 public class AfspillerWidget extends AppWidgetProvider {
