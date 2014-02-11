@@ -288,7 +288,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
   public void onClick(View v) {
     new AlertDialog.Builder(getActivity())
 //        .setAdapter(new ArrayAdapter(getActivity(), android.R.layout.select_dialog_singlechoice, kanal.streams), new DialogInterface.OnClickListener() {
-        .setAdapter(new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, kanal.streams), new DialogInterface.OnClickListener() {
+        .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.streams), new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
             DRData.instans.aktuelKanal = kanal;

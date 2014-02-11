@@ -35,7 +35,7 @@ firkant=3*x
 
 
   public static String skalérBilledeUrl(String u, int bredde, int højde) {
-    if (u == null || u.length() == 0) return null;
+    if (u == null || u.length() == 0 || "null".equals(u)) return null;
     try {
       URL url = new URL(u);
       //String skaleretUrl = "http://asset.dr.dk/imagescaler/?host="+url.getAuthority()+"&path="+url.getPath()+"&h=" + firkant + "&w=" + firkant + "&scaleafter=crop";
