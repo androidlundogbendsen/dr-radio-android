@@ -52,7 +52,7 @@
           ProgressBar's synlighed kan ikke ændres direkte, man er nødt til at indlejre den
           i f.eks. et LinearLayout -->
         <LinearLayout
-                android:id="@+id/progressbar"
+                android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
