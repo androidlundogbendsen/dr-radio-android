@@ -71,7 +71,7 @@ public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener
       if (k.logoUrl2.length() > 0) {
         ImageView iv = new ImageView(getActivity());
         //new AQuery(iv).image("http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P1.png");
-        new AQuery(iv).image(k.logoUrl2);
+        new AQuery(iv).image(k.logoUrl);
         fane.setCustomView(iv);
       } else fane.setText(k.navn); // Intet ikon, så vis tekst - burde ikke ske
       fane.setTabListener(this);

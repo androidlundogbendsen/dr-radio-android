@@ -3,6 +3,7 @@ package dk.dr.radio.akt;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,6 +79,7 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
           if (json != null && !"null".equals(json)) try {
             JSONObject o = new JSONObject(json);
             udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
+            adapter.notifyDataSetChanged();
           } catch (Exception e) {
             Log.d("Parsefejl: " + e + " for json=" + json);
           }
@@ -90,14 +92,17 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
     return rod;
   }
 
+  @Override
+  public void onResume() {
+    getActivity().setTitle(udsendelse.slug);
+    super.onResume();
+  }
 
   @Override
   public void onClick(View v) {
     if (udsendelse.streams == null || udsendelse.streams.size() == 0) return;
-    new AlertDialog.Builder(getActivity())
-//        .setAdapter(new ArrayAdapter(getActivity(), android.R.layout.select_dialog_singlechoice, kanal.streams), new DialogInterface.OnClickListener() {
-        .setAdapter(new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, udsendelse.streams), new DialogInterface.OnClickListener() {
-          @Override
+    new AlertDialog.Builder(getActivity()).setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, udsendelse.streams), new DialogInterface.OnClickListener() {
+      @Override
           public void onClick(DialogInterface dialog, int which) {
             DRData.instans.aktuelKanal = kanal;
             DRData.instans.afspiller.setUrl(udsendelse.streams.get(which).url);
@@ -150,10 +155,18 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
         if (position == 0) {
           a.id(R.id.billede).image("http://asset.dr.dk/imagescaler/?file=/mu/programcard/imageuri/" + udsendelse.slug + "&w=" + bredde + "&h=" + højde + "&scaleAfter=crop");
           v.setBackgroundColor(getResources().getColor(R.color.hvid));
-          a.id(R.id.hør).clicked(Udsendelse_frag.this);
+          a.id(R.id.hør).clicked(Udsendelse_frag.this).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.GONE);
           a.id(R.id.højttalerikon).gone();
           a.id(R.id.lige_nu).gone();
-          vh.titel.setText(udsendelse.titel);
+          a.id(R.id.hent).enabled(udsendelse.streams != null && udsendelse.streams.size() > 0);
+          a.id(R.id.playliste).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.INVISIBLE);
+          vh.titel.setText(udsendelse.titel.toUpperCase());
+          a.id(R.id.logo).image(kanal.logoUrl);
+          a.id(R.id.titel2).typeface(App.skrift_fed).text(udsendelse.titel);
+          a.id(R.id.dato).typeface(App.skrift_normal).text(" - " + Kanal.datoformat.format(udsendelse.startTid));
+
+          a.id(R.id.beskrivelse).text(udsendelse.beskrivelse);
+          Linkify.addLinks(a.getTextView(), Linkify.ALL);
         } else {
           a.id(R.id.højttalerikon).visible().clicked(new UdsendelseClickListener(vh));
         }
@@ -170,8 +183,6 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
         vh.kunstner.setText("|  " + u.kunstner);
         vh.startid.setText(u.startTidKl);
       }
-
-      a.id(R.id.beskrivelse).text(udsendelse.beskrivelse);
       return v;
     }
   };

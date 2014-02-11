@@ -61,8 +61,12 @@ public class DRData {
     i.stamdata.parseFællesStamdata(Diverse.læsStreng(new FileInputStream("res/raw/stamdata2_faelles.json")));
     i.stamdata.hentSupplerendeDataBg();
 
-//    Log.d(i.stamdata.kanaler);
-    int n = 0;
+    for (Kanal kanal : i.stamdata.kanaler) {
+      Log.d("\n\nkanal = " + kanal);
+      FilCache.hentFil(kanal.logoUrl, true, true, 1000 * 60 * 60 * 24 * 7);
+      FilCache.hentFil(kanal.logoUrl2, true, true, 1000 * 60 * 60 * 24 * 7);
+    }
+
     for (Kanal kanal : i.stamdata.kanaler) {
       Log.d("\n\nkanal = " + kanal);
       kanal.parsUdsendelser(new JSONArray(hent(kanal.getUdsendelserUrl())), 0);
