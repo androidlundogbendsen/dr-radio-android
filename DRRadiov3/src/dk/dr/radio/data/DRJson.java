@@ -62,9 +62,10 @@ public enum DRJson {
 
 
   /**
-   * parser der kan forstå DRs tidformat
+   * parser der kan forstå DRs tidformat: "2014-02-13T10:03:00+01:00"
    */
-  public static final DateFormat servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // +01:00 springes over da kolon i +01:00 er ikke-standard
+  //public static final DateFormat servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // +01:00 springes over da kolon i +01:00 er ikke-standard
+  public static final DateFormat servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz"); // +01:00 springes over da kolon i +01:00 er ikke-standard
 
   public static void main(String[] a) throws ParseException {
     System.out.println(servertidsformat.format(new Date()));

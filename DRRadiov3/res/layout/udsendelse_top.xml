@@ -79,12 +79,12 @@
             android:paddingRight="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="For lige om lidt bliver fremdriftsreformen implementeret, der skal få jer hurtigere ud af jeres uddannelse. Vi taler med Morten Østergaard om de unge studerendes bekymringer for fremtiden. For hvordan hænger dygtige og arbejdsmarkedsparate akademikere sammen med et studieliv, hvor man risikerer at udvikle stress og eksamensangst? (Genudsendelse fra onsdag). (Sendes også søndag 7.03, 18.32 og 00.05)."
+            android:text="For lige om lidt bliver fremdriftsreformen implementeret."
             />
 
 
     <include
-            layout="@layout/element_playliste_info"
+            layout="@layout/udsendelse_playliste_info_overskrift"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
