@@ -27,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -65,8 +66,9 @@ public class Kanal {
   }
 
 
-  public static final DateFormat klokkenformat = new SimpleDateFormat("HH:mm");
-  public static final DateFormat datoformat = new SimpleDateFormat("d. MMM. yyyy");
+  public static final Locale dansk = new Locale("da", "DA");
+  public static final DateFormat klokkenformat = new SimpleDateFormat("HH:mm", dansk);
+  public static final DateFormat datoformat = new SimpleDateFormat("d. MMM. yyyy", dansk);
 
 
   public void parsUdsendelser(JSONArray jsonArray, int dag) throws JSONException, ParseException {

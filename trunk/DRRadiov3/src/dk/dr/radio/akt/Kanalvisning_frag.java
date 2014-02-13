@@ -222,7 +222,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       if (getItemViewType(position) == AKTUEL) {
         aktuelUdsendelseViewholder = vh;
 
-        a.id(R.id.billede).image("http://asset.dr.dk/imagescaler/?file=/mu/programcard/imageuri/" + u.slug + "&w=" + bredde + "&h=" + højde + "&scaleAfter=crop");
+        a.id(R.id.billede).image(skalérBilledeFraSlug(u.slug, bredde, højde));
         opdaterSenestSpillet(a, u);
         a.id(R.id.senest_spillet_overskrift).typeface(App.skrift_normal); // ???
         v.setBackgroundColor(getResources().getColor(R.color.hvid));
@@ -273,10 +273,9 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     if (u.playliste.size() > 0) {
       aq.id(R.id.senest_spillet_container).visible();
       Playlisteelement elem = u.playliste.get(0);
-      aq.id(R.id.senest_spillet_kunstner).text(elem.kunstner);
       aq.id(R.id.senest_spillet_titel).text(elem.titel);
-      // "http://api.discogs.com/image/A-3062379-1371611467-2166.jpeg"
-      aq.id(R.id.senest_spillet_kunstnerbillede).image(skalérBilledeUrl(elem.billedeUrl, firkant, firkant));
+      aq.id(R.id.senest_spillet_kunstner).text("|  " + elem.kunstner);
+      aq.id(R.id.senest_spillet_kunstnerbillede).image(skalérDiscoBilledeUrl(elem.billedeUrl, firkant, firkant));
     } else {
       aq.id(R.id.senest_spillet_container).gone();
     }

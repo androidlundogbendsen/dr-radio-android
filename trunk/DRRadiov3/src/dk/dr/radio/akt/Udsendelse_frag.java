@@ -131,13 +131,14 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
 
     @Override
     public int getViewTypeCount() {
-      return 2;
+      return 3;
     }
 
     @Override
     public int getItemViewType(int position) {
       if (position == 0) return 0;
-      return 1;
+      if (position == 1) return 1;
+      return 2;
     }
 
     @Override
@@ -145,7 +146,7 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
       Viewholder vh;
       AQuery a;
       if (v == null) {
-        v = getLayoutInflater(null).inflate(position == 0 ? R.layout.udsendelse_top : R.layout.element_tid_titel_kunstner, parent, false);
+        v = getLayoutInflater(null).inflate(position == 0 ? R.layout.udsendelse_top : position == 1 ? R.layout.udsendelse_playlisteelement_spiller_nu : R.layout.element_tid_titel_kunstner, parent, false);
         vh = new Viewholder();
         v.setTag(vh);
         a = vh.aq = new AQuery(v);
@@ -153,7 +154,7 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
         vh.titel = a.id(R.id.titel).typeface(App.skrift_fed).getTextView();
         vh.kunstner = a.id(R.id.kunstner).typeface(App.skrift_normal).getTextView();
         if (position == 0) {
-          a.id(R.id.billede).image("http://asset.dr.dk/imagescaler/?file=/mu/programcard/imageuri/" + udsendelse.slug + "&w=" + bredde + "&h=" + højde + "&scaleAfter=crop");
+          a.id(R.id.billede).image(skalérBilledeFraSlug(udsendelse.slug, bredde, højde));
           v.setBackgroundColor(getResources().getColor(R.color.hvid));
           a.id(R.id.hør).clicked(Udsendelse_frag.this).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.GONE);
           a.id(R.id.højttalerikon).gone();
@@ -182,6 +183,9 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
         vh.titel.setText(u.titel);
         vh.kunstner.setText("|  " + u.kunstner);
         vh.startid.setText(u.startTidKl);
+        if (position == 1) {
+          a.id(R.id.billede).image(skalérDiscoBilledeUrl(u.billedeUrl, firkant, firkant));
+        }
       }
       return v;
     }
