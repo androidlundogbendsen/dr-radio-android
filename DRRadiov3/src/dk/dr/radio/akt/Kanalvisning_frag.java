@@ -61,8 +61,24 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
   private void hentSendeplanForDag(final AQuery aq, final int dag) {
     String url = kanal.getUdsendelserUrl() + "/" + dag;
     Log.d("hentSendeplanForDag url=" + url);
+
+
+    // Vis først cachet værdi
     App.sætErIGang(true);
-    aq.ajax(url, String.class, 1 * 60 * 60 * 1000, new AjaxCallback<String>() {
+    aq.ajax(url, String.class, 0, lavCallback(aq, dag));
+    // Lav derefter trippel-forespørgsel (!), for at undgå DRs cachingproblemer med forkert dag
+    App.sætErIGang(true);
+    aq.ajax(url, String.class, 1, lavCallback(aq, dag));
+    App.sætErIGang(true);
+    aq.ajax(url, String.class, 1, lavCallback(aq, dag));
+    App.sætErIGang(true);
+    aq.ajax(url, String.class, 1, lavCallback(aq, dag));
+    /*
+    */
+  }
+
+  private AjaxCallback<String> lavCallback(final AQuery aq, final int dag) {
+    return new AjaxCallback<String>() {
       @Override
       public void callback(String url, String json, AjaxStatus status) {
         App.sætErIGang(false);
@@ -90,12 +106,15 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
           }
 
           return;
+        } catch (JSONException e) {
+          Log.d("PXXXarsefejl: " + e + " for json=" + json);
+          e.printStackTrace();
         } catch (Exception e) {
-          Log.d("Parsefejl: " + e + " for json=" + json);
+          Log.rapporterFejl(e);
         }
         aq.id(R.id.tom).text(url + "   status=" + status.getCode() + "\njson=" + json);
       }
-    });
+    };
   }
 
 
@@ -120,7 +139,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
 
   private void opdaterListe(ArrayList<Udsendelse> nyuliste) {
     try {
-      //Log.d("opdaterListe " + json.toString(2));
+      Log.d(kanal + " opdaterListe " + nyuliste.size());
       Date nu = new Date(); // TODO kompenser for forskelle mellem telefonens ur og serverens ur
       Log.d("opdaterListe " + kanal.kode + "  nu=" + nu);
       aktuelUdsendelseIndex = -1;
@@ -262,6 +281,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
             return;
           } catch (Exception e) {
             Log.d("Parsefejl: " + e + " for json=" + json);
+            e.printStackTrace();
           }
           aq2.id(R.id.senest_spillet_container).gone();
         }

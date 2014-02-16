@@ -65,6 +65,7 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
             adapter.notifyDataSetChanged();
           } catch (Exception e) {
             Log.d("Parsefejl: " + e + " for json=" + json);
+            e.printStackTrace();
           }
         }
       });
@@ -82,6 +83,7 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
             adapter.notifyDataSetChanged();
           } catch (Exception e) {
             Log.d("Parsefejl: " + e + " for json=" + json);
+            e.printStackTrace();
           }
         }
       });

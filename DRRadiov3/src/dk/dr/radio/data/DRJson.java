@@ -14,7 +14,7 @@ import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.diverse.Log;
 
 /**
- * Navne for formater der er i DRs JSON-feeds
+ * Navne for felter der er i DRs JSON-feeds og støttefunktioner til at parse dem
  * Created by j on 19-01-14.
  */
 public enum DRJson {
@@ -64,8 +64,13 @@ public enum DRJson {
   /**
    * parser der kan forstå DRs tidformat: "2014-02-13T10:03:00+01:00"
    */
-  //public static final DateFormat servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // +01:00 springes over da kolon i +01:00 er ikke-standard
-  public static final DateFormat servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz"); // +01:00 springes over da kolon i +01:00 er ikke-standard
+  public static DateFormat servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
+
+  /**
+   * parser der kan forstå DRs tidformat: "2014-02-13T10:03:00"
+   */
+  public static DateFormat servertidsformat_playlise = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
 
   public static void main(String[] a) throws ParseException {
     System.out.println(servertidsformat.format(new Date()));
@@ -87,16 +92,24 @@ public enum DRJson {
     for (int n = 0; n < jsonArray.length(); n++) {
       JSONObject o = jsonArray.getJSONObject(n);
       Playlisteelement u = new Playlisteelement();
-      u.titel = o.optString(DRJson.Title.name());
-      u.kunstner = o.optString(DRJson.Artist.name());
+      u.titel = o.getString(DRJson.Title.name());
+      u.kunstner = o.getString(DRJson.Artist.name());
       u.billedeUrl = o.optString(DRJson.Image.name());
-      u.startTid = DRJson.servertidsformat.parse(o.optString(DRJson.Played.name()));
+      u.startTid = DRJson.servertidsformat_playlise.parse(o.getString(DRJson.Played.name()));
       u.startTidKl = Kanal.klokkenformat.format(u.startTid);
       liste.add(u);
     }
     return liste;
   }
 
+  /**
+   * Parse en stream.
+   * F.eks. Streams-objekt fra http://www.dr.dk/tjenester/mu-apps/channel?urn=urn:dr:mu:bundle:4f3b8926860d9a33ccfdafb9&includeStreams=true
+   *
+   * @param jsonArray
+   * @return
+   * @throws JSONException
+   */
 
   public static ArrayList<Lydstream> parsStreams(JSONArray jsonArray) throws JSONException {
     ArrayList<Lydstream> lydData = new ArrayList<Lydstream>();

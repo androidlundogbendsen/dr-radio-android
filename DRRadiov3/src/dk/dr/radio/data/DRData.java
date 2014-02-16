@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.data.stamdata.Kanal;
@@ -52,6 +53,7 @@ public class DRData {
   public static void main(String[] a) throws Exception {
     DRData i = new DRData();
     FilCache.init(new File("/tmp/drradio-cache"));
+    DRJson.servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // +01:00 springes over da kolon i +01:00 er ikke-standard Java
 
 //    i.stamdata = Stamdata.xxx_parseStamdatafil(Diverse.læsStreng(new FileInputStream("res/raw/stamdata1_android_v3_01.json")));
 //    i.stamdata.skrald_parseAlleKanaler(Diverse.læsStreng(new FileInputStream("res/raw/skrald__alle_kanaler.json")));
