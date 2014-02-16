@@ -55,6 +55,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
           return;
         } catch (Exception e) {
           Log.d("Parsefejl: " + e + " for json=" + json);
+          e.printStackTrace();
         }
         aq.id(R.id.tom).text(url + "   status=" + status.getCode() + "\njson=" + json);
       }
