@@ -62,7 +62,7 @@ public class Kanal {
 
   @Override
   public String toString() {
-    return kode + "/" + navn + "/" + logoUrl;
+    return kode;// + "/" + navn + "/" + logoUrl;
   }
 
 

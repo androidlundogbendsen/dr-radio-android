@@ -112,12 +112,14 @@ Jeg bruger selv følgende macro'er i C til generering af URIs:
     if (url == null || url.length() == 0 || "null".equals(url)) return null;
     try {
       URL u = new URL(url);
-      String skaleretUrl = "http://asset.dr.dk/discoImages/?discoserver=" + u.getHost() + ";w=" + bredde + "&amp;h=" + højde +
-          "&amp;file=" + URLEncoder.encode(u.getPath(), "UTF-8") + "&amp;scaleAfter=crop;quality=85";
+      //String skaleretUrl = "http://asset.dr.dk/discoImages/?discoserver=" + u.getHost() + ";w=" + bredde + "&amp;h=" + højde +
+      //    "&amp;file=" + URLEncoder.encode(u.getPath(), "UTF-8") + "&amp;scaleAfter=crop&amp;quality=85";
+      String skaleretUrl = "http://asset.dr.dk/discoImages/?discoserver=" + u.getHost() + "&w=" + bredde + "&h=" + højde +
+          "&file=" + u.getPath() + "&scaleAfter=crop&quality=85";
 
-      Log.d("skalérDiscoBilledeUrl url1 = " + url);
-      Log.d("skalérDiscoBilledeUrl url2 = " + u);
-      Log.d("skalérDiscoBilledeUrl url3 = " + skaleretUrl);
+      //Log.d("skalérDiscoBilledeUrl url1 = " + url);
+      //Log.d("skalérDiscoBilledeUrl url2 = " + u);
+      //Log.d("skalérDiscoBilledeUrl url3 = " + skaleretUrl);
       return skaleretUrl;
     } catch (Exception e) {
       Log.e("url=" + url, e);

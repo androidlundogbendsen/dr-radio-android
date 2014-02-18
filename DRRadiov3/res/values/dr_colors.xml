@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="hvid">#ffffff</color>
+    <color name="grå05x">#F2F2F2</color>
     <color name="grå10">#E5E5E5</color>
     <color name="grå20">#CCCCCC</color>
     <color name="grå40">#999999</color>

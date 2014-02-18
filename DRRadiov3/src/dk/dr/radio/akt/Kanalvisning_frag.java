@@ -21,6 +21,8 @@ import com.androidquery.callback.AjaxStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -45,6 +47,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
   private int aktuelUdsendelseIndex;
   private Kanal kanal;
   protected View rod;
+  private boolean fragmentErSynligt;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,31 +61,27 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     return rod;
   }
 
+  public static DateFormat datoFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+
   private void hentSendeplanForDag(final AQuery aq, final int dag) {
-    String url = kanal.getUdsendelserUrl() + "/" + dag;
+//    String url = kanal.getUdsendelserUrl() + "/" + dag;
+
+    Date nu = new Date();
+    nu.setDate(dag + nu.getDate());
+
+
+    String url = kanal.getUdsendelserUrl() + "/date/" + datoFormat.format(nu);
     Log.d("hentSendeplanForDag url=" + url);
 
 
-    // Vis først cachet værdi
+    // Cache værdier i en time
     App.sætErIGang(true);
-    aq.ajax(url, String.class, 0, lavCallback(aq, dag));
-    // Lav derefter trippel-forespørgsel (!), for at undgå DRs cachingproblemer med forkert dag
-    App.sætErIGang(true);
-    aq.ajax(url, String.class, 1, lavCallback(aq, dag));
-    App.sætErIGang(true);
-    aq.ajax(url, String.class, 1, lavCallback(aq, dag));
-    App.sætErIGang(true);
-    aq.ajax(url, String.class, 1, lavCallback(aq, dag));
-    /*
-    */
-  }
-
-  private AjaxCallback<String> lavCallback(final AQuery aq, final int dag) {
-    return new AjaxCallback<String>() {
+    aq.ajax(url, String.class, 1000 * 60 * 60, new AjaxCallback<String>() {
       @Override
-      public void callback(String url, String json, AjaxStatus status) {
+      public void callback(String url1, String json, AjaxStatus status) {
         App.sætErIGang(false);
-        Log.d("hentSendeplanForDag url " + url + "   status=" + status.getCode());
+        Log.d("hentSendeplanForDag url " + url1 + "   status=" + status.getCode());
         if (json != null && !"null".equals(json)) try {
 
           if (dag == 0) {
@@ -112,11 +111,18 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
         } catch (Exception e) {
           Log.rapporterFejl(e);
         }
-        aq.id(R.id.tom).text(url + "   status=" + status.getCode() + "\njson=" + json);
+        aq.id(R.id.tom).text(url1 + "   status=" + status.getCode() + "\njson=" + json);
       }
-    };
+    });
   }
 
+
+  @Override
+  public void setUserVisibleHint(boolean isVisibleToUser) {
+    Log.d(kanal + " QQQQQQQQQQQ setUserVisibleHint " + isVisibleToUser + "  " + this);
+    fragmentErSynligt = isVisibleToUser;
+    super.setUserVisibleHint(isVisibleToUser);
+  }
 
   @Override
   public void onResume() {
@@ -132,8 +138,14 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
 
   @Override
   public void run() {
-    App.forgrundstråd.postDelayed(this, 5000);
-    opdaterAktuelUdsendelse();
+    App.forgrundstråd.postDelayed(this, 15000);
+    if (aktuelUdsendelseViewholder == null) return;
+    Viewholder vh = aktuelUdsendelseViewholder;
+    if (!vh.starttidbjælke.isShown() || !fragmentErSynligt) {
+      Log.d(kanal + " opdaterAktuelUdsendelse starttidbjælke ikke synlig");
+      return;
+    }
+    opdaterAktuelUdsendelse(vh);
   }
 
 
@@ -240,6 +252,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
 
       if (getItemViewType(position) == AKTUEL) {
         aktuelUdsendelseViewholder = vh;
+        opdaterAktuelUdsendelse(vh);
 
         a.id(R.id.billede).image(skalérBilledeFraSlug(u.slug, bredde, højde));
         opdaterSenestSpillet(a, u);
@@ -262,6 +275,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
 
 
   private void opdaterSenestSpillet(AQuery aq, Udsendelse u) {
+    Log.d(kanal.kode + " opdaterSenestSpillet " + u);
 
     if (u.playliste == null) {
       // optimering - brug kun final i enkelte tilfælde. Final forårsager at variabler lægges i heap i stedet for stakken) at garbage collectoren skal køre fordi final
@@ -270,13 +284,15 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       String url = kanal.getPlaylisteUrl(u); // http://www.dr.dk/tjenester/mu-apps/playlist/monte-carlo-352/p3
       Log.d("Henter playliste " + url);
       App.sætErIGang(true);
-      aq.ajax(url, String.class, 1 * 60 * 60 * 1000, new AjaxCallback<String>() {
+      // før aq.ajax(url, String.class, 1 * 60 * 60 * 1000, men det er p.t. nødvendigt at spørge hele tiden da vi kun får op til lige nu
+      aq.ajax(url, String.class, 15 * 1000, new AjaxCallback<String>() {
         @Override
         public void callback(String url, String json, AjaxStatus status) {
           App.sætErIGang(false);
           Log.d("XXX url " + url + "   status=" + status.getCode());
           if (json != null && !"null".equals(json)) try {
             u2.playliste = DRJson.parsePlayliste(new JSONArray(json));
+            Log.d(kanal.kode + " parsePlayliste gav " + u2.playliste.size() + " elemener");
             opdaterSenestSpillet(aq2, u2);
             return;
           } catch (Exception e) {
@@ -301,16 +317,14 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     }
   }
 
-  private void opdaterAktuelUdsendelse() {
-    if (aktuelUdsendelseViewholder == null) return;
+  private void opdaterAktuelUdsendelse(Viewholder vh) {
     try {
-      Viewholder vh = aktuelUdsendelseViewholder;
       Udsendelse u = vh.udsendelse;
       long passeret = System.currentTimeMillis() - u.startTid.getTime() + FilCache.serverkorrektionTilKlienttidMs;
       long længde = u.slutTid.getTime() - u.startTid.getTime();
       int passeretPct = længde > 0 ? (int) (passeret * 100 / længde) : 0;
       Log.d(kanal.kode + " passeretPct=" + passeretPct + " af længde=" + længde);
-      AQuery a = aktuelUdsendelseViewholder.aq;
+      AQuery a = vh.aq;
       LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) vh.starttidbjælke.getLayoutParams();
       lp.weight = passeretPct;
       vh.starttidbjælke.setLayoutParams(lp);
@@ -318,6 +332,10 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       lp = (LinearLayout.LayoutParams) vh.slutttidbjælke.getLayoutParams();
       lp.weight = 100 - passeretPct;
       vh.slutttidbjælke.setLayoutParams(lp);
+      if (u.playliste != null && u.playliste.size() > 0) {
+        opdaterSenestSpillet(vh.aq, u);
+      }
+
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
