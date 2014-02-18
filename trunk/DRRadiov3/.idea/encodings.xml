@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
+    <file url="file://$PROJECT_DIR$/res/drawable" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/res/drawable-hdpi/eksempel_kunstner.jpg" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/res/drawable-hdpi/eksempel_udsendelse.jpg" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/res/layout-sw600dp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/res/layout/afspiller_lille_frag.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/res/layout/element_billede_med_titeloverlaegning.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/res/layout/element_download_del.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/res/layout/element_tid_titel_kunstner.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/res/layout/element_tidligere_senere.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/res/layout/kanaler_frag.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/res/layout/kanalvisning_aktuel.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/res/layout/kanalvisning_frag.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/res/layout/listeelement_udvikler.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/res/layout/udsendelse_playliste_info_overskrift.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/res/layout/udsendelse_playlisteelement_spiller_nu.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/res/layout/udsendelse_top.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Afspiller_frag.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Kanaler_frag.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Kanalvisning_frag.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Programserie_frag.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Udsendelse_frag.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/dk/dr/radio/diverse/ui/Basisadapter.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/dk/dr/radio/diverse/ui/Basisaktivitet.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/dk/dr/radio/diverse/ui/Basisfragment.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/dk/dr/radio/diverse/ui/VisFragment_akt.java" charset="UTF-8" />
+  </component>
+</project>
+
