@@ -26,6 +26,7 @@
             >
 
         <!--
+            android:logo="@drawable/dr_logo"
             android:theme="@style/CustomActionBarTheme"
             android:theme="@style/Theme.Drxx_ab"
                     android:theme="@style/AppTheme"
