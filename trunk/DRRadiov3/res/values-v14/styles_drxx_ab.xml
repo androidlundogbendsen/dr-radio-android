@@ -27,8 +27,8 @@
         <item name="android:listDivider">@android:drawable/divider_horizontal_dark</item>
     </style>
 
-    <style name="ActionBar.Solid.Drxx_ab" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
-        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_drxx_ab</item>
+    <style name="ActionBar.Solid.Drxx_ab" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+    <item name="android:backgroundStacked">@drawable/ab_stacked_solid_drxx_ab</item>
         <item name="android:background">@color/grå70</item>
         <!--
         -->
