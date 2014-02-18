@@ -32,7 +32,7 @@ public class Udsendelse {
 
   @Override
   public String toString() {
-    return slug + "/" + startTid + "/" + slutTid;
+    return slug;// + "/" + startTid + "/" + slutTid;
   }
 
   // http://www.dr.dk/tjenester/mu-apps/program/monte-carlo-361

@@ -22,10 +22,12 @@
             android:name="dk.dr.radio.diverse.App"
             android:icon="@drawable/ic_launcher"
             android:label="@string/app_name"
-            android:theme="@style/CustomActionBarTheme"
+            android:theme="@style/Theme.Drxx_ab"
             >
 
         <!--
+            android:theme="@style/CustomActionBarTheme"
+            android:theme="@style/Theme.Drxx_ab"
                     android:theme="@style/AppTheme"
                     -->
         <activity
