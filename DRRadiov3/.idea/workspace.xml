@@ -1,0 +1,1468 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_TEST_SOURCES" value="false" />
+  </component>
+  <component name="AndroidConfiguredLogFilters">
+    <filters>
+      <filter>
+        <option name="name" value="app: dk.dr.radio.v3" />
+        <option name="packageNamePattern" value="dk.dr.radio.v3" />
+      </filter>
+    </filters>
+  </component>
+  <component name="AndroidDesignerProfile">
+    <option name="fullProfile">
+      <profile>
+        <option name="device" value="2.7in QVGA" />
+        <option name="deviceConfiguration" value="Portrait" />
+        <option name="targetHashString" value="android-16" />
+        <option name="theme" value="Theme" />
+      </profile>
+    </option>
+    <option name="selection" value="[Full]" />
+  </component>
+  <component name="AndroidLayoutPreviewToolWindow">
+    <option name="state">
+      <GlobalState />
+    </option>
+  </component>
+  <component name="AndroidLayouts">
+    <shared>
+      <config>
+        <target>android-10</target>
+      </config>
+    </shared>
+    <layouts>
+      <layout url="file://$PROJECT_DIR$/res/layout/element_billede_med_titeloverlaegning.xml">
+        <config>
+          <device>Nexus 4</device>
+          <theme>@style/AppTheme</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/res/layout/element_tidligere_senere.xml">
+        <config>
+          <device>jacob</device>
+          <theme>@style/CustomActionBarTheme</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/res/layout/kanalvisning_aktuel.xml">
+        <config>
+          <device>Nexus 4</device>
+          <theme>@style/AppTheme</theme>
+        </config>
+      </layout>
+    </layouts>
+  </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="app: dk.dr.radio.v3" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" readonly="true" id="2970307e-d894-4b23-8f88-a25447213762" name="Default" comment="Forbedrede Actionbar-faner">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/copyright" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dictionaries" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/scopes" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/values-v14" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.name" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/DRRadiov3.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/ant.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dictionaries/j.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/libs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/values/styles_drxx_ab.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/values-v14/styles_drxx_ab.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
+    <list id="6008a0ea-af5e-4861-bf76-3a60647723e2" name="Skal ikke versioneres" comment="Skal ikke versioneres">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/Gibson-Regular.otf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/Gibson-SemiBold.otf" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/bugsense.xml" afterPath="$PROJECT_DIR$/res/values/bugsense.xml" />
+    </list>
+    <ignored path=".idea/workspace.xml" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="DebuggerManager">
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </breakpoint_any>
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <breakpoint_rules />
+    <ui_properties />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="DRRadiov3" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="tab_selected_focused_drxx_ab.9.png" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_selected_focused_drxx_ab.9.png">
+          <provider editor-type-id="images">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="ninepatcheditor">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tab_selected_pressed_drxx_ab.9.png" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_selected_pressed_drxx_ab.9.png">
+          <provider editor-type-id="images">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="ninepatcheditor">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tab_unselected_focused_drxx_ab.9.png" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_unselected_focused_drxx_ab.9.png">
+          <provider selected="true" editor-type-id="images">
+            <state />
+          </provider>
+          <provider editor-type-id="ninepatcheditor">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tab_unselected_pressed_drxx_ab.9.png" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_unselected_pressed_drxx_ab.9.png">
+          <provider editor-type-id="images">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="ninepatcheditor">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tab_unselected_drxx_ab.9.png" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_unselected_drxx_ab.9.png">
+          <provider selected="true" editor-type-id="images">
+            <state />
+          </provider>
+          <provider editor-type-id="ninepatcheditor">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Kanaler_frag.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Kanaler_frag.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="36" column="11" selection-start="1026" selection-end="1026" vertical-scroll-proportion="-2.4" vertical-offset="120" max-vertical-offset="2220">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ab_stacked_solid_drxx_ab.9.png" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/ab_stacked_solid_drxx_ab.9.png">
+          <provider editor-type-id="images">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="ninepatcheditor">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Hovedaktivitet.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Hovedaktivitet.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="101" column="14" selection-start="3074" selection-end="3074" vertical-scroll-proportion="-12.12" vertical-offset="1092" max-vertical-offset="1590">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ab_transparent_drxx_ab.9.png" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/ab_transparent_drxx_ab.9.png">
+          <provider editor-type-id="images">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="ninepatcheditor">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tab_selected_drxx_ab.9.png" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_selected_drxx_ab.9.png">
+          <provider editor-type-id="images">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="ninepatcheditor">
+            <state />
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="false" />
+    </FindUsagesManager>
+  </component>
+  <component name="GenerateSignedApkSettings">
+    <option name="KEY_STORE_PATH" value="$PROJECT_DIR$/../../A_signaturer/drandroid.key" />
+    <option name="KEY_ALIAS" value="dr android" />
+    <option name="REMEMBER_PASSWORDS" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$USER_HOME$/Projekter/MicroBizz/MicrobizzAndroid" />
+  </component>
+  <component name="GitLogSettings">
+    <option name="myDateState">
+      <MyDateState />
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/diverse/Log.java" />
+        <option value="$PROJECT_DIR$/res/layout/listeelement_kanal_lige_nu.xml" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/akt_v3/Kanaler_frag.java" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/data/Udsendelse1.java" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/data/Playlisteelement.java" />
+        <option value="$PROJECT_DIR$/res/drawable/runde_hjoerner.xml" />
+        <option value="$PROJECT_DIR$/res/layout/listeelement_billede_med_titeloverlaegning.xml" />
+        <option value="$PROJECT_DIR$/res/layout/kanalvisning_listeelement_aktuel.xml" />
+        <option value="$PROJECT_DIR$/res/layout/udsendelse_listeelement_aktuel.xml" />
+        <option value="$PROJECT_DIR$/res/layout/listeelement_download_del.xml" />
+        <option value="$PROJECT_DIR$/res/layout/element_playliste_info.xml" />
+        <option value="$PROJECT_DIR$/res/layout/element_billede_med_titeloverlaegning.xml" />
+        <option value="$PROJECT_DIR$/res/layout/element_tid_titel_kunstner.xml" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/data/stamdata/Stamdata.java" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/afspilning/Afspiller.java" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/akt_v3/Udsendelse_frag.java" />
+        <option value="$PROJECT_DIR$/res/layout/kanalvisning_aktuel.xml" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/akt_v3/Kanalvisning_frag.java" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/akt_v3/Basisaktivitet.java" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/akt_v3/Basisfragment.java" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/diverse/ui/AfspillerWidget.java" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/data/Lydstream.java" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/diverse/FilCache.java" />
+        <option value="$PROJECT_DIR$/res/layout/skrald_vaelg_streamtype.xml" />
+        <option value="$PROJECT_DIR$/res/drawable/knap_hvid_bg.xml" />
+        <option value="$PROJECT_DIR$/res/layout/element_download_del.xml" />
+        <option value="$PROJECT_DIR$/res/layout/afspillerwidget.xml" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/akt/Venstremenu_frag.java" />
+        <option value="$PROJECT_DIR$/res/layout/element_tidligere_senere.xml" />
+        <option value="$PROJECT_DIR$/res/layout/udsendelse_playlisteelement.xml" />
+        <option value="$PROJECT_DIR$/res/layout/udsendelse_top.xml" />
+        <option value="$PROJECT_DIR$/res/layout/udsendelse_playlisteelement_spiller_nu.xml" />
+        <option value="$PROJECT_DIR$/res/values/styles.xml" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/data/DRData.java" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/akt/Programserie_frag.java" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/akt/Udsendelse_frag.java" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/data/DRJson.java" />
+        <option value="$PROJECT_DIR$/res/drawable/tab_indicator_ab_drxx_a2b.xml" />
+        <option value="$PROJECT_DIR$/res/values/dr_colors.xml" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/data/Udsendelse.java" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/diverse/ui/Basisfragment.java" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/data/stamdata/Kanal.java" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/akt/Kanalvisning_frag.java" />
+        <option value="$PROJECT_DIR$/res/drawable/tab_indicator_ab_drxx_ab.xml" />
+        <option value="$PROJECT_DIR$/res/layout/om_drradio_akt.xml" />
+        <option value="$PROJECT_DIR$/res/values/dr_dimens.xml" />
+        <option value="$PROJECT_DIR$/res/drawable/skrald_tab_indicator_ab_drxx_ab.xml" />
+        <option value="$PROJECT_DIR$/res/values/styles_drxx_ab.xml" />
+        <option value="$PROJECT_DIR$/res/values-v14/styles_drxx_ab.xml" />
+        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/src/dk/dr/radio/akt/Kanaler_frag.java" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="87" />
+    <option name="y" value="39" />
+    <option name="width" value="1292" />
+    <option name="height" value="1004" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>Android Lint</id>
+          </State>
+          <State>
+            <id>Imports</id>
+          </State>
+          <State>
+            <id>J2ME issues</id>
+          </State>
+          <State>
+            <id>Memory issues</id>
+          </State>
+          <State>
+            <id>Performance issues</id>
+          </State>
+          <State>
+            <id>Resource management issues</id>
+          </State>
+        </expanded-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="2" id="Add" />
+    <ConfirmationsSetting value="2" id="Remove" />
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DRRadiov3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DRRadiov3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DRRadiov3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DRRadiov3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DRRadiov3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DRRadiov3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DRRadiov3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="values" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="ExportedApkPath" value="$PROJECT_DIR$/DRRadiov3.apk" />
+    <property name="options.lastSelected" value="reference.settingsdialog.IDE.editor.colors" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="recentsLimit" value="5" />
+    <property name="ExportedModule" value="DRRadiov3" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../DRRadio" />
+    <property name="AndroidLayoutSelectedEditor" value="android-designer" />
+    <property name="project.structure.side.proportion" value="0.20000002" />
+    <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
+    <property name="AndroidRunProguardForReleaseBuild" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
+    <property name="GoToClass.includeLibraries" value="false" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
+    <property name="restartRequiresConfirmation" value="true" />
+    <property name="FullScreen" value="false" />
+    <property name="show.migrate.to.gradle.popup" value="false" />
+    <property name="extract.method.default.visibility" value="private" />
+    <property name="OverrideImplement.combined" value="true" />
+    <property name="OverrideImplement.overriding.sorted" value="false" />
+    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="emulator-5554" />
+    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="x86v10" />
+    <property name="LayoutCode.rearrangeEntriesPlain text" value="false" />
+    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager2.WIDTH" value="414" />
+    <property name="UI_DESIGNER_EDITOR_MODE.PaletteToolWindowManager.WIDTH" value="221" />
+    <property name="dynamic.classpath" value="false" />
+    <property name="ChangesBrowser.SHOW_FLATTEN" value="false" />
+    <property name="SearchEverywhereHistory" value="" />
+    <property name="LayoutCode.rearrangeEntriesJava" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="dk.dr.radio.akt_v3" />
+      <recent name="dk.dr.radio.data" />
+      <recent name="dk.dr.radio.diverse" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/res/drawable" />
+      <recent name="$PROJECT_DIR$/res/layout" />
+      <recent name="$PROJECT_DIR$/res/values" />
+      <recent name="$PROJECT_DIR$/res" />
+      <recent name="$PROJECT_DIR$/src/dk/dr/radio" />
+    </key>
+    <key name="MoveMembersDialog.RECENTS_KEY">
+      <recent name="dk.dr.radio.diverse.App" />
+      <recent name="dk.dr.radio.data.stamdata.Stamdata" />
+    </key>
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="dk.dr.radio.data" />
+      <recent name="dk.dr.radio.akt_v3" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/res" />
+      <recent name="$PROJECT_DIR$/res/drawable-hdpi" />
+      <recent name="$PROJECT_DIR$/res/drawable-mdpi" />
+      <recent name="$PROJECT_DIR$/res/drawable" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="dk.dr.radio" />
+      <recent name="dk.dr.radio.v3" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Android Application.DRRadiov3">
+    <configuration default="false" name="Kanalvisning_frag" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="dk.dr.radio.akt.Kanalvisning_frag" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="DRRadiov3" />
+      <envs />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="DRJson" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="dk.dr.radio.data.DRJson" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="DRRadiov3" />
+      <envs />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="DRData" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="dk.dr.radio.data.DRData" />
+      <option name="VM_PARAMETERS" value="-classpath $PROJECT_DIR$/../../dr-netradio/trunk/JSONParsning/lib/json-1.0.jar:$PROJECT_DIR$/out/production/DRRadiov3:$APPLICATION_HOME_DIR$/lib/idea_rt.jar:$PROJECT_DIR$/../../android-sdk-linux_86/platforms/android-18/android.jar:$PROJECT_DIR$/libs/android-support-v7-appcompat.jar:$PROJECT_DIR$/libs/android-support-v4.jar:$PROJECT_DIR$/libs/bugsense-3.6.jar" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="DRRadiov3" />
+      <envs />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="All in Microbizz Mobile" type="JUnit" factoryName="JUnit" temporary="true">
+      <module name="Microbizz Mobile" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="package" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
+      <module name="" />
+      <option name="TESTING_TYPE" value="0" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+      <method />
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG">
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
+      <module name="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
+    <configuration default="false" name="DRRadiov3" type="AndroidRunConfigurationType" factoryName="Android Application">
+      <module name="DRRadiov3" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="true" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="true" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <RunnerSettings RunnerId="AndroidDebugRunner" />
+      <ConfigurationWrapper RunnerId="AndroidDebugRunner" />
+      <method />
+    </configuration>
+    <list size="5">
+      <item index="0" class="java.lang.String" itemvalue="Android Application.DRRadiov3" />
+      <item index="1" class="java.lang.String" itemvalue="Application.Kanalvisning_frag" />
+      <item index="2" class="java.lang.String" itemvalue="Application.DRJson" />
+      <item index="3" class="java.lang.String" itemvalue="Application.DRData" />
+      <item index="4" class="java.lang.String" itemvalue="JUnit.All in Microbizz Mobile" />
+    </list>
+    <recent_temporary>
+      <list size="4">
+        <item index="0" class="java.lang.String" itemvalue="Application.DRData" />
+        <item index="1" class="java.lang.String" itemvalue="Application.DRJson" />
+        <item index="2" class="java.lang.String" itemvalue="Application.Kanalvisning_frag" />
+        <item index="3" class="java.lang.String" itemvalue="JUnit.All in Microbizz Mobile" />
+      </list>
+    </recent_temporary>
+    <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
+      <Host>localhost</Host>
+      <Port>5050</Port>
+    </configuration>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SliceManager">
+    <option name="analysisUIOptions">
+      <AnalysisUIOptions />
+    </option>
+  </component>
+  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="true" cleanupOnStartRun="true" SSL_PROTOCOLS="all">
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="mySSHConnectionTimeout" value="30000" />
+    <option name="mySSHReadTimeout" value="30000" />
+    <option name="LAST_MERGED_REVISION" />
+    <option name="MERGE_DRY_RUN" value="false" />
+    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
+    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
+    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
+    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
+    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
+    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
+    <option name="FORCE_UPDATE" value="false" />
+    <option name="IGNORE_EXTERNALS" value="false" />
+    <configuration useDefault="true">$USER_HOME$/.subversion</configuration>
+    <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
+    <supportedVersion>125</supportedVersion>
+  </component>
+  <component name="SvnFileUrlMappingImpl">
+    <option name="myMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="$PROJECT_DIR$" />
+          <option name="myCopyRoot" value="$PROJECT_DIR$" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="$PROJECT_DIR$/../appcompat" />
+          <option name="myCopyRoot" value="$PROJECT_DIR$/../appcompat" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
+    <option name="myMoreRealMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="$PROJECT_DIR$" />
+          <option name="myCopyRoot" value="$PROJECT_DIR$" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="$PROJECT_DIR$/../appcompat" />
+          <option name="myCopyRoot" value="$PROJECT_DIR$/../appcompat" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2970307e-d894-4b23-8f88-a25447213762" name="Default" comment="" />
+      <changelist id="6008a0ea-af5e-4861-bf76-3a60647723e2" name="Skal ikke versioneres" comment="" />
+      <created>1362060980709</created>
+      <updated>1362060980709</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Omformatering af kode">
+      <created>1389910419108</created>
+      <updated>1389910419108</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Oprydning og Android lint">
+      <created>1389911710102</created>
+      <updated>1389911710102</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Mere oprydning">
+      <created>1389918570108</created>
+      <updated>1389918570108</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Mere oprydning. Eksempler på v3 jsondata ind">
+      <created>1389922126104</created>
+      <updated>1389922126104</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Mere oprydning. &#10;Støttebiblioteker - aquery, kompatibilitetsbibliotek, frisk version af BugSense&#10;Interaktiv notifikation&#10;">
+      <created>1389949185103</created>
+      <updated>1389949185103</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Diverse&#10;Start på fragmenter&#10;Vise P1 og P3">
+      <created>1390143619108</created>
+      <updated>1390143619108</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Lagt viewpager ind">
+      <created>1390308510107</created>
+      <updated>1390308510107</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Viewpager med kanaloversigt&#10;Ikoner til kanaler&#10;Stamdata og eksempler på data&#10;Parsning af stamdata (både for app'en og json med alle kanaler)">
+      <created>1390370813117</created>
+      <updated>1390370813117</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Snurrende hjul vises ved netværkskommunikation&#10;Menu med udviklermuligheder">
+      <created>1390371787104</created>
+      <updated>1390371787104</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Nyt layout af venstremenu&#10;Faner med kanalikoner (appendix)&#10;Farver rettet&#10;Kanalkoder svarer nu til DRs nuværende kanalkoder">
+      <created>1390694942120</created>
+      <updated>1390694942120</updated>
+    </task>
+    <task id="LOCAL-00011" summary="tilbageViserVenstremenu">
+      <created>1390727159104</created>
+      <updated>1390727159104</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Diverse">
+      <created>1390736367103</created>
+      <updated>1390736367103</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Programserie kan nu vises&#10;Navngivning">
+      <created>1390762113104</created>
+      <updated>1390762113104</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Pæn visnin af kanal&#10;Billede med titeloverlægning ind&#10;Udviklerflag kan slås til i venstremenu&#10;">
+      <created>1390770939103</created>
+      <updated>1390770939103</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Nyt appikon&#10;Gibson skrifter&#10;Layoutarbejde&#10;Farver&#10;Parsning af kanalfeed">
+      <created>1390990393110</created>
+      <updated>1390990393110</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Nye DR-ikoner">
+      <created>1390999811101</created>
+      <updated>1390999811101</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Layoutarbejde">
+      <created>1391006019102</created>
+      <updated>1391006019102</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Styling af actionbar&#10;Kanallogoer hentes over nettet&#10;Ny parsning af stamdata&#10;Fjernet brug af Apache HTTPClient&#10;Standard-JVM (ikke Android) main()-metoder til dataparsning">
+      <created>1391181571107</created>
+      <updated>1391181571107</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Navngivning">
+      <created>1391333020103</created>
+      <updated>1391333020103</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Tilføjet levende ikon&#10;Tilføjet interaktiv notifikation&#10;Tilføjet afspillerdel&#10;&#10;">
+      <created>1391343772106</created>
+      <updated>1391343772106</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Småting">
+      <created>1391345450101</created>
+      <updated>1391345450101</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Afspillerfragments udseende følger nu afspillerens status">
+      <created>1391375768102</created>
+      <updated>1391375768102</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Kanalvisning - tidsbjælke opdaterer sig nu&#10;layout og diverse">
+      <created>1391633404116</created>
+      <updated>1391633404117</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Kanalvisning - korrekt billede vises på aktuel udsendelse">
+      <created>1391635344102</created>
+      <updated>1391635344102</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Layoutarbejde - senest spillet">
+      <created>1391719767109</created>
+      <updated>1391719767109</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Parsning af feeds">
+      <created>1391724946102</created>
+      <updated>1391724946102</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Layoutarbejde&#10;Kanalvisning&#10;Visning af udsendelser med playlisteelementer&#10;Parsning af lydstreams&#10;Detektering forskel mellem klienttid og servertid på HTTP-niveau - kompenser for forskelle mellem telefonens ur og serverens ur">
+      <created>1392109789113</created>
+      <updated>1392109789113</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Omdøbning af pakker og flyttet nogen klasser">
+      <created>1392110792105</created>
+      <updated>1392110792105</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Stream-parsning">
+      <created>1392126576103</created>
+      <updated>1392126576103</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Lad brugeren vælge imellem de forskellige streams indtil streamsituationen er afklaret">
+      <created>1392128943102</created>
+      <updated>1392128943102</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Kanallogo, titel og dato på udsendelsesside&#10;Links i beskrivelser">
+      <created>1392134908103</created>
+      <updated>1392134908103</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Design&#10;Forrige/næste dag på kanal&#10;">
+      <created>1392159903102</created>
+      <updated>1392159903102</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Fix tidszone-problem&#10;Brug de af Nicolai anviste billedskalerings-URLer&#10;Billeder på spillelister">
+      <created>1392287437104</created>
+      <updated>1392287437104</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Fix: datoformater i spillelister formateres anderledes end andre datoer&#10;Grimt fix, skal fjernes igen: Da programAPI ikke er datostabilt og caches flere steder. skal det spørges 3 gange på den samme URL, for at være sikker på at få friske data&#10;&#10;">
+      <created>1392583357120</created>
+      <updated>1392583357120</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Fix billedskalerings-URL for disco-server&#10;Brug datostabilt API, slå caching til (og forespørg kun én gang)'&#10;opdater kun Aktuel Udsendelse hvis den er synlig&#10;(Actionbar faner driller stadig)">
+      <created>1392757055118</created>
+      <updated>1392757055118</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Forbedrede Actionbar-faner">
+      <created>1392765496103</created>
+      <updated>1392765496103</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="87" y="39" width="1292" height="1004" extended-state="0" />
+    <editor active="false" />
+    <layout>
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27245206" sideWeight="0.6956522" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30138445" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2704339" sideWeight="0.6956522" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.12279294" sideWeight="0.6714801" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329602" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3895349" sideWeight="0.625" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5017544" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5170517" sideWeight="0.2965806" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22077923" sideWeight="0.3339383" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295838" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4011628" sideWeight="0.4982554" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27906978" sideWeight="0.7034194" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22077923" sideWeight="0.67150635" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30448717" sideWeight="0.6956522" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.44186047" sideWeight="0.73621774" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="SVN Properties" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295838" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.196875" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.json" />
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_NEW_TODO" value="false" />
+    <option name="myTodoPanelSettings">
+      <TodoPanelSettings />
+    </option>
+    <confirmMoveToFailedCommit value="1" />
+    <MESSAGE value="Programserie kan nu vises&#10;Navngivning" />
+    <MESSAGE value="Pæn visnin af kanal&#10;Billede med titeloverlægning ind&#10;Udviklerflag kan slås til i venstremenu&#10;" />
+    <MESSAGE value="Nyt appikon&#10;Gibson skrifter&#10;Layoutarbejde&#10;Farver" />
+    <MESSAGE value="Nyt appikon&#10;Gibson skrifter&#10;Layoutarbejde&#10;Farver&#10;Parsning af kanalfeed" />
+    <MESSAGE value="Nye DR-ikoner" />
+    <MESSAGE value="Layoutarbejde" />
+    <MESSAGE value="Styling af actionbar&#10;Kanallogoer hentes over nettet&#10;Ny parsning af stamdata&#10;Fjernet brug af Apache HTTPClient&#10;Standard-JVM (ikke Android) main()-metoder til dataparsning" />
+    <MESSAGE value="Navngivning" />
+    <MESSAGE value="Tilføjet levende ikon&#10;Tilføjet interaktiv notifikation&#10;Tilføjet afspillerdel&#10;&#10;" />
+    <MESSAGE value="Småting" />
+    <MESSAGE value="Afspillerfragments udseende følger nu afspillerens status" />
+    <MESSAGE value="Kanalvisning - tidsbjælke opdaterer sig nu&#10;layout og diverse" />
+    <MESSAGE value="Kanalvisning - korrekt billede vises på aktuel udsendelse" />
+    <MESSAGE value="Layoutarbejde - senest spillet" />
+    <MESSAGE value="Parsning af feeds" />
+    <MESSAGE value="Layoutarbejde&#10;Kanalvisning&#10;Visning af udsendelser med playlisteelementer&#10;Parsning af lydstreams&#10;Detektering forskel mellem klienttid og servertid på HTTP-niveau - kompenser for forskelle mellem telefonens ur og serverens ur" />
+    <MESSAGE value="Omdøbning af pakker og flyttet nogen klasser" />
+    <MESSAGE value="Stream-parsning" />
+    <MESSAGE value="Lad brugeren vælge imellem de forskellige streams indtil streamsituationen er afklaret" />
+    <MESSAGE value="Kanallogo, titel og dato på udsendelsesside&#10;Links i beskrivelser" />
+    <MESSAGE value="Design&#10;Forrige/næste dag på kanal&#10;" />
+    <MESSAGE value="Fix tidszone-problem&#10;Brug de af Nicolai anviste billedskalerings-URLer&#10;Billeder på spillelister" />
+    <MESSAGE value="Fix: datoformater i spillelister formateres anderledes end andre datoer&#10;Grimt fix, skal fjernes igen: Da programAPI ikke er datostabilt og caches flere steder. skal det spørges 3 gange på den samme URL, for at være sikker på at få friske data&#10;&#10;" />
+    <MESSAGE value="Fix billedskalerings-URL for disco-server&#10;Brug datostabilt API, slå caching til (og forespørg kun én gang)'&#10;opdater kun Aktuel Udsendelse hvis den er synlig&#10;(Actionbar faner driller stadig)" />
+    <MESSAGE value="Forbedrede Actionbar-faner" />
+    <option name="LAST_COMMIT_MESSAGE" value="Forbedrede Actionbar-faner" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+  </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Programserie_frag.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="57" column="30" selection-start="1929" selection-end="1929" vertical-scroll-proportion="0.0" vertical-offset="338" max-vertical-offset="2220" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/sources/android-18/org/json/JSONObject.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="512" column="18" selection-start="18642" selection-end="18642" vertical-scroll-proportion="0.0" vertical-offset="7289" max-vertical-offset="10695" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/sources/android-18/java/util/concurrent/ThreadPoolExecutor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1087" column="0" selection-start="42615" selection-end="42615" vertical-scroll-proportion="0.0" vertical-offset="16079" max-vertical-offset="30330" />
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/libs/android-query-full.0.26.7.jar!/com/androidquery/util/AQUtility.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="136" column="6" selection-start="3082" selection-end="3082" vertical-scroll-proportion="0.0" vertical-offset="1061" max-vertical-offset="10440" />
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/libs/android-query-full.0.26.7.jar!/com/androidquery/callback/AbstractAjaxCallback.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="579" column="13" selection-start="14606" selection-end="14606" vertical-scroll-proportion="0.0" vertical-offset="6865" max-vertical-offset="31485" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/values/styles.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="32" column="17" selection-start="1230" selection-end="1230" vertical-scroll-proportion="0.0" vertical-offset="315" max-vertical-offset="1185">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/sources/android-18/android/widget/LinearLayout.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="912" column="19" selection-start="35156" selection-end="35156" vertical-scroll-proportion="0.0" vertical-offset="12810" max-vertical-offset="27585" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/sources/android-18/android/database/DataSetObservable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="16" selection-start="1146" selection-end="1146" vertical-scroll-proportion="-9.0" vertical-offset="0" max-vertical-offset="690" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/sources/android-18/android/widget/BaseAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="49" column="31" selection-start="1798" selection-end="1798" vertical-scroll-proportion="-10.92" vertical-offset="207" max-vertical-offset="1110" />
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/libs/android-query-full.0.26.7.jar!/com/androidquery/AbstractAQuery.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="700" column="14" selection-start="15254" selection-end="15254" vertical-scroll-proportion="-7.12" vertical-offset="9062" max-vertical-offset="40425" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/data/DRJson.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="89" column="58" selection-start="2486" selection-end="2500" vertical-scroll-proportion="-6.2" vertical-offset="1015" max-vertical-offset="1965" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/data/Udsendelse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="34" column="18" selection-start="687" selection-end="687" vertical-scroll-proportion="-8.2" vertical-offset="260" max-vertical-offset="750" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/diverse/ui/Basisfragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="0" selection-start="379" selection-end="379" vertical-scroll-proportion="-6.6" vertical-offset="0" max-vertical-offset="2190" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/sources/android-18/android/app/Fragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="994" column="0" selection-start="37713" selection-end="37713" vertical-scroll-proportion="-12.6" vertical-offset="13560" max-vertical-offset="27660" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/sources/android-18/android/graphics/drawable/Drawable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="393" column="28" selection-start="15188" selection-end="15188" vertical-scroll-proportion="0.0" vertical-offset="5895" max-vertical-offset="15255" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/sources/android-18/android/view/View.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5624" column="0" selection-start="216181" selection-end="216181" vertical-scroll-proportion="0.0" vertical-offset="84360" max-vertical-offset="281970" />
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/libs/android-support-v4.jar!/android/support/v4/app/Fragment.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="136" column="14" selection-start="5058" selection-end="5058" vertical-scroll-proportion="0.0" vertical-offset="2040" max-vertical-offset="4080" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/data/stamdata/Kanal.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="56" column="21" selection-start="1753" selection-end="1753" vertical-scroll-proportion="0.0" vertical-offset="840" max-vertical-offset="1890">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Udsendelse_frag.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="166" column="38" selection-start="6468" selection-end="6468" vertical-scroll-proportion="0.0" vertical-offset="2490" max-vertical-offset="3330" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Kanalvisning_frag.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="90" column="85" selection-start="3192" selection-end="3192" vertical-scroll-proportion="0.0" vertical-offset="1350" max-vertical-offset="6105">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/values/dr_dimens.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="0" selection-start="51" selection-end="51" vertical-scroll-proportion="0.0" vertical-offset="30" max-vertical-offset="210">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/om_drradio_akt.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="38" column="43" selection-start="1511" selection-end="1511" vertical-scroll-proportion="0.0" vertical-offset="283" max-vertical-offset="1065">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../appcompat/res/values-v14/styles_base.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="60" column="59" selection-start="2267" selection-end="2267" vertical-scroll-proportion="-10.28" vertical-offset="643" max-vertical-offset="3510">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/platforms/android-18/data/res/values/styles.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1191" column="0" selection-start="54337" selection-end="54399" vertical-scroll-proportion="-10.88" vertical-offset="17593" max-vertical-offset="37785" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../appcompat/res/values/dimens.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="17" selection-start="1169" selection-end="1169" vertical-scroll-proportion="-10.0" vertical-offset="140" max-vertical-offset="1005">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable/actionbar_background.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="751">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable/gradient.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="751">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable/knap_blaa_bg.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="751">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable/knap_hvid_bg.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="751">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../appcompat/res/values/themes.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="79" column="17" selection-start="3941" selection-end="3941" vertical-scroll-proportion="-10.0" vertical-offset="935" max-vertical-offset="2985">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable/skrald_tab_indicator_ab_drxx_ab.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="645">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../appcompat/res/values/styles.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="32" column="17" selection-start="1288" selection-end="1288" vertical-scroll-proportion="0.0" vertical-offset="283" max-vertical-offset="3765">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/platforms/android-18/data/res/drawable-hdpi/divider_horizontal_dark.9.png">
+      <provider editor-type-id="images">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="ninepatcheditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable/dr_kanalindikator.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="2" selection-start="447" selection-end="447" vertical-scroll-proportion="-3.0" vertical-offset="90" max-vertical-offset="645">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/values/dr_colors.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="17" selection-start="308" selection-end="308" vertical-scroll-proportion="-4.8" vertical-offset="0" max-vertical-offset="360">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/values/styles_drxx_ab.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="37" column="3" selection-start="1585" selection-end="1585" vertical-scroll-proportion="-13.12" vertical-offset="227" max-vertical-offset="750">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/values-v14/styles_drxx_ab.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="81" selection-start="1247" selection-end="1247" vertical-scroll-proportion="-7.12" vertical-offset="257" max-vertical-offset="1080">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/ic_drawer.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/ic_launcher.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable-mdpi/dr_logo.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="0" selection-start="1056" selection-end="1056" vertical-scroll-proportion="-11.44" vertical-offset="149" max-vertical-offset="1590">
+          <folding>
+            <element signature="e#915#933#0" expanded="true" />
+            <element signature="e#1347#1365#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Hovedaktivitet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="101" column="14" selection-start="3074" selection-end="3074" vertical-scroll-proportion="-12.12" vertical-offset="1092" max-vertical-offset="1590">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Kanaler_frag.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="36" column="11" selection-start="1026" selection-end="1026" vertical-scroll-proportion="-2.4" vertical-offset="120" max-vertical-offset="2220">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/ab_stacked_solid_drxx_ab.9.png">
+      <provider editor-type-id="images">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="ninepatcheditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/ab_transparent_drxx_ab.9.png">
+      <provider editor-type-id="images">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="ninepatcheditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_selected_drxx_ab.9.png">
+      <provider editor-type-id="images">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="ninepatcheditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_selected_focused_drxx_ab.9.png">
+      <provider editor-type-id="images">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="ninepatcheditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_unselected_drxx_ab.9.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+      <provider editor-type-id="ninepatcheditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_selected_pressed_drxx_ab.9.png">
+      <provider editor-type-id="images">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="ninepatcheditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_unselected_focused_drxx_ab.9.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+      <provider editor-type-id="ninepatcheditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_unselected_pressed_drxx_ab.9.png">
+      <provider editor-type-id="images">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="ninepatcheditor">
+        <state />
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <last-edited>DRRadiov3</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.20000002" />
+                <option value="0.5" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>Android</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.7</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>appcompat</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.20000002" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>Android 4.2 Platform</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>libs</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.20000002" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>
+
