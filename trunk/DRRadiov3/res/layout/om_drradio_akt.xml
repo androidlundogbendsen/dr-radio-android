@@ -14,7 +14,7 @@
 
         <TextView
                 android:id="@+id/about_header_textview"
-                android:textSize="@dimen/about_header_size"
+                android:textSize="20dp"
                 android:gravity="left"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

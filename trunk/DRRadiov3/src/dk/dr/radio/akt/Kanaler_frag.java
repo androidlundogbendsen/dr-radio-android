@@ -54,7 +54,7 @@ public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener
 
 
     Hovedaktivitet a = (Hovedaktivitet) getActivity();
-    a.sætTitel("KanalViewpager");
+    //a.sætTitel("KanalViewpager");
     final ActionBar actionBar = a.getSupportActionBar();
     actionBar.removeAllTabs();
     // Tilføj okoner for kanalerne til action bar.
