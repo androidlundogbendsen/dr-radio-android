@@ -47,8 +47,8 @@ public class Stamdata {
 
   public HashMap<String, Kanal> kanalFraKode = new HashMap<String, Kanal>();
   public HashMap<String, Kanal> kanalFraUrn = new HashMap<String, Kanal>();
+  public HashMap<String, Kanal> kanalFraSlug = new HashMap<String, Kanal>();
   private HashMap<String, Kanal> kanalFraLogonøgle = new HashMap<String, Kanal>();
-  ;
 
 
   private void fjernKanalMedFejl(Kanal k) {
@@ -57,6 +57,7 @@ public class Stamdata {
     p4koder.remove(k.kode);
     kanalFraKode.remove(k.kode);
     kanalFraUrn.remove(k.urn);
+    kanalFraSlug.remove(k.slug);
   }
 
 
@@ -129,6 +130,7 @@ public class Stamdata {
         String data = Diverse.læsStreng(new FileInputStream(FilCache.hentFil(url, false, true, 1000 * 60 * 60 * 24 * 7)));
         JSONObject o = new JSONObject(data);
         k.slug = o.getString(DRJson.Slug.name());
+        kanalFraSlug.put(k.slug, k);
         k.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
         Log.d(k.kode + " k.lydUrl=" + k.streams);
       } catch (Exception e) {

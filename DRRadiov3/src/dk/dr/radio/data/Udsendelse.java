@@ -12,6 +12,7 @@ import java.util.Date;
 public class Udsendelse {
   public JSONObject json;
   public String slug;
+  public String kanalSlug;
   public String programserieSlug;
   public String urn;
   public Date startTid;

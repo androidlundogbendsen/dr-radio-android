@@ -9,8 +9,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
-import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.diverse.Log;
 
 /**
@@ -25,7 +25,7 @@ public enum DRJson {
   StartTime, EndTime,
   Streams,
   Uri, Played, Artist, Image,
-  Type, Kind, Quality, Kbps;  // til streams - se enumsne herunder
+  Type, Kind, Quality, Kbps, ChannelSlug;
 
   public enum StreamType {
     Shoutcast, // 0 tidligere 'Streaming'
@@ -78,6 +78,38 @@ public enum DRJson {
   }
 
 
+  public static final Locale dansk = new Locale("da", "DA");
+  public static final DateFormat klokkenformat = new SimpleDateFormat("HH:mm", dansk);
+  public static final DateFormat datoformat = new SimpleDateFormat("d. MMM. yyyy", dansk);
+
+
+  /**
+   * Parser udsendelser for kanal. A la http://www.dr.dk/tjenester/mu-apps/schedule/P3/0
+   */
+  public static ArrayList<Udsendelse> parseUdsendelserForKanal(JSONArray jsonArray) throws JSONException, ParseException {
+    String nuDatoStr = datoformat.format(new Date());
+    ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
+    for (int n = 0; n < jsonArray.length(); n++) {
+      JSONObject o = jsonArray.getJSONObject(n);
+      Udsendelse u = new Udsendelse();
+      u.json = o;
+      u.startTid = DRJson.servertidsformat.parse(o.getString(DRJson.StartTime.name()));
+      u.startTidKl = klokkenformat.format(u.startTid);
+      u.slutTid = DRJson.servertidsformat.parse(o.getString(DRJson.EndTime.name()));
+      u.slutTidKl = klokkenformat.format(u.slutTid);
+      String datoStr = datoformat.format(u.startTid);
+      if (!datoStr.equals(nuDatoStr)) u.startTidKl += " - " + datoStr;
+      u.titel = o.getString(DRJson.Title.name());
+      u.beskrivelse = o.getString(DRJson.Description.name());
+      u.slug = o.getString(DRJson.Slug.name());
+      u.kanalSlug = o.getString(DRJson.ChannelSlug.name());
+      u.programserieSlug = o.getString(DRJson.SeriesSlug.name());
+      u.urn = o.getString(DRJson.Urn.name());
+      uliste.add(u);
+    }
+    return uliste;
+  }
+
   /*
   Title: "Back to life",
   Artist: "Soul II Soul",
@@ -96,7 +128,7 @@ public enum DRJson {
       u.kunstner = o.getString(DRJson.Artist.name());
       u.billedeUrl = o.optString(DRJson.Image.name());
       u.startTid = DRJson.servertidsformat_playlise.parse(o.getString(DRJson.Played.name()));
-      u.startTidKl = Kanal.klokkenformat.format(u.startTid);
+      u.startTidKl = klokkenformat.format(u.startTid);
       liste.add(u);
     }
     return liste;

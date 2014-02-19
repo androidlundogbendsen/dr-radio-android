@@ -41,7 +41,7 @@
                 android:text="LIGE NU"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:background="@color/sort"
-                android:textColor="#26b7c8"
+                android:textColor="@color/blå"
                 android:gravity="center_vertical|center_horizontal"
                 android:paddingTop="4dp"
                 android:paddingLeft="4dp"
