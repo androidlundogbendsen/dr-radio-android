@@ -56,8 +56,9 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     rod = inflater.inflate(R.layout.kanalvisning_frag, container, false);
     final AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
-    listView.setEmptyView(aq.id(R.id.tom).getView());
+    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_fed).getView());
     hentSendeplanForDag(aq, 0);
+    udvikling_checkDrSkrifter(rod, this + " rod");
     return rod;
   }
 
@@ -85,7 +86,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
         if (json != null && !"null".equals(json)) try {
 
           if (dag == 0) {
-            kanal.parsUdsendelser(new JSONArray(json), dag);
+            kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json)), dag);
             opdaterListe(kanal.udsendelser);
             // scroll Til Aktuel Udsendelse
             int topmargen = getResources().getDimensionPixelOffset(R.dimen.kanalvisning_aktuelUdsendelse_topmargen);
@@ -97,7 +98,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
             View v = listView.getChildAt(1);
             int næstøversteSynligOffset = (v == null) ? 0 : v.getTop();
 
-            kanal.parsUdsendelser(new JSONArray(json), dag);
+            kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json)), dag);
             opdaterListe(kanal.udsendelser);
 
             int næstøversteSynligNytIndex = liste.indexOf(næstøversteSynlig);
@@ -237,22 +238,25 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
         v.setTag(vh);
 
         if (type == AKTUEL) {
-          AQuery aq = a.id(R.id.billede);
-          int br = bestemBilledebredde(listView, (View) aq.getView().getParent());
-          aq.image(skalérSlugBilledeUrl(u.slug, br, højde * br / bredde), true, true, br, 0).width(br, false);
-          a.id(R.id.senest_spillet_overskrift).typeface(App.skrift_normal); // ???
+          int br = bestemBilledebredde(listView, (View) a.id(R.id.billede).getView().getParent());
+          a.id(R.id.billede).image(skalérSlugBilledeUrl(u.slug, br, højde * br / bredde), true, true, br, 0).width(br, false);
+          a.id(R.id.senest_spillet_overskrift).typeface(App.skrift_normal);
+          a.id(R.id.senest_spillet_titel).typeface(App.skrift_normal);
+          a.id(R.id.senest_spillet_kunstner).typeface(App.skrift_normal);
+          a.id(R.id.lige_nu).typeface(App.skrift_normal);
+          a.id(R.id.hør_live).typeface(App.skrift_normal);
           v.setBackgroundColor(getResources().getColor(R.color.hvid));
         }
-        udvikling_checkDrSkrifter(v, this.getClass() + " type=" + type);
       } else {
         vh = (Viewholder) v.getTag();
         a = vh.aq;
       }
+      udvikling_checkDrSkrifter(v, this.getClass() + " type=" + type);
 
       // Opdatér viewholderens data
       vh.udsendelse = u;
       vh.titel.setText(u.titel);
-      if (getItemViewType(position) == TIDLIGERE_SENERE) {
+      if (type == TIDLIGERE_SENERE) {
         a.id(R.id.progressBar).invisible();
         vh.titel.setVisibility(View.VISIBLE);
         return v;
@@ -261,6 +265,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
 
       if (type == AKTUEL) {
         aktuelUdsendelseViewholder = vh;
+        vh.titel.setText(u.titel.toUpperCase());
         opdaterAktuelUdsendelse(vh);
         opdaterSenestSpillet(a, u);
       }

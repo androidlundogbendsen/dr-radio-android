@@ -71,9 +71,9 @@ public class DRData {
 
     for (Kanal kanal : i.stamdata.kanaler) {
       Log.d("\n\nkanal = " + kanal);
-      kanal.parsUdsendelser(new JSONArray(hent(kanal.getUdsendelserUrl())), 0);
-      kanal.parsUdsendelser(new JSONArray(hent(kanal.getUdsendelserUrl() + "/-1")), -1);
-      kanal.parsUdsendelser(new JSONArray(hent(kanal.getUdsendelserUrl() + "/1")), 1);
+      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(hent(kanal.getUdsendelserUrl()))), 0);
+      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(hent(kanal.getUdsendelserUrl() + "/-1"))), -1);
+      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(hent(kanal.getUdsendelserUrl() + "/1"))), 1);
       for (Udsendelse u : kanal.udsendelser) {
         Log.d("\nudsendelse = " + u);
         JSONObject obj = new JSONObject(hent(u.getStreamsUrl()));

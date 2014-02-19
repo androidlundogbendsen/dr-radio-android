@@ -41,6 +41,8 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import com.bugsense.trace.BugSenseHandler;
+
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -66,11 +68,11 @@ public class App extends Application {
 
   @Override
   public void onCreate() {
-    //BugSenseHandler.initAndStartSession(this, "57c90f98");
-    super.onCreate();
-
     instans = this;
     EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator");
+    if (!EMULATOR) BugSenseHandler.initAndStartSession(this, getString(R.string.bugsense_nøgle));
+    super.onCreate();
+
     forgrundstråd = new Handler();
     connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

@@ -18,20 +18,14 @@
 
 package dk.dr.radio.data.stamdata;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Lydstream;
 import dk.dr.radio.data.Udsendelse;
 
@@ -66,31 +60,7 @@ public class Kanal {
   }
 
 
-  public static final Locale dansk = new Locale("da", "DA");
-  public static final DateFormat klokkenformat = new SimpleDateFormat("HH:mm", dansk);
-  public static final DateFormat datoformat = new SimpleDateFormat("d. MMM. yyyy", dansk);
-
-
-  public void parsUdsendelser(JSONArray jsonArray, int dag) throws JSONException, ParseException {
-    String nuDatoStr = datoformat.format(new Date());
-    ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
-    for (int n = 0; n < jsonArray.length(); n++) {
-      JSONObject o = jsonArray.getJSONObject(n);
-      Udsendelse u = new Udsendelse();
-      u.json = o;
-      u.startTid = DRJson.servertidsformat.parse(o.optString(DRJson.StartTime.name()));
-      u.startTidKl = klokkenformat.format(u.startTid);
-      u.slutTid = DRJson.servertidsformat.parse(o.optString(DRJson.EndTime.name()));
-      u.slutTidKl = klokkenformat.format(u.slutTid);
-      String datoStr = datoformat.format(u.startTid);
-      if (!datoStr.equals(nuDatoStr)) u.startTidKl += " - " + datoStr;
-      u.titel = o.optString(DRJson.Title.name());
-      u.beskrivelse = o.optString(DRJson.Description.name());
-      u.slug = o.optString(DRJson.Slug.name());
-      u.programserieSlug = o.optString(DRJson.SeriesSlug.name());
-      u.urn = o.optString(DRJson.Urn.name());
-      uliste.add(u);
-    }
+  public void setUdsendelserForDag(ArrayList<Udsendelse> uliste, int dag) throws JSONException, ParseException {
     udsendelserPerDag.put(dag, uliste);
     udsendelser.clear();
     for (ArrayList<Udsendelse> ul : udsendelserPerDag.values()) udsendelser.addAll(ul);

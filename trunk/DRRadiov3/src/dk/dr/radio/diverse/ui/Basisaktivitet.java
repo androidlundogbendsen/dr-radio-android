@@ -75,7 +75,7 @@ public class Basisaktivitet extends ActionBarActivity {
       case 1643:
         startActivity(new Intent(android.content.Intent.ACTION_VIEW).setDataAndType(Uri.parse(DRData.instans.afspiller.getUrl()), "audio/*"));
         return true;
-      case 2643:
+      case 2645:
         finish();
         System.exit(0);
       case 643:

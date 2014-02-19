@@ -1,5 +1,6 @@
 package dk.dr.radio.akt;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,31 +18,33 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
+import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.ui.Basisadapter;
 import dk.dr.radio.diverse.ui.Basisfragment;
+import dk.dr.radio.diverse.ui.VisFragment_akt;
 import dk.dr.radio.v3.R;
 
 public class Programserie_frag extends Basisfragment implements AdapterView.OnItemClickListener {
 
-  public static String P_kode = "kanalkode";
   private ListView listView;
   private ArrayList<JSONObject> liste = new ArrayList<JSONObject>();
-  private String kanalkode;
-  private String url;
   private JSONObject data;
   private AQuery aq;
+  private String programserieSlug;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    //setRetainInstance(true);
+    programserieSlug = getArguments().getString(DRJson.SeriesSlug.name());
+    Log.d(this + " viser " + programserieSlug);
 
-    kanalkode = getArguments().getString(P_kode);
     // svarer til v3_programserie.json
-    url = "http://www.dr.dk/tjenester/mu-apps/series/" + kanalkode + "?type=radio&includePrograms=true";
+    // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true
+    String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true";
     Log.d("XXX url=" + url);
     App.sætErIGang(true);
     new AQuery(App.instans).ajax(url, String.class, 60000, new AjaxCallback<String>() {
@@ -68,7 +71,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     View rod = inflater.inflate(R.layout.kanalvisning_frag, container, false);
     aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
-    listView.setEmptyView(aq.id(R.id.tom).getView());
+    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_fed).getView());
     return rod;
   }
 
@@ -159,8 +162,10 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
   public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
     JSONObject d = liste.get(position);
     String slug = d.optString(DRJson.Slug.name());
-    if (slug.length() > 0) {
-//      startActivity(new Intent(getActivity(), VisFragment_akt.class).putExtra(VisFragment_akt.KLASSE));
+    Kanal k = DRData.instans.stamdata.kanalFraSlug.get(d.optString(DRJson.ChannelSlug.name()));
+    if (k != null && slug.length() > 0) {
+      startActivity(new Intent(getActivity(), VisFragment_akt.class).putExtra(VisFragment_akt.KLASSE, Udsendelse_frag.class.getName()).putExtra(Kanalvisning_frag.P_kode, k.kode) // Kanalkode
+          .putExtra(DRJson.Slug.name(), slug)); // Udsenselses-ID
     }
   }
 }
