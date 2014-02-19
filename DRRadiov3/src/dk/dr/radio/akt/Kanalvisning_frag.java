@@ -119,7 +119,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
 
   @Override
   public void setUserVisibleHint(boolean isVisibleToUser) {
-    Log.d(kanal + " QQQQQQQQQQQ setUserVisibleHint " + isVisibleToUser + "  " + this);
+    Log.d(kanal + " setUserVisibleHint " + isVisibleToUser + "  " + this);
     fragmentErSynligt = isVisibleToUser;
     super.setUserVisibleHint(isVisibleToUser);
   }
@@ -235,6 +235,15 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
         a.id(R.id.slutttid).typeface(App.skrift_normal).text(u.slutTidKl);
         a.id(R.id.kunstner).text(""); // ikke .gone() - skal skubbe højttalerikon ud til venstre
         v.setTag(vh);
+
+        if (type == AKTUEL) {
+          AQuery aq = a.id(R.id.billede);
+          int br = bestemBilledebredde(listView, (View) aq.getView().getParent());
+          aq.image(skalérSlugBilledeUrl(u.slug, br, højde * br / bredde), true, true, br, 0).width(br, false);
+          a.id(R.id.senest_spillet_overskrift).typeface(App.skrift_normal); // ???
+          v.setBackgroundColor(getResources().getColor(R.color.hvid));
+        }
+        udvikling_checkDrSkrifter(v, this.getClass() + " type=" + type);
       } else {
         vh = (Viewholder) v.getTag();
         a = vh.aq;
@@ -250,14 +259,10 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       }
       vh.startid.setText(u.startTidKl);
 
-      if (getItemViewType(position) == AKTUEL) {
+      if (type == AKTUEL) {
         aktuelUdsendelseViewholder = vh;
         opdaterAktuelUdsendelse(vh);
-
-        a.id(R.id.billede).image(skalérBilledeFraSlug(u.slug, bredde, højde));
         opdaterSenestSpillet(a, u);
-        a.id(R.id.senest_spillet_overskrift).typeface(App.skrift_normal); // ???
-        v.setBackgroundColor(getResources().getColor(R.color.hvid));
       }
 
       // Til udvikling
@@ -272,7 +277,6 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       return v;
     }
   };
-
 
   private void opdaterSenestSpillet(AQuery aq, Udsendelse u) {
     Log.d(kanal.kode + " opdaterSenestSpillet " + u);

@@ -4,11 +4,16 @@
  */
 package dk.dr.radio.diverse.ui;
 
+import android.graphics.Typeface;
 import android.support.v4.app.Fragment;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.net.URL;
 import java.net.URLEncoder;
 
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
 /**
@@ -30,12 +35,27 @@ TODO - skalering efter visningsstørrelse
 bredde=16*x
 højde=9*x
 firkant=3*x
- */ int x = 20;
-  public int bredde = 16 * x;
-  public int højde = 9 * x;
-  public int firkant = 3 * x;
+ */
+  static int x = 20;
+  public static int bredde = 16 * x;
+  public static int højde = 9 * x;
+  public static int firkant = 3 * x;
 
 
+  /**
+   * Finder breddens som et et velskaleret billede forventes at have
+   *
+   * @param rod         listen eller rod-viewet hvor billedet skal vises
+   * @param paddingView containeren der har polstring/padding
+   */
+  protected int bestemBilledebredde(View rod, View paddingView) {
+    int br = rod.getWidth();
+    if (rod.getHeight() < br / 2) br = br / 2; // Halvbreddebilleder ved liggende visning
+    br = br - paddingView.getPaddingRight() - paddingView.getPaddingLeft();
+    Log.d("QQQQQ listView.getWidth()=" + rod.getWidth() + " getHeight()=" + rod.getHeight());
+    Log.d("QQQQQ billedeContainer.getPaddingRight()=" + paddingView.getPaddingRight() + "   .... så br=" + br);
+    return br;
+  }
 
 /* Doku fra Nicolai
 Alle billeder der ligger på dr.dk skal igennem "asset.dr.dk/imagescaler<http://asset.dr.dk/imagescaler>".
@@ -96,7 +116,7 @@ Jeg bruger selv følgende macro'er i C til generering af URIs:
   /**
    * Billedeskalering af billeder på DRs servere.
    */
-  public static String skalérBilledeFraSlug(String slug, int bredde, int højde) {
+  public static String skalérSlugBilledeUrl(String slug, int bredde, int højde) {
     return "http://asset.dr.dk/imagescaler/?file=/mu/programcard/imageuri/" + slug + "&w=" + bredde + "&h=" + højde + "&scaleAfter=crop";
   }
 
@@ -143,6 +163,23 @@ Jeg bruger selv følgende macro'er i C til generering af URIs:
     } catch (Exception e) {
       Log.e("url=" + url, e);
       return null;
+    }
+  }
+
+
+  protected static void udvikling_checkDrSkrifter(View view, String beskrivelse) {
+    if (view instanceof ViewGroup) {
+      ViewGroup vg = (ViewGroup) view;
+      for (int i = 0; i < vg.getChildCount(); i++) {
+        udvikling_checkDrSkrifter(vg.getChildAt(i), beskrivelse);
+      }
+    } else if (view instanceof TextView) {
+      TextView tv = ((TextView) view);
+      Typeface tf = tv.getTypeface();
+      if (tv.getText().length() > 0 && tf != App.skrift_normal && tf != App.skrift_fed) {
+        String resId = App.instans.getResources().getResourceEntryName(tv.getId());
+        Log.d("udvikling_checkDrSkrifter: TextView " + resId + " har forkert skrift: " + tf + " for " + beskrivelse);
+      }
     }
   }
 }

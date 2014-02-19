@@ -39,7 +39,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="dk.dr.radio.diverse.ui.VisFragment_akt"/>
+        <activity android:name="dk.dr.radio.diverse.ui.VisFragment_akt">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="dk.dr.radio.akt.Hovedaktivitet"/>
+        </activity>
 
 
         <activity

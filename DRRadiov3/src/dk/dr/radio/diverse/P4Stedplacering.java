@@ -47,6 +47,8 @@ function geoip_metro_code()   { return ''; }
         lat = Double.parseDouble(l.split("'")[1]); // split efter '
       } else if (l.contains("longitude")) {
         lon = Double.parseDouble(l.split("'")[1]); // split efter '
+      } else if (l.contains("country_name")) {
+        if (!"Denmark".equals(l.split("'")[1])) return null; // Hop ud hvis vi er uden for Danmark
       }
     }
     if (lat == 0 || lon == 0) return null;

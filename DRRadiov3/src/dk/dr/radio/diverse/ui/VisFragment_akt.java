@@ -2,6 +2,8 @@ package dk.dr.radio.diverse.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import dk.dr.radio.diverse.Log;
@@ -17,7 +19,8 @@ public class VisFragment_akt extends Basisaktivitet {
   public void onCreate(Bundle savedInstanceState) {
     try {
       super.onCreate(savedInstanceState);
-      super.getActionBarSetDisplayHomeAsUpEnabledKompat(true);
+      //super.getActionBarSetDisplayHomeAsUpEnabledKompat(true);
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       FrameLayout fl = new FrameLayout(this);
       fl.setId(android.R.id.input);
       setContentView(fl);
@@ -37,5 +40,13 @@ public class VisFragment_akt extends Basisaktivitet {
     } catch (Exception ex) {
       ex.printStackTrace();
     }
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      NavUtils.navigateUpFromSameTask(this);
+    }
+    return super.onOptionsItemSelected(item);
   }
 }

@@ -76,7 +76,7 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
         @Override
         public void callback(String url, String json, AjaxStatus status) {
           App.sætErIGang(false);
-          Log.d("XXX url " + url + "   status=" + status.getCode());
+          Log.d("XXX udsendelse.getStreamsUrl()= " + url + "   status=" + status.getCode());
           if (json != null && !"null".equals(json)) try {
             JSONObject o = new JSONObject(json);
             udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
@@ -156,12 +156,12 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
         vh.titel = a.id(R.id.titel).typeface(App.skrift_fed).getTextView();
         vh.kunstner = a.id(R.id.kunstner).typeface(App.skrift_normal).getTextView();
         if (position == 0) {
-          a.id(R.id.billede).image(skalérBilledeFraSlug(udsendelse.slug, bredde, højde));
+          AQuery aq = a.id(R.id.billede);
+          int br = bestemBilledebredde(listView, (View) aq.getView().getParent());
+          aq.image(skalérSlugBilledeUrl(udsendelse.slug, br, højde * br / bredde), true, true, br, 0).width(br, false);
           v.setBackgroundColor(getResources().getColor(R.color.hvid));
-          a.id(R.id.hør).clicked(Udsendelse_frag.this).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.GONE);
           a.id(R.id.højttalerikon).gone();
           a.id(R.id.lige_nu).gone();
-          a.id(R.id.hent).enabled(udsendelse.streams != null && udsendelse.streams.size() > 0);
           a.id(R.id.playliste).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.INVISIBLE);
           vh.titel.setText(udsendelse.titel.toUpperCase());
           a.id(R.id.logo).image(kanal.logoUrl);
@@ -178,8 +178,11 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
         a = vh.aq;
       }
 
-      if (position > 0) {
-        // Opdatér viewholderens data
+      // Opdatér viewholderens data
+      if (position == 0) {
+        a.id(R.id.hør).clicked(Udsendelse_frag.this).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.GONE);
+        a.id(R.id.hent).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.INVISIBLE);
+      } else {
         Playlisteelement u = liste.get(position - 1);
         vh.playlisteelement = u;
         vh.titel.setText(u.titel);
