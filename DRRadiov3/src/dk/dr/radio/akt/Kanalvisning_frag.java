@@ -44,7 +44,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
   public static String P_kode = "kanal.kode";
   private ListView listView;
   private ArrayList<Udsendelse> liste = new ArrayList<Udsendelse>();
-  private int aktuelUdsendelseIndex;
+  private int aktuelUdsendelseIndex = -1;
   private Kanal kanal;
   protected View rod;
   private boolean fragmentErSynligt;
@@ -88,9 +88,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
           if (dag == 0) {
             kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json)), dag);
             opdaterListe(kanal.udsendelser);
-            // scroll Til Aktuel Udsendelse
-            int topmargen = getResources().getDimensionPixelOffset(R.dimen.kanalvisning_aktuelUdsendelse_topmargen);
-            listView.setSelectionFromTop(aktuelUdsendelseIndex, topmargen);
+            scrollTilAktuelUdsendelse();
           } else {
             // Nu ændres der i listen for at vise en dag før eller efter - sørg for at det synlige indhold ikke rykker sig
             Udsendelse næstøversteSynlig = liste.get(listView.getFirstVisiblePosition() + 1);
@@ -117,11 +115,18 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     });
   }
 
+  private void scrollTilAktuelUdsendelse() {
+    if (aktuelUdsendelseIndex < 0) return;
+    int topmargen = getResources().getDimensionPixelOffset(R.dimen.kanalvisning_aktuelUdsendelse_topmargen);
+    listView.setSelectionFromTop(aktuelUdsendelseIndex, topmargen);
+  }
+
 
   @Override
   public void setUserVisibleHint(boolean isVisibleToUser) {
     Log.d(kanal + " setUserVisibleHint " + isVisibleToUser + "  " + this);
     fragmentErSynligt = isVisibleToUser;
+    if (fragmentErSynligt) scrollTilAktuelUdsendelse();
     super.setUserVisibleHint(isVisibleToUser);
   }
 
