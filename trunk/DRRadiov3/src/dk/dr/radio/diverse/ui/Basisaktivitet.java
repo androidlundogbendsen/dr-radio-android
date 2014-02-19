@@ -1,14 +1,11 @@
 package dk.dr.radio.diverse.ui;
 
-import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,37 +28,7 @@ public class Basisaktivitet extends ActionBarActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-    //getActionBarSetDisplayHomeAsUpEnabledKompat(this, true);
   }
-
-  @SuppressWarnings("UnusedDeclaration")
-  public static void invalidateOptionsMenuKompat(final FragmentActivity akt) {
-    if (akt != null && android.os.Build.VERSION.SDK_INT >= 11) { // separat klasse, for at undgå crash på tidl. versioner
-      new Runnable() {
-        @SuppressLint("NewApi")
-        public void run() {
-          akt.invalidateOptionsMenu();
-        }
-      }.run();
-    }
-  }
-
-  /**
-   * Tillader brugeren at navigere 'op' v.hj.a. actionbaren
-   */
-  public void getActionBarSetDisplayHomeAsUpEnabledKompat(final boolean b) {
-    if (android.os.Build.VERSION.SDK_INT >= 11) { // separat klasse, for at undgå crash på tidl. versioner
-      new Runnable() {
-        @SuppressLint("NewApi")
-        public void run() {
-          ActionBar ab = getActionBar();
-          if (ab == null) return;
-          ab.setDisplayHomeAsUpEnabled(b);
-        }
-      }.run();
-    }
-  }
-
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -73,6 +40,7 @@ public class Basisaktivitet extends ActionBarActivity {
     menu.add(0, 645, 0, "Del lyd 1");
     menu.add(0, 1645, 0, "Del lyd 2");
     menu.add(0, 646, 0, "Send fejlrapport");
+    menu.add(0, 2645, 0, "System.exit");
     //}
     return super.onCreateOptionsMenu(menu);
   }
@@ -106,6 +74,10 @@ public class Basisaktivitet extends ActionBarActivity {
         return true;
       case 1643:
         startActivity(new Intent(android.content.Intent.ACTION_VIEW).setDataAndType(Uri.parse(DRData.instans.afspiller.getUrl()), "audio/*"));
+        return true;
+      case 2643:
+        finish();
+        System.exit(0);
       case 643:
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         TextView tv = new TextView(this);

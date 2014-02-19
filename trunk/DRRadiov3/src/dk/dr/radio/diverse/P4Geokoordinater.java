@@ -1,5 +1,9 @@
 package dk.dr.radio.diverse;
 
+
+/**
+ * Kilde: http://www.dr.dk/assets/js/004/dr/dr-geo-location.js
+ */
 class P4Geokoordinater {
 
   static class Omraade {

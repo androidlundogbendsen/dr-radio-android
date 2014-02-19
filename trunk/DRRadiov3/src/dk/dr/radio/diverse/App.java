@@ -102,6 +102,13 @@ public class App extends Application {
         @Override
         protected Object doInBackground(Object[] params) {
           i.stamdata.hentSupplerendeDataBg();
+          try {
+            String p4kanal = P4Stedplacering.findP4KanalnavnFraIP();
+            App.langToast("p4kanal: " + p4kanal);
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+
           return null;
         }
       }.execute();
