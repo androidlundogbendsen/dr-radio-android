@@ -48,41 +48,32 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
   private Kanal kanal;
   protected View rod;
   private boolean fragmentErSynligt;
+  private boolean p4;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     String kanalkode = getArguments().getString(P_kode);
+    p4 = Kanal.P4kode.equals(kanalkode);
+    rod = null;
 
-    if (Kanal.P4kode.equals(kanalkode)) {
+    if (p4) {
       kanalkode = App.prefs.getString(App.FORETRUKKEN_P4_AF_BRUGER, null);
       if (kanalkode == null) {
         kanalkode = App.prefs.getString(App.FORETRUKKEN_P4_FRA_STEDPLACERING, "KH4");
         kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
-
-        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        dialog.setTitle("Vi gætter på at du vælger:");
-        dialog.setMessage(kanal.navn);
-        final String finalKanalkode = kanalkode;
-        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            //ths.startActivity(new Intent(ths, CheckudAkt.class));
-            App.prefs.edit().putString(App.FORETRUKKEN_P4_AF_BRUGER, finalKanalkode).commit();
-          }
-        });
-        dialog.setNegativeButton("Skift distrikt", new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            startActivity(new Intent(getActivity(), Kanalvalg_akt.class));
-          }
-        });
-        dialog.show();
+        rod = inflater.inflate(R.layout.kanalvisning_p4_frag, container, false);
+        AQuery aq = new AQuery(rod);
+        aq.id(R.id.p4_vi_gætter_på_tekst).typeface(App.skrift_normal);
+        aq.id(R.id.p4_kanalnavn).text(kanal.navn).typeface(App.skrift_fed);
+        aq.id(R.id.p4_skift_distrikt).clicked(this).typeface(App.skrift_normal);
+        aq.id(R.id.p4_ok).clicked(this).typeface(App.skrift_normal);
       }
     }
     kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
 
-    rod = inflater.inflate(R.layout.kanalvisning_frag, container, false);
-    final AQuery aq = new AQuery(rod);
+    if (rod == null) rod = inflater.inflate(R.layout.kanalvisning_frag, container, false);
+
+    AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_fed).getView());
     hentSendeplanForDag(aq, 0);
@@ -390,7 +381,14 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
 
   @Override
   public void onClick(View v) {
-    new AlertDialog.Builder(getActivity())
+    if (v.getId() == R.id.p4_skift_distrikt) {
+      rod.findViewById(R.id.p4_vi_gætter_på_dialog).setVisibility(View.GONE);
+      startActivity(new Intent(getActivity(), Kanalvalg_akt.class));
+    } else if (v.getId() == R.id.p4_ok) {
+      rod.findViewById(R.id.p4_vi_gætter_på_dialog).setVisibility(View.GONE);
+      App.prefs.edit().putString(App.FORETRUKKEN_P4_AF_BRUGER, kanal.kode).commit();
+    } else
+      new AlertDialog.Builder(getActivity())
 //        .setAdapter(new ArrayAdapter(getActivity(), android.R.layout.select_dialog_singlechoice, kanal.streams), new DialogInterface.OnClickListener() {
         .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.streams), new DialogInterface.OnClickListener() {
           @Override
@@ -418,7 +416,8 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       v.findViewById(R.id.titel).setVisibility(View.GONE);
       v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
     } else {
-      startActivity(new Intent(getActivity(), VisFragment_akt.class).putExtras(getArguments())  // Kanalkode
+      startActivity(new Intent(getActivity(), VisFragment_akt.class)
+          .putExtra(P_kode, kanal.kode)
           .putExtra(VisFragment_akt.KLASSE, Udsendelse_frag.class.getName()).putExtra(DRJson.Slug.name(), liste.get(position).slug)); // Udsenselses-ID
     }
   }

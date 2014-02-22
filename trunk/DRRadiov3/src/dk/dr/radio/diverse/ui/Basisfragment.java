@@ -183,8 +183,9 @@ Jeg bruger selv følgende macro'er i C til generering af URIs:
       TextView tv = ((TextView) view);
       Typeface tf = tv.getTypeface();
       if (tv.getVisibility() == View.VISIBLE && tv.getText().length() > 0 && tf != App.skrift_normal && tf != App.skrift_fed) {
-        String resId = App.instans.getResources().getResourceEntryName(tv.getId());
-        Log.d("udvikling_checkDrSkrifter: TextView " + resId + " har forkert skrift: " + tf + " for " + beskrivelse);
+        String resId = tv.getId() > 0 ? App.instans.getResources().getResourceEntryName(tv.getId()) : "(MANGLER ID)";
+        Log.e("udvikling_checkDrSkrifter: TextView " + resId + " har forkert skrift: " + tf + " for " + beskrivelse, null);
+        tv.setTypeface(App.skrift_normal);
       }
     }
   }
