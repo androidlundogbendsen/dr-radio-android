@@ -75,7 +75,7 @@ public class Stamdata {
     return d;
   }
 
-  private void parseKanaler(JSONArray jsonArray, boolean underkanal) throws JSONException {
+  private void parseKanaler(JSONArray jsonArray, boolean p4) throws JSONException {
 
 
     int antal = jsonArray.length();
@@ -87,7 +87,7 @@ public class Stamdata {
       k.lognøgle = j.getString("logo");
       k.urn = j.getString("urn");
       kanaler.add(k);
-      if (underkanal) p4koder.add(k.kode);
+      if (p4) p4koder.add(k.kode);
       else kanalkoder.add(k.kode);
       kanalFraKode.put(k.kode, k);
       kanalFraUrn.put(k.urn, k);
@@ -95,7 +95,10 @@ public class Stamdata {
       if (j.optBoolean("isDefault")) forvalgtKanal = k;
 
       JSONArray underkanaler = j.optJSONArray("channels");
-      if (underkanaler != null) parseKanaler(underkanaler, true);
+      if (underkanaler != null) {
+        if (!Kanal.P4kode.equals(k.kode)) Log.rapporterFejl(new IllegalStateException("Forkert P4-kode: " + k.kode));
+        parseKanaler(underkanaler, true);
+      }
     }
   }
 

@@ -54,6 +54,9 @@ import dk.dr.radio.diverse.ui.Basisaktivitet;
 import dk.dr.radio.v3.R;
 
 public class App extends Application {
+  public static final String FORETRUKKEN_P4_FRA_STEDPLACERING = "FORETRUKKEN_P4_FRA_STEDPLACERING";
+  public static final String FORETRUKKEN_P4_AF_BRUGER = "FORETRUKKEN_P4_AF_BRUGER";
+  public static final String FORETRUKKEN_KANAL = "FORETRUKKEN_kanal";
   public static boolean EMULATOR = true;
   public static App instans;
   public static SharedPreferences prefs;
@@ -98,22 +101,29 @@ public class App extends Application {
       final DRData i = DRData.instans = new DRData();
       i.stamdata = Stamdata.parseAndroidStamdata(Diverse.læsStreng(getResources().openRawResource(R.raw.stamdata1_android_v3_01)));
       i.stamdata.parseFællesStamdata(Diverse.læsStreng(getResources().openRawResource(R.raw.stamdata2_faelles)));
-      i.aktuelKanal = i.stamdata.forvalgtKanal;
 
-      new AsyncTask() {
-        @Override
-        protected Object doInBackground(Object[] params) {
-          i.stamdata.hentSupplerendeDataBg();
-          try {
-            String p4kanal = P4Stedplacering.findP4KanalnavnFraIP();
-            App.langToast("p4kanal: " + p4kanal);
-          } catch (Exception e) {
-            e.printStackTrace();
+      String kanal = prefs.getString(FORETRUKKEN_KANAL, null);
+      i.aktuelKanal = i.stamdata.kanalFraKode.get(kanal);
+      if (i.aktuelKanal == null) i.aktuelKanal = i.stamdata.forvalgtKanal;
+
+      if (erOnline() && prefs.getString(FORETRUKKEN_P4_FRA_STEDPLACERING, null) == null) {
+        new AsyncTask() {
+          @Override
+          protected Object doInBackground(Object[] params) {
+            i.stamdata.hentSupplerendeDataBg();
+            try {
+              String p4kanal = P4Stedplacering.findP4KanalnavnFraIP();
+              if (App.udvikling) App.langToast("p4kanal: " + p4kanal);
+              prefs.edit().putString(FORETRUKKEN_P4_FRA_STEDPLACERING, p4kanal).commit();
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
+
+            return null;
           }
+        }.execute();
+      }
 
-          return null;
-        }
-      }.execute();
 
       DRData.instans.afspiller = new Afspiller();
       /*
@@ -235,12 +245,13 @@ public class App extends Application {
     i.putExtra(Intent.EXTRA_SUBJECT, emne);
 
 
+    android.util.Log.d("KONTAKT", txt);
     if (vedhæftning != null) try {
-      String xmlFilename = "programlog.txt";
-      @SuppressLint("WorldReadableFiles") FileOutputStream fos = akt.openFileOutput(xmlFilename, akt.MODE_WORLD_READABLE);
+      String logfil = "programlog.txt";
+      @SuppressLint("WorldReadableFiles") FileOutputStream fos = akt.openFileOutput(logfil, akt.MODE_WORLD_READABLE);
       fos.write(vedhæftning.getBytes());
       fos.close();
-      Uri uri = Uri.fromFile(new File(akt.getFilesDir().getAbsolutePath(), xmlFilename));
+      Uri uri = Uri.fromFile(new File(akt.getFilesDir().getAbsolutePath(), logfil));
       txt += "\n\nRul op øverst i meddelelsen og giv din feedback, tak.";
       i.putExtra(Intent.EXTRA_STREAM, uri);
     } catch (Exception e) {
@@ -252,7 +263,7 @@ public class App extends Application {
     try {
       akt.startActivity(i);
     } catch (Exception e) {
-      Log.rapporterOgvisFejl(akt, e);
+      e.printStackTrace();
     }
   }
 }

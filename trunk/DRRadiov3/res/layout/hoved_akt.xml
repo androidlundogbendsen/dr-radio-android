@@ -8,23 +8,6 @@
         tools:context="com.example.dk.dr.radio.akt.Hovedaktivitet">
 
     <!-- As the main content view, the view below consumes the entire
-         space available using match_parent in both dimensions.
-    <FrameLayout
-            android:id="@+id/indhold_frag"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-        <FrameLayout
-                android:id="@+id/afspiller_frag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
-        <fragment
-                android:id="@+id/afspiller_frag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:name="dk.dr.radio.akt_v3.Venstremenu_frag"/>
--->
-    <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
     <LinearLayout
             android:orientation="vertical"

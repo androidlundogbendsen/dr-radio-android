@@ -1,6 +1,7 @@
 package dk.dr.radio.akt;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -28,11 +29,12 @@ import com.androidquery.AQuery;
 
 import java.util.ArrayList;
 
+import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.ui.Basisadapter;
+import dk.dr.radio.skrald.Om_DRRadio_akt;
 import dk.dr.radio.v3.R;
 
-;
 
 /**
  * Venstremenu-navigering
@@ -252,7 +254,7 @@ public class Venstremenu_frag extends Fragment {
   }
 
 
-  static class Navigation_adapter extends Basisadapter {
+  class Navigation_adapter extends Basisadapter {
     public int LIVE_KANALER_INDEX;
     private final LayoutInflater layoutInflater;
     private AQuery aq;
@@ -267,6 +269,12 @@ public class Venstremenu_frag extends Fragment {
 
     public void vælgMenu(FragmentActivity akt, int position) {
       MenuElement e = elem.get(position);
+
+      if (e.runnable != null) {
+        e.runnable.run();
+        return;
+      }
+
       Bundle b = new Bundle();
       Fragment f;
 
@@ -314,19 +322,27 @@ public class Venstremenu_frag extends Fragment {
       return elem.get(position).layout;
     }
 
-    static class MenuElement {
+    class MenuElement {
       final int type;
       final String data;
       final View layout;
+      public Runnable runnable;
 
       MenuElement(int type, String data, View layout) {
         this.type = type;
         this.data = data;
         this.layout = layout;
       }
+
+      MenuElement(int type, String data, View layout, Runnable r) {
+        this.type = type;
+        this.data = data;
+        this.layout = layout;
+        runnable = r;
+      }
     }
 
-    public Navigation_adapter(Context themedContext) {
+    public Navigation_adapter(final Context themedContext) {
       layoutInflater = (LayoutInflater) themedContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       aq = new AQuery(themedContext);
       elem.add(new MenuElement(0, null, aq(R.layout.venstremenu_elem_soeg)));
@@ -355,7 +371,12 @@ public class Venstremenu_frag extends Fragment {
       elem.add(new MenuElement(4, null, aq(R.layout.venstremenu_elem_overskrift)));
       aq.id(R.id.tekst).text(Html.fromHtml("<b>Live kanaler</b>"));
 
-      elem.add(new MenuElement(4, null, aq(R.layout.venstremenu_elem_overskrift)));
+      elem.add(new MenuElement(4, null, aq(R.layout.venstremenu_elem_overskrift), new Runnable() {
+        @Override
+        public void run() {
+          getActivity().startActivity(new Intent(getActivity(), Om_DRRadio_akt.class));
+        }
+      }));
       aq.id(R.id.tekst).text(Html.fromHtml("<b>Kontakt / info / om</b>"));
 
       elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_udvikler)));
@@ -369,14 +390,48 @@ public class Venstremenu_frag extends Fragment {
 
       elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_overskrift)));
       aq.id(R.id.tekst).text(Html.fromHtml("<br/><br/>(fjernes):<br/><br/><b>HØR LIVE RADIO</b>"));
-      elem.add(new MenuElement(2, "P1D", aq(R.layout.skrald__nav_elem_kanal)));
+
+      elem.add(new MenuElement(4, null, aq(R.layout.venstremenu_elem_overskrift), new Runnable() {
+        @Override
+        public void run() {
+          startActivity(new Intent(getActivity(), Kanalvalg_akt.class));
+        }
+      }));
+      aq.id(R.id.tekst).text(Html.fromHtml("<b>Kanalvalg fra v2</b>"));
+
+
+      elem.add(new MenuElement(2, "P1D", aq(R.layout.skrald__nav_elem_kanal), new Runnable() {
+        @Override
+        public void run() {
+          DRData.instans.afspiller.setUrl("http://live-icy.gss.dr.dk/A/A03L.mp3.m3u");
+          DRData.instans.afspiller.startAfspilning();
+        }
+      }));
       aq.id(R.id.billede).image(R.drawable.skrald__kanal_p1d);
-      elem.add(new MenuElement(2, "P2D", aq(R.layout.skrald__nav_elem_kanal)));
+      elem.add(new MenuElement(2, "P2D", aq(R.layout.skrald__nav_elem_kanal), new Runnable() {
+        @Override
+        public void run() {
+          DRData.instans.afspiller.setUrl("http://live-icy.gss.dr.dk:8000/A/A04L.mp3");
+          DRData.instans.afspiller.startAfspilning();
+        }
+      }));
       aq.id(R.id.billede).image(R.drawable.skrald__kanal_p2d);
-      elem.add(new MenuElement(2, "P3", aq(R.layout.skrald__nav_elem_kanal)));
+      elem.add(new MenuElement(2, "P3", aq(R.layout.skrald__nav_elem_kanal), new Runnable() {
+        @Override
+        public void run() {
+          DRData.instans.afspiller.setUrl("http://live-icy.gss.dr.dk:8000/A/A05L.mp3");
+          DRData.instans.afspiller.startAfspilning();
+        }
+      }));
       aq.id(R.id.billede).image(R.drawable.skrald__kanal_p3);
-      elem.add(new MenuElement(2, "P4D", aq(R.layout.skrald__nav_elem_kanal)));
-      aq.id(R.id.billede).image(R.drawable.skrald__kanal_p4).id(R.id.p4åbn).visible();
+      elem.add(new MenuElement(2, "DRM", aq(R.layout.skrald__nav_elem_kanal), new Runnable() {
+        @Override
+        public void run() {
+          DRData.instans.afspiller.setUrl("http://live-icy.gss.dr.dk:8000/A/A18L.mp3");
+          DRData.instans.afspiller.startAfspilning();
+        }
+      }));
+      aq.id(R.id.billede).image(R.drawable.skrald__kanallogo_ram).id(R.id.p4åbn).visible();
       elem.add(new MenuElement(2, "P4K", aq(R.layout.skrald__nav_elem_kanaltekst)));
       aq.id(R.id.tekst).text("P4 København");
       elem.add(new MenuElement(2, "P4S", aq(R.layout.skrald__nav_elem_kanaltekst)));

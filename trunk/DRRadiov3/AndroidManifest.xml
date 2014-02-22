@@ -62,6 +62,12 @@
             </intent-filter>
         </activity>
 
+        <activity
+                android:name="dk.dr.radio.akt.Kanalvalg_akt"
+                android:theme="@android:style/Theme.NoTitleBar"
+                android:label="Kanalvalg"
+                android:noHistory="true">
+        </activity>
         <!--
          * Tidligere AfspillerService - service-del der sørger for at app'en
          * bliver i hukommelsen mens der spilles lyd
