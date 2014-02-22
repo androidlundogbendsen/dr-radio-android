@@ -21,7 +21,6 @@ package dk.dr.radio.akt;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,15 +35,14 @@ import java.util.List;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.stamdata.Kanal;
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.ImageViewTilBlinde;
-import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
 public class Kanalvalg_akt extends ListActivity {
 
   private KanalAdapter kanaladapter;
   private View[] listeElementer;
-  private Typeface skrift_DRiBold;
   private List<String> overordnedeKanalkoder;
   private int p4indeks;
   /**
@@ -75,11 +73,6 @@ public class Kanalvalg_akt extends ListActivity {
         DRData.instans.stamdata.kanalFraKode.put(k, new Kanal()); // reparér problemet :-(
       }
 
-    try { // DRs skrifttyper er ikke offentliggjort i SVN, derfor kan følgende fejle:
-      skrift_DRiBold = Typeface.createFromAsset(getAssets(), "DRiBold.otf");
-    } catch (Exception e) {
-      Log.e("DRs skrifttyper er ikke tilgængelige", e);
-    }
 
 
     // Da der er tale om et fast lille antal kanaler er der ikke grund til det store bogholderi
@@ -125,7 +118,7 @@ public class Kanalvalg_akt extends ListActivity {
       // tjek om der er et billede i 'drawable' med det navn filnavn
       int id = res.getIdentifier("kanal_" + kanalkode.toLowerCase(), "drawable", getPackageName());
       //System.out.println("getView " + position + " kanal_" + kanalkode.toLowerCase() + " type = " + id);
-      View view = mInflater.inflate(R.layout.kanalvalg_element, null);
+      View view = mInflater.inflate(R.layout.v2_kanalvalg_element, null);
       ImageViewTilBlinde billede = (ImageViewTilBlinde) view.findViewById(R.id.billede);
       ImageViewTilBlinde ikon = (ImageViewTilBlinde) view.findViewById(R.id.ikon);
       TextView textView = (TextView) view.findViewById(R.id.tekst);
@@ -149,7 +142,7 @@ public class Kanalvalg_akt extends ListActivity {
         billede.setVisibility(View.GONE);
         textView.setVisibility(View.VISIBLE);
         textView.setText(visningsNavn);
-        if (skrift_DRiBold != null) textView.setTypeface(skrift_DRiBold);
+        textView.setTypeface(App.skrift_fed);
       }
 
       return view;
