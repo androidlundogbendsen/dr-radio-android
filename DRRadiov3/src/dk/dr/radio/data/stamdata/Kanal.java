@@ -32,6 +32,7 @@ import dk.dr.radio.data.Udsendelse;
 public class Kanal {
 
   public String kode; // P3
+  public static final String P4kode = "P4F";
   public String slug; // p3
   public String navn;
 

@@ -51,8 +51,36 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    Log.d("Viser fragment " + this);
-    kanal = DRData.instans.stamdata.kanalFraKode.get(getArguments().getString(P_kode));
+    String kanalkode = getArguments().getString(P_kode);
+
+    if (Kanal.P4kode.equals(kanalkode)) {
+      kanalkode = App.prefs.getString(App.FORETRUKKEN_P4_AF_BRUGER, null);
+      if (kanalkode == null) {
+        kanalkode = App.prefs.getString(App.FORETRUKKEN_P4_FRA_STEDPLACERING, "KH4");
+        kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        dialog.setTitle("Vi gætter på at du vælger:");
+        dialog.setMessage(kanal.navn);
+        final String finalKanalkode = kanalkode;
+        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            //ths.startActivity(new Intent(ths, CheckudAkt.class));
+            App.prefs.edit().putString(App.FORETRUKKEN_P4_AF_BRUGER, finalKanalkode).commit();
+          }
+        });
+        dialog.setNegativeButton("Skift distrikt", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            startActivity(new Intent(getActivity(), Kanalvalg_akt.class));
+          }
+        });
+        dialog.show();
+      }
+    }
+    kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
+
     rod = inflater.inflate(R.layout.kanalvisning_frag, container, false);
     final AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
@@ -152,6 +180,8 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       return;
     }
     opdaterAktuelUdsendelse(vh);
+    //MediaPlayer mp = DRData.instans.afspiller.getMediaPlayer();
+    //Log.d("mp pos="+mp.getCurrentPosition() + "  af "+mp.getDuration());
   }
 
 
@@ -338,7 +368,6 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       long længde = u.slutTid.getTime() - u.startTid.getTime();
       int passeretPct = længde > 0 ? (int) (passeret * 100 / længde) : 0;
       Log.d(kanal.kode + " passeretPct=" + passeretPct + " af længde=" + længde);
-      AQuery a = vh.aq;
       LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) vh.starttidbjælke.getLayoutParams();
       lp.weight = passeretPct;
       vh.starttidbjælke.setLayoutParams(lp);
@@ -346,6 +375,10 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       lp = (LinearLayout.LayoutParams) vh.slutttidbjælke.getLayoutParams();
       lp.weight = 100 - passeretPct;
       vh.slutttidbjælke.setLayoutParams(lp);
+      if (passeretPct >= 100) { // Hop til næste udsendelse
+        opdaterListe(kanal.udsendelser);
+        scrollTilAktuelUdsendelse();
+      }
       if (u.playliste != null && u.playliste.size() > 0) {
         opdaterSenestSpillet(vh.aq, u);
       }

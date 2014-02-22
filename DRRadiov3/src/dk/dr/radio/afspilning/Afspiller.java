@@ -143,6 +143,23 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
     } else Log.d(" forkert status=" + afspillerstatus);
   }
 
+  long setDataSourceTid = 0;
+  boolean setDataSourceLyd = false;
+
+  private String mpTils() {
+    AudioManager ar = (AudioManager) App.instans.getSystemService(App.AUDIO_SERVICE);
+    //return mediaPlayer.getCurrentPosition()+ "/"+mediaPlayer.getDuration() + "    "+mediaPlayer.isPlaying()+ar.isMusicActive();
+    if (!setDataSourceLyd && ar.isMusicActive()) {
+      setDataSourceLyd = true;
+      String str = "Det tog " + (System.currentTimeMillis() - setDataSourceTid) / 100 / 10.0 + " sek før lyden kom";
+      Log.d(str);
+      if (App.udvikling) {
+        App.langToast(str);
+      }
+    }
+    return "    " + ar.isMusicActive() + " dt=" + (System.currentTimeMillis() - setDataSourceTid) + "ms";
+  }
+
   synchronized private void startAfspilningIntern() {
     Log.d("mediaPlayer.setDataSource( " + lydUrl);
 
@@ -155,13 +172,18 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
     // at den hænger under visse netværksforhold
     new Thread() {
       public void run() {
-        Log.d("mediaPlayer.setDataSource() start");
+        setDataSourceTid = System.currentTimeMillis();
+        setDataSourceLyd = false;
         try {
           mediaPlayer.setDataSource(lydUrl);
           Log.d("mediaPlayer.setDataSource() slut");
           mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-          mediaPlayer.prepareAsync();
+          Log.d("mediaPlayer.setDataSource() slut  " + mpTils());
+          mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+          mediaPlayer.prepare();
+          Log.d("mediaPlayer.prepare() slut  " + mpTils());
         } catch (Exception ex) {
+          ex.printStackTrace();
           //ex = new Exception("spiller "+kanalNavn+" "+lydUrl, ex);
           //Log.kritiskFejlStille(ex);
           handler.post(new Runnable() {
@@ -175,7 +197,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
   }
 
   synchronized public void stopAfspilning() {
-    Log.d("AfspillerService stopAfspilning");
+    Log.d("Afspiller stopAfspilning");
     handler.removeCallbacks(startAfspilningIntern);
     // Da mediaPlayer.reset() erfaringsmæssigt kan hænge i dette tilfælde afregistrerer vi
     // alle lyttere og bruger en ny
@@ -204,11 +226,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
     //if (notification != null) notificationManager.cancelAll();
     // Stop afspillerservicen
     App.instans.stopService(new Intent(App.instans, HoldAppIHukommelsenService.class));
-    if (wifilock != null) try {
-      wifilock.release();
-    } catch (Exception e) {
-      Log.rapporterFejl(e);
-    } // TODO fjern try/catch
+    if (wifilock != null) wifilock.release();
     // Informer evt aktivitet der lytter
     for (Runnable observatør : observatører) {
       observatør.run();
@@ -219,14 +237,6 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
   public void setUrl(String url) {
     if (App.udvikling) App.kortToast("Spiller:\n" + url);
     lydUrl = url;
-
-    // Fjernet. Skulle ikke være nødvendigt. Jacob 22/10-2011
-    /*
-    PreferenceManager.getDefaultSharedPreferences(DRData.appCtx).edit()
-            .putString("kanalNavn", kanalNavn)
-            .putString("lydUrl", lydUrl)
-            .commit();
-     */
 
 
     if ((afspillerstatus == Status.SPILLER) || (afspillerstatus == Status.FORBINDER)) {
@@ -265,7 +275,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
   //    TILBAGEKALD FRA MEDIAPLAYER
   //
   public void onPrepared(MediaPlayer mp) {
-    Log.d("onPrepared");
+    Log.d("onPrepared " + mpTils());
     afspillerstatus = Status.SPILLER; //No longer buffering
     if (observatører != null) {
       opdaterWidgets();
@@ -277,9 +287,9 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
     // (i hvert fald på Samsung Galaxy S III), så vi kalder det i baggrunden
     new Thread() {
       public void run() {
-        Log.d("mediaPlayer.start()");
+        Log.d("mediaPlayer.start() " + mpTils());
         mediaPlayer.start();
-        Log.d("mediaPlayer.start() slut");
+        Log.d("mediaPlayer.start() slut " + mpTils());
       }
     }.start();
   }
@@ -313,7 +323,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
 
   public boolean onInfo(MediaPlayer mp, int hvad, int extra) {
     //Log.d("onInfo(" + MedieafspillerInfo.infokodeTilStreng(hvad) + "(" + hvad + ") " + extra);
-    Log.d("onInfo(" + hvad + ") " + extra);
+    Log.d("onInfo(" + hvad + ") " + extra + " " + mpTils());
     return true;
   }
 
@@ -379,7 +389,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
   }
 
   public void onBufferingUpdate(MediaPlayer mp, int procent) {
-    //Log.d("Afspiller onBufferingUpdate : " + procent + "% - lyttere er "+observatører );
+    Log.d("Afspiller onBufferingUpdate : " + procent + " " + mpTils());
     if (procent < -100) procent = -1; // Ignorér vilde tal
 
     sendOnAfspilningForbinder(procent);
@@ -392,5 +402,9 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
 
   public int getForbinderProcent() {
     return forbinderProcent;
+  }
+
+  public MediaPlayer getMediaPlayer() {
+    return mediaPlayer;
   }
 }

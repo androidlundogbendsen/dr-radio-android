@@ -16,7 +16,7 @@
 
  */
 
-package dk.dr.radio.diverse.ui;
+package dk.dr.radio.diverse;
 
 import android.content.Context;
 import android.util.AttributeSet;

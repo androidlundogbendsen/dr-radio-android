@@ -5,6 +5,7 @@
 package dk.dr.radio.diverse.ui;
 
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,11 @@ import dk.dr.radio.diverse.Log;
 //public class BasisFragment extends DialogFragment {
 public class Basisfragment extends Fragment {
 
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    Log.d("onCreate " + this);
+    super.onCreate(savedInstanceState);
+  }
 
   public static final int LINKFARVE = 0xff00458f;
 
