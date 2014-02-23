@@ -1,4 +1,4 @@
-package dk.dr.radio.diverse.ui;
+package dk.dr.radio.skrald;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

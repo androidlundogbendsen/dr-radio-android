@@ -26,6 +26,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import dk.dr.radio.akt.diverse.Basisadapter;
+import dk.dr.radio.akt.diverse.Basisfragment;
+import dk.dr.radio.akt.diverse.VisFragment_akt;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Playlisteelement;
@@ -34,9 +37,6 @@ import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.FilCache;
 import dk.dr.radio.diverse.Log;
-import dk.dr.radio.diverse.ui.Basisadapter;
-import dk.dr.radio.diverse.ui.Basisfragment;
-import dk.dr.radio.diverse.ui.VisFragment_akt;
 import dk.dr.radio.v3.R;
 
 public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnItemClickListener, View.OnClickListener, Runnable {
@@ -390,14 +390,14 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     } else
       new AlertDialog.Builder(getActivity())
 //        .setAdapter(new ArrayAdapter(getActivity(), android.R.layout.select_dialog_singlechoice, kanal.streams), new DialogInterface.OnClickListener() {
-        .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.streams), new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            DRData.instans.aktuelKanal = kanal;
-            DRData.instans.afspiller.setUrl(kanal.streams.get(which).url);
-            DRData.instans.afspiller.startAfspilning();
-          }
-        }).show();
+          .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.streams), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              DRData.instans.aktuelKanal = kanal;
+              DRData.instans.afspiller.setUrl(kanal.streams.get(which).url);
+              DRData.instans.afspiller.startAfspilning();
+            }
+          }).show();
     /*
     DRData.instans.aktuelKanal = kanal;
     DRData.instans.afspiller.setUrl(kanal.streams.get(0).url);

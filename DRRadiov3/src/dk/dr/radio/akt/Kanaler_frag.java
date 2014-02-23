@@ -18,13 +18,13 @@ import com.androidquery.AQuery;
 
 import java.util.ArrayList;
 
+import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.diverse.Log;
-import dk.dr.radio.diverse.ui.Basisfragment;
 import dk.dr.radio.v3.R;
 
-import static dk.dr.radio.diverse.ui.Basisaktivitet.putString;
+import static dk.dr.radio.akt.diverse.Basisaktivitet.putString;
 
 public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener {
 

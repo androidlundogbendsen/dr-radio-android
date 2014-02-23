@@ -25,8 +25,8 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
 import dk.dr.radio.akt.Hovedaktivitet;
+import dk.dr.radio.akt.diverse.AfspillerWidget;
 import dk.dr.radio.diverse.Log;
-import dk.dr.radio.diverse.ui.AfspillerWidget;
 import dk.dr.radio.v3.R;
 
 /**

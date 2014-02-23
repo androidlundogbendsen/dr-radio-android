@@ -39,7 +39,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="dk.dr.radio.diverse.ui.VisFragment_akt">
+        <activity android:name="dk.dr.radio.akt.diverse.VisFragment_akt">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="dk.dr.radio.akt.Hovedaktivitet"/>
@@ -94,7 +94,7 @@
         </receiver>
 
         <receiver
-                android:name="dk.dr.radio.diverse.ui.AfspillerWidget"
+                android:name="dk.dr.radio.akt.diverse.AfspillerWidget"
                 android:label="DR Radio">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
