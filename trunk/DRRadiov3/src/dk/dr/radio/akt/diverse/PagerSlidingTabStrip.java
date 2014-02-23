@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.astuetz;
+package dk.dr.radio.akt.diverse;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -86,10 +86,10 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
   private boolean textAllCaps = true;
 
   private int scrollOffset = 52;
-  private int indicatorHeight = 48;//8;
+  private int indicatorHeight = 8;
   private int underlineHeight = 1;// 2;
   private int dividerPadding = 0;//12;
-  private int tabPadding = 8;//24;
+  private int tabPadding = 12;//24;
   private int dividerWidth = 1;
 
   private int tabTextSize = 12;

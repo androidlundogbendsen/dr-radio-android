@@ -13,6 +13,7 @@ import com.androidquery.AQuery;
 import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
@@ -36,8 +37,8 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     aq = new AQuery(rod);
     start_stop_pauseknap = aq.id(R.id.start_stop_pauseknap).clicked(this).getImageView();
     progressbar = aq.id(R.id.progressBar).getProgressBar();
-    kanal = aq.id(R.id.kanal).getTextView();
-    titel = aq.id(R.id.titel).getTextView();
+    kanal = aq.id(R.id.kanal).typeface(App.skrift_normal).getTextView();
+    titel = aq.id(R.id.titel).typeface(App.skrift_fed).getTextView();
     DRData.instans.afspiller.observatører.add(this);
     DRData.instans.afspiller.forbindelseobservatører.add(this);
     run(); // opdatér views

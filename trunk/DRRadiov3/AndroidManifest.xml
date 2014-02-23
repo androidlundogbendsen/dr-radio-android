@@ -21,6 +21,7 @@
             android:allowBackup="true"
             android:name="dk.dr.radio.diverse.App"
             android:icon="@drawable/ic_launcher"
+            android:logo="@drawable/dr_logo"
             android:label="@string/app_name"
             android:theme="@style/Theme.Drxx_ab"
             >

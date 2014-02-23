@@ -5,10 +5,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/grå70"
+        android:gravity="center_vertical"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         android:orientation="horizontal">
 
 
@@ -17,7 +18,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/start_stop_pauseknap"
             android:src="@drawable/dri_radio_pause_hvid"
-            android:layout_gravity="center_vertical"
             />
 
     <LinearLayout
@@ -32,7 +32,7 @@
                 android:id="@+id/kanal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="P3 Live"
                 tools:ignore="HardcodedText"
                 android:textStyle="bold"
@@ -43,7 +43,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Smag på P3"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="bold"
                 tools:ignore="HardcodedText"
                 android:textColor="@color/hvid"/>
 
