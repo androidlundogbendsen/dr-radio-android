@@ -15,11 +15,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.androidquery.AQuery;
-import com.astuetz.PagerSlidingTabStrip;
 
 import java.util.ArrayList;
 
 import dk.dr.radio.akt.diverse.Basisfragment;
+import dk.dr.radio.akt.diverse.PagerSlidingTabStrip;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.diverse.Log;
