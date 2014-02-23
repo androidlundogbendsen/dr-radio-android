@@ -31,6 +31,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -49,6 +50,7 @@ import java.io.FileOutputStream;
 import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Diverse;
+import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.data.stamdata.Stamdata;
 import dk.dr.radio.diverse.ui.Basisaktivitet;
 import dk.dr.radio.v3.R;
@@ -105,6 +107,12 @@ public class App extends Application {
       String kanal = prefs.getString(FORETRUKKEN_KANAL, null);
       i.aktuelKanal = i.stamdata.kanalFraKode.get(kanal);
       if (i.aktuelKanal == null) i.aktuelKanal = i.stamdata.forvalgtKanal;
+
+      String pn = App.instans.getPackageName();
+      Resources res = App.instans.getResources();
+      for (Kanal k : i.stamdata.kanaler) {
+        k.kanalappendis_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase(), "drawable", pn);
+      }
 
       if (erOnline() && prefs.getString(FORETRUKKEN_P4_FRA_STEDPLACERING, null) == null) {
         new AsyncTask() {

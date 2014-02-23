@@ -279,7 +279,7 @@ public class Venstremenu_frag extends Fragment {
       Fragment f;
 
       if (e.type == 4) {
-        f = new Kanaler_frag();
+        f = new Kanaler_frag_v3();
       } else if (e.type == 2) {
         f = new Kanalvisning_frag();
         b.putString(Kanalvisning_frag.P_kode, e.data);
