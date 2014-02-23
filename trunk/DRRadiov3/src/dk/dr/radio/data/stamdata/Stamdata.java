@@ -86,6 +86,7 @@ public class Stamdata {
       k.navn = j.getString("title");
       k.lognøgle = j.getString("logo");
       k.urn = j.getString("urn");
+      k.p4underkanal = p4;
       kanaler.add(k);
       if (p4) p4koder.add(k.kode);
       else kanalkoder.add(k.kode);

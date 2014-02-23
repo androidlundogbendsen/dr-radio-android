@@ -15,10 +15,11 @@
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
      See the License for the specific language governing permissions and
      limitations under the License.
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 -->
 
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Non focused states -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android" android:exitFadeDuration="@android:integer/config_longAnimTime">
+<!-- Non focused states -->
     <item android:state_focused="false" android:state_selected="false" android:state_pressed="false" android:drawable="@color/grå10"/>
     <item android:state_focused="false" android:state_selected="true" android:state_pressed="false" android:drawable="@color/hvid"/>
 
