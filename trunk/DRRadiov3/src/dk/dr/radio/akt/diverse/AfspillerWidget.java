@@ -16,7 +16,7 @@
 
  */
 
-package dk.dr.radio.diverse.ui;
+package dk.dr.radio.akt.diverse;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;

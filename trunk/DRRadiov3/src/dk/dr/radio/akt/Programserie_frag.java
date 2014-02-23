@@ -18,14 +18,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import dk.dr.radio.akt.diverse.Basisadapter;
+import dk.dr.radio.akt.diverse.Basisfragment;
+import dk.dr.radio.akt.diverse.VisFragment_akt;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
-import dk.dr.radio.diverse.ui.Basisadapter;
-import dk.dr.radio.diverse.ui.Basisfragment;
-import dk.dr.radio.diverse.ui.VisFragment_akt;
 import dk.dr.radio.v3.R;
 
 public class Programserie_frag extends Basisfragment implements AdapterView.OnItemClickListener {

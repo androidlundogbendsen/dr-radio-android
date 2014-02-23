@@ -20,13 +20,13 @@ import java.util.ArrayList;
 
 import dk.dr.radio.akt.Hovedaktivitet;
 import dk.dr.radio.akt.Kanalvisning_frag;
+import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.diverse.Log;
-import dk.dr.radio.diverse.ui.Basisfragment;
 import dk.dr.radio.v3.R;
 
-import static dk.dr.radio.diverse.ui.Basisaktivitet.putString;
+import static dk.dr.radio.akt.diverse.Basisaktivitet.putString;
 
 public class Kanaler_frag_v2 extends Basisfragment implements ActionBar.TabListener {
 
@@ -39,7 +39,7 @@ public class Kanaler_frag_v2 extends Basisfragment implements ActionBar.TabListe
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     Log.d("Viser fragment " + this);
-    rod = inflater.inflate(R.layout.kanaler_frag_v2, container, false);
+    rod = inflater.inflate(R.layout.skrald_kanaler_frag_v2, container, false);
     aq = new AQuery(rod);
     faneAdapter = new FaneAdapter(getActivity().getSupportFragmentManager());
     Bundle args = new Bundle();

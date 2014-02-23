@@ -23,6 +23,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import dk.dr.radio.akt.diverse.Basisadapter;
+import dk.dr.radio.akt.diverse.Basisfragment;
+import dk.dr.radio.akt.diverse.VisFragment_akt;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Playlisteelement;
@@ -30,9 +33,6 @@ import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
-import dk.dr.radio.diverse.ui.Basisadapter;
-import dk.dr.radio.diverse.ui.Basisfragment;
-import dk.dr.radio.diverse.ui.VisFragment_akt;
 import dk.dr.radio.v3.R;
 
 public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItemClickListener, View.OnClickListener {
@@ -108,12 +108,12 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
     if (udsendelse.streams == null || udsendelse.streams.size() == 0) return;
     new AlertDialog.Builder(getActivity()).setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, udsendelse.streams), new DialogInterface.OnClickListener() {
       @Override
-          public void onClick(DialogInterface dialog, int which) {
-            DRData.instans.aktuelKanal = kanal;
-            DRData.instans.afspiller.setUrl(udsendelse.streams.get(which).url);
-            DRData.instans.afspiller.startAfspilning();
-          }
-        }).show();
+      public void onClick(DialogInterface dialog, int which) {
+        DRData.instans.aktuelKanal = kanal;
+        DRData.instans.afspiller.setUrl(udsendelse.streams.get(which).url);
+        DRData.instans.afspiller.startAfspilning();
+      }
+    }).show();
   }
 
 

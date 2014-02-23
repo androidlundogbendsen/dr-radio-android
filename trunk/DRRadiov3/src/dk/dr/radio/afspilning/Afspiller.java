@@ -41,10 +41,10 @@ import android.telephony.TelephonyManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import dk.dr.radio.akt.diverse.AfspillerWidget;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.Opkaldshaandtering;
-import dk.dr.radio.diverse.ui.AfspillerWidget;
 
 
 /**
