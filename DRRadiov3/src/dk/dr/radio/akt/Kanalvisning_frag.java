@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -267,8 +268,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
           int br = bestemBilledebredde(listView, (View) a.id(R.id.billede).getView().getParent());
           a.id(R.id.billede).image(skalérSlugBilledeUrl(u.slug, br, højde * br / bredde), true, true, br, 0).width(br, false);
           a.id(R.id.senest_spillet_overskrift).typeface(App.skrift_normal);
-          a.id(R.id.senest_spillet_titel).typeface(App.skrift_normal);
-          a.id(R.id.senest_spillet_kunstner).typeface(App.skrift_normal);
+          a.id(R.id.senest_spillet_titel_og_kunstner).typeface(App.skrift_normal);
           a.id(R.id.lige_nu).typeface(App.skrift_normal);
           a.id(R.id.hør_live).typeface(App.skrift_normal);
           v.setBackgroundColor(getResources().getColor(R.color.hvid));
@@ -344,8 +344,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     if (u.playliste.size() > 0) {
       aq.id(R.id.senest_spillet_container).visible();
       Playlisteelement elem = u.playliste.get(0);
-      aq.id(R.id.senest_spillet_titel).text(elem.titel);
-      aq.id(R.id.senest_spillet_kunstner).text("|  " + elem.kunstner);
+      aq.id(R.id.senest_spillet_titel_og_kunstner).text(Html.fromHtml("<b>" + elem.titel + "</b> &nbsp; | &nbsp;" + elem.kunstner));
       aq.id(R.id.senest_spillet_kunstnerbillede).image(skalérDiscoBilledeUrl(elem.billedeUrl, firkant, firkant));
     } else {
       aq.id(R.id.senest_spillet_container).gone();
@@ -387,9 +386,9 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     } else if (v.getId() == R.id.p4_ok) {
       rod.findViewById(R.id.p4_vi_gætter_på_dialog).setVisibility(View.GONE);
       App.prefs.edit().putString(App.FORETRUKKEN_P4_AF_BRUGER, kanal.kode).commit();
-    } else
-      new AlertDialog.Builder(getActivity())
-//        .setAdapter(new ArrayAdapter(getActivity(), android.R.layout.select_dialog_singlechoice, kanal.streams), new DialogInterface.OnClickListener() {
+    } else if (kanal.streams == null)
+      Log.rapporterOgvisFejl(getActivity(), new IllegalStateException("kanal.streams er null"));
+    else new AlertDialog.Builder(getActivity())
           .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.streams), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -398,11 +397,6 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
               DRData.instans.afspiller.startAfspilning();
             }
           }).show();
-    /*
-    DRData.instans.aktuelKanal = kanal;
-    DRData.instans.afspiller.setUrl(kanal.streams.get(0).url);
-    DRData.instans.afspiller.startAfspilning();
-    */
   }
 
   @Override

@@ -118,22 +118,12 @@
                     android:orientation="horizontal">
 
                 <TextView
-                        android:id="@+id/senest_spillet_titel"
+                        android:id="@+id/senest_spillet_titel_og_kunstner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Feel Again One"
-                        tools:ignore="HardcodedText"
-                        android:textStyle="bold"/>
-
-                <TextView
-                        android:id="@+id/senest_spillet_kunstner"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:text="|  Republic"
-                        android:singleLine="true"
-                        tools:ignore="HardcodedText"
-                        android:layout_weight="1"/>
+                        android:text="Feel Again One | Republic"
+                        android:maxLines="2"
+                        tools:ignore="HardcodedText"/>
 
             </LinearLayout>
         </LinearLayout>
