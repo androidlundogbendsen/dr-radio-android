@@ -120,7 +120,7 @@ public class Kanaler_frag_v3 extends Basisfragment implements ActionBar.TabListe
 
     @Override
     public int getPageIconResId(int position) {
-      return kanaler.get(position).kanalappendis_resid;
+      return kanaler.get(position).kanallogo_resid;
     }
   }
 }

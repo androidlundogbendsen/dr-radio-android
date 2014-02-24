@@ -47,7 +47,7 @@ public class Kanal {
    * Se tidligere med /-1 , /-2 etc
    */
   //public String kanalside;
-  public int kanalappendis_resid;
+  public int kanallogo_resid;
   public boolean p4underkanal;
   public String lognøgle = "";
   public String logoUrl = "";

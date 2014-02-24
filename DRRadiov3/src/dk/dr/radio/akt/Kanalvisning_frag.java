@@ -58,9 +58,9 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     rod = null;
 
     if (p4) {
-      kanalkode = App.prefs.getString(App.FORETRUKKEN_P4_AF_BRUGER, null);
+      kanalkode = App.prefs.getString(App.P4_FORETRUKKEN_AF_BRUGER, null);
       if (kanalkode == null) {
-        kanalkode = App.prefs.getString(App.FORETRUKKEN_P4_FRA_STEDPLACERING, "KH4");
+        kanalkode = App.prefs.getString(App.P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, "KH4");
         kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
         rod = inflater.inflate(R.layout.kanalvisning_p4_frag, container, false);
         AQuery aq = new AQuery(rod);
@@ -385,7 +385,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       startActivity(new Intent(getActivity(), Kanalvalg_akt.class));
     } else if (v.getId() == R.id.p4_ok) {
       rod.findViewById(R.id.p4_vi_gætter_på_dialog).setVisibility(View.GONE);
-      App.prefs.edit().putString(App.FORETRUKKEN_P4_AF_BRUGER, kanal.kode).commit();
+      App.prefs.edit().putString(App.P4_FORETRUKKEN_AF_BRUGER, kanal.kode).commit();
     } else if (kanal.streams == null)
       Log.rapporterOgvisFejl(getActivity(), new IllegalStateException("kanal.streams er null"));
     else new AlertDialog.Builder(getActivity())
