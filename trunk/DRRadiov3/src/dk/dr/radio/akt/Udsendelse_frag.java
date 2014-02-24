@@ -168,7 +168,7 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
           a.id(R.id.playliste).typeface(App.skrift_normal).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.INVISIBLE);
           a.id(R.id.info).typeface(App.skrift_normal);
           vh.titel.setText(udsendelse.titel.toUpperCase());
-          a.id(R.id.logo).image(kanal.logoUrl);
+          a.id(R.id.logo).image(kanal.kanallogo_resid);
           a.id(R.id.titel2).typeface(App.skrift_fed).text(udsendelse.titel);
           a.id(R.id.dato).typeface(App.skrift_normal).text(" - " + DRJson.datoformat.format(udsendelse.startTid));
 

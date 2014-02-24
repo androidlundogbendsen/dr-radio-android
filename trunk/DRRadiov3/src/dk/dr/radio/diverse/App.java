@@ -56,14 +56,14 @@ import dk.dr.radio.data.stamdata.Stamdata;
 import dk.dr.radio.v3.R;
 
 public class App extends Application {
-  public static final String FORETRUKKEN_P4_FRA_STEDPLACERING = "FORETRUKKEN_P4_FRA_STEDPLACERING";
-  public static final String FORETRUKKEN_P4_AF_BRUGER = "FORETRUKKEN_P4_AF_BRUGER";
+  public static final String P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING = "P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING";
+  public static final String P4_FORETRUKKEN_AF_BRUGER = "P4_FORETRUKKEN_AF_BRUGER";
   public static final String FORETRUKKEN_KANAL = "FORETRUKKEN_kanal";
   public static boolean EMULATOR = true;
   public static App instans;
   public static SharedPreferences prefs;
   private static ConnectivityManager connectivityManager;
-  private static String versionName;
+  private static String versionName = "(ukendt)";
   public static NotificationManager notificationManager;
   public static boolean udvikling = false;
   public static Handler forgrundstråd;
@@ -111,18 +111,20 @@ public class App extends Application {
       String pn = App.instans.getPackageName();
       Resources res = App.instans.getResources();
       for (Kanal k : i.stamdata.kanaler) {
-        k.kanalappendis_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase(), "drawable", pn);
+        k.kanallogo_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase(), "drawable", pn);
       }
 
-      if (erOnline() && prefs.getString(FORETRUKKEN_P4_FRA_STEDPLACERING, null) == null) {
+      if (erOnline()) {
         new AsyncTask() {
           @Override
           protected Object doInBackground(Object[] params) {
-            i.stamdata.hentSupplerendeDataBg();
             try {
-              String p4kanal = P4Stedplacering.findP4KanalnavnFraIP();
-              if (App.udvikling) App.langToast("p4kanal: " + p4kanal);
-              prefs.edit().putString(FORETRUKKEN_P4_FRA_STEDPLACERING, p4kanal).commit();
+              i.stamdata.hentSupplerendeDataBg();
+              if (prefs.getString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, null) == null) {
+                String p4kanal = P4Stedplacering.findP4KanalnavnFraIP();
+                if (App.udvikling) App.langToast("p4kanal: " + p4kanal);
+                prefs.edit().putString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, p4kanal).commit();
+              }
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -172,9 +174,8 @@ public class App extends Application {
 
 
   /*
-     * Version fra
-     * http://developer.android.com/training/basics/network-ops/managing.html
-     */
+   * Kilde: http://developer.android.com/training/basics/network-ops/managing.html
+   */
   public static boolean erOnline() {
     NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
     return (networkInfo != null && networkInfo.isConnected());
