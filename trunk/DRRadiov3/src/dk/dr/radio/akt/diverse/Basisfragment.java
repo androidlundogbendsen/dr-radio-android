@@ -38,14 +38,12 @@ Forhold 16:9 for de store billeder
 Forhold 1:1 for playlistebilleder - og de skal være 1/3-del i højden af de store billeder
 
 TODO - skalering efter visningsstørrelse
-bredde=16*x
-højde=9*x
+bredde16=16*x
+højde9=9*x
 firkant=3*x
  */
-  static int x = 20;
-  public static int bredde = 16 * x;
-  public static int højde = 9 * x;
-  public static int firkant = 3 * x;
+  public static int bredde16 = 16;
+  public static int højde9 = 9;
 
 
   /**
@@ -58,8 +56,8 @@ firkant=3*x
     int br = rod.getWidth();
     if (rod.getHeight() < br / 2) br = br / 2; // Halvbreddebilleder ved liggende visning
     br = br - paddingView.getPaddingRight() - paddingView.getPaddingLeft();
-    Log.d("QQQQQ listView.getWidth()=" + rod.getWidth() + " getHeight()=" + rod.getHeight());
-    Log.d("QQQQQ billedeContainer.getPaddingRight()=" + paddingView.getPaddingRight() + "   .... så br=" + br);
+    //Log.d("QQQQQ listView.getWidth()=" + rod.getWidth() + " getHeight()=" + rod.getHeight());
+    //Log.d("QQQQQ billedeContainer.getPaddingRight()=" + paddingView.getPaddingRight() + "   .... så br=" + br);
     return br;
   }
 
@@ -135,17 +133,17 @@ Jeg bruger selv følgende macro'er i C til generering af URIs:
    * ScaledImage: "http://asset.dr.dk/discoImages/?discoserver=api.discogs.com&file=%2fimage%2fA-4970-1339439274-8053.jpeg&h=400&w=400&scaleafter=crop&quality=85",
    */
   public static String skalérDiscoBilledeUrl(String url, int bredde, int højde) {
+    Log.d("skalérDiscoBilledeUrl url1 = " + url);
     if (url == null || url.length() == 0 || "null".equals(url)) return null;
     try {
       URL u = new URL(url);
-      //String skaleretUrl = "http://asset.dr.dk/discoImages/?discoserver=" + u.getHost() + ";w=" + bredde + "&amp;h=" + højde +
+      //String skaleretUrl = "http://asset.dr.dk/discoImages/?discoserver=" + u.getHost() + ";w=" + bredde16 + "&amp;h=" + højde9 +
       //    "&amp;file=" + URLEncoder.encode(u.getPath(), "UTF-8") + "&amp;scaleAfter=crop&amp;quality=85";
       String skaleretUrl = "http://asset.dr.dk/discoImages/?discoserver=" + u.getHost() + "&w=" + bredde + "&h=" + højde +
           "&file=" + u.getPath() + "&scaleAfter=crop&quality=85";
 
-      //Log.d("skalérDiscoBilledeUrl url1 = " + url);
-      //Log.d("skalérDiscoBilledeUrl url2 = " + u);
-      //Log.d("skalérDiscoBilledeUrl url3 = " + skaleretUrl);
+      Log.d("skalérDiscoBilledeUrl url2 = " + u);
+      Log.d("skalérDiscoBilledeUrl url3 = " + skaleretUrl);
       return skaleretUrl;
     } catch (Exception e) {
       Log.e("url=" + url, e);

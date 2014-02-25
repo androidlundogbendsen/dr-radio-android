@@ -53,7 +53,7 @@ public class Kanal {
   public String logoUrl = "";
   public String logoUrl2 = "";
   public ArrayList<Udsendelse> udsendelser = new ArrayList<Udsendelse>();
-  public SortedMap<Integer, ArrayList<Udsendelse>> udsendelserPerDag = new TreeMap<Integer, ArrayList<Udsendelse>>();
+  public SortedMap<String, ArrayList<Udsendelse>> udsendelserPerDag = new TreeMap<String, ArrayList<Udsendelse>>();
   public ArrayList<Lydstream> streams;
 
   @Override
@@ -62,8 +62,8 @@ public class Kanal {
   }
 
 
-  public void setUdsendelserForDag(ArrayList<Udsendelse> uliste, int dag) throws JSONException, ParseException {
-    udsendelserPerDag.put(dag, uliste);
+  public void setUdsendelserForDag(ArrayList<Udsendelse> uliste, String dato) throws JSONException, ParseException {
+    udsendelserPerDag.put(dato, uliste);
     udsendelser.clear();
     for (ArrayList<Udsendelse> ul : udsendelserPerDag.values()) udsendelser.addAll(ul);
   }

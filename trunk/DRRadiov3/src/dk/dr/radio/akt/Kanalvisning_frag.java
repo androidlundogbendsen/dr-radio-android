@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -50,6 +51,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
   protected View rod;
   private boolean fragmentErSynligt;
   private boolean p4;
+  private int antalHentedeSendeplaner;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,7 +84,9 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_fed).getView());
-    hentSendeplanForDag(aq, 0);
+
+
+    hentSendeplanForDag(aq, new Date(), true);
     udvikling_checkDrSkrifter(rod, this + " rod");
     return rod;
   }
@@ -90,14 +94,11 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
   public static DateFormat datoFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 
-  private void hentSendeplanForDag(final AQuery aq, final int dag) {
+  private void hentSendeplanForDag(final AQuery aq, Date dato1, final boolean idag) {
 //    String url = kanal.getUdsendelserUrl() + "/" + dag;
+    final String dato = datoFormat.format(dato1);
 
-    Date nu = new Date();
-    nu.setDate(dag + nu.getDate());
-
-
-    String url = kanal.getUdsendelserUrl() + "/date/" + datoFormat.format(nu);
+    String url = kanal.getUdsendelserUrl() + "/date/" + dato;
     Log.d("hentSendeplanForDag url=" + url);
 
 
@@ -110,8 +111,8 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
         Log.d("hentSendeplanForDag url " + url1 + "   status=" + status.getCode());
         if (json != null && !"null".equals(json)) try {
 
-          if (dag == 0) {
-            kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json)), dag);
+          if (idag) {
+            kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json)), dato);
             opdaterListe(kanal.udsendelser);
             scrollTilAktuelUdsendelse();
           } else {
@@ -121,7 +122,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
             View v = listView.getChildAt(1);
             int næstøversteSynligOffset = (v == null) ? 0 : v.getTop();
 
-            kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json)), dag);
+            kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json)), dato);
             opdaterListe(kanal.udsendelser);
 
             int næstøversteSynligNytIndex = liste.indexOf(næstøversteSynlig);
@@ -158,7 +159,8 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
   @Override
   public void onResume() {
     super.onResume();
-    App.forgrundstråd.postDelayed(this, 50);
+    run();
+    //App.forgrundstråd.postDelayed(this, 50);
   }
 
   @Override
@@ -188,21 +190,25 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       Date nu = new Date(); // TODO kompenser for forskelle mellem telefonens ur og serverens ur
       Log.d("opdaterListe " + kanal.kode + "  nu=" + nu);
       aktuelUdsendelseIndex = -1;
+      Udsendelse tidligere = new Udsendelse("Tidligere");
+      Udsendelse senere = new Udsendelse("Senere");
+      tidligere.startTid = new Date(nyuliste.get(0).startTid.getTime() - 12 * 60 * 60 * 1000); // Døgnet starter kl 5, så vi er på den sikre side med 12 timer
+      senere.startTid = nyuliste.get(nyuliste.size() - 1).slutTid;
+
       liste.clear();
-      liste.add(new Udsendelse("Tidligere"));
+      liste.add(tidligere);
       liste.addAll(nyuliste);
       // Nicolai: "jeg løber listen igennem fra bunden og op,
       // og så finder jeg den første der har starttid >= nuværende tid + sluttid <= nuværende tid."
       for (int n = liste.size() - 1; n > 1; n--) {
         Udsendelse u = liste.get(n);
         Log.d(n + " " + nu.after(u.startTid) + u.slutTid.before(nu) + "  " + u);
-        //if (u.startTid.before(nu)) aktuelUdsendelseIndex = n;
         if (u.startTid.before(nu) && nu.before(u.slutTid)) {
           aktuelUdsendelseIndex = n;
           break;
         }
       }
-      liste.add(new Udsendelse("Senere"));
+      liste.add(senere);
     } catch (Exception e1) {
       Log.rapporterFejl(e1);
     }
@@ -271,7 +277,8 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
 
         if (type == AKTUEL) {
           int br = bestemBilledebredde(listView, (View) a.id(R.id.billede).getView().getParent());
-          a.id(R.id.billede).image(skalérSlugBilledeUrl(u.slug, br, højde * br / bredde), true, true, br, 0).width(br, false);
+          String burl = skalérSlugBilledeUrl(u.slug, br, br * højde9 / bredde16);
+          a.id(R.id.billede).width(br, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
           a.id(R.id.senest_spillet_overskrift).typeface(App.skrift_normal);
           a.id(R.id.senest_spillet_titel_og_kunstner).typeface(App.skrift_normal);
           a.id(R.id.lige_nu).typeface(App.skrift_normal);
@@ -288,8 +295,16 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       vh.udsendelse = u;
       vh.titel.setText(u.titel);
       if (type == TIDLIGERE_SENERE) {
-        a.id(R.id.progressBar).invisible();
-        vh.titel.setVisibility(View.VISIBLE);
+
+        if (antalHentedeSendeplaner++ < 20) {
+          a.id(R.id.progressBar).visible();   // De første 20 henter vi bare for brugeren
+          vh.titel.setVisibility(View.VISIBLE);
+          hentSendeplanForDag(new AQuery(rod), u.startTid, false);
+        } else {
+          a.id(R.id.progressBar).invisible(); // Derefter er det nok noget ser looper og brugeren må manuelt gøre det
+          vh.titel.setVisibility(View.VISIBLE);
+        }
+
         return v;
       }
       vh.startid.setText(u.startTidKl);
@@ -350,7 +365,13 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       aq.id(R.id.senest_spillet_container).visible();
       Playlisteelement elem = u.playliste.get(0);
       aq.id(R.id.senest_spillet_titel_og_kunstner).text(Html.fromHtml("<b>" + elem.titel + "</b> &nbsp; | &nbsp;" + elem.kunstner));
-      aq.id(R.id.senest_spillet_kunstnerbillede).image(skalérDiscoBilledeUrl(elem.billedeUrl, firkant, firkant));
+
+      ImageView b = aq.id(R.id.senest_spillet_kunstnerbillede).getImageView();
+      if (elem.billedeUrl.length() == 0) {
+        aq.gone();
+      } else {
+        aq.visible().image(skalérDiscoBilledeUrl(elem.billedeUrl, b.getWidth(), b.getHeight()));
+      }
     } else {
       aq.id(R.id.senest_spillet_container).gone();
     }
@@ -409,18 +430,15 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
 
   @Override
   public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
-    if (position == 0) {
-      hentSendeplanForDag(new AQuery(rod), kanal.udsendelserPerDag.firstKey() - 1);
-      v.findViewById(R.id.titel).setVisibility(View.GONE);
-      v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-    } else if (position == liste.size() - 1) {
-      hentSendeplanForDag(new AQuery(rod), kanal.udsendelserPerDag.lastKey() + 1);
+    Udsendelse u = liste.get(position);
+    if (position == 0 || position == liste.size() - 1) {
+      hentSendeplanForDag(new AQuery(rod), u.startTid, false);
       v.findViewById(R.id.titel).setVisibility(View.GONE);
       v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
     } else {
       startActivity(new Intent(getActivity(), VisFragment_akt.class)
           .putExtra(P_kode, kanal.kode)
-          .putExtra(VisFragment_akt.KLASSE, Udsendelse_frag.class.getName()).putExtra(DRJson.Slug.name(), liste.get(position).slug)); // Udsenselses-ID
+          .putExtra(VisFragment_akt.KLASSE, Udsendelse_frag.class.getName()).putExtra(DRJson.Slug.name(), u.slug)); // Udsenselses-ID
     }
   }
 /*
