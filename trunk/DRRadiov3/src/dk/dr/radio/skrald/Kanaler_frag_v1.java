@@ -1,4 +1,4 @@
-package dk.dr.radio.akt;
+package dk.dr.radio.skrald;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -18,6 +18,8 @@ import com.androidquery.AQuery;
 
 import java.util.ArrayList;
 
+import dk.dr.radio.akt.Hovedaktivitet;
+import dk.dr.radio.akt.Kanalvisning_frag;
 import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.stamdata.Kanal;
@@ -26,7 +28,7 @@ import dk.dr.radio.v3.R;
 
 import static dk.dr.radio.akt.diverse.Basisaktivitet.putString;
 
-public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener {
+public class Kanaler_frag_v1 extends Basisfragment implements ActionBar.TabListener {
 
 
   protected AQuery aq;
