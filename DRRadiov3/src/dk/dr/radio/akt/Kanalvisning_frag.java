@@ -62,6 +62,11 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       if (kanalkode == null) {
         kanalkode = App.prefs.getString(App.P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, "KH4");
         kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
+        if (kanal == null) {
+          Log.e("P4 IKKE FUNDET kanalkode=" + kanalkode, null);
+          kanalkode = DRData.instans.stamdata.p4koder.get(0);
+          kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
+        }
         rod = inflater.inflate(R.layout.kanalvisning_p4_frag, container, false);
         AQuery aq = new AQuery(rod);
         aq.id(R.id.p4_vi_gætter_på_tekst).typeface(App.skrift_normal);
@@ -386,9 +391,11 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
     } else if (v.getId() == R.id.p4_ok) {
       rod.findViewById(R.id.p4_vi_gætter_på_dialog).setVisibility(View.GONE);
       App.prefs.edit().putString(App.P4_FORETRUKKEN_AF_BRUGER, kanal.kode).commit();
-    } else if (kanal.streams == null)
+    } else if (kanal.streams == null) {
       Log.rapporterOgvisFejl(getActivity(), new IllegalStateException("kanal.streams er null"));
-    else new AlertDialog.Builder(getActivity())
+    } else {
+      if (App.udvikling) App.kortToast("kanal.streams=" + kanal.streams);
+      new AlertDialog.Builder(getActivity())
           .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.streams), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -397,6 +404,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
               DRData.instans.afspiller.startAfspilning();
             }
           }).show();
+    }
   }
 
   @Override

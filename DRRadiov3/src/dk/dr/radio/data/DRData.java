@@ -18,9 +18,6 @@
 
 package dk.dr.radio.data;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -63,12 +60,14 @@ public class DRData {
     i.stamdata.parseFællesStamdata(Diverse.læsStreng(new FileInputStream("res/raw/stamdata2_faelles.json")));
     i.stamdata.hentSupplerendeDataBg();
 
-    for (Kanal kanal : i.stamdata.kanaler) {
-      Log.d("\n\nkanal = " + kanal);
-      FilCache.hentFil(kanal.logoUrl, true, true, 1000 * 60 * 60 * 24 * 7);
-      FilCache.hentFil(kanal.logoUrl2, true, true, 1000 * 60 * 60 * 24 * 7);
+    for (Kanal k : i.stamdata.kanaler) {
+      if (k.p4underkanal) continue;
+      Log.d("\n\nkanal = " + k);
+      String f = FilCache.hentFil(k.logoUrl, true, true, 1000 * 60 * 60 * 24 * 7);
+      new File(f).renameTo(new File("/tmp/drawable-hdpi/kanalappendix_" + k.kode.toLowerCase() + ".png"));
+      FilCache.hentFil(k.logoUrl2, true, true, 1000 * 60 * 60 * 24 * 7);
     }
-
+/*
     for (Kanal kanal : i.stamdata.kanaler) {
       Log.d("\n\nkanal = " + kanal);
       kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(hent(kanal.getUdsendelserUrl()))), 0);
@@ -86,7 +85,7 @@ public class DRData {
       }
       break;
     }
-
+*/
 
   }
 
