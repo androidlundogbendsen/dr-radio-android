@@ -87,7 +87,10 @@ public enum DRJson {
    * Parser udsendelser for kanal. A la http://www.dr.dk/tjenester/mu-apps/schedule/P3/0
    */
   public static ArrayList<Udsendelse> parseUdsendelserForKanal(JSONArray jsonArray) throws JSONException, ParseException {
-    String nuDatoStr = datoformat.format(new Date());
+    String iDagDatoStr = datoformat.format(new Date());
+    String iMorgenDatoStr = datoformat.format(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
+    String iGårDatoStr = datoformat.format(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000));
+
     ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
     for (int n = 0; n < jsonArray.length(); n++) {
       JSONObject o = jsonArray.getJSONObject(n);
@@ -98,7 +101,12 @@ public enum DRJson {
       u.slutTid = DRJson.servertidsformat.parse(o.getString(DRJson.EndTime.name()));
       u.slutTidKl = klokkenformat.format(u.slutTid);
       String datoStr = datoformat.format(u.startTid);
-      if (!datoStr.equals(nuDatoStr)) u.startTidKl += " - " + datoStr;
+
+      if (datoStr.equals(iDagDatoStr)) ; // ingen ting
+      else if (datoStr.equals(iMorgenDatoStr)) u.startTidKl += " - i morgen";
+      else if (datoStr.equals(iGårDatoStr)) u.startTidKl += " - i går";
+      else u.startTidKl += " - " + datoStr;
+
       u.titel = o.getString(DRJson.Title.name());
       u.beskrivelse = o.getString(DRJson.Description.name());
       u.slug = o.getString(DRJson.Slug.name());

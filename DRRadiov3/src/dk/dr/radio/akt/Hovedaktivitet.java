@@ -2,7 +2,6 @@ package dk.dr.radio.akt;
 
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 
 import dk.dr.radio.akt.diverse.Basisaktivitet;
 import dk.dr.radio.v3.R;
@@ -19,8 +18,8 @@ public class Hovedaktivitet extends Basisaktivitet {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.hoved_akt);
 
-    ActionBar actionBar = getSupportActionBar();
-    actionBar.setDisplayShowTitleEnabled(false);
+    //ActionBar actionBar = getSupportActionBar();
+    //actionBar.setDisplayShowTitleEnabled(false);
 
     venstremenuFrag = (Venstremenu_frag) getSupportFragmentManager().findFragmentById(R.id.navigation_frag);
 
