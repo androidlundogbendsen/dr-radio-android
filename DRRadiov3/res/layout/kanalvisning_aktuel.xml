@@ -147,7 +147,7 @@
             android:drawableLeft="@drawable/dri_lyd_hvid"
             android:text="HØR P3 LIVE"
             android:textColor="@color/hvid"
-            android:background="@drawable/knap_blaa_bg"/>
+            android:background="@drawable/knap_blaa_bg2"/>
 
 
 </LinearLayout>
