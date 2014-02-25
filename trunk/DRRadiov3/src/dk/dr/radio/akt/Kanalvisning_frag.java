@@ -95,7 +95,6 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
 
 
   private void hentSendeplanForDag(final AQuery aq, Date dato1, final boolean idag) {
-//    String url = kanal.getUdsendelserUrl() + "/" + dag;
     final String dato = datoFormat.format(dato1);
 
     String url = kanal.getUdsendelserUrl() + "/date/" + dato;
@@ -296,8 +295,8 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       vh.titel.setText(u.titel);
       if (type == TIDLIGERE_SENERE) {
 
-        if (antalHentedeSendeplaner++ < 20) {
-          a.id(R.id.progressBar).visible();   // De første 20 henter vi bare for brugeren
+        if (antalHentedeSendeplaner++ < 7) {
+          a.id(R.id.progressBar).visible();   // De første 7 henter vi bare for brugeren
           vh.titel.setVisibility(View.VISIBLE);
           hentSendeplanForDag(new AQuery(rod), u.startTid, false);
         } else {
