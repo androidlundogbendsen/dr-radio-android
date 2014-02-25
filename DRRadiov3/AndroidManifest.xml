@@ -27,10 +27,10 @@
             >
 
         <!--
-            android:logo="@drawable/dr_logo"
-            android:theme="@style/CustomActionBarTheme"
             android:theme="@style/Theme.Drxx_ab"
-                    android:theme="@style/AppTheme"
+            android:theme="@style/CustomActionBarTheme"
+            android:theme="@style/AppTheme"
+            android:logo="@drawable/dr_logo_stort"
                     -->
         <activity
                 android:name="dk.dr.radio.akt.Hovedaktivitet"
