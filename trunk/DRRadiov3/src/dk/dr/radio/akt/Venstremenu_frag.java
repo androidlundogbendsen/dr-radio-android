@@ -285,8 +285,7 @@ public class Venstremenu_frag extends Fragment {
         b.putString(Kanalvisning_frag.P_kode, e.data);
       } else {
         App.kortToast("Ikke implementeret");
-        f = new Kanalvisning_frag();
-        b.putString(Kanalvisning_frag.P_kode, "P3");
+        f = new KanalerP4_frag();
       }
 
       f.setArguments(b);
