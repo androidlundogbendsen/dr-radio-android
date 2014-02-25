@@ -88,8 +88,8 @@
             android:orientation="horizontal">
 
         <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:adjustViewBounds="true"
                 android:id="@+id/senest_spillet_kunstnerbillede"
                 android:src="@drawable/eksempel_kunstner"/>
@@ -131,7 +131,7 @@
     </LinearLayout>
 
     <!--
-        designoplæg siger 36dp, men designretningslinjer på Android siger min 48dp i højde
+        designoplæg siger 36dp, men designretningslinjer på Android siger min 48dp i højde9
         (se http://developer.android.com/design/style/metrics-grids.html)
                 android:layout_height="36dp"
         -->

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -161,7 +162,7 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
         if (position == 0) {
           AQuery aq = a.id(R.id.billede);
           int br = bestemBilledebredde(listView, (View) aq.getView().getParent());
-          aq.image(skalérSlugBilledeUrl(udsendelse.slug, br, højde * br / bredde), true, true, br, 0).width(br, false);
+          aq.image(skalérSlugBilledeUrl(udsendelse.slug, br, br * højde9 / bredde16), true, true, br, 0).width(br, false);
           v.setBackgroundColor(getResources().getColor(R.color.hvid));
           a.id(R.id.højttalerikon).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.GONE);
           a.id(R.id.lige_nu).gone();
@@ -194,7 +195,8 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
         vh.kunstner.setText("|  " + u.kunstner);
         vh.startid.setText(u.startTidKl);
         if (position == 1) {
-          a.id(R.id.billede).image(skalérDiscoBilledeUrl(u.billedeUrl, firkant, firkant));
+          ImageView im = a.id(R.id.billede).getImageView();
+          a.id(R.id.billede).image(skalérDiscoBilledeUrl(u.billedeUrl, im.getWidth(), im.getHeight()));
         }
       }
       udvikling_checkDrSkrifter(v, this + " position " + position);

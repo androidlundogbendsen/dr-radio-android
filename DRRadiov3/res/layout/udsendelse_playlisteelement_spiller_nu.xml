@@ -26,8 +26,8 @@
             android:layout_alignParentStart="true"/>
 
     <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:adjustViewBounds="true"
             android:id="@+id/billede"
             android:src="@drawable/eksempel_kunstner"
