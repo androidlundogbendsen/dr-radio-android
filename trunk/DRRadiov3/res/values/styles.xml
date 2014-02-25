@@ -13,22 +13,6 @@
 
     </style>
 
-    <!--
-        <style name="MyTheme.ActionBarStyle" parent="android:style/Widget.Holo.ActionBar">
-            <item name="android:background">@color/hvid</item>
-            <item name="android:windowBackground">@color/hvid</item>
-            <item name="android:colorBackground">@color/hvid</item>
-        </style>
-
-
-        <style name="AppTheme.ActionBar.TitleTextStyle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-            <item name="android:background">@color/hvid</item>
-            <item name="android:windowBackground">@color/hvid</item>
-            <item name="android:colorBackground">@color/hvid</item>
-        </style>
-    -->
-
-
     <!-- the theme applied to the application or activity -->
     <style name="CustomActionBarTheme"
            parent="@style/Theme.AppCompat.Light">
