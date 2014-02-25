@@ -64,7 +64,7 @@
             android:drawableLeft="@drawable/dri_lyd_hvid"
             android:text="HØR UDSENDELSE"
             android:textColor="@color/hvid"
-            android:background="@drawable/knap_blaa_bg"/>
+            android:background="@drawable/knap_blaa_bg_normal"/>
 
     <include
             layout="@layout/element_download_del"
