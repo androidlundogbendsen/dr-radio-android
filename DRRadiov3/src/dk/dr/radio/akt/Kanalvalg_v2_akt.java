@@ -39,22 +39,20 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.ImageViewTilBlinde;
 import dk.dr.radio.v3.R;
 
-public class Kanalvalg_akt extends ListActivity {
+public class Kanalvalg_v2_akt extends ListActivity {
 
   private KanalAdapter kanaladapter;
   private View[] listeElementer;
   private List<String> overordnedeKanalkoder;
   private int p4indeks;
   /**
-   * Om P4-underlisten er åbnet. static da det er en nem måde at få listen til at huske om den er åben 'næsten altid'
+   * Om P4-underlisten er åbnet.
+   * static da det er en nem måde at få listen til at huske om den er åben 'næsten altid'
    */
   private static boolean p4erÅbnet;
   private List<String> p4koder;
   private List<String> alleKanalkoder;
 
-  /**
-   * Called when the activity is first created.
-   */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -115,33 +113,31 @@ public class Kanalvalg_akt extends ListActivity {
 
       String kanalkode = alleKanalkoder.get(position);
       Kanal kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
-      // tjek om der er et billede i 'drawable' med det navn filnavn
-      int id = res.getIdentifier("kanal_" + kanalkode.toLowerCase(), "drawable", getPackageName());
-      //System.out.println("getView " + position + " kanal_" + kanalkode.toLowerCase() + " type = " + id);
       View view = mInflater.inflate(R.layout.v2_kanalvalg_element, null);
       ImageViewTilBlinde billede = (ImageViewTilBlinde) view.findViewById(R.id.billede);
       ImageViewTilBlinde ikon = (ImageViewTilBlinde) view.findViewById(R.id.ikon);
       TextView textView = (TextView) view.findViewById(R.id.tekst);
       //Log.d("billedebilledebilledebillede"+billede+ikon+textView);
-      String visningsNavn = kanal.navn;
       // Sæt åbne/luk-ikon for P4 og højttalerikon for kanal
       if (position == p4indeks) {
-        sætP4ikon(ikon);
+        sætP4åbnLukIkon(ikon);
       } else if (DRData.instans.aktuelKanal.kode.equals(kanalkode)) {
         ikon.setImageResource(R.drawable.kanalvalg_spiller);
         ikon.blindetekst = "Spiller nu";
       } else ikon.setVisibility(View.INVISIBLE);
-      if (id != 0) {
+      if (kanal.kanallogo_resid != 0) {
         // Element med billede
         billede.setVisibility(View.VISIBLE);
-        billede.setImageResource(id);
-        billede.blindetekst = visningsNavn;
+        billede.setImageResource(kanal.kanallogo_resid);
+        billede.blindetekst = kanal.navn;
         textView.setVisibility(View.GONE);
       } else {
-        // Element uden billede
+        // Element uden billede - P4
         billede.setVisibility(View.GONE);
+        //billede.setVisibility(View.VISIBLE);
+        //billede.setImageResource(R.drawable.kanalappendix_p4f);
         textView.setVisibility(View.VISIBLE);
-        textView.setText(visningsNavn);
+        textView.setText(kanal.navn);
         textView.setTypeface(App.skrift_fed);
       }
 
@@ -175,7 +171,7 @@ public class Kanalvalg_akt extends ListActivity {
   }
 
 
-  private void sætP4ikon(ImageViewTilBlinde ikon) {
+  private void sætP4åbnLukIkon(ImageViewTilBlinde ikon) {
     ikon.setImageResource(p4erÅbnet ? R.drawable.kanalvalg_minus : R.drawable.kanalvalg_plus);
     ikon.blindetekst = (p4erÅbnet ? "Luk" : "Åben");
   }
@@ -187,7 +183,7 @@ public class Kanalvalg_akt extends ListActivity {
       p4erÅbnet = !p4erÅbnet;
       // Opdatér plus/minus på P4-kanal
       ImageViewTilBlinde åbneLukIkon = (ImageViewTilBlinde) listeElementer[p4indeks].findViewById(R.id.ikon);
-      sætP4ikon(åbneLukIkon);
+      sætP4åbnLukIkon(åbneLukIkon);
       // Fortæl at antal elementer i listen er ændret
       kanaladapter.notifyDataSetChanged();
       return;
@@ -198,7 +194,10 @@ public class Kanalvalg_akt extends ListActivity {
     String kanalkode = alleKanalkoder.get(position);
 
 
-    //Kanal kanal = drData.stamdata.kanalkodeTilKanal.get(kanalkode);
+    Kanal kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
+    if (kanal.p4underkanal) {
+      App.prefs.edit().putString(App.P4_FORETRUKKEN_AF_BRUGER, kanalkode).commit();
+    }
     //Toast.makeText(this, "Klik på "+position+" "+kanal.longName, Toast.LENGTH_LONG).show();
 
     if (kanalkode.equals(DRData.instans.aktuelKanal.kode)) setResult(RESULT_CANCELED);

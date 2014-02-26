@@ -163,7 +163,7 @@ public class Venstremenu_frag extends Fragment {
           // the navigation drawer automatically in the future.
           mUserLearnedDrawer = true;
           SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-          sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
+          sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).commit();
         }
 
         getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
@@ -253,6 +253,10 @@ public class Venstremenu_frag extends Fragment {
     navListView.requestFocus();
   }
 
+  public void skjulMenu() {
+    mDrawerLayout.closeDrawer(mFragmentContainerView);
+  }
+
 
   class Navigation_adapter extends Basisadapter {
     public int LIVE_KANALER_INDEX;
@@ -279,10 +283,10 @@ public class Venstremenu_frag extends Fragment {
       Fragment f;
 
       if (e.type == 4) {
-        f = new Kanaler_frag_v3();
+        f = new Kanaler_frag();
       } else if (e.type == 2) {
-        f = new Kanalvisning_frag();
-        b.putString(Kanalvisning_frag.P_kode, e.data);
+        f = new Kanal_frag();
+        b.putString(Kanal_frag.P_kode, e.data);
       } else {
         App.kortToast("Ikke implementeret");
         f = new KanalerP4_frag();
@@ -393,7 +397,7 @@ public class Venstremenu_frag extends Fragment {
       elem.add(new MenuElement(4, null, aq(R.layout.venstremenu_elem_overskrift), new Runnable() {
         @Override
         public void run() {
-          startActivity(new Intent(getActivity(), Kanalvalg_akt.class));
+          startActivity(new Intent(getActivity(), Kanalvalg_v2_akt.class));
         }
       }));
       aq.id(R.id.tekst).text(Html.fromHtml("<b>Kanalvalg fra v2</b>"));

@@ -5,7 +5,7 @@
           android:versionName="0.0.1 afspiller">
 
     <uses-sdk
-            android:minSdkVersion="9"
+            android:minSdkVersion="8"
             android:targetSdkVersion="19"/>
 
 
@@ -64,11 +64,14 @@
         </activity>
 
         <activity
-                android:name="dk.dr.radio.akt.Kanalvalg_akt"
-                android:theme="@android:style/Theme.NoTitleBar"
+                android:name="dk.dr.radio.akt.Kanalvalg_v2_akt"
                 android:label="Kanalvalg"
                 android:noHistory="true">
         </activity>
+        <!--
+                android:theme="@android:style/Theme.NoTitleBar"
+        -->
+
         <!--
          * Tidligere AfspillerService - service-del der sørger for at app'en
          * bliver i hukommelsen mens der spilles lyd

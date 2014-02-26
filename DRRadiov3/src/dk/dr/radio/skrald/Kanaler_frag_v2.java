@@ -19,7 +19,7 @@ import com.androidquery.AQuery;
 import java.util.ArrayList;
 
 import dk.dr.radio.akt.Hovedaktivitet;
-import dk.dr.radio.akt.Kanalvisning_frag;
+import dk.dr.radio.akt.Kanal_frag;
 import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.stamdata.Kanal;
@@ -48,7 +48,7 @@ public class Kanaler_frag_v2 extends Basisfragment implements ActionBar.TabListe
     Log.d("xxx DRData.instans.stamdata.kanalkoder=" + DRData.instans.stamdata.kanalkoder);
 
     for (String kode : DRData.instans.stamdata.kanalkoder) {
-      faneAdapter.tilføj(kode, new Kanalvisning_frag(), putString(args, Kanalvisning_frag.P_kode, kode));
+      faneAdapter.tilføj(kode, new Kanal_frag(), putString(args, Kanal_frag.P_kode, kode));
     }
 
     viewPager = (ViewPager) rod.findViewById(R.id.pager);
