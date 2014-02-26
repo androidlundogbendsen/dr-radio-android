@@ -4,15 +4,13 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.androidquery.AQuery;
 
 import java.util.ArrayList;
 
@@ -25,16 +23,13 @@ import dk.dr.radio.v3.R;
 
 public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener {
 
-  protected AQuery aq;
-  protected View rod;
   private ViewPager viewPager;
   private ArrayList<Kanal> kanaler = new ArrayList<Kanal>();
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     Log.d("Viser fragment " + this);
-    rod = inflater.inflate(R.layout.kanaler_frag_v3, container, false);
-    aq = new AQuery(rod);
+    View rod = inflater.inflate(R.layout.kanaler_frag_v3, container, false);
 
     for (Kanal k : DRData.instans.stamdata.kanaler) {
       if (!k.p4underkanal) kanaler.add(k);
@@ -71,7 +66,8 @@ public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener
   }
 
 
-  public class KanalAdapter extends FragmentPagerAdapter implements PagerSlidingTabStrip.IconTabProvider {
+  //  public class KanalAdapter extends FragmentPagerAdapter implements PagerSlidingTabStrip.IconTabProvider {
+  public class KanalAdapter extends FragmentStatePagerAdapter implements PagerSlidingTabStrip.IconTabProvider {
 
     public KanalAdapter(FragmentManager fm) {
       super(fm);

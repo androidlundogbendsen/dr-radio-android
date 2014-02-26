@@ -264,59 +264,26 @@ public class Venstremenu_frag extends Fragment {
     private AQuery aq;
     ArrayList<MenuElement> elem = new ArrayList<MenuElement>();
 
-    private View aq(int nav_elem_soeg) {
-      View v = layoutInflater.inflate(nav_elem_soeg, null);
-      aq = new AQuery(v);
-      return v;
-    }
-
-
-    public void vælgMenu(FragmentActivity akt, int position) {
-      MenuElement e = elem.get(position);
-
-      if (e.runnable != null) {
-        e.runnable.run();
-        return;
-      }
-
-      Bundle b = new Bundle();
-      Fragment f;
-
-      if (e.type == 4) {
-        f = new Kanaler_frag();
-      } else if (e.type == 2) {
-        f = new Kanal_frag();
-        b.putString(Kanal_frag.P_kode, e.data);
-      } else {
-        App.kortToast("Ikke implementeret");
-        f = new KanalerP4_frag();
-      }
-
-      f.setArguments(b);
-      FragmentManager fragmentManager = akt.getSupportFragmentManager();
-      fragmentManager.beginTransaction().replace(R.id.indhold_frag, f).commit();
-
-    }
-
-
     @Override
     public int getCount() {
       return elem.size();
     }
 
+    // Reelt skal ingen views genbruges til andre menupunkter, så vi giver dem alle en forskellig type
     @Override
     public int getViewTypeCount() {
-      return 10;
+      return elem.size();
+    }
+
+    // Reelt skal ingen views genbruges til andre menupunkter, så vi giver dem alle en forskellig type
+    @Override
+    public int getItemViewType(int position) {
+      return position;
     }
 
     @Override
     public boolean isEnabled(int position) {
       return elem.get(position).type >= 2;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-      return elem.get(position).type;
     }
 
 
@@ -345,9 +312,25 @@ public class Venstremenu_frag extends Fragment {
       }
     }
 
+
+    private View aq(int nav_elem_soeg) {
+      View v = layoutInflater.inflate(nav_elem_soeg, null);
+      aq = new AQuery(v);
+      return v;
+    }
+
+
+    private void tilføj(boolean b, int venstremenu_elem_soeg, Object o) {
+      //me = new MenuElement()
+    }
+
     public Navigation_adapter(final Context themedContext) {
       layoutInflater = (LayoutInflater) themedContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-      aq = new AQuery(themedContext);
+
+      //tilføj(true, R.layout.venstremenu_elem_soeg, null);
+      //aq.id(R.id.tekst).typeface(App.skrift_normal);
+
+
       elem.add(new MenuElement(0, null, aq(R.layout.venstremenu_elem_soeg)));
       aq.id(R.id.tekst).typeface(App.skrift_normal);
 
@@ -404,13 +387,8 @@ public class Venstremenu_frag extends Fragment {
       aq.id(R.id.tekst).text(Html.fromHtml("<b>Kanalvalg fra v2</b>"));
 
 
-      elem.add(new MenuElement(2, "P1D", aq(R.layout.skrald__nav_elem_kanal), new Runnable() {
-        @Override
-        public void run() {
-          DRData.instans.afspiller.setUrl("http://live-icy.gss.dr.dk/A/A03L.mp3.m3u");
-          DRData.instans.afspiller.startAfspilning();
-        }
-      }));
+      elem.add(new MenuElement(2, "P1D", aq(R.layout.skrald__nav_elem_kanal)));
+
       aq.id(R.id.billede).image(R.drawable.skrald__kanal_p1d);
       elem.add(new MenuElement(2, "P2D", aq(R.layout.skrald__nav_elem_kanal), new Runnable() {
         @Override
@@ -443,6 +421,33 @@ public class Venstremenu_frag extends Fragment {
 
     }
 
+
+    public void vælgMenu(FragmentActivity akt, int position) {
+      MenuElement e = elem.get(position);
+
+      if (e.runnable != null) {
+        e.runnable.run();
+        return;
+      }
+
+      Bundle b = new Bundle();
+      Fragment f;
+
+      if (e.type == 4) {
+        f = new Kanaler_frag();
+      } else if (e.type == 2) {
+        f = new Kanalvalg_v2_frag();
+        //b.putString(Kanal_frag.P_kode, e.data);
+      } else {
+        App.kortToast("Ikke implementeret");
+        f = new KanalerP4_frag();
+      }
+
+      f.setArguments(b);
+      FragmentManager fragmentManager = akt.getSupportFragmentManager();
+      fragmentManager.beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).commit();
+
+    }
 
   }
 }
