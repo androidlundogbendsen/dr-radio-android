@@ -256,7 +256,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     public static final int AKTUEL = 1;
     public static final int TIDLIGERE_SENERE = 2;
 
-    public static final boolean TITELTEKST_KUN_SORT_LIGE_BAG_TEKST = false;
+    boolean TITELTEKST_KUN_SORT_LIGE_BAG_TEKST = App.prefs.getBoolean("kunSortLigeBagTekst", false);
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {

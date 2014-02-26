@@ -330,33 +330,40 @@ public class Venstremenu_frag extends Fragment {
       //tilføj(true, R.layout.venstremenu_elem_soeg, null);
       //aq.id(R.id.tekst).typeface(App.skrift_normal);
 
+      boolean gib = App.prefs.getBoolean("brugGibsonIVenstremenu", true);
+
 
       elem.add(new MenuElement(0, null, aq(R.layout.venstremenu_elem_soeg)));
-      aq.id(R.id.tekst).typeface(App.skrift_normal);
+      if (gib) aq.id(R.id.tekst).typeface(App.skrift_normal);
 
       elem.add(new MenuElement(3, null, aq(R.layout.venstremenu_elem_overskrift)));
-      aq.id(R.id.tekst).typeface(App.skrift_normal).text(Html.fromHtml("<b>Senest lyttede</b>"));
+      aq.id(R.id.tekst).text(Html.fromHtml("<b>Senest lyttede</b>"));
+      if (gib) aq.typeface(App.skrift_normal);
 
       elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_adskiller_tynd)));
 
       elem.add(new MenuElement(3, null, aq(R.layout.venstremenu_elem_overskrift)));
-      aq.id(R.id.tekst).typeface(App.skrift_normal).text(Html.fromHtml("<b>Dine favoritprogrammer</b><br/>(2 nye udsendelser)"));
+      aq.id(R.id.tekst).text(Html.fromHtml("<b>Dine favoritprogrammer</b><br/>(2 nye udsendelser)"));
+      if (gib) aq.typeface(App.skrift_normal);
 
       elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_adskiller_tynd)));
 
       elem.add(new MenuElement(3, null, aq(R.layout.venstremenu_elem_overskrift)));
-      aq.id(R.id.tekst).typeface(App.skrift_normal).text(Html.fromHtml("<b>Downloadede udsendelser</b> (13)"));
+      aq.id(R.id.tekst).text(Html.fromHtml("<b>Downloadede udsendelser</b> (13)"));
+      if (gib) aq.typeface(App.skrift_normal);
 
       elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_adskiller_tyk)));
 
       elem.add(new MenuElement(3, null, aq(R.layout.venstremenu_elem_overskrift)));
-      aq.id(R.id.tekst).typeface(App.skrift_normal).text(Html.fromHtml("<b>Alle programmer A-Å"));
+      aq.id(R.id.tekst).text(Html.fromHtml("<b>Alle programmer A-Å"));
+      if (gib) aq.typeface(App.skrift_normal);
 
       elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_adskiller_tynd)));
 
       LIVE_KANALER_INDEX = elem.size();
       elem.add(new MenuElement(4, null, aq(R.layout.venstremenu_elem_overskrift)));
-      aq.id(R.id.tekst).typeface(App.skrift_normal).text(Html.fromHtml("<b>Live kanaler</b>"));
+      aq.id(R.id.tekst).text(Html.fromHtml("<b>Live kanaler</b>"));
+      if (gib) aq.typeface(App.skrift_normal);
 
       elem.add(new MenuElement(4, null, aq(R.layout.venstremenu_elem_overskrift), new Runnable() {
         @Override
@@ -364,7 +371,8 @@ public class Venstremenu_frag extends Fragment {
           getActivity().startActivity(new Intent(getActivity(), Om_DRRadio_akt.class));
         }
       }));
-      aq.id(R.id.tekst).typeface(App.skrift_normal).text(Html.fromHtml("<b>Kontakt / info / om</b>"));
+      aq.id(R.id.tekst).text(Html.fromHtml("<b>Kontakt / info / om</b>"));
+      if (gib) aq.typeface(App.skrift_normal);
 
       elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_udvikler)));
       aq.id(R.id.tekst).clicked(new View.OnClickListener() {

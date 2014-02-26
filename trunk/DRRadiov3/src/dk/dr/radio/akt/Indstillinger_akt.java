@@ -16,7 +16,7 @@
 
  */
 
-package dk.dr.radio.skrald;
+package dk.dr.radio.akt;
 
 import android.os.Build;
 import android.os.Bundle;
