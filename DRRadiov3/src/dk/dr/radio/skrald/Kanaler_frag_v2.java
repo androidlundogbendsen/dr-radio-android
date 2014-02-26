@@ -73,7 +73,7 @@ public class Kanaler_frag_v2 extends Basisfragment implements ActionBar.TabListe
       ImageView iv = new ImageView(getActivity());
       //iv.setBackgroundColor(Color.BLUE);
       //new AQuery(iv).image("http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P1.png");
-      new AQuery(iv).image(k.logoUrl);
+      new AQuery(iv).image(k.kanallogo_resid);
       iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
       fane.setCustomView(iv);

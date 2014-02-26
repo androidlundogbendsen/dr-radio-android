@@ -11,8 +11,6 @@ import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.androidquery.AQuery;
 
@@ -48,22 +46,6 @@ public class KanalerP4_frag extends Basisfragment implements ActionBar.TabListen
 
     PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) rod.findViewById(R.id.tabs);
     tabs.setViewPager(viewPager);
-
-    for (String kode : DRData.instans.stamdata.kanalkoder) {
-      Kanal k = DRData.instans.stamdata.kanalFraKode.get(kode);
-      if (k == null) {
-        Log.rapporterFejl(new Exception("kanalFraKode mangler kode " + kode));
-        continue;
-      }
-      ImageView iv = new ImageView(getActivity());
-      //iv.setBackgroundColor(Color.BLUE);
-      //new AQuery(iv).image("http://www.dr.dk/tjenester/iphone/radio/logos-no-dr/v2/P1.png");
-      new AQuery(iv).image(k.logoUrl);
-      iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-
-      LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) iv.getLayoutParams();
-    }
 
     return rod;
   }

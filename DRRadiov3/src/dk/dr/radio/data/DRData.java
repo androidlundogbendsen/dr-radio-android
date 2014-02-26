@@ -18,6 +18,9 @@
 
 package dk.dr.radio.data;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -60,6 +63,7 @@ public class DRData {
     i.stamdata.parseFællesStamdata(Diverse.læsStreng(new FileInputStream("res/raw/stamdata2_faelles.json")));
     i.stamdata.hentSupplerendeDataBg();
 
+/*
     for (Kanal k : i.stamdata.kanaler) {
       if (k.p4underkanal) continue;
       Log.d("\n\nkanal = " + k);
@@ -67,12 +71,10 @@ public class DRData {
       new File(f).renameTo(new File("/tmp/drawable-hdpi/kanalappendix_" + k.kode.toLowerCase() + ".png"));
       FilCache.hentFil(k.logoUrl2, true, true, 1000 * 60 * 60 * 24 * 7);
     }
-/*
+*/
     for (Kanal kanal : i.stamdata.kanaler) {
       Log.d("\n\nkanal = " + kanal);
-      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(hent(kanal.getUdsendelserUrl()))), 0);
-      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(hent(kanal.getUdsendelserUrl() + "/-1"))), -1);
-      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(hent(kanal.getUdsendelserUrl() + "/1"))), 1);
+      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(hent(kanal.getUdsendelserUrl()))), "0");
       for (Udsendelse u : kanal.udsendelser) {
         Log.d("\nudsendelse = " + u);
         JSONObject obj = new JSONObject(hent(u.getStreamsUrl()));
@@ -85,7 +87,6 @@ public class DRData {
       }
       break;
     }
-*/
 
   }
 

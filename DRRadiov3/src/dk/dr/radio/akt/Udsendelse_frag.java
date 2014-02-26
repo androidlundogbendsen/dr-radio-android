@@ -160,9 +160,14 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
         vh.titel = a.id(R.id.titel).typeface(App.skrift_fed).getTextView();
         vh.kunstner = a.id(R.id.kunstner).typeface(App.skrift_normal).getTextView();
         if (position == 0) {
-          AQuery aq = a.id(R.id.billede);
-          int br = bestemBilledebredde(listView, (View) aq.getView().getParent());
-          aq.image(skalérSlugBilledeUrl(udsendelse.slug, br, br * højde9 / bredde16), true, true, br, 0).width(br, false);
+          int br = bestemBilledebredde(listView, (View) a.id(R.id.billede).getView().getParent());
+          int hø = br * højde9 / bredde16;
+          String burl = skalérSlugBilledeUrl(udsendelse.slug, br, hø);
+          a.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
+
+          //AQuery aq = a.id(R.id.billede);
+          //int br = bestemBilledebredde(listView, (View) aq.getView().getParent());
+          //aq.image(skalérSlugBilledeUrl(udsendelse.slug, br, br * højde9 / bredde16), true, true, br, 0).width(br, false);
           v.setBackgroundColor(getResources().getColor(R.color.hvid));
           a.id(R.id.højttalerikon).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.GONE);
           a.id(R.id.lige_nu).gone();

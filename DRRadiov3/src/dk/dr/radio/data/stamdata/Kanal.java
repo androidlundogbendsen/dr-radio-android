@@ -50,8 +50,6 @@ public class Kanal {
   public int kanallogo_resid;
   public boolean p4underkanal;
   public String lognøgle = "";
-  public String logoUrl = "";
-  public String logoUrl2 = "";
   public ArrayList<Udsendelse> udsendelser = new ArrayList<Udsendelse>();
   public SortedMap<String, ArrayList<Udsendelse>> udsendelserPerDag = new TreeMap<String, ArrayList<Udsendelse>>();
   public ArrayList<Lydstream> streams;

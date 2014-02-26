@@ -258,7 +258,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       Viewholder vh;
       AQuery a;
       int type = getItemViewType(position);
-      Udsendelse u = liste.get(position);
+      Udsendelse udsendelse = liste.get(position);
       if (v == null) {
         v = getLayoutInflater(null).inflate(type == AKTUEL ? R.layout.kanalvisning_aktuel : type == TIDLIGERE_SENERE ? R.layout.element_tidligere_senere : R.layout.element_tid_titel_kunstner, parent, false);
         vh = new Viewholder();
@@ -269,15 +269,17 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
         vh.slutttidbjælke = a.id(R.id.slutttidbjælke).getView();
         //a.id(R.id.højttalerikon).clicked(new UdsendelseClickListener(vh));
         a.id(R.id.højttalerikon).gone();  // Bruges ikke mere i dette design
-        a.id(R.id.hør_live).text(" HØR " + kanal.navn + " LIVE").clicked(Kanalvisning_frag.this);
-        a.id(R.id.slutttid).typeface(App.skrift_normal).text(u.slutTidKl);
+        a.id(R.id.hør_live).text(" HØR " + kanal.navn.toUpperCase() + " LIVE").clicked(Kanalvisning_frag.this);
+        a.id(R.id.slutttid).typeface(App.skrift_normal).text(udsendelse.slutTidKl);
         a.id(R.id.kunstner).text(""); // ikke .gone() - skal skubbe højttalerikon ud til venstre
         v.setTag(vh);
 
         if (type == AKTUEL) {
           int br = bestemBilledebredde(listView, (View) a.id(R.id.billede).getView().getParent());
-          String burl = skalérSlugBilledeUrl(u.slug, br, br * højde9 / bredde16);
-          a.id(R.id.billede).width(br, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
+          int hø = br * højde9 / bredde16;
+          String burl = skalérSlugBilledeUrl(udsendelse.slug, br, hø);
+          a.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
+
           a.id(R.id.senest_spillet_overskrift).typeface(App.skrift_normal);
           a.id(R.id.senest_spillet_titel_og_kunstner).typeface(App.skrift_normal);
           a.id(R.id.lige_nu).typeface(App.skrift_normal);
@@ -291,14 +293,14 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
       udvikling_checkDrSkrifter(v, this.getClass() + " type=" + type);
 
       // Opdatér viewholderens data
-      vh.udsendelse = u;
-      vh.titel.setText(u.titel);
+      vh.udsendelse = udsendelse;
+      vh.titel.setText(udsendelse.titel);
       if (type == TIDLIGERE_SENERE) {
 
         if (antalHentedeSendeplaner++ < 7) {
           a.id(R.id.progressBar).visible();   // De første 7 henter vi bare for brugeren
           vh.titel.setVisibility(View.VISIBLE);
-          hentSendeplanForDag(new AQuery(rod), u.startTid, false);
+          hentSendeplanForDag(new AQuery(rod), udsendelse.startTid, false);
         } else {
           a.id(R.id.progressBar).invisible(); // Derefter er det nok noget ser looper og brugeren må manuelt gøre det
           vh.titel.setVisibility(View.VISIBLE);
@@ -306,20 +308,20 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
 
         return v;
       }
-      vh.startid.setText(u.startTidKl);
+      vh.startid.setText(udsendelse.startTidKl);
 
       if (type == AKTUEL) {
         aktuelUdsendelseViewholder = vh;
-        vh.titel.setText(u.titel.toUpperCase());
+        vh.titel.setText(udsendelse.titel.toUpperCase());
         opdaterAktuelUdsendelse(vh);
-        opdaterSenestSpillet(a, u);
+        opdaterSenestSpillet(a, udsendelse);
       }
 
       // Til udvikling
-      a.id(R.id.beskrivelse).text(u.beskrivelse);
+      a.id(R.id.beskrivelse).text(udsendelse.beskrivelse);
       if (App.udvikling) {
         try {
-          Log.d(u.json.toString(2));
+          Log.d(udsendelse.json.toString(2));
         } catch (JSONException e) {
           e.printStackTrace();
         }
@@ -343,7 +345,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
         @Override
         public void callback(String url, String json, AjaxStatus status) {
           App.sætErIGang(false);
-          Log.d("XXX url " + url + "   status=" + status.getCode());
+          Log.d(kanal.kode + " opdaterSenestSpillet url " + url + "   status=" + status.getCode());
           if (json != null && !"null".equals(json)) try {
             u2.playliste = DRJson.parsePlayliste(new JSONArray(json));
             Log.d(kanal.kode + " parsePlayliste gav " + u2.playliste.size() + " elemener");
