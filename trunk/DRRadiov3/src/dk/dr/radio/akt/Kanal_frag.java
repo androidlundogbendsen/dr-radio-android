@@ -190,7 +190,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     try {
       Log.d(kanal + " opdaterListe " + nyuliste.size());
       Date nu = new Date(); // TODO kompenser for forskelle mellem telefonens ur og serverens ur
-      Log.d("opdaterListe " + kanal.kode + "  nu=" + nu);
+      //Log.d("opdaterListe " + kanal.kode + "  nu=" + nu);
       aktuelUdsendelseIndex = -1;
       Udsendelse tidligere = new Udsendelse("Tidligere");
       Udsendelse senere = new Udsendelse("Senere");
@@ -204,7 +204,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       // og så finder jeg den første der har starttid >= nuværende tid + sluttid <= nuværende tid."
       for (int n = liste.size() - 1; n > 1; n--) {
         Udsendelse u = liste.get(n);
-        Log.d(n + " " + nu.after(u.startTid) + u.slutTid.before(nu) + "  " + u);
+        //Log.d(n + " " + nu.after(u.startTid) + u.slutTid.before(nu) + "  " + u);
         if (u.startTid.before(nu) && nu.before(u.slutTid)) {
           aktuelUdsendelseIndex = n;
           break;
@@ -265,7 +265,10 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       int type = getItemViewType(position);
       Udsendelse udsendelse = liste.get(position);
       if (v == null) {
-        v = getLayoutInflater(null).inflate(type == AKTUEL ? R.layout.kanalvisning_aktuel : type == TIDLIGERE_SENERE ? R.layout.element_tidligere_senere : R.layout.element_tid_titel_kunstner, parent, false);
+        v = getLayoutInflater(null).inflate(
+            type == AKTUEL ? R.layout.kanalvisning_aktuel :        // Visning af den aktuelle udsendelse
+                type == NORMAL ? R.layout.element_tid_titel_kunstner   // De andre udsendelser
+                    : R.layout.element_tidligere_senere, parent, false);
         vh = new Viewholder();
         a = vh.aq = new AQuery(v);
         vh.titel = a.id(R.id.titel).typeface(App.skrift_fed).getTextView();
@@ -277,21 +280,14 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         a.id(R.id.hør_live).text(" HØR " + kanal.navn.toUpperCase() + " LIVE").clicked(Kanal_frag.this);
         a.id(R.id.slutttid).typeface(App.skrift_normal).text(udsendelse.slutTidKl);
         a.id(R.id.kunstner).text(""); // ikke .gone() - skal skubbe højttalerikon ud til venstre
-        v.setTag(vh);
-
         if (type == AKTUEL) {
-          int br = bestemBilledebredde(listView, (View) a.id(R.id.billede).getView().getParent());
-          int hø = br * højde9 / bredde16;
-          String burl = skalérSlugBilledeUrl(udsendelse.slug, br, hø);
-          a.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
-
           a.id(R.id.senest_spillet_overskrift).typeface(App.skrift_normal);
           a.id(R.id.senest_spillet_titel_og_kunstner).typeface(App.skrift_normal);
           a.id(R.id.lige_nu).typeface(App.skrift_normal);
           a.id(R.id.hør_live).typeface(App.skrift_normal);
           v.setBackgroundColor(getResources().getColor(R.color.hvid));
-          if (TITELTEKST_KUN_SORT_LIGE_BAG_TEKST) vh.titel.setBackgroundColor(0);
         }
+        v.setTag(vh);
       } else {
         vh = (Viewholder) v.getTag();
         a = vh.aq;
@@ -319,7 +315,13 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       if (type == AKTUEL) {
         aktuelUdsendelseViewholder = vh;
 
+        int br = bestemBilledebredde(listView, (View) a.id(R.id.billede).getView().getParent());
+        int hø = br * højde9 / bredde16;
+        String burl = skalérSlugBilledeUrl(udsendelse.slug, br, hø);
+        a.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
+
         if (TITELTEKST_KUN_SORT_LIGE_BAG_TEKST) {
+          vh.titel.setBackgroundColor(0);
           Spannable spanna = new SpannableString(udsendelse.titel.toUpperCase());
           spanna.setSpan(new BackgroundColorSpan(0xFF000000), 0, udsendelse.titel.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
           vh.titel.setText(spanna);
