@@ -18,13 +18,11 @@
 
 package dk.dr.radio.akt;
 
-import android.app.ListActivity;
-import android.content.Context;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,13 +30,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.ImageViewTilBlinde;
 import dk.dr.radio.v3.R;
 
-public class Kanalvalg_v2_akt extends ListActivity {
+public class Kanalvalg_v2_frag extends Basisfragment implements AdapterView.OnItemClickListener {
 
   private KanalAdapter kanaladapter;
   private View[] listeElementer;
@@ -53,9 +52,7 @@ public class Kanalvalg_v2_akt extends ListActivity {
   private List<String> alleKanalkoder;
 
   @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     overordnedeKanalkoder = DRData.instans.stamdata.kanalkoder;
     p4koder = DRData.instans.stamdata.p4koder;
     if (p4koder.get(0).equals(Kanal.P4kode)) p4koder.remove(0); // Selve P4 skal ikke vises som en del af underlisten
@@ -64,11 +61,12 @@ public class Kanalvalg_v2_akt extends ListActivity {
     alleKanalkoder = new ArrayList<String>(overordnedeKanalkoder);
     alleKanalkoder.addAll(p4indeks + 1, p4koder); // P4's underkanaler ligger lige under P4-indgangen
 
-    for (String k : alleKanalkoder)
+    for (String k : alleKanalkoder) {
       if (DRData.instans.stamdata.kanalFraKode.get(k) == null) {
         new IllegalStateException("Kanalkode mangler! Det her må ikke ske!").printStackTrace();
         DRData.instans.stamdata.kanalFraKode.put(k, new Kanal()); // reparér problemet :-(
       }
+    }
 
 
     // Da der er tale om et fast lille antal kanaler er der ikke grund til det store bogholderi
@@ -79,18 +77,12 @@ public class Kanalvalg_v2_akt extends ListActivity {
     // Opbyg arrayet på forhånd for jævnere visning
     for (int pos = 0; pos < listeElementer.length; pos++) kanaladapter.bygListeelement(pos);
 
-    setListAdapter(kanaladapter);
     // Sæt baggrunden. Normalt ville man gøre det fra XML eller med
     //getListView().setBackgroundResource(R.drawable.main_app_bg);
 
-    ListView lv = getListView();
-/*
-    // Vi ønsker en mørkere udgave af baggrunden, så vi indlæser den
-    // her og sætter et farvefilter.
-    Drawable baggrund = getResources().getDrawable(R.drawable.main_app_bg);
-    baggrund = baggrund.mutate();
-    baggrund.setColorFilter(0xffa0a0a0, Mode.MULTIPLY);
-*/
+    ListView lv = new ListView(getActivity());
+    lv.setAdapter(kanaladapter);
+    lv.setOnItemClickListener(this);
 
 //    lv.setBackgroundColor( 0xffa0a0a0);
 //    lv.setDivider(new ColorDrawable(0x80ffffff));
@@ -101,14 +93,14 @@ public class Kanalvalg_v2_akt extends ListActivity {
     lv.setCacheColorHint(0x00000000);
     // Man kunne have en ensfarvet baggrund, det gør scroll mere flydende
     //getListView().setCacheColorHint(0xffe4e4e4);
+    return lv;
   }
 
 
   private class KanalAdapter extends BaseAdapter {
-    LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    Resources res = getResources();
 
     private View bygListeelement(int position) {
+      LayoutInflater mInflater = getLayoutInflater(null);// (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
       String kanalkode = alleKanalkoder.get(position);
       Kanal kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
@@ -177,7 +169,7 @@ public class Kanalvalg_v2_akt extends ListActivity {
 
 
   @Override
-  protected void onListItemClick(ListView l, View v, int position, long id) {
+  public void onItemClick(AdapterView<?> l, View v, int position, long id) {
     if (position == p4indeks) {
       p4erÅbnet = !p4erÅbnet;
       // Opdatér plus/minus på P4-kanal
@@ -199,13 +191,14 @@ public class Kanalvalg_v2_akt extends ListActivity {
     }
     //Toast.makeText(this, "Klik på "+position+" "+kanal.longName, Toast.LENGTH_LONG).show();
 
-    if (kanalkode.equals(DRData.instans.aktuelKanal.kode)) setResult(RESULT_CANCELED);
-    else setResult(RESULT_OK);  // Signalér til kalderen at der er skiftet kanal!!
+    //if (kanalkode.equals(DRData.instans.aktuelKanal.kode)) setResult(RESULT_CANCELED);
+    //else setResult(RESULT_OK);  // Signalér til kalderen at der er skiftet kanal!!
 
     // Ny kanal valgt - send valg til afspiller (ændrer også drData.aktuelKanalkode)
 //TODO    DRData.instans.skiftKanal(kanalkode);
 
     // Hop tilbage til kalderen (hovedskærmen)
-    finish();
+    //finish();
+    getFragmentManager().popBackStack();
   }
 }
