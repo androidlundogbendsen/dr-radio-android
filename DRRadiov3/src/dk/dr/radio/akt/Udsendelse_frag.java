@@ -169,7 +169,6 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
           //int br = bestemBilledebredde(listView, (View) aq.getView().getParent());
           //aq.image(skalérSlugBilledeUrl(udsendelse.slug, br, br * højde9 / bredde16), true, true, br, 0).width(br, false);
           v.setBackgroundColor(getResources().getColor(R.color.hvid));
-          a.id(R.id.højttalerikon).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.GONE);
           a.id(R.id.lige_nu).gone();
           a.id(R.id.playliste).typeface(App.skrift_normal).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.INVISIBLE);
           a.id(R.id.info).typeface(App.skrift_normal);
@@ -190,6 +189,7 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
 
       // Opdatér viewholderens data
       if (position == 0) {
+        a.id(R.id.højttalerikon).clicked(Udsendelse_frag.this).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.GONE);
         a.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_normal).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.GONE);
         a.id(R.id.hent).clicked(Udsendelse_frag.this).typeface(App.skrift_normal).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.INVISIBLE);
         a.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_normal);

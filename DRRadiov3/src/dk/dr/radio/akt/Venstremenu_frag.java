@@ -453,8 +453,7 @@ public class Venstremenu_frag extends Fragment {
 
       f.setArguments(b);
       FragmentManager fragmentManager = akt.getSupportFragmentManager();
-      fragmentManager.beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).commit();
-
+      fragmentManager.beginTransaction().replace(R.id.indhold_frag, f).commit();
     }
 
   }
