@@ -36,18 +36,13 @@ SKALERINGSFORHOLD
 Skalering af billeder - 16/9/3
 Forhold 16:9 for de store billeder
 Forhold 1:1 for playlistebilleder - og de skal være 1/3-del i højden af de store billeder
-
-TODO - skalering efter visningsstørrelse
-bredde16=16*x
-højde9=9*x
-firkant=3*x
  */
-  public static int bredde16 = 16;
-  public static int højde9 = 9;
+  public static final int bredde16 = 16;
+  public static final int højde9 = 9;
 
 
   /**
-   * Finder breddens som et et velskaleret billede forventes at have
+   * Finder bredden som et et velskaleret billede forventes at have
    *
    * @param rod         listen eller rod-viewet hvor billedet skal vises
    * @param paddingView containeren der har polstring/padding

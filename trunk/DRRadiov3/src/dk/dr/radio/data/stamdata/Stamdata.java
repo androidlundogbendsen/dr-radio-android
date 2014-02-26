@@ -109,21 +109,6 @@ public class Stamdata {
 
     parseKanaler(json.getJSONArray("channels"), false);
     if (forvalgtKanal == null) forvalgtKanal = kanaler.get(2); // Det er nok P3 :-)
-
-    JSONArray logoer = json.getJSONArray("logos");
-    int antal = logoer.length();
-    for (int i = 0; i < antal; i++) {
-      JSONObject j = logoer.getJSONObject(i);
-      Kanal k = kanalFraLogonøgle.get(j.getString("ident"));
-      k.logoUrl = j.optString("image");
-      k.logoUrl2 = j.optString("image@2x");
-      // http://www.dr.dk/tjenester/mu-apps/schedule/P3 - svarer til v3_kanalside__p3.json
-      //k.kanalside = "http://www.dr.dk/tjenester/mu-apps/schedule/" + k.kode;
-
-      // http://www.dr.dk/tjenester/mu-apps/channel?urn=urn:dr:mu:bundle:4f3b8926860d9a33ccfdafb9&includeStreams=true
-      //k.kanalside = "http://www.dr.dk/tjenester/mu-apps/channel?urn=" + k.urn+"&includeStreams=true";
-    }
-
   }
 
 
