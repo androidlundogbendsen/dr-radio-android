@@ -41,7 +41,7 @@ import dk.dr.radio.diverse.FilCache;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnItemClickListener, View.OnClickListener, Runnable {
+public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClickListener, View.OnClickListener, Runnable {
 
   public static String P_kode = "kanal.kode";
   private ListView listView;
@@ -269,7 +269,7 @@ public class Kanalvisning_frag extends Basisfragment implements AdapterView.OnIt
         vh.slutttidbjælke = a.id(R.id.slutttidbjælke).getView();
         //a.id(R.id.højttalerikon).clicked(new UdsendelseClickListener(vh));
         a.id(R.id.højttalerikon).gone();  // Bruges ikke mere i dette design
-        a.id(R.id.hør_live).text(" HØR " + kanal.navn.toUpperCase() + " LIVE").clicked(Kanalvisning_frag.this);
+        a.id(R.id.hør_live).text(" HØR " + kanal.navn.toUpperCase() + " LIVE").clicked(Kanal_frag.this);
         a.id(R.id.slutttid).typeface(App.skrift_normal).text(udsendelse.slutTidKl);
         a.id(R.id.kunstner).text(""); // ikke .gone() - skal skubbe højttalerikon ud til venstre
         v.setTag(vh);

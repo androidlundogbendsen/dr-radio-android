@@ -2,23 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:gravity="center_vertical"
               android:layout_width="fill_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="50dp">
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/dr_logo"
+            />
 
     <dk.dr.radio.diverse.ImageViewTilBlinde
             android:id="@+id/billede"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_gravity="left|center_vertical"
-            android:scaleType="fitStart"
-            android:src="@drawable/skrald__kanal_p2d"
+            android:src="@drawable/kanalappendix_drm"
             />
 
     <TextView
             android:id="@+id/tekst"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:gravity="center_vertical"
-            android:text="DR P4 i P1"
+            android:layout_height="wrap_content"
+            android:text="P4 Esbjerg"
             android:textSize="@dimen/kanalvalg_tekststr"
             android:layout_marginLeft="10dp"
             android:textColor="#FF000000"

@@ -82,9 +82,9 @@ public class KanalerP4_frag extends Basisfragment implements ActionBar.TabListen
 
     @Override
     public Fragment getItem(int position) {
-      Kanalvisning_frag f = new Kanalvisning_frag();
+      Kanal_frag f = new Kanal_frag();
       Bundle b = new Bundle();
-      b.putString(Kanalvisning_frag.P_kode, kanaler.get(position).kode);
+      b.putString(Kanal_frag.P_kode, kanaler.get(position).kode);
       f.setArguments(b);
       return f;
     }

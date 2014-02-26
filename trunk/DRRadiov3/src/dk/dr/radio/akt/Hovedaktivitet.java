@@ -28,6 +28,15 @@ public class Hovedaktivitet extends Basisaktivitet {
   }
 
 
+  @Override
+  public void onBackPressed() {
+    if (venstremenuFrag.isDrawerOpen()) {
+      venstremenuFrag.skjulMenu();
+    } else {
+      super.onBackPressed();
+    }
+  }
+
   /**
    * Om tilbageknappen skal afslutte programmet eller vise venstremenuen
    static boolean tilbageViserVenstremenu = true; // hack - static, ellers skulle den gemmes i savedInstanceState

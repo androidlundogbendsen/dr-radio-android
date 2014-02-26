@@ -164,7 +164,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     String slug = d.optString(DRJson.Slug.name());
     Kanal k = DRData.instans.stamdata.kanalFraSlug.get(d.optString(DRJson.ChannelSlug.name()));
     if (k != null && slug.length() > 0) {
-      startActivity(new Intent(getActivity(), VisFragment_akt.class).putExtra(VisFragment_akt.KLASSE, Udsendelse_frag.class.getName()).putExtra(Kanalvisning_frag.P_kode, k.kode) // Kanalkode
+      startActivity(new Intent(getActivity(), VisFragment_akt.class).putExtra(VisFragment_akt.KLASSE, Udsendelse_frag.class.getName()).putExtra(Kanal_frag.P_kode, k.kode) // Kanalkode
           .putExtra(DRJson.Slug.name(), slug)); // Udsenselses-ID
     }
   }

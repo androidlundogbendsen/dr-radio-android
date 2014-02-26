@@ -23,7 +23,7 @@ import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-public class Kanaler_frag_v3 extends Basisfragment implements ActionBar.TabListener {
+public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener {
 
   protected AQuery aq;
   protected View rod;
@@ -82,9 +82,9 @@ public class Kanaler_frag_v3 extends Basisfragment implements ActionBar.TabListe
 
     @Override
     public Fragment getItem(int position) {
-      Kanalvisning_frag f = new Kanalvisning_frag();
+      Kanal_frag f = new Kanal_frag();
       Bundle b = new Bundle();
-      b.putString(Kanalvisning_frag.P_kode, kanaler.get(position).kode);
+      b.putString(Kanal_frag.P_kode, kanaler.get(position).kode);
       f.setArguments(b);
       return f;
     }
