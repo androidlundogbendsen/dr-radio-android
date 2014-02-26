@@ -50,11 +50,12 @@
             android:defaultValue="false"
             android:summary="Hakker afspilningen når skærmen er slukket så prøv at krydse af her (bruger mere batteri). Nødvendigt på XPeria Play."/>
 
+    <CheckBoxPreference
+            android:key="udvikler" android:title="Udvikler"
+            android:defaultValue="false" android:summaryOff=""
+            android:summaryOn="Til udviklere og fejlfinding. Appen skal genstartes før det træder i kraft"/>
 
     <!--
-        <CheckBoxPreference android:key="udvikler" android:title="Udvikler"
-            android:defaultValue="false" android:summaryOff=""
-        android:summaryOn="Til udviklere og fejlfinding. Appen skal genstartes før det træder i kraft" />
 
      />
 

@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -461,32 +463,17 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       v.findViewById(R.id.titel).setVisibility(View.GONE);
       v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
     } else {
-      startActivity(new Intent(getActivity(), VisFragment_akt.class)
+      //startActivity(new Intent(getActivity(), VisFragment_akt.class)
+      //    .putExtra(P_kode, kanal.kode)
+      //    .putExtra(VisFragment_akt.KLASSE, Udsendelse_frag.class.getName()).putExtra(DRJson.Slug.name(), u.slug)); // Udsenselses-ID
+
+      Fragment f = new Udsendelse_frag();
+      f.setArguments(new Intent()
           .putExtra(P_kode, kanal.kode)
-          .putExtra(VisFragment_akt.KLASSE, Udsendelse_frag.class.getName()).putExtra(DRJson.Slug.name(), u.slug)); // Udsenselses-ID
+          .putExtra(DRJson.Slug.name(), u.slug).getExtras());
+      getFragmentManager().beginTransaction().add(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+
     }
   }
-/*
-  private class UdsendelseClickListener implements View.OnClickListener {
-
-    private final Viewholder viewHolder;
-
-    public UdsendelseClickListener(Viewholder vh) {
-      viewHolder = vh;
-    }
-
-    @Override
-    public void onClick(View v) {
-      if (aktuelUdsendelseViewholder == viewHolder) {
-        DRData.instans.aktuelKanal = kanal;
-        DRData.instans.afspiller.setUrl(kanal.streams.get(0).url);
-      } else {
-        String url = "http://www.dr.dk/tjenester/mu-apps/program/" + viewHolder.udsendelse.slug + "?type=radio&includeStreams=true";
-
-      }
-      DRData.instans.afspiller.startAfspilning();
-    }
-  }
-  */
 }
 
