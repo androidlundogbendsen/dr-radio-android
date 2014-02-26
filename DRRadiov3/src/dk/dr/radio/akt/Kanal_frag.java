@@ -5,6 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -253,6 +256,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     public static final int AKTUEL = 1;
     public static final int TIDLIGERE_SENERE = 2;
 
+    public static final boolean TITELTEKST_KUN_SORT_LIGE_BAG_TEKST = false;
+
     @Override
     public View getView(int position, View v, ViewGroup parent) {
       Viewholder vh;
@@ -285,6 +290,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           a.id(R.id.lige_nu).typeface(App.skrift_normal);
           a.id(R.id.hør_live).typeface(App.skrift_normal);
           v.setBackgroundColor(getResources().getColor(R.color.hvid));
+          if (TITELTEKST_KUN_SORT_LIGE_BAG_TEKST) vh.titel.setBackgroundColor(0);
         }
       } else {
         vh = (Viewholder) v.getTag();
@@ -312,7 +318,15 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
       if (type == AKTUEL) {
         aktuelUdsendelseViewholder = vh;
-        vh.titel.setText(udsendelse.titel.toUpperCase());
+
+        if (TITELTEKST_KUN_SORT_LIGE_BAG_TEKST) {
+          Spannable spanna = new SpannableString(udsendelse.titel.toUpperCase());
+          spanna.setSpan(new BackgroundColorSpan(0xFF000000), 0, udsendelse.titel.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+          vh.titel.setText(spanna);
+        } else {
+          vh.titel.setText(udsendelse.titel.toUpperCase());
+        }
+
         opdaterAktuelUdsendelse(vh);
         opdaterSenestSpillet(a, udsendelse);
       }
