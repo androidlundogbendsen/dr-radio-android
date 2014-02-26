@@ -54,7 +54,7 @@
 
 
         <activity
-                android:name="dk.dr.radio.skrald.Indstillinger_akt"
+                android:name="dk.dr.radio.akt.Indstillinger_akt"
                 android:label="DR Radio Indstillinger">
             <!-- Gør aktivitet synlig i forbindelse med at brugeren gennemser sit dataforbrug -->
             <intent-filter>

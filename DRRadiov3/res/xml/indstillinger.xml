@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+
+    <CheckBoxPreference
+            android:key="brugGibsonIVenstremenu"
+            android:title="Brug Gibson i venstre-menu"
+            android:defaultValue="true"
+            android:summary="Gibson ser grimt ud i venstremenu på visse enheder. Kræver app-genstart"/>
+
+
+    <CheckBoxPreference
+            android:key="kunSortLigeBagTekst"
+            android:title="Kun sort bag tekst i titler"
+            android:defaultValue="false"
+            android:summary="Ser også grimt ud. Kræver app-genstart"/>
+
+
     <ListPreference
             android:key="lydkvalitet"
             android:title="Lydkvalitet"

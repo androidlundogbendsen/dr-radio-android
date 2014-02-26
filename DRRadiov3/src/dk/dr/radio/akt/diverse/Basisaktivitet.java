@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.androidquery.AQuery;
 
+import dk.dr.radio.akt.Indstillinger_akt;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
@@ -39,6 +40,7 @@ public class Basisaktivitet extends ActionBarActivity {
     menu.add(0, 644, 0, "Hent nyeste udvikler-version");
     menu.add(0, 645, 0, "Del lyd 1");
     menu.add(0, 1645, 0, "Del lyd 2");
+    menu.add(0, 3643, 0, "Indstillinger");
     menu.add(0, 646, 0, "Send fejlrapport");
     menu.add(0, 2645, 0, "System.exit");
     //}
@@ -78,6 +80,9 @@ public class Basisaktivitet extends ActionBarActivity {
       case 2645:
         finish();
         System.exit(0);
+      case 3643:
+        startActivity(new Intent(this, Indstillinger_akt.class));
+        return true;
       case 643:
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         TextView tv = new TextView(this);
