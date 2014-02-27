@@ -11,10 +11,10 @@ import java.util.Date;
  */
 public class Udsendelse {
   public JSONObject json;
-  public String slug;
-  public String kanalSlug;
-  public String programserieSlug;
-  public String urn;
+  public String slug;  // Bemærk - kan være tom!
+  public String kanalSlug;  // Bemærk - kan være tom!
+  public String programserieSlug;  // Bemærk - kan være tom!
+  public String urn;  // Bemærk - kan være tom!
   public Date startTid;
   public String titel;
   public String startTidKl;
