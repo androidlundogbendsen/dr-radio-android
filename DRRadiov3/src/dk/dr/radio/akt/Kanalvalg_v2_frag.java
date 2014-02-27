@@ -104,7 +104,7 @@ public class Kanalvalg_v2_frag extends Basisfragment implements AdapterView.OnIt
 
       String kanalkode = alleKanalkoder.get(position);
       Kanal kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
-      View view = mInflater.inflate(R.layout.v2_kanalvalg_element, null);
+      View view = mInflater.inflate(R.layout.kanalvalg_elem, null);
       ImageViewTilBlinde billede = (ImageViewTilBlinde) view.findViewById(R.id.billede);
       ImageViewTilBlinde ikon = (ImageViewTilBlinde) view.findViewById(R.id.ikon);
       TextView textView = (TextView) view.findViewById(R.id.tekst);

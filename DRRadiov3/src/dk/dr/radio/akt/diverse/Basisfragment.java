@@ -23,58 +23,59 @@ import dk.dr.radio.diverse.Log;
  */
 //public class BasisFragment extends DialogFragment {
 public class Basisfragment extends Fragment {
+  static final boolean LOG_LIVSCYKLUS = false;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
+    if (LOG_LIVSCYKLUS) Log.d("onCreate " + this);
     super.onCreate(savedInstanceState);
-    Log.d("onCreate " + this);
   }
 
   @Override
   public void onStart() {
+    if (LOG_LIVSCYKLUS) Log.d("onStart " + this);
     super.onStart();
-    Log.d("onStart " + this);
   }
 
   @Override
   public void onResume() {
-    Log.d("onResume " + this);
+    if (LOG_LIVSCYKLUS) Log.d("onResume " + this);
     super.onResume();
   }
 
   @Override
   public void onPause() {
-    Log.d("onPause " + this);
+    if (LOG_LIVSCYKLUS) Log.d("onPause " + this);
     super.onPause();
   }
 
   @Override
   public void onDestroy() {
-    Log.d("onDestroy " + this);
+    if (LOG_LIVSCYKLUS) Log.d("onDestroy " + this);
     super.onDestroy();
   }
 
   @Override
   public void onAttach(Activity activity) {
-    Log.d("onAttach " + this + " til " + activity);
+    if (LOG_LIVSCYKLUS) Log.d("onAttach " + this + " til " + activity);
     super.onAttach(activity);
   }
 
   @Override
   public void onStop() {
+    if (LOG_LIVSCYKLUS) Log.d("onStop " + this);
     super.onStop();
-    Log.d("onStop " + this);
   }
 
   @Override
   public void onDestroyView() {
+    if (LOG_LIVSCYKLUS) Log.d("onDestroyView " + this);
     super.onDestroyView();
-    Log.d("onDestroyView " + this);
   }
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
-    Log.d("onActivityCreated " + this);
+    if (LOG_LIVSCYKLUS) Log.d("onActivityCreated " + this);
     super.onActivityCreated(savedInstanceState);
   }
 

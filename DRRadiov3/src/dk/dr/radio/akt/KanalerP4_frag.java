@@ -33,7 +33,7 @@ public class KanalerP4_frag extends Basisfragment implements ActionBar.TabListen
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     Log.d("Viser fragment " + this);
-    rod = inflater.inflate(R.layout.kanaler_frag_v3, container, false);
+    rod = inflater.inflate(R.layout.kanaler_frag, container, false);
     aq = new AQuery(rod);
 
     for (Kanal k : DRData.instans.stamdata.kanaler) {

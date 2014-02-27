@@ -28,7 +28,7 @@ public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     Log.d("onCreateView " + this);
-    View rod = inflater.inflate(R.layout.kanaler_frag_v3, container, false);
+    View rod = inflater.inflate(R.layout.kanaler_frag, container, false);
 
     for (Kanal k : DRData.instans.stamdata.kanaler) {
       if (!k.p4underkanal) kanaler.add(k);

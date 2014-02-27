@@ -55,7 +55,7 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
     udsendelse = kanal.findUdsendelseFraSlug(getArguments().getString(DRJson.Slug.name()));
     Log.d("onCreateView " + this);
 
-    rod = inflater.inflate(R.layout.kanalvisning_frag, container, false);
+    rod = inflater.inflate(R.layout.kanal_frag, container, false);
     final AQuery aq = new AQuery(rod);
     if (udsendelse.playliste != null) {
       liste = udsendelse.playliste;
@@ -157,7 +157,7 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
       Viewholder vh;
       AQuery a;
       if (v == null) {
-        v = getLayoutInflater(null).inflate(position == 0 ? R.layout.udsendelse_top : position == 1 ? R.layout.udsendelse_playlisteelement_spiller_nu : R.layout.element_tid_titel_kunstner, parent, false);
+        v = getLayoutInflater(null).inflate(position == 0 ? R.layout.udsendelse_elem_top : position == 1 ? R.layout.udsendelse_elem_spiller_nu : R.layout.elem_tid_titel_kunstner, parent, false);
         vh = new Viewholder();
         v.setTag(vh);
         a = vh.aq = new AQuery(v);
