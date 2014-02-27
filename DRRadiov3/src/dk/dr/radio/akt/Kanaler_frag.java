@@ -1,10 +1,9 @@
 package dk.dr.radio.akt;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -28,7 +27,7 @@ public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    Log.d("Viser fragment " + this);
+    Log.d("onCreateView " + this);
     View rod = inflater.inflate(R.layout.kanaler_frag_v3, container, false);
 
     for (Kanal k : DRData.instans.stamdata.kanaler) {
@@ -36,7 +35,9 @@ public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener
     }
 
     viewPager = (ViewPager) rod.findViewById(R.id.pager);
-    viewPager.setAdapter(new KanalAdapter(getActivity().getSupportFragmentManager()));
+    // Da ViewPager er indlejret i et fragment skal adapteren virke på den indlejrede (child)
+    // fragmentmanageren - ikke på aktivitens (getFragmentManager)
+    viewPager.setAdapter(new KanalAdapter(getChildFragmentManager()));
 
 
     PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) rod.findViewById(R.id.tabs);
@@ -47,8 +48,9 @@ public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener
 
 
   @Override
-  public void onAttach(Activity activity) {
-    super.onAttach(activity);
+  public void onDestroyView() {
+    viewPager = null;
+    super.onDestroyView();
   }
 
   @Override
@@ -66,8 +68,8 @@ public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener
   }
 
 
-  //  public class KanalAdapter extends FragmentPagerAdapter implements PagerSlidingTabStrip.IconTabProvider {
-  public class KanalAdapter extends FragmentStatePagerAdapter implements PagerSlidingTabStrip.IconTabProvider {
+  public class KanalAdapter extends FragmentPagerAdapter implements PagerSlidingTabStrip.IconTabProvider {
+    //public class KanalAdapter extends FragmentStatePagerAdapter implements PagerSlidingTabStrip.IconTabProvider {
 
     public KanalAdapter(FragmentManager fm) {
       super(fm);

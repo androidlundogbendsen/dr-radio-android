@@ -59,6 +59,11 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   private int antalHentedeSendeplaner;
 
   @Override
+  public String toString() {
+    return super.toString() + "/" + kanal;
+  }
+
+  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     String kanalkode = getArguments().getString(P_kode);
     p4 = Kanal.P4kode.equals(kanalkode);
@@ -83,6 +88,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       }
     }
     kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
+    Log.d("onCreateView " + this);
 
     if (rod == null) rod = inflater.inflate(R.layout.kanalvisning_frag, container, false);
 
@@ -156,21 +162,25 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   public void setUserVisibleHint(boolean isVisibleToUser) {
     Log.d(kanal + " setUserVisibleHint " + isVisibleToUser + "  " + this);
     fragmentErSynligt = isVisibleToUser;
-    if (fragmentErSynligt) scrollTilAktuelUdsendelse();
+    if (fragmentErSynligt) {
+      scrollTilAktuelUdsendelse();
+      run();
+    } else {
+      App.forgrundstråd.removeCallbacks(this);
+    }
     super.setUserVisibleHint(isVisibleToUser);
   }
 
   @Override
   public void onResume() {
     super.onResume();
-    run();
     //App.forgrundstråd.postDelayed(this, 50);
   }
 
   @Override
   public void onPause() {
     super.onPause();
-    App.forgrundstråd.removeCallbacks(this);
+    //App.forgrundstråd.removeCallbacks(this);
   }
 
   @Override
@@ -471,8 +481,9 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       f.setArguments(new Intent()
           .putExtra(P_kode, kanal.kode)
           .putExtra(DRJson.Slug.name(), u.slug).getExtras());
-      getFragmentManager().beginTransaction().add(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
-
+      //getFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+      //getChildFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+      getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
     }
   }
 }

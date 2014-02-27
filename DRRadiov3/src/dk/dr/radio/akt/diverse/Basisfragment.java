@@ -4,6 +4,7 @@
  */
 package dk.dr.radio.akt.diverse;
 
+import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,8 +26,56 @@ public class Basisfragment extends Fragment {
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
-    Log.d("onCreate " + this);
     super.onCreate(savedInstanceState);
+    Log.d("onCreate " + this);
+  }
+
+  @Override
+  public void onStart() {
+    super.onStart();
+    Log.d("onStart " + this);
+  }
+
+  @Override
+  public void onResume() {
+    Log.d("onResume " + this);
+    super.onResume();
+  }
+
+  @Override
+  public void onPause() {
+    Log.d("onPause " + this);
+    super.onPause();
+  }
+
+  @Override
+  public void onDestroy() {
+    Log.d("onDestroy " + this);
+    super.onDestroy();
+  }
+
+  @Override
+  public void onAttach(Activity activity) {
+    Log.d("onAttach " + this + " til " + activity);
+    super.onAttach(activity);
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+    Log.d("onStop " + this);
+  }
+
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    Log.d("onDestroyView " + this);
+  }
+
+  @Override
+  public void onActivityCreated(Bundle savedInstanceState) {
+    Log.d("onActivityCreated " + this);
+    super.onActivityCreated(savedInstanceState);
   }
 
   public static final int LINKFARVE = 0xff00458f;
@@ -137,8 +186,8 @@ Jeg bruger selv følgende macro'er i C til generering af URIs:
       String skaleretUrl = "http://asset.dr.dk/discoImages/?discoserver=" + u.getHost() + "&w=" + bredde + "&h=" + højde +
           "&file=" + u.getPath() + "&scaleAfter=crop&quality=85";
 
-      Log.d("skalérDiscoBilledeUrl url2 = " + u);
-      Log.d("skalérDiscoBilledeUrl url3 = " + skaleretUrl);
+      //Log.d("skalérDiscoBilledeUrl url2 = " + u);
+      //Log.d("skalérDiscoBilledeUrl url3 = " + skaleretUrl);
       return skaleretUrl;
     } catch (Exception e) {
       Log.e("url=" + url, e);

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
 /**
@@ -167,7 +168,7 @@ public enum DRJson {
         if (o.getInt(Kind.name()) != StreamKind.Audio.ordinal()) continue;
         l.kvalitet = StreamQuality.values()[o.getInt(Quality.name())];
         lydData.add(l);
-        Log.d("lydstream=" + l);
+        if (App.udvikling) Log.d("lydstream=" + l);
       } catch (Exception e) {
         Log.e(e);
       }
