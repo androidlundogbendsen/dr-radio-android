@@ -68,7 +68,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     Log.d("Viser fragment " + this);
-    View rod = inflater.inflate(R.layout.kanalvisning_frag, container, false);
+    View rod = inflater.inflate(R.layout.kanal_frag, container, false);
     aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_fed).getView());
@@ -145,7 +145,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
      */
     @Override
     public View getView(int position, View v, ViewGroup parent) {
-      if (v == null) v = getLayoutInflater(null).inflate(R.layout.listeelement_udvikler, parent, false);
+      if (v == null) v = getLayoutInflater(null).inflate(R.layout.elem_udvikler, parent, false);
       AQuery a = new AQuery(v);
       JSONObject d = liste.get(position);
       a.id(R.id.titel).text(d.optString(DRJson.Title.name()));

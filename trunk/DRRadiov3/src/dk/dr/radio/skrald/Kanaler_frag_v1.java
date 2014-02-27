@@ -39,7 +39,7 @@ public class Kanaler_frag_v1 extends Basisfragment implements ActionBar.TabListe
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     Log.d("Viser fragment " + this);
-    rod = inflater.inflate(R.layout.kanaler_frag, container, false);
+    rod = inflater.inflate(R.layout.skrald_kanaler_v1_frag, container, false);
     aq = new AQuery(rod);
     faneAdapter = new FaneAdapter(getActivity().getSupportFragmentManager());
     Bundle args = new Bundle();

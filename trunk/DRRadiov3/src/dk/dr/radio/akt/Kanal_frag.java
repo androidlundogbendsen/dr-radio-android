@@ -79,7 +79,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           kanalkode = DRData.instans.stamdata.p4koder.get(0);
           kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
         }
-        rod = inflater.inflate(R.layout.kanalvisning_p4_frag, container, false);
+        rod = inflater.inflate(R.layout.kanal_p4_frag, container, false);
         AQuery aq = new AQuery(rod);
         aq.id(R.id.p4_vi_gætter_på_tekst).typeface(App.skrift_normal);
         aq.id(R.id.p4_kanalnavn).text(kanal.navn).typeface(App.skrift_fed);
@@ -90,7 +90,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
     Log.d("onCreateView " + this);
 
-    if (rod == null) rod = inflater.inflate(R.layout.kanalvisning_frag, container, false);
+    if (rod == null) rod = inflater.inflate(R.layout.kanal_frag, container, false);
 
     AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
@@ -278,9 +278,9 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       Udsendelse udsendelse = liste.get(position);
       if (v == null) {
         v = getLayoutInflater(null).inflate(
-            type == AKTUEL ? R.layout.kanalvisning_aktuel :        // Visning af den aktuelle udsendelse
-                type == NORMAL ? R.layout.element_tid_titel_kunstner   // De andre udsendelser
-                    : R.layout.element_tidligere_senere, parent, false);
+            type == AKTUEL ? R.layout.kanalelem_aktuel :        // Visning af den aktuelle udsendelse
+                type == NORMAL ? R.layout.elem_tid_titel_kunstner   // De andre udsendelser
+                    : R.layout.kanal_elem_tidligere_senere, parent, false);
         vh = new Viewholder();
         a = vh.aq = new AQuery(v);
         vh.titel = a.id(R.id.titel).typeface(App.skrift_fed).getTextView();
