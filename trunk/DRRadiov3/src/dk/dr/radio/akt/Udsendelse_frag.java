@@ -45,10 +45,15 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
   private ArrayList<Playlisteelement> liste = new ArrayList<Playlisteelement>();
 
   @Override
+  public String toString() {
+    return super.toString() + "/" + kanal + "/" + udsendelse;
+  }
+
+  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     kanal = DRData.instans.stamdata.kanalFraKode.get(getArguments().getString(Kanal_frag.P_kode));
     udsendelse = kanal.findUdsendelseFraSlug(getArguments().getString(DRJson.Slug.name()));
-    Log.d(this + " viser " + udsendelse + " med playliste=" + udsendelse.playliste);
+    Log.d("onCreateView " + this);
 
     rod = inflater.inflate(R.layout.kanalvisning_frag, container, false);
     final AQuery aq = new AQuery(rod);
