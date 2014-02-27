@@ -109,10 +109,10 @@ public enum DRJson {
 
       u.titel = o.getString(DRJson.Title.name());
       u.beskrivelse = o.getString(DRJson.Description.name());
-      u.slug = o.getString(DRJson.Slug.name());
-      u.kanalSlug = o.getString(DRJson.ChannelSlug.name());
-      u.programserieSlug = o.getString(DRJson.SeriesSlug.name());
-      u.urn = o.getString(DRJson.Urn.name());
+      u.slug = o.optString(DRJson.Slug.name());  // Bemærk - kan være tom!
+      u.kanalSlug = o.optString(DRJson.ChannelSlug.name());  // Bemærk - kan være tom!
+      u.programserieSlug = o.optString(DRJson.SeriesSlug.name());  // Bemærk - kan være tom!
+      u.urn = o.optString(DRJson.Urn.name());  // Bemærk - kan være tom!
       uliste.add(u);
     }
     return uliste;
