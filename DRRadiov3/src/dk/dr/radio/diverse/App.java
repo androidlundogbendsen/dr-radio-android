@@ -26,6 +26,7 @@ package dk.dr.radio.diverse;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
+import android.app.DownloadManager;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -69,6 +70,7 @@ public class App extends Application {
   public static Handler forgrundstråd;
   public static Typeface skrift_normal;
   public static Typeface skrift_fed;
+  public static DownloadManager downloadService;
 
 
   @Override
@@ -81,6 +83,7 @@ public class App extends Application {
     forgrundstråd = new Handler();
     connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    downloadService = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
     prefs = PreferenceManager.getDefaultSharedPreferences(this);
     udvikling = prefs.getBoolean("udvikling", false);
 

@@ -4,7 +4,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:descendantFocusability="blocksDescendants"
+        android:background="@color/hvid"
         >
     <!--
                 android:descendantFocusability="blocksDescendants"
@@ -64,10 +64,10 @@
             android:drawableLeft="@drawable/dri_lyd_hvid"
             android:text="HØR UDSENDELSE"
             android:textColor="@color/hvid"
-            android:background="@drawable/knap_blaa_bg_normal"/>
+            android:background="@drawable/knap_blaa_bg"/>
 
     <include
-            layout="@layout/udsendelse_elem_download_del"
+            layout="@layout/udsendelse_elem_hent_del"
             android:layout_width="match_parent"
             android:layout_marginBottom="16dp"
             android:layout_height="wrap_content"/>
@@ -82,10 +82,10 @@
             android:text="For lige om lidt bliver fremdriftsreformen implementeret."
             />
 
-
-    <include
-            layout="@layout/udsendelse_elem_playliste_info_overskrift"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
+    <!--
+        <include
+                layout="@layout/udsendelse_elem_playliste_info_overskrift"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+    -->
 </LinearLayout>

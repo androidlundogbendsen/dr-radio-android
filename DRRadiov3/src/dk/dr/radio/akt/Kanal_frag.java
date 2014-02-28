@@ -48,7 +48,6 @@ import dk.dr.radio.v3.R;
 
 public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClickListener, View.OnClickListener, Runnable {
 
-  public static String P_kode = "kanal.kode";
   private ListView listView;
   private ArrayList<Udsendelse> liste = new ArrayList<Udsendelse>();
   private int aktuelUdsendelseIndex = -1;
@@ -263,9 +262,9 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       return NORMAL;
     }
 
-    public static final int NORMAL = 0;
-    public static final int AKTUEL = 1;
-    public static final int TIDLIGERE_SENERE = 2;
+    static final int NORMAL = 0;
+    static final int AKTUEL = 1;
+    static final int TIDLIGERE_SENERE = 2;
 
     boolean TITELTEKST_KUN_SORT_LIGE_BAG_TEKST = App.prefs.getBoolean("kunSortLigeBagTekst", false);
 
@@ -282,7 +281,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
                     : R.layout.kanal_elem_tidligere_senere, parent, false);
         vh = new Viewholder();
         a = vh.aq = new AQuery(v);
-        vh.titel = a.id(R.id.titel).typeface(App.skrift_fed).getTextView();
         vh.startid = a.id(R.id.startid).typeface(App.skrift_normal).getTextView();
         vh.starttidbjælke = a.id(R.id.starttidbjælke).getView();
         vh.slutttidbjælke = a.id(R.id.slutttidbjælke).getView();
@@ -290,13 +288,17 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         a.id(R.id.højttalerikon).gone();  // Bruges ikke mere i dette design
         a.id(R.id.hør_live).text(" HØR " + kanal.navn.toUpperCase() + " LIVE").clicked(Kanal_frag.this);
         a.id(R.id.slutttid).typeface(App.skrift_normal).text(udsendelse.slutTidKl);
-        a.id(R.id.kunstner).text(""); // ikke .gone() - skal skubbe højttalerikon ud til venstre
-        if (type == AKTUEL) {
+        if (type == TIDLIGERE_SENERE) {
+          vh.titel = a.id(R.id.titel).typeface(App.skrift_fed).getTextView();
+        } else if (type == AKTUEL) {
+          vh.titel = a.id(R.id.titel).typeface(App.skrift_fed).getTextView();
           a.id(R.id.senest_spillet_overskrift).typeface(App.skrift_normal);
-          a.id(R.id.senest_spillet_titel_og_kunstner).typeface(App.skrift_normal);
+          a.id(R.id.titel_og_kunstner).typeface(App.skrift_normal);
           a.id(R.id.lige_nu).typeface(App.skrift_normal);
           a.id(R.id.hør_live).typeface(App.skrift_normal);
-          v.setBackgroundColor(getResources().getColor(R.color.hvid));
+          v.setBackgroundResource(R.drawable.knap_hvid_bg);
+        } else {
+          vh.titel = a.id(R.id.titel_og_kunstner).typeface(App.skrift_fed).getTextView();
         }
         v.setTag(vh);
       } else {
@@ -307,8 +309,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
       // Opdatér viewholderens data
       vh.udsendelse = udsendelse;
-      vh.titel.setText(udsendelse.titel);
       if (type == TIDLIGERE_SENERE) {
+        vh.titel.setText(udsendelse.titel);
 
         if (antalHentedeSendeplaner++ < 7) {
           a.id(R.id.progressBar).visible();   // De første 7 henter vi bare for brugeren
@@ -319,12 +321,10 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           vh.titel.setVisibility(View.VISIBLE);
         }
 
-        return v;
-      }
-      vh.startid.setText(udsendelse.startTidKl);
-
-      if (type == AKTUEL) {
+      } else if (type == AKTUEL) {
         aktuelUdsendelseViewholder = vh;
+        vh.startid.setText(udsendelse.startTidKl);
+        vh.titel.setText(udsendelse.titel);
 
         int br = bestemBilledebredde(listView, (View) a.id(R.id.billede).getView().getParent());
         int hø = br * højde9 / bredde16;
@@ -343,18 +343,11 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         opdaterAktuelUdsendelse(vh);
         opdaterSenestSpillet(a, udsendelse);
       } else {
+        vh.startid.setText(udsendelse.startTidKl);
+        vh.titel.setText(udsendelse.titel);
         a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
       }
 
-      // Til udvikling
-      a.id(R.id.beskrivelse).text(udsendelse.beskrivelse);
-      if (App.udvikling) {
-        try {
-          Log.d(udsendelse.json.toString(2));
-        } catch (JSONException e) {
-          e.printStackTrace();
-        }
-      }
       return v;
     }
   };
@@ -394,7 +387,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     if (u.playliste.size() > 0) {
       aq.id(R.id.senest_spillet_container).visible();
       Playlisteelement elem = u.playliste.get(0);
-      aq.id(R.id.senest_spillet_titel_og_kunstner).text(Html.fromHtml("<b>" + elem.titel + "</b> &nbsp; | &nbsp;" + elem.kunstner));
+      aq.id(R.id.titel_og_kunstner).text(Html.fromHtml("<b>" + elem.titel + "</b> &nbsp; | &nbsp;" + elem.kunstner));
 
       ImageView b = aq.id(R.id.senest_spillet_kunstnerbillede).getImageView();
       if (elem.billedeUrl.length() == 0) {

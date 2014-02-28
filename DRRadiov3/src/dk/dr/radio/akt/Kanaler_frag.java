@@ -26,13 +26,18 @@ public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener
   private ArrayList<Kanal> kanaler = new ArrayList<Kanal>();
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    Log.d("onCreateView " + this);
-    View rod = inflater.inflate(R.layout.kanaler_frag, container, false);
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
     for (Kanal k : DRData.instans.stamdata.kanaler) {
       if (!k.p4underkanal) kanaler.add(k);
     }
+  }
+
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    Log.d("onCreateView " + this);
+    View rod = inflater.inflate(R.layout.kanaler_frag, container, false);
 
     viewPager = (ViewPager) rod.findViewById(R.id.pager);
     // Da ViewPager er indlejret i et fragment skal adapteren virke på den indlejrede (child)

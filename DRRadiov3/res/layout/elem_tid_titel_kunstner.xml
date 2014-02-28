@@ -7,11 +7,18 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingBottom="16dp"
+        android:background="@drawable/knap_graa_bg"
         android:orientation="vertical">
+
+    <!--
+        android:layerType="software" er nødvendig, ellers tegnes der en vandret
+         streg i stedet for stiplet linje på Android 3+
+        -->
 
     <View
             android:id="@+id/stiplet_linje"
             android:background="@drawable/stiplet_linje"
+            android:layerType="software"
             android:layout_width="match_parent"
             android:layout_marginBottom="13dp"
             android:layout_height="3dp"/>
@@ -33,29 +40,20 @@
             android:orientation="horizontal">
 
         <TextView
-                android:id="@+id/titel"
-                android:layout_width="wrap_content"
+                android:id="@+id/titel_og_kunstner"
+                android:layout_width="0px"
                 android:layout_height="wrap_content"
-                android:text="P3 Sporten"
-                tools:ignore="HardcodedText"
-                android:textStyle="bold"/>
-
-        <TextView
-                android:id="@+id/kunstner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:singleLine="true"
-                android:text="|  Polarkreis 18"
-                tools:ignore="HardcodedText"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:text="P3 Sporten  |  Polarkreis 18"
+                android:maxLines="2"
+                tools:ignore="HardcodedText"/>
 
         <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:scaleType="centerInside"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
                 android:id="@+id/højttalerikon"
-                android:src="@drawable/dri_lyd2_blaa"/>
+                android:src="@drawable/dri_lyd_blaa"/>
 
     </LinearLayout>
 

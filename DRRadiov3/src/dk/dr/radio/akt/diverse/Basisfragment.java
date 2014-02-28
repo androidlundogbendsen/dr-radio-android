@@ -25,6 +25,10 @@ import dk.dr.radio.diverse.Log;
  */
 //public class BasisFragment extends DialogFragment {
 public class Basisfragment extends Fragment {
+
+  public static String P_kode = "kanal.kode";
+
+
   static final boolean LOG_LIVSCYKLUS = false;
 
   @Override
