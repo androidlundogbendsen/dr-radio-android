@@ -21,6 +21,7 @@
 
     <style name="Theme.Drxx_ab" parent="@style/Theme.AppCompat.Light">
         <item name="actionBarStyle">@style/ActionBar.Solid.Drxx_ab</item>
+        <item name="android:windowBackground">@color/hvid</item>
     </style>
 
     <style name="ActionBar.Solid.Drxx_ab" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">

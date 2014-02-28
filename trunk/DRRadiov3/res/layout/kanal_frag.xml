@@ -5,15 +5,19 @@
     <ListView
             android:id="@+id/listView"
             android:divider="@null"
-            android:layerType="software"
+            android:dividerHeight="0px"
+            android:cacheColorHint="@color/grå10"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"/>
-    <!-- hurtigscroll
+    <!--
+
+
+    hurtigscroll
                 android:scrollbars="none"
                 android:fastScrollEnabled="true"/>
 
 
-    For mere komplekst tomhedsindikator, brug ViewStub - se
+    For mere kompleks tomhedsindikator, brug ViewStub - se
                http://cyrilmottier.com/2011/06/20/listview-tips-tricks-1-handle-emptiness/
                 android:visibility="gone"
             android:layout_gravity="center"

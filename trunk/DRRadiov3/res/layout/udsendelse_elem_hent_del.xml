@@ -15,9 +15,10 @@
             android:paddingLeft="16dp"
             android:gravity="center_vertical"
             android:text="UDSENDELSEN KAN ENDNU IKKE HENTES"
+            android:enabled="false"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/grå40"
-            android:background="@drawable/knap_hvid_bg2"/>
+            android:background="@drawable/knap_hvid_bg"/>
 
 
     <Button
@@ -31,7 +32,7 @@
             android:gravity="center_vertical"
             android:text=" HENT"
             android:textColor="@color/blå"
-            android:background="@drawable/knap_hvid_bg2"/>
+            android:background="@drawable/knap_hvid_bg"/>
 
     <Button
             android:id="@+id/del"
@@ -44,6 +45,6 @@
             android:gravity="center_vertical"
             android:text=" DEL"
             android:textColor="@color/blå"
-            android:background="@drawable/knap_hvid_bg2"/>
+            android:background="@drawable/knap_hvid_bg"/>
 
 </LinearLayout>

@@ -1,9 +1,17 @@
 package dk.dr.radio.akt;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +34,6 @@ import java.util.ArrayList;
 
 import dk.dr.radio.akt.diverse.Basisadapter;
 import dk.dr.radio.akt.diverse.Basisfragment;
-import dk.dr.radio.akt.diverse.VisFragment_akt;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Playlisteelement;
@@ -36,7 +43,7 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItemClickListener, View.OnClickListener {
+public class Udsendelse_frag extends Basisfragment implements View.OnClickListener, AdapterView.OnItemClickListener {
 
   private ListView listView;
   private Kanal kanal;
@@ -57,6 +64,10 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
 
     rod = inflater.inflate(R.layout.kanal_frag, container, false);
     final AQuery aq = new AQuery(rod);
+    listView = aq.id(R.id.listView).adapter(adapter).getListView();
+    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_fed).getView());
+    listView.setOnItemClickListener(this);
+
     if (udsendelse.playliste != null) {
       liste = udsendelse.playliste;
     } else {
@@ -96,8 +107,6 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
         }
       });
     }
-    listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
-    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_fed).getView());
     udvikling_checkDrSkrifter(rod, this + " rod");
 
     return rod;
@@ -117,88 +126,107 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
     public TextView titel;
     public TextView startid;
     public Playlisteelement playlisteelement;
-    public TextView kunstner;
   }
+
+  static final int TOP = 0;
+  static final int SPILLER_NU = 1;
+  static final int SPILLEDE = 2;
+  static final int ALLE_UDS = 3;
+
+  static final int[] layoutFraType = {
+      R.layout.udsendelse_elem_top,
+      R.layout.udsendelse_elem_spiller_nu,
+      R.layout.elem_tid_titel_kunstner,
+      R.layout.udsendelse_elem_alle_udsendelser};
 
   private BaseAdapter adapter = new Basisadapter() {
     @Override
     public int getCount() {
-      return liste.size() + 1;
+      return liste.size() + 2;
     }
 
     @Override
     public int getViewTypeCount() {
-      return 3;
+      return 4;
     }
 
     @Override
     public int getItemViewType(int position) {
-      if (position == 0) return 0;
-      if (position == 1) return 1;
-      return 2;
+      if (position == 0) return TOP;
+      if (position > liste.size()) return ALLE_UDS;
+      if (position == 1) return SPILLER_NU;
+      return SPILLEDE;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+      return getItemViewType(position) == ALLE_UDS;
+    }
+
+    @Override
+    public boolean areAllItemsEnabled() {
+      return false;
     }
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
       Viewholder vh;
-      AQuery a;
+      AQuery aq;
+      int type = getItemViewType(position);
       if (v == null) {
-        v = getLayoutInflater(null).inflate(position == 0 ? R.layout.udsendelse_elem_top : position == 1 ? R.layout.udsendelse_elem_spiller_nu : R.layout.elem_tid_titel_kunstner, parent, false);
+        v = getLayoutInflater(null).inflate(layoutFraType[type], parent, false);
         vh = new Viewholder();
+        aq = vh.aq = new AQuery(v);
         v.setTag(vh);
-        a = vh.aq = new AQuery(v);
-        vh.startid = a.id(R.id.startid).typeface(App.skrift_normal).getTextView();
-        vh.titel = a.id(R.id.titel).typeface(App.skrift_fed).getTextView();
-        vh.kunstner = a.id(R.id.kunstner).typeface(App.skrift_normal).getTextView();
-        if (position == 0) {
-          int br = bestemBilledebredde(listView, (View) a.id(R.id.billede).getView().getParent());
+        vh.startid = aq.id(R.id.startid).typeface(App.skrift_normal).getTextView();
+        vh.titel = aq.id(R.id.titel).typeface(App.skrift_fed).getTextView();
+        if (type == TOP) {
+          int br = bestemBilledebredde(listView, (View) aq.id(R.id.billede).getView().getParent());
           int hø = br * højde9 / bredde16;
           String burl = skalérSlugBilledeUrl(udsendelse.slug, br, hø);
-          a.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
+          aq.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
 
-          //AQuery aq = a.id(R.id.billede);
-          //int br = bestemBilledebredde(listView, (View) aq.getView().getParent());
-          //aq.image(skalérSlugBilledeUrl(udsendelse.slug, br, br * højde9 / bredde16), true, true, br, 0).width(br, false);
-          v.setBackgroundColor(getResources().getColor(R.color.hvid));
-          a.id(R.id.lige_nu).gone();
-          a.id(R.id.playliste).typeface(App.skrift_normal).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.INVISIBLE);
-          a.id(R.id.info).typeface(App.skrift_normal);
+          aq.id(R.id.lige_nu).gone();
+          aq.id(R.id.playliste).typeface(App.skrift_normal).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.INVISIBLE);
+          aq.id(R.id.info).typeface(App.skrift_normal);
           vh.titel.setText(udsendelse.titel.toUpperCase());
-          a.id(R.id.logo).image(kanal.kanallogo_resid);
-          a.id(R.id.titel2).typeface(App.skrift_fed).text(udsendelse.titel);
-          a.id(R.id.dato).typeface(App.skrift_normal).text(" - " + DRJson.datoformat.format(udsendelse.startTid));
+          aq.id(R.id.logo).image(kanal.kanallogo_resid);
+          aq.id(R.id.titel2).typeface(App.skrift_fed).text(udsendelse.titel);
+          aq.id(R.id.dato).typeface(App.skrift_normal).text(" - " + DRJson.datoformat.format(udsendelse.startTid));
 
-          a.id(R.id.beskrivelse).text(udsendelse.beskrivelse).typeface(App.skrift_normal);
-          Linkify.addLinks(a.getTextView(), Linkify.ALL);
+          aq.id(R.id.beskrivelse).text(udsendelse.beskrivelse).typeface(App.skrift_normal);
+          Linkify.addLinks(aq.getTextView(), Linkify.ALL);
 
-          a.id(R.id.højttalerikon).clicked(Udsendelse_frag.this);
-          a.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_normal);
-          a.id(R.id.hent).clicked(Udsendelse_frag.this).typeface(App.skrift_normal);
-          a.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_normal);
-        } else {
-          a.id(R.id.højttalerikon).visible().clicked(new UdsendelseClickListener(vh));
+          aq.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_normal);
+          aq.id(R.id.hent).clicked(Udsendelse_frag.this).typeface(App.skrift_normal);
+          aq.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_normal);
+        } else if (type != ALLE_UDS) {
+          vh.titel = aq.id(R.id.titel_og_kunstner).typeface(App.skrift_normal).getTextView();
         }
+        aq.id(R.id.højttalerikon).visible().clicked(new UdsendelseClickListener(vh));
       } else {
         vh = (Viewholder) v.getTag();
-        a = vh.aq;
+        aq = vh.aq;
       }
 
       // Opdatér viewholderens data
-      if (position == 0) {
+      if (type == TOP) {
         boolean streams = udsendelse.streams != null && udsendelse.streams.size() > 0;
-        a.id(R.id.højttalerikon).visibility(streams ? View.VISIBLE : View.GONE);
-        a.id(R.id.hør).visibility(streams ? View.VISIBLE : View.GONE);
-        a.id(R.id.hent).visibility(streams ? View.VISIBLE : View.GONE);
-        a.id(R.id.kan_endnu_ikke_hentes).visibility(!streams ? View.VISIBLE : View.GONE);
-      } else {
+        aq.id(R.id.højttalerikon).visibility(streams ? View.VISIBLE : View.GONE);
+        aq.id(R.id.hør).visibility(streams ? View.VISIBLE : View.GONE);
+        aq.id(R.id.hent).visibility(streams ? View.VISIBLE : View.GONE);
+        aq.id(R.id.kan_endnu_ikke_hentes).visibility(!streams ? View.VISIBLE : View.GONE);
+      } else if (type != ALLE_UDS) {
         Playlisteelement u = liste.get(position - 1);
         vh.playlisteelement = u;
-        vh.titel.setText(u.titel);
-        vh.kunstner.setText("|  " + u.kunstner);
+        vh.titel.setText(Html.fromHtml("<b>" + u.titel + "</b> &nbsp; | &nbsp;" + u.kunstner));
         vh.startid.setText(u.startTidKl);
-        if (position == 1) {
-          ImageView im = a.id(R.id.billede).getImageView();
-          a.id(R.id.billede).image(skalérDiscoBilledeUrl(u.billedeUrl, im.getWidth(), im.getHeight()));
+        if (type == SPILLER_NU) {
+          ImageView im = aq.id(R.id.senest_spillet_kunstnerbillede).getImageView();
+          aq.image(skalérDiscoBilledeUrl(u.billedeUrl, im.getWidth(), im.getHeight()));
+        } else {
+          //v.setBackgroundResource(R.drawable.knap_hvid_bg);
+          v.setBackgroundResource(R.color.hvid);
         }
       }
       udvikling_checkDrSkrifter(v, this + " position " + position);
@@ -207,6 +235,7 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
   };
 
 
+  @TargetApi(Build.VERSION_CODES.GINGERBREAD)
   @Override
   public void onClick(View v) {
     if (v.getId() == R.id.del) {
@@ -222,32 +251,64 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
         http:
 //www.dr.dk/p1/mennesker-og-medier/mennesker-og-medier-100
       startActivity(intent);
-      return;
-    }
-    if (udsendelse.streams == null || udsendelse.streams.size() == 0) return;
-    if (App.udvikling) App.kortToast("kanal.streams=" + kanal.streams);
-    if (App.prefs.getBoolean("manuelStreamvalg", false)) {
-      new AlertDialog.Builder(getActivity())
-          .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.streams), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              DRData.instans.aktuelKanal = kanal;
-              DRData.instans.afspiller.setUrl(udsendelse.streams.get(which).url);
-              DRData.instans.afspiller.startAfspilning();
-            }
-          }).show();
+    } else if (v.getId() == R.id.hør) {
+      if (udsendelse.streams == null || udsendelse.streams.size() == 0) return;
+      if (App.udvikling) App.kortToast("kanal.streams=" + kanal.streams);
+      if (App.prefs.getBoolean("manuelStreamvalg", false)) {
+        new AlertDialog.Builder(getActivity())
+            .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.streams), new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int which) {
+                DRData.instans.aktuelKanal = kanal;
+                DRData.instans.afspiller.setUrl(udsendelse.streams.get(which).url);
+                DRData.instans.afspiller.startAfspilning();
+              }
+            }).show();
+      } else {
+        DRData.instans.aktuelKanal = kanal;
+        DRData.instans.afspiller.setUrl(findBedsteStreamUrl(udsendelse.streams).url);
+        DRData.instans.afspiller.startAfspilning();
+      }
+    } else if (v.getId() == R.id.hent) {
+      if (udsendelse.streams == null || udsendelse.streams.size() == 0) return;
+      if (Build.VERSION.SDK_INT < 9) {
+        App.langToast("Beklager, din telefon er for gammel");
+      }
+      Uri uri = Uri.parse(findBedsteStreamUrl(udsendelse.streams).url);
+
+      Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS).mkdirs();
+
+      DownloadManager.Request req = new DownloadManager.Request(uri);
+
+      req.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI
+          | DownloadManager.Request.NETWORK_MOBILE)
+          .setAllowedOverRoaming(false)
+          .setTitle(udsendelse.titel)
+          .setDescription(udsendelse.beskrivelse)
+          .setDestinationInExternalPublicDir(Environment.DIRECTORY_PODCASTS, udsendelse.slug + ".mp3");
+
+      long downloadId = App.downloadService.enqueue(req);
+      App.langToast("downloadId=" + downloadId);
     } else {
-      DRData.instans.aktuelKanal = kanal;
-      DRData.instans.afspiller.setUrl(findBedsteStreamUrl(udsendelse.streams).url);
-      DRData.instans.afspiller.startAfspilning();
+      App.langToast("fejl");
     }
   }
 
-
   @Override
   public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
-    startActivity(new Intent(getActivity(), VisFragment_akt.class).putExtras(getArguments())  // Kanalkode + slug
-        .putExtra(VisFragment_akt.KLASSE, Programserie_frag.class.getName()).putExtra(DRJson.SeriesSlug.name(), udsendelse.programserieSlug));
+    if (position == 0) return;
+    //startActivity(new Intent(getActivity(), VisFragment_akt.class).putExtras(getArguments())  // Kanalkode + slug
+    //    .putExtra(VisFragment_akt.KLASSE, Programserie_frag.class.getName()).putExtra(DRJson.SeriesSlug.name(), udsendelse.programserieSlug));
+
+    if (adapter.getItemViewType(position) == ALLE_UDS) {
+
+      Fragment f = new Programserie_frag();
+      f.setArguments(new Intent()
+          .putExtra(P_kode, kanal.kode)
+          .putExtra(DRJson.Slug.name(), udsendelse.slug)
+          .putExtra(DRJson.SeriesSlug.name(), udsendelse.programserieSlug).getExtras());
+      getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+    }
   }
 
   private class UdsendelseClickListener implements View.OnClickListener {
@@ -260,6 +321,7 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
 
     @Override
     public void onClick(View v) {
+      App.langToast("fejl2");
     }
   }
 }
