@@ -18,3 +18,11 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+
+# Slår obfuskering fra. Det gør det meget nemmere at læse stakspor, men gør APK'en ca 100kb større.
+-dontobfuscate
+
+
+# Referes fra AQuery, men bruges ikke
+-dontwarn oauth.signpost.**

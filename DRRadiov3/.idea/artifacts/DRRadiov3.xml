@@ -4,8 +4,8 @@
     <properties id="android-properties">
       <options>
         <option name="keyAlias" value="dr android" />
-        <option name="keyPassword" value="QXplcnR5MTIzNA==" />
-        <option name="keyStorePassword" value="QXplcnR5MTIzNA==" />
+        <option name="keyPassword" value="QXplcnR5MTIzNA==&#13;&#10;" />
+        <option name="keyStorePassword" value="QXplcnR5MTIzNA==&#13;&#10;" />
         <option name="keyStoreUrl" value="file://$PROJECT_DIR$/../../A_signaturer/drandroid.key" />
         <option name="signingMode" value="RELEASE_SIGNED" />
       </options>
