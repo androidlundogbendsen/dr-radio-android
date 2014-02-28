@@ -96,7 +96,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_fed).getView());
 
-
     hentSendeplanForDag(aq, new Date(), true);
     udvikling_checkDrSkrifter(rod, this + " rod");
     return rod;
@@ -343,6 +342,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
         opdaterAktuelUdsendelse(vh);
         opdaterSenestSpillet(a, udsendelse);
+      } else {
+        a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
       }
 
       // Til udvikling

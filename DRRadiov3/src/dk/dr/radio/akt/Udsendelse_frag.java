@@ -109,20 +109,6 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
     super.onResume();
   }
 
-  @Override
-  public void onClick(View v) {
-    if (udsendelse.streams == null || udsendelse.streams.size() == 0) return;
-    new AlertDialog.Builder(getActivity()).setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, udsendelse.streams), new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        DRData.instans.aktuelKanal = kanal;
-        DRData.instans.afspiller.setUrl(udsendelse.streams.get(which).url);
-        DRData.instans.afspiller.startAfspilning();
-      }
-    }).show();
-  }
-
-
   /**
    * Viewholder designmønster - hold direkte referencer til de views og objekter der bruges hele tiden
    */
@@ -194,9 +180,10 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
 
       // Opdatér viewholderens data
       if (position == 0) {
-        a.id(R.id.højttalerikon).clicked(Udsendelse_frag.this).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.GONE);
-        a.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_normal).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.GONE);
-        a.id(R.id.hent).clicked(Udsendelse_frag.this).typeface(App.skrift_normal).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.INVISIBLE);
+        boolean streams = udsendelse.streams != null && udsendelse.streams.size() > 0;
+        a.id(R.id.højttalerikon).clicked(Udsendelse_frag.this).visibility(streams ? View.VISIBLE : View.GONE);
+        a.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_normal).visibility(streams ? View.VISIBLE : View.GONE);
+        a.id(R.id.hent).clicked(Udsendelse_frag.this).typeface(App.skrift_normal).visibility(streams ? View.VISIBLE : View.INVISIBLE);
         a.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_normal);
       } else {
         Playlisteelement u = liste.get(position - 1);
@@ -213,6 +200,34 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
       return v;
     }
   };
+
+
+  @Override
+  public void onClick(View v) {
+    if (v.getId() == R.id.del) {
+      Intent intent = new Intent(Intent.ACTION_SEND);
+      intent.setType("text/plain");
+      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+      intent.putExtra(Intent.EXTRA_SUBJECT, udsendelse.titel);
+      intent.putExtra(Intent.EXTRA_TEXT, udsendelse.titel + "\n\n"
+          + udsendelse.beskrivelse + "\n\n" +
+          "http://dr.dk/" + kanal.slug + "/" + udsendelse.programserieSlug + "/" + udsendelse.slug
+      );
+        http:
+//www.dr.dk/p1/mennesker-og-medier/mennesker-og-medier-100
+      startActivity(intent);
+      return;
+    }
+    if (udsendelse.streams == null || udsendelse.streams.size() == 0) return;
+    new AlertDialog.Builder(getActivity()).setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, udsendelse.streams), new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        DRData.instans.aktuelKanal = kanal;
+        DRData.instans.afspiller.setUrl(udsendelse.streams.get(which).url);
+        DRData.instans.afspiller.startAfspilning();
+      }
+    }).show();
+  }
 
 
   @Override
