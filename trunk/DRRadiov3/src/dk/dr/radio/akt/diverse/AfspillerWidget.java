@@ -21,9 +21,12 @@ package dk.dr.radio.akt.diverse;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Build;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -61,12 +64,22 @@ public class AfspillerWidget extends AppWidgetProvider {
   public static void opdaterUdseende(Context ctx, AppWidgetManager appWidgetManager, int appWidgetId) {
     Log.d("AfspillerWidget opdaterUdseende()");
 
-    RemoteViews remoteViews = lavRemoteViews();
+    boolean låseskærm = false;
+
+    if (Build.VERSION.SDK_INT >= 16) {
+      Bundle o = appWidgetManager.getAppWidgetOptions(appWidgetId);
+      App.langToast("opdaterUdseende opts=" + o);
+      låseskærm = o.getInt(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY, -1) == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD;
+      App.langToast("opdaterUdseende låseskærm=" + låseskærm);
+    }
+
+    RemoteViews remoteViews = lavRemoteViews(låseskærm);
 
     appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
   }
 
-  public static RemoteViews lavRemoteViews() {
+  public static RemoteViews lavRemoteViews(boolean låseskærm) {
+
 
     RemoteViews remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspillerwidget);
 
