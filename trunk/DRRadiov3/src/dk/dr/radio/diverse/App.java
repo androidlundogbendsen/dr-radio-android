@@ -169,6 +169,8 @@ public class App extends Application {
     try { // DRs skrifttyper er ikke offentliggjort i SVN, derfor kan følgende fejle:
       skrift_normal = Typeface.createFromAsset(getAssets(), "Gibson-Regular.otf");
       skrift_fed = Typeface.createFromAsset(getAssets(), "Gibson-SemiBold.otf");
+      // TODO - se om vi kan spare 100kb ved at selv lave en fed variant
+      // skrift_fed =  Typeface.create(skrift_normal, Typeface.BOLD);
     } catch (Exception e) {
       Log.e("DRs skrifttyper er ikke tilgængelige", e);
       skrift_normal = Typeface.DEFAULT;
