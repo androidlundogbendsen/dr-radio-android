@@ -14,7 +14,9 @@ import android.widget.TextView;
 
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
+import dk.dr.radio.data.Lydstream;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
@@ -232,4 +234,13 @@ Jeg bruger selv følgende macro'er i C til generering af URIs:
       }
     }
   }
+
+
+  public static Lydstream findBedsteStreamUrl(ArrayList<Lydstream> streams) {
+    for (Lydstream s : streams) {
+      if (s.url.endsWith(".mp3")) return s;
+    }
+    return streams.get(0);
+  }
+
 }

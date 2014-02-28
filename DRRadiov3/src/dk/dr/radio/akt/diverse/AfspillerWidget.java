@@ -68,9 +68,9 @@ public class AfspillerWidget extends AppWidgetProvider {
 
     if (Build.VERSION.SDK_INT >= 16) {
       Bundle o = appWidgetManager.getAppWidgetOptions(appWidgetId);
-      App.langToast("opdaterUdseende opts=" + o);
+      //App.langToast("opdaterUdseende opts=" + o);
       låseskærm = o.getInt(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY, -1) == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD;
-      App.langToast("opdaterUdseende låseskærm=" + låseskærm);
+      //App.langToast("opdaterUdseende låseskærm=" + låseskærm);
     }
 
     RemoteViews remoteViews = lavRemoteViews(låseskærm);

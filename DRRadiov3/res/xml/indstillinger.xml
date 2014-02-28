@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-
     <CheckBoxPreference
-            android:key="brugGibsonIVenstremenu"
-            android:title="Brug Gibson i venstre-menu"
-            android:defaultValue="true"
-            android:summary="Gibson ser grimt ud i venstremenu på visse enheder. Kræver app-genstart"/>
-
-
-    <CheckBoxPreference
-            android:key="kunSortLigeBagTekst"
-            android:title="Kun sort bag tekst i titler"
+            android:key="startAfspilningMedDetSammme"
+            android:title="Start automatisk"
             android:defaultValue="false"
-            android:summary="Ser også grimt ud. Kræver app-genstart"/>
-
+            android:summary="Start afspilning automatisk, når appen åbnes"/>
 
     <ListPreference
             android:key="lydkvalitet"
@@ -33,13 +24,6 @@
             android:entryValues="@array/lydformat_kode"/>
 
     <CheckBoxPreference
-            android:key="startAfspilningMedDetSammme"
-            android:title="Start automatisk"
-            android:defaultValue="false"
-            android:summary="Start afspilling automatisk, når appen åbnes"/>
-
-
-    <CheckBoxPreference
             android:key="wifilås" android:title="Hold wifi tændt"
             android:defaultValue="true" android:summaryOn="Undlad at skrue ned for wifi (bruger mere batteri)"
             android:summaryOff="Tillad enheden at skrue ned for wifi. Kan forårsage at afspilningen hakker."/>
@@ -54,6 +38,27 @@
             android:key="udvikler" android:title="Udvikler"
             android:defaultValue="false" android:summaryOff=""
             android:summaryOn="Til udviklere og fejlfinding. Appen skal genstartes før det træder i kraft"/>
+
+
+    <CheckBoxPreference
+            android:key="brugGibsonIVenstremenu"
+            android:title="Brug Gibson i venstre-menu"
+            android:defaultValue="true"
+            android:summary="Gibson ser grimt ud i venstremenu på visse enheder. Kræver app-genstart"/>
+
+
+    <CheckBoxPreference
+            android:key="kunSortLigeBagTekst"
+            android:title="Kun sort bag tekst i titler"
+            android:defaultValue="false"
+            android:summary="Ser også grimt ud. Kræver app-genstart"/>
+
+
+    <CheckBoxPreference
+            android:key="manuelStreamvalg"
+            android:title="Manuelt streamvalg"
+            android:defaultValue="false"
+            android:summary="Vælg manuelt mellem de tilgængelige streams, indtil API'et kan give korrekte streamtyper"/>
 
     <!--
 
