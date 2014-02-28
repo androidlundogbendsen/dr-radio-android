@@ -170,6 +170,11 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
 
           a.id(R.id.beskrivelse).text(udsendelse.beskrivelse).typeface(App.skrift_normal);
           Linkify.addLinks(a.getTextView(), Linkify.ALL);
+
+          a.id(R.id.højttalerikon).clicked(Udsendelse_frag.this);
+          a.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_normal);
+          a.id(R.id.hent).clicked(Udsendelse_frag.this).typeface(App.skrift_normal);
+          a.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_normal);
         } else {
           a.id(R.id.højttalerikon).visible().clicked(new UdsendelseClickListener(vh));
         }
@@ -181,10 +186,10 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
       // Opdatér viewholderens data
       if (position == 0) {
         boolean streams = udsendelse.streams != null && udsendelse.streams.size() > 0;
-        a.id(R.id.højttalerikon).clicked(Udsendelse_frag.this).visibility(streams ? View.VISIBLE : View.GONE);
-        a.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_normal).visibility(streams ? View.VISIBLE : View.GONE);
-        a.id(R.id.hent).clicked(Udsendelse_frag.this).typeface(App.skrift_normal).visibility(streams ? View.VISIBLE : View.INVISIBLE);
-        a.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_normal);
+        a.id(R.id.højttalerikon).visibility(streams ? View.VISIBLE : View.GONE);
+        a.id(R.id.hør).visibility(streams ? View.VISIBLE : View.GONE);
+        a.id(R.id.hent).visibility(streams ? View.VISIBLE : View.GONE);
+        a.id(R.id.kan_endnu_ikke_hentes).visibility(!streams ? View.VISIBLE : View.GONE);
       } else {
         Playlisteelement u = liste.get(position - 1);
         vh.playlisteelement = u;
@@ -211,7 +216,8 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
       intent.putExtra(Intent.EXTRA_SUBJECT, udsendelse.titel);
       intent.putExtra(Intent.EXTRA_TEXT, udsendelse.titel + "\n\n"
           + udsendelse.beskrivelse + "\n\n" +
-          "http://dr.dk/" + kanal.slug + "/" + udsendelse.programserieSlug + "/" + udsendelse.slug
+          "http://dr.dk/" + kanal.slug + "/" + udsendelse.programserieSlug + "/" + udsendelse.slug + "\n\n" +
+          findBedsteStreamUrl(kanal.streams)
       );
         http:
 //www.dr.dk/p1/mennesker-og-medier/mennesker-og-medier-100
