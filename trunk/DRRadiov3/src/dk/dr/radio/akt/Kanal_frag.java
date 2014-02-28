@@ -454,15 +454,21 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       Log.rapporterOgvisFejl(getActivity(), new IllegalStateException("kanal.streams er null"));
     } else {
       if (App.udvikling) App.kortToast("kanal.streams=" + kanal.streams);
-      new AlertDialog.Builder(getActivity())
-          .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.streams), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              DRData.instans.aktuelKanal = kanal;
-              DRData.instans.afspiller.setUrl(kanal.streams.get(which).url);
-              DRData.instans.afspiller.startAfspilning();
-            }
-          }).show();
+      if (App.prefs.getBoolean("manuelStreamvalg", false)) {
+        new AlertDialog.Builder(getActivity())
+            .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.streams), new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int which) {
+                DRData.instans.aktuelKanal = kanal;
+                DRData.instans.afspiller.setUrl(kanal.streams.get(which).url);
+                DRData.instans.afspiller.startAfspilning();
+              }
+            }).show();
+      } else {
+        DRData.instans.aktuelKanal = kanal;
+        DRData.instans.afspiller.setUrl(findBedsteStreamUrl(kanal.streams).url);
+        DRData.instans.afspiller.startAfspilning();
+      }
     }
   }
 

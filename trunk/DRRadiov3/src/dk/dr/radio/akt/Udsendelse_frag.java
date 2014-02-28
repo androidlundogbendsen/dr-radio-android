@@ -219,14 +219,22 @@ public class Udsendelse_frag extends Basisfragment implements AdapterView.OnItem
       return;
     }
     if (udsendelse.streams == null || udsendelse.streams.size() == 0) return;
-    new AlertDialog.Builder(getActivity()).setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, udsendelse.streams), new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        DRData.instans.aktuelKanal = kanal;
-        DRData.instans.afspiller.setUrl(udsendelse.streams.get(which).url);
-        DRData.instans.afspiller.startAfspilning();
-      }
-    }).show();
+    if (App.udvikling) App.kortToast("kanal.streams=" + kanal.streams);
+    if (App.prefs.getBoolean("manuelStreamvalg", false)) {
+      new AlertDialog.Builder(getActivity())
+          .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.streams), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              DRData.instans.aktuelKanal = kanal;
+              DRData.instans.afspiller.setUrl(udsendelse.streams.get(which).url);
+              DRData.instans.afspiller.startAfspilning();
+            }
+          }).show();
+    } else {
+      DRData.instans.aktuelKanal = kanal;
+      DRData.instans.afspiller.setUrl(findBedsteStreamUrl(udsendelse.streams).url);
+      DRData.instans.afspiller.startAfspilning();
+    }
   }
 
 
