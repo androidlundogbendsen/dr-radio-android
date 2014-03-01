@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.akt.diverse.PagerSlidingTabStrip;
 import dk.dr.radio.data.DRData;
-import dk.dr.radio.data.stamdata.Kanal;
+import dk.dr.radio.data.Kanal;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 

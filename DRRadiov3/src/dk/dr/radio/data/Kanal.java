@@ -16,43 +16,25 @@
 
  */
 
-package dk.dr.radio.data.stamdata;
+package dk.dr.radio.data;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import dk.dr.radio.data.Lydstream;
-import dk.dr.radio.data.Udsendelse;
-
-public class Kanal {
+public class Kanal extends Lydkilde {
 
   public String kode; // P3
   public static final String P4kode = "P4F";
-  public String slug; // p3
   public String navn;
-
-  public String urn;
-  public JSONObject json;
-
-  /**
-   * Eksemlelvis v3_kanalside__p3.json
-   * http://www.dr.dk/tjenester/mu-apps/schedule/P3 .
-   * Er sorteret kronologisk og skal vises sådan. Starter d.d. om morgenen.
-   * Tilføj /1, /2, …  i URL for at se senere. /7 er max.
-   * Se tidligere med /-1 , /-2 etc
-   */
-  //public String kanalside;
   public int kanallogo_resid;
   public boolean p4underkanal;
   public String lognøgle = "";
   public ArrayList<Udsendelse> udsendelser = new ArrayList<Udsendelse>();
   public SortedMap<String, ArrayList<Udsendelse>> udsendelserPerDag = new TreeMap<String, ArrayList<Udsendelse>>();
-  public ArrayList<Lydstream> streams;
 
   @Override
   public String toString() {

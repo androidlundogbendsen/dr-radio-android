@@ -16,7 +16,7 @@
 
  */
 
-package dk.dr.radio.data.stamdata;
+package dk.dr.radio.data;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import dk.dr.radio.data.DRJson;
-import dk.dr.radio.data.Diverse;
 import dk.dr.radio.diverse.FilCache;
 import dk.dr.radio.diverse.Log;
 

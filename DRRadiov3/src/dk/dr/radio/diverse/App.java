@@ -52,8 +52,8 @@ import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.akt.diverse.Basisaktivitet;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Diverse;
-import dk.dr.radio.data.stamdata.Kanal;
-import dk.dr.radio.data.stamdata.Stamdata;
+import dk.dr.radio.data.Kanal;
+import dk.dr.radio.data.Stamdata;
 import dk.dr.radio.v3.R;
 
 public class App extends Application {
