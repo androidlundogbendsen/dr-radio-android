@@ -1,7 +1,5 @@
 package dk.dr.radio.data;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -9,20 +7,19 @@ import java.util.Date;
  * Repræsenterer en udsendelse
  * Created by j on 28-01-14.
  */
-public class Udsendelse {
-  public JSONObject json;
-  public String slug;  // Bemærk - kan være tom!
+public class Udsendelse extends Lydkilde {
+
+  public String titel;
+  public String beskrivelse;
   public String kanalSlug;  // Bemærk - kan være tom!
   public String programserieSlug;  // Bemærk - kan være tom!
-  public String urn;  // Bemærk - kan være tom!
+
   public Date startTid;
-  public String titel;
   public String startTidKl;
-  public String beskrivelse;
   public Date slutTid;
   public String slutTidKl;
+
   public ArrayList<Playlisteelement> playliste;
-  public ArrayList<Lydstream> streams;
 
   public Udsendelse(String s) {
     titel = s;

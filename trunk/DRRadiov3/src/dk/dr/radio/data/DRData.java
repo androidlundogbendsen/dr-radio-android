@@ -27,8 +27,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 import dk.dr.radio.afspilning.Afspiller;
-import dk.dr.radio.data.stamdata.Kanal;
-import dk.dr.radio.data.stamdata.Stamdata;
 import dk.dr.radio.diverse.FilCache;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.Rapportering;

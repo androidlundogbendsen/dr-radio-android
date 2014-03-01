@@ -96,7 +96,6 @@ public enum DRJson {
     for (int n = 0; n < jsonArray.length(); n++) {
       JSONObject o = jsonArray.getJSONObject(n);
       Udsendelse u = new Udsendelse();
-      u.json = o;
       u.startTid = DRJson.servertidsformat.parse(o.getString(DRJson.StartTime.name()));
       u.startTidKl = klokkenformat.format(u.startTid);
       u.slutTid = DRJson.servertidsformat.parse(o.getString(DRJson.EndTime.name()));

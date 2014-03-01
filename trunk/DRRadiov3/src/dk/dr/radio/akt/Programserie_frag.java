@@ -23,7 +23,7 @@ import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.akt.diverse.VisFragment_akt;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
-import dk.dr.radio.data.stamdata.Kanal;
+import dk.dr.radio.data.Kanal;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;

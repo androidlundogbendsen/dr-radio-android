@@ -32,7 +32,7 @@ import java.util.List;
 
 import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
-import dk.dr.radio.data.stamdata.Kanal;
+import dk.dr.radio.data.Kanal;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.ImageViewTilBlinde;
 import dk.dr.radio.v3.R;

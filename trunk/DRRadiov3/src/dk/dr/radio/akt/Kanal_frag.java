@@ -35,12 +35,11 @@ import java.util.Date;
 
 import dk.dr.radio.akt.diverse.Basisadapter;
 import dk.dr.radio.akt.diverse.Basisfragment;
-import dk.dr.radio.akt.diverse.VisFragment_akt;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
+import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Playlisteelement;
 import dk.dr.radio.data.Udsendelse;
-import dk.dr.radio.data.stamdata.Kanal;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.FilCache;
 import dk.dr.radio.diverse.Log;
@@ -433,8 +432,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       rod.findViewById(R.id.p4_vi_gætter_på_dialog).setVisibility(View.GONE);
       //startActivity(new Intent(getActivity(), Kanalvalg_akt.class));
 
-      startActivity(new Intent(getActivity(), VisFragment_akt.class)
-          .putExtra(VisFragment_akt.KLASSE, KanalerP4_frag.class.getName()));
+      //startActivity(new Intent(getActivity(), VisFragment_akt.class)
+      //    .putExtra(VisFragment_akt.KLASSE, KanalerP4_frag.class.getName()));
 
       //KanalerP4_frag f = new KanalerP4_frag();
       //FragmentManager fragmentManager = getFragmentManager();
