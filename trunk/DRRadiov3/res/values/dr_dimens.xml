@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <!-- Værdier i skærmbilledet for kanalvalg -->
-    <dimen name="kanalvalg_tekststr">20sp</dimen>
-
-    <dimen name="kanalvisning_aktuelUdsendelse_topmargen">-10dp</dimen>
-</resources>

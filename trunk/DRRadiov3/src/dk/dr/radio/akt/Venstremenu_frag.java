@@ -30,7 +30,6 @@ import com.androidquery.AQuery;
 import java.util.ArrayList;
 
 import dk.dr.radio.akt.diverse.Basisadapter;
-import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.skrald.Om_DRRadio_akt;
 import dk.dr.radio.v3.R;
@@ -394,38 +393,6 @@ public class Venstremenu_frag extends Fragment {
       }));
       aq.id(R.id.tekst).text(Html.fromHtml("<b>Kanalvalg fra v2</b>"));
 
-
-      elem.add(new MenuElement(2, "P1D", aq(R.layout.skrald__nav_elem_kanal)));
-
-      aq.id(R.id.billede).image(R.drawable.skrald__kanal_p1d);
-      elem.add(new MenuElement(2, "P2D", aq(R.layout.skrald__nav_elem_kanal), new Runnable() {
-        @Override
-        public void run() {
-          DRData.instans.afspiller.setUrl("http://live-icy.gss.dr.dk:8000/A/A04L.mp3");
-          DRData.instans.afspiller.startAfspilning();
-        }
-      }));
-      aq.id(R.id.billede).image(R.drawable.skrald__kanal_p2d);
-      elem.add(new MenuElement(2, "P3", aq(R.layout.skrald__nav_elem_kanal), new Runnable() {
-        @Override
-        public void run() {
-          DRData.instans.afspiller.setUrl("http://live-icy.gss.dr.dk:8000/A/A05L.mp3");
-          DRData.instans.afspiller.startAfspilning();
-        }
-      }));
-      aq.id(R.id.billede).image(R.drawable.skrald__kanal_p3);
-      elem.add(new MenuElement(2, "DRM", aq(R.layout.skrald__nav_elem_kanal), new Runnable() {
-        @Override
-        public void run() {
-          DRData.instans.afspiller.setUrl("http://live-icy.gss.dr.dk:8000/A/A18L.mp3");
-          DRData.instans.afspiller.startAfspilning();
-        }
-      }));
-      aq.id(R.id.billede).image(R.drawable.skrald__kanallogo_ram).id(R.id.p4åbn).visible();
-      elem.add(new MenuElement(2, "P4K", aq(R.layout.skrald__nav_elem_kanaltekst)));
-      aq.id(R.id.tekst).text("P4 København");
-      elem.add(new MenuElement(2, "P4S", aq(R.layout.skrald__nav_elem_kanaltekst)));
-      aq.id(R.id.tekst).text("P4 Sjælland");
 
     }
 

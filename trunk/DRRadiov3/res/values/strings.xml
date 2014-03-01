@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="app_name">DR Radio</string>
+    <string name="navigation_drawer_open">Åbn venstremenu</string>
+    <string name="navigation_drawer_close">Luk venstremenu</string>
+    <string name="action_settings">Settings</string>
+
     <string-array name="lydformat_tekst">
         <item>AAC (RTSP)</item>
         <item>MP3 (Shoutcast)</item>
@@ -28,4 +33,5 @@
         <item>standard</item>
         <item>høj</item>
     </string-array>
+
 </resources>
