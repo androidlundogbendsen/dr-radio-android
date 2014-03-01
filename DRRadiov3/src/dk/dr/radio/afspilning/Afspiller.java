@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dk.dr.radio.akt.diverse.AfspillerWidget;
+import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.Opkaldshaandtering;
@@ -50,27 +51,21 @@ import dk.dr.radio.diverse.Opkaldshaandtering;
 /**
  * @author j
  */
-public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, OnCompletionListener, OnInfoListener, OnErrorListener, OnBufferingUpdateListener {
-
-  /** ID til notifikation i toppen. Skal bare være unikt og det samme altid */
-  //private static final int NOTIFIKATION_ID = 117;
-
-  /**
-   * Bruges fra widget til at kommunikere med servicen
-   */
-  //public static final int WIDGET_HENT_INFO = 10;
-  public static final int WIDGET_START_ELLER_STOP = 11;
+public class Afspiller {
 
   public Status afspillerstatus = Status.STOPPET;
 
   private MediaPlayer mediaPlayer;
+  private MediaPlayerLytter lytter = new MediaPlayerLytter();
+
   public List<Runnable> observatører = new ArrayList<Runnable>();
   public List<Runnable> forbindelseobservatører = new ArrayList<Runnable>();
 
   private String lydUrl;
   private int forbinderProcent;
+  private Lydkilde lydkilde;
 
-  private static void sætMediaPlayerLytter(MediaPlayer mediaPlayer, Afspiller lytter) {
+  private static void sætMediaPlayerLytter(MediaPlayer mediaPlayer, MediaPlayerLytter lytter) {
     mediaPlayer.setOnCompletionListener(lytter);
     mediaPlayer.setOnErrorListener(lytter);
     mediaPlayer.setOnInfoListener(lytter);
@@ -91,7 +86,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
   public Afspiller() {
     mediaPlayer = new MediaPlayer();
 
-    sætMediaPlayerLytter(mediaPlayer, this);
+    sætMediaPlayerLytter(mediaPlayer, this.lytter);
     // Indlæs gamle værdier så vi har nogle...
     // Fjernet. Skulle ikke være nødvendigt. Jacob 22/10-2011
     // kanalNavn = p.getString("kanalNavn", "P1");
@@ -125,12 +120,9 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
       // Start afspillerservicen så programmet ikke bliver lukket
       // når det kører i baggrunden under afspilning
       App.instans.startService(new Intent(App.instans, HoldAppIHukommelsenService.class));
-      if (App.prefs.getBoolean("wifilås", true) && wifilock != null) try {
+      if (App.prefs.getBoolean("wifilås", true) && wifilock != null) {
         wifilock.acquire();
-        if (App.udvikling) App.langToast("wifilock.acquire()");
-      } catch (Exception e) {
-        Log.rapporterFejl(e);
-      } // TODO fjern try/catch
+      }
       startAfspilningIntern();
       AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
       // Skru op til 1/5 styrke hvis volumen er lavere end det
@@ -188,7 +180,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
           //Log.kritiskFejlStille(ex);
           handler.post(new Runnable() {
             public void run() { // Stop afspilleren fra forgrundstråden. Jacob 14/11
-              onError(mediaPlayer, 42, 42); // kalder stopAfspilning(); og forsøger igen senere og melder fejl til bruger efter 10 forsøg
+              lytter.onError(mediaPlayer, 42, 42); // kalder stopAfspilning(); og forsøger igen senere og melder fejl til bruger efter 10 forsøg
             }
           });
         }
@@ -218,7 +210,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
     }.start();
 
     mediaPlayer = new MediaPlayer();
-    sætMediaPlayerLytter(mediaPlayer, this); // registrér lyttere på den nye instans
+    sætMediaPlayerLytter(mediaPlayer, this.lytter); // registrér lyttere på den nye instans
 
     afspillerstatus = Status.STOPPET;
     opdaterWidgets();
@@ -234,9 +226,10 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
   }
 
 
-  public void setUrl(String url) {
-    if (App.udvikling) App.kortToast("Spiller:\n" + url);
-    lydUrl = url;
+  public void setLydkilde(Lydkilde lydkilde) {
+    if (App.udvikling) App.kortToast("Spiller:\n" + lydkilde);
+    this.lydkilde = lydkilde;
+    lydUrl = lydkilde.findBedsteStream().url;
 
 
     if ((afspillerstatus == Status.SPILLER) || (afspillerstatus == Status.FORBINDER)) {
@@ -250,10 +243,6 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
     opdaterWidgets();
   }
 
-
-  public String getUrl() {
-    return lydUrl;
-  }
 
   private void opdaterWidgets() {
 
@@ -271,61 +260,18 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
   }
 
 
-  //
-  //    TILBAGEKALD FRA MEDIAPLAYER
-  //
-  public void onPrepared(MediaPlayer mp) {
-    Log.d("onPrepared " + mpTils());
-    afspillerstatus = Status.SPILLER; //No longer buffering
-    if (observatører != null) {
-      opdaterWidgets();
-      for (Runnable observer : observatører) {
-        observer.run();
-      }
-    }
-    // Det ser ud til kaldet til start() kan tage lang tid på Android 4.1 Jelly Bean
-    // (i hvert fald på Samsung Galaxy S III), så vi kalder det i baggrunden
-    new Thread() {
-      public void run() {
-        Log.d("mediaPlayer.start() " + mpTils());
-        mediaPlayer.start();
-        Log.d("mediaPlayer.start() slut " + mpTils());
-      }
-    }.start();
+  public int getForbinderProcent() {
+    return forbinderProcent;
   }
 
-  public void onCompletion(MediaPlayer mp) {
-    Log.d("AfspillerService onCompletion!");
-    // Hvis forbindelsen mistes kommer der en onCompletion() og vi er derfor
-    // nødt til at genstarte, medmindre brugeren trykkede stop
-    if (afspillerstatus == Status.SPILLER) {
-      Log.d("Genstarter afspilning!");
-      mediaPlayer.stop();
-      // mediaPlayer.reset();
-      // Da mediaPlayer.reset() erfaringsmæssigt kan hænge i dette tilfælde afregistrerer vi
-      // alle lyttere og bruger en ny
-      final MediaPlayer gammelMediaPlayer = mediaPlayer;
-      sætMediaPlayerLytter(gammelMediaPlayer, null); // afregistrér alle lyttere
-      new Thread() {
-        public void run() {
-          Log.d("gammelMediaPlayer.release() start");
-          gammelMediaPlayer.release();
-          Log.d("gammelMediaPlayer.release() færdig");
-        }
-      }.start();
-
-      mediaPlayer = new MediaPlayer();
-      sætMediaPlayerLytter(mediaPlayer, this); // registrér lyttere på den nye instans
-
-      startAfspilningIntern();
-    }
+  public MediaPlayer getMediaPlayer() {
+    return mediaPlayer;
   }
 
-  public boolean onInfo(MediaPlayer mp, int hvad, int extra) {
-    //Log.d("onInfo(" + MedieafspillerInfo.infokodeTilStreng(hvad) + "(" + hvad + ") " + extra);
-    Log.d("onInfo(" + hvad + ") " + extra + " " + mpTils());
-    return true;
+  public Lydkilde getLydkilde() {
+    return lydkilde;
   }
+
 
   Handler handler = new Handler();
   Runnable startAfspilningIntern = new Runnable() {
@@ -338,49 +284,6 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
     }
   };
 
-  public boolean onError(MediaPlayer mp, int hvad, int extra) {
-    //Log.d("onError(" + MedieafspillerInfo.fejlkodeTilStreng(hvad) + "(" + hvad + ") " + extra+ " onErrorTæller="+onErrorTæller);
-    Log.d("onError(" + hvad + ") " + extra + " onErrorTæller=" + onErrorTæller);
-
-
-    if (Build.VERSION.SDK_INT >= 16 && hvad == MediaPlayer.MEDIA_ERROR_UNKNOWN) {
-      // Ignorer, da Samsung Galaxy SIII på Android 4.1 Jelly Bean
-      // sender denne fejl (onError(1) -110) men i øvrigt spiller fint videre!
-      return true;
-    }
-
-    // Iflg http://developer.android.com/guide/topics/media/index.html :
-    // "It's important to remember that when an error occurs, the MediaPlayer moves to the Error
-    //  state and you must reset it before you can use it again."
-    if (afspillerstatus == Status.SPILLER || afspillerstatus == Status.FORBINDER) {
-
-
-      // Hvis der har været
-      // 1) færre end 10 fejl eller
-      // 2) der højest er 1 fejl pr 20 sekunder så prøv igen
-      long dt = System.currentTimeMillis() - onErrorTællerNultid;
-
-      if (onErrorTæller++ < (App.udvikling ? 2 : 10) || (dt / onErrorTæller > 20000)) {
-        mediaPlayer.stop();
-        mediaPlayer.reset();
-
-        // Vi venter længere og længere tid her
-        int n = onErrorTæller;
-        if (n > 11) n = 11;
-        int ventetid = 10 + 5 * (1 << n); // fra n=0:10 msek til n=10:5 sek   til max n=11:10 sek
-        Log.d("Ventetid før vi prøver igen: " + ventetid + "  n=" + n + " " + onErrorTæller);
-        handler.postDelayed(startAfspilningIntern, ventetid);
-      } else {
-        stopAfspilning(); // Vi giver op efter 10. forsøg
-        App.langToast("Beklager, kan ikke spille radio");
-        App.langToast("Prøv at vælge et andet format i indstillingerne");
-      }
-    } else {
-      mediaPlayer.reset();
-    }
-    return true;
-  }
-
   private void sendOnAfspilningForbinder(int procent) {
     forbinderProcent = procent;
     for (Runnable observer : forbindelseobservatører) {
@@ -388,23 +291,116 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
     }
   }
 
-  public void onBufferingUpdate(MediaPlayer mp, int procent) {
-    Log.d("Afspiller onBufferingUpdate : " + procent + " " + mpTils());
-    if (procent < -100) procent = -1; // Ignorér vilde tal
 
-    sendOnAfspilningForbinder(procent);
-  }
+  //
+  //    TILBAGEKALD FRA MEDIAPLAYER
+  //
+  class MediaPlayerLytter implements OnPreparedListener, OnSeekCompleteListener, OnCompletionListener, OnInfoListener, OnErrorListener, OnBufferingUpdateListener {
+    public void onPrepared(MediaPlayer mp) {
+      Log.d("onPrepared " + mpTils());
+      afspillerstatus = Status.SPILLER; //No longer buffering
+      if (observatører != null) {
+        opdaterWidgets();
+        for (Runnable observer : observatører) {
+          observer.run();
+        }
+      }
+      // Det ser ud til kaldet til start() kan tage lang tid på Android 4.1 Jelly Bean
+      // (i hvert fald på Samsung Galaxy S III), så vi kalder det i baggrunden
+      new Thread() {
+        public void run() {
+          Log.d("mediaPlayer.start() " + mpTils());
+          mediaPlayer.start();
+          Log.d("mediaPlayer.start() slut " + mpTils());
+        }
+      }.start();
+    }
 
-  public void onSeekComplete(MediaPlayer mp) {
-    Log.d("AfspillerService onSeekComplete");
-  }
+    public void onCompletion(MediaPlayer mp) {
+      Log.d("AfspillerService onCompletion!");
+      // Hvis forbindelsen mistes kommer der en onCompletion() og vi er derfor
+      // nødt til at genstarte, medmindre brugeren trykkede stop
+      if (afspillerstatus == Status.SPILLER) {
+        Log.d("Genstarter afspilning!");
+        mediaPlayer.stop();
+        // mediaPlayer.reset();
+        // Da mediaPlayer.reset() erfaringsmæssigt kan hænge i dette tilfælde afregistrerer vi
+        // alle lyttere og bruger en ny
+        final MediaPlayer gammelMediaPlayer = mediaPlayer;
+        sætMediaPlayerLytter(gammelMediaPlayer, null); // afregistrér alle lyttere
+        new Thread() {
+          public void run() {
+            Log.d("gammelMediaPlayer.release() start");
+            gammelMediaPlayer.release();
+            Log.d("gammelMediaPlayer.release() færdig");
+          }
+        }.start();
+
+        mediaPlayer = new MediaPlayer();
+        sætMediaPlayerLytter(mediaPlayer, this); // registrér lyttere på den nye instans
+
+        startAfspilningIntern();
+      }
+    }
+
+    public boolean onInfo(MediaPlayer mp, int hvad, int extra) {
+      //Log.d("onInfo(" + MedieafspillerInfo.infokodeTilStreng(hvad) + "(" + hvad + ") " + extra);
+      Log.d("onInfo(" + hvad + ") " + extra + " " + mpTils());
+      return true;
+    }
+
+    public boolean onError(MediaPlayer mp, int hvad, int extra) {
+      //Log.d("onError(" + MedieafspillerInfo.fejlkodeTilStreng(hvad) + "(" + hvad + ") " + extra+ " onErrorTæller="+onErrorTæller);
+      Log.d("onError(" + hvad + ") " + extra + " onErrorTæller=" + onErrorTæller);
 
 
-  public int getForbinderProcent() {
-    return forbinderProcent;
-  }
+      if (Build.VERSION.SDK_INT >= 16 && hvad == MediaPlayer.MEDIA_ERROR_UNKNOWN) {
+        // Ignorer, da Samsung Galaxy SIII på Android 4.1 Jelly Bean
+        // sender denne fejl (onError(1) -110) men i øvrigt spiller fint videre!
+        return true;
+      }
 
-  public MediaPlayer getMediaPlayer() {
-    return mediaPlayer;
+      // Iflg http://developer.android.com/guide/topics/media/index.html :
+      // "It's important to remember that when an error occurs, the MediaPlayer moves to the Error
+      //  state and you must reset it before you can use it again."
+      if (afspillerstatus == Status.SPILLER || afspillerstatus == Status.FORBINDER) {
+
+
+        // Hvis der har været
+        // 1) færre end 10 fejl eller
+        // 2) der højest er 1 fejl pr 20 sekunder så prøv igen
+        long dt = System.currentTimeMillis() - onErrorTællerNultid;
+
+        if (onErrorTæller++ < (App.udvikling ? 2 : 10) || (dt / onErrorTæller > 20000)) {
+          mediaPlayer.stop();
+          mediaPlayer.reset();
+
+          // Vi venter længere og længere tid her
+          int n = onErrorTæller;
+          if (n > 11) n = 11;
+          int ventetid = 10 + 5 * (1 << n); // fra n=0:10 msek til n=10:5 sek   til max n=11:10 sek
+          Log.d("Ventetid før vi prøver igen: " + ventetid + "  n=" + n + " " + onErrorTæller);
+          handler.postDelayed(startAfspilningIntern, ventetid);
+        } else {
+          stopAfspilning(); // Vi giver op efter 10. forsøg
+          App.langToast("Beklager, kan ikke spille radio");
+          App.langToast("Prøv at vælge et andet format i indstillingerne");
+        }
+      } else {
+        mediaPlayer.reset();
+      }
+      return true;
+    }
+
+    public void onBufferingUpdate(MediaPlayer mp, int procent) {
+      Log.d("Afspiller onBufferingUpdate : " + procent + " " + mpTils());
+      if (procent < -100) procent = -1; // Ignorér vilde tal
+
+      sendOnAfspilningForbinder(procent);
+    }
+
+    public void onSeekComplete(MediaPlayer mp) {
+      Log.d("AfspillerService onSeekComplete");
+    }
   }
 }

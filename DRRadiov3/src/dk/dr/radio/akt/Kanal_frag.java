@@ -94,7 +94,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_fed).getView());
 
-    hentSendeplanForDag(aq, new Date(), true);
+    // Hent sendeplan for den pågældende dag. Døgnskifte sker kl 5, så det kan være dagen før
+    hentSendeplanForDag(aq, new Date(System.currentTimeMillis() - 5 * 60 * 60 * 1000), true);
     udvikling_checkDrSkrifter(rod, this + " rod");
     return rod;
   }
@@ -102,8 +103,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   public static DateFormat datoFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 
-  private void hentSendeplanForDag(final AQuery aq, Date dato1, final boolean idag) {
-    final String dato = datoFormat.format(dato1);
+  private void hentSendeplanForDag(final AQuery aq, Date dag, final boolean idag) {
+    final String dato = datoFormat.format(dag);
 
     String url = kanal.getUdsendelserUrl() + "/date/" + dato;
     Log.d("hentSendeplanForDag url=" + url);
@@ -119,8 +120,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         if (json != null && !"null".equals(json)) try {
 
           if (idag) {
-            kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json)), dato);
-            opdaterListe(kanal.udsendelser);
+            kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json), kanal), dato);
+            opdaterListe();
             scrollTilAktuelUdsendelse();
           } else {
             // Nu ændres der i listen for at vise en dag før eller efter - sørg for at det synlige indhold ikke rykker sig
@@ -129,8 +130,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
             View v = listView.getChildAt(1);
             int næstøversteSynligOffset = (v == null) ? 0 : v.getTop();
 
-            kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json)), dato);
-            opdaterListe(kanal.udsendelser);
+            kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json), kanal), dato);
+            opdaterListe();
 
             int næstøversteSynligNytIndex = liste.indexOf(næstøversteSynlig);
             listView.setSelectionFromTop(næstøversteSynligNytIndex, næstøversteSynligOffset);
@@ -195,30 +196,20 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   }
 
 
-  private void opdaterListe(ArrayList<Udsendelse> nyuliste) {
+  private void opdaterListe() {
     try {
-      Log.d(kanal + " opdaterListe " + nyuliste.size());
-      Date nu = new Date(); // TODO kompenser for forskelle mellem telefonens ur og serverens ur
-      //Log.d("opdaterListe " + kanal.kode + "  nu=" + nu);
-      aktuelUdsendelseIndex = -1;
       Udsendelse tidligere = new Udsendelse("Tidligere");
       Udsendelse senere = new Udsendelse("Senere");
+      ArrayList<Udsendelse> nyuliste = kanal.udsendelser;
+      Log.d(kanal + " opdaterListe " + nyuliste.size());
       tidligere.startTid = new Date(nyuliste.get(0).startTid.getTime() - 12 * 60 * 60 * 1000); // Døgnet starter kl 5, så vi er på den sikre side med 12 timer
       senere.startTid = nyuliste.get(nyuliste.size() - 1).slutTid;
 
       liste.clear();
       liste.add(tidligere);
       liste.addAll(nyuliste);
-      // Nicolai: "jeg løber listen igennem fra bunden og op,
-      // og så finder jeg den første der har starttid >= nuværende tid + sluttid <= nuværende tid."
-      for (int n = liste.size() - 1; n > 1; n--) {
-        Udsendelse u = liste.get(n);
-        //Log.d(n + " " + nu.after(u.startTid) + u.slutTid.before(nu) + "  " + u);
-        if (u.startTid.before(nu) && nu.before(u.slutTid)) {
-          aktuelUdsendelseIndex = n;
-          break;
-        }
-      }
+
+      aktuelUdsendelseIndex = kanal.getAktuelUdsendelseIndex() + 1;
       liste.add(senere);
     } catch (Exception e1) {
       Log.rapporterFejl(e1);
@@ -255,9 +246,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
     @Override
     public int getItemViewType(int position) {
-      //if (position == 0) return 1;
-      if (position == aktuelUdsendelseIndex) return AKTUEL;
       if (position == 0 || position == liste.size() - 1) return TIDLIGERE_SENERE;
+      if (position == aktuelUdsendelseIndex) return AKTUEL;
       return NORMAL;
     }
 
@@ -414,7 +404,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       lp.weight = 100 - passeretPct;
       vh.slutttidbjælke.setLayoutParams(lp);
       if (passeretPct >= 100) { // Hop til næste udsendelse
-        opdaterListe(kanal.udsendelser);
+        opdaterListe();
         scrollTilAktuelUdsendelse();
       }
       if (u.playliste != null && u.playliste.size() > 0) {
@@ -451,14 +441,15 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
             .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.streams), new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialog, int which) {
+                kanal.streams.get(which).foretrukken = true;
                 DRData.instans.aktuelKanal = kanal;
-                DRData.instans.afspiller.setUrl(kanal.streams.get(which).url);
+                DRData.instans.afspiller.setLydkilde(kanal);
                 DRData.instans.afspiller.startAfspilning();
               }
             }).show();
       } else {
         DRData.instans.aktuelKanal = kanal;
-        DRData.instans.afspiller.setUrl(findBedsteStreamUrl(kanal.streams).url);
+        DRData.instans.afspiller.setLydkilde(kanal);
         DRData.instans.afspiller.startAfspilning();
       }
     }

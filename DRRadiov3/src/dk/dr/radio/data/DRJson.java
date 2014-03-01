@@ -87,7 +87,7 @@ public enum DRJson {
   /**
    * Parser udsendelser for kanal. A la http://www.dr.dk/tjenester/mu-apps/schedule/P3/0
    */
-  public static ArrayList<Udsendelse> parseUdsendelserForKanal(JSONArray jsonArray) throws JSONException, ParseException {
+  public static ArrayList<Udsendelse> parseUdsendelserForKanal(JSONArray jsonArray, Kanal kanal) throws JSONException, ParseException {
     String iDagDatoStr = datoformat.format(new Date());
     String iMorgenDatoStr = datoformat.format(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
     String iGårDatoStr = datoformat.format(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000));
@@ -110,7 +110,7 @@ public enum DRJson {
       u.titel = o.getString(DRJson.Title.name());
       u.beskrivelse = o.getString(DRJson.Description.name());
       u.slug = o.optString(DRJson.Slug.name());  // Bemærk - kan være tom!
-      u.kanalSlug = o.optString(DRJson.ChannelSlug.name());  // Bemærk - kan være tom!
+      u.kanalSlug = o.optString(DRJson.ChannelSlug.name(), kanal.slug);  // Bemærk - kan være tom..
       u.programserieSlug = o.optString(DRJson.SeriesSlug.name());  // Bemærk - kan være tom!
       u.urn = o.optString(DRJson.Urn.name());  // Bemærk - kan være tom!
       uliste.add(u);

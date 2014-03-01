@@ -42,4 +42,18 @@ public class Udsendelse extends Lydkilde {
   }
 
 
+  @Override
+  public Kanal kanal() {
+    return DRData.instans.stamdata.kanalFraSlug.get(kanalSlug);
+  }
+
+  @Override
+  public boolean erStreaming() {
+    return false;
+  }
+
+  @Override
+  public Udsendelse getUdsendelse() {
+    return this;
+  }
 }

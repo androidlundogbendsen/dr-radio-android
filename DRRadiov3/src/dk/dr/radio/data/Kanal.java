@@ -22,6 +22,7 @@ import org.json.JSONException;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -68,5 +69,36 @@ public class Kanal extends Lydkilde {
       if (u.slug.equals(slug)) return u;
     }
     return null;
+  }
+
+  @Override
+  public Kanal kanal() {
+    return this;
+  }
+
+  @Override
+  public boolean erStreaming() {
+    return true;
+  }
+
+  @Override
+  public Udsendelse getUdsendelse() {
+    int n = getAktuelUdsendelseIndex();
+    if (n >= 0) return udsendelser.get(n);
+    return null;
+  }
+
+  public int getAktuelUdsendelseIndex() {
+    Date nu = new Date(); // TODO kompenser for forskelle mellem telefonens ur og serverens ur
+    // Nicolai: "jeg løber listen igennem fra bunden og op,
+    // og så finder jeg den første der har starttid >= nuværende tid + sluttid <= nuværende tid."
+    for (int n = udsendelser.size() - 1; n > 1; n--) {
+      Udsendelse u = udsendelser.get(n);
+      //Log.d(n + " " + nu.after(u.startTid) + u.slutTid.before(nu) + "  " + u);
+      if (u.startTid.before(nu) && nu.before(u.slutTid)) {
+        return n;
+      }
+    }
+    return -2;
   }
 }
