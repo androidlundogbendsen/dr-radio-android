@@ -265,8 +265,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       Udsendelse udsendelse = liste.get(position);
       if (v == null) {
         v = getLayoutInflater(null).inflate(
-            type == AKTUEL ? R.layout.kanalelem_aktuel :        // Visning af den aktuelle udsendelse
-                type == NORMAL ? R.layout.elem_tid_titel_kunstner   // De andre udsendelser
+            type == AKTUEL ? R.layout.kanal_elem_aktuel :        // Visning af den aktuelle udsendelse
+                type == NORMAL ? R.layout.udsendelse_elem2_tid_titel_kunstner   // De andre udsendelser
                     : R.layout.kanal_elem_tidligere_senere, parent, false);
         vh = new Viewholder();
         a = vh.aq = new AQuery(v);

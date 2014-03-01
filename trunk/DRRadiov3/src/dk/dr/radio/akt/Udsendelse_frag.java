@@ -134,10 +134,10 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   static final int ALLE_UDS = 3;
 
   static final int[] layoutFraType = {
-      R.layout.udsendelse_elem_top,
-      R.layout.udsendelse_elem_spiller_nu,
-      R.layout.elem_tid_titel_kunstner,
-      R.layout.udsendelse_elem_alle_udsendelser};
+      R.layout.udsendelse_elem0_top,
+      R.layout.udsendelse_elem1_spiller_nu,
+      R.layout.udsendelse_elem2_tid_titel_kunstner,
+      R.layout.udsendelse_elem3_alle_udsendelser};
 
   private BaseAdapter adapter = new Basisadapter() {
     @Override
