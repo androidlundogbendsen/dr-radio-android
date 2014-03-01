@@ -23,7 +23,7 @@
             android:icon="@drawable/ic_launcher"
             android:logo="@drawable/dr_logo"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Drxx_ab"
+            android:theme="@style/Theme.Dr"
             >
 
         <!--

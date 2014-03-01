@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <style name="Theme.Dr" parent="@style/Theme.AppCompat.Light">
+        <item name="actionBarStyle">@style/ActionBar.Solid.Dr</item>
+        <item name="android:windowBackground">@color/hvid</item>
+    </style>
+
+    <style name="ActionBar.Solid.Dr" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+    <item name="background">@color/grå70</item>
+        <item name="displayOptions">showHome|useLogo</item>
+    </style>
+
+</resources>
