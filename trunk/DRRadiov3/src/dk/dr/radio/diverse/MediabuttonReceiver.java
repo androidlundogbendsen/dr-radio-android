@@ -25,7 +25,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 
-import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.afspilning.AfspillerReciever;
 
 public class MediabuttonReceiver extends BroadcastReceiver {
@@ -59,9 +58,7 @@ public class MediabuttonReceiver extends BroadcastReceiver {
           case KeyEvent.KEYCODE_HEADSETHOOK:
           case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
             Log.d("MediabuttonReciever supported event.");
-            Intent startStopI = new Intent(context, AfspillerReciever.class);
-            startStopI.putExtra("flag", Afspiller.WIDGET_START_ELLER_STOP);
-            context.sendBroadcast(startStopI);
+            context.sendBroadcast(new Intent(context, AfspillerReciever.class));
             break;
           case KeyEvent.KEYCODE_MEDIA_NEXT:
           case KeyEvent.KEYCODE_MEDIA_PREVIOUS:

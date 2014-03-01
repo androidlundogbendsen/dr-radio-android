@@ -13,6 +13,9 @@ import com.androidquery.AQuery;
 import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
+import dk.dr.radio.data.Kanal;
+import dk.dr.radio.data.Lydkilde;
+import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
@@ -21,13 +24,12 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
   private AQuery aq;
   private ImageView start_stop_pauseknap;
   private ProgressBar progressbar;
-  private TextView kanal;
-  private TextView titel;
+  private TextView kanalTv;
+  private TextView titelTv;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    //setRetainInstance(true);
   }
 
   @Override
@@ -37,8 +39,8 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     aq = new AQuery(rod);
     start_stop_pauseknap = aq.id(R.id.start_stop_pauseknap).clicked(this).getImageView();
     progressbar = aq.id(R.id.progressBar).getProgressBar();
-    kanal = aq.id(R.id.kanal).typeface(App.skrift_normal).getTextView();
-    titel = aq.id(R.id.titel).typeface(App.skrift_fed).getTextView();
+    kanalTv = aq.id(R.id.kanal).typeface(App.skrift_normal).getTextView();
+    titelTv = aq.id(R.id.titel).typeface(App.skrift_fed).getTextView();
     DRData.instans.afspiller.observatører.add(this);
     DRData.instans.afspiller.forbindelseobservatører.add(this);
     run(); // opdatér views
@@ -54,19 +56,32 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
 
   @Override
   public void run() {
-    kanal.setText(DRData.instans.aktuelKanal.navn);
-    switch (DRData.instans.afspiller.getAfspillerstatus()) {
+    Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
+    if (lydkilde == null) lydkilde = DRData.instans.aktuelKanal;
+    Kanal k = lydkilde.kanal();
+    Status status = DRData.instans.afspiller.getAfspillerstatus();
+    boolean live = lydkilde.erStreaming() && status != Status.STOPPET;
+    kanalTv.setText(k.navn + (live ? " LIVE" : ""));
+    Udsendelse udsendelse = lydkilde.getUdsendelse();
+    String titel = udsendelse == null ? "" : " - " + udsendelse.titel;
+    switch (status) {
+      case STOPPET:
+        start_stop_pauseknap.setImageResource(R.drawable.dri_radio_spil_hvid);
+        titelTv.setText("Stoppet" + titel);
+        kanalTv.setTextColor(getResources().getColor(R.color.grå40));
+        progressbar.setVisibility(View.GONE);
+        break;
       case FORBINDER:
         start_stop_pauseknap.setImageResource(R.drawable.dri_radio_pause_hvid);
         progressbar.setVisibility(View.VISIBLE);
-        titel.setText("Forbinder " + DRData.instans.afspiller.getForbinderProcent());
-        break;
-      case STOPPET:
-        start_stop_pauseknap.setImageResource(R.drawable.dri_radio_spil_hvid);
-        progressbar.setVisibility(View.GONE);
+        kanalTv.setTextColor(getResources().getColor(R.color.blå));
+        int fpct = DRData.instans.afspiller.getForbinderProcent();
+        titelTv.setText("Forbinder " + (fpct > 0 ? fpct : "") + titel);
         break;
       case SPILLER:
         start_stop_pauseknap.setImageResource(R.drawable.dri_radio_stop_hvid);
+        kanalTv.setTextColor(getResources().getColor(R.color.blå));
+        titelTv.setText("Afspiller" + titel);
         progressbar.setVisibility(View.GONE);
         break;
     }

@@ -72,7 +72,7 @@ public class DRData {
 */
     for (Kanal kanal : i.stamdata.kanaler) {
       Log.d("\n\nkanal = " + kanal);
-      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(hent(kanal.getUdsendelserUrl()))), "0");
+      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(hent(kanal.getUdsendelserUrl())), kanal), "0");
       for (Udsendelse u : kanal.udsendelser) {
         Log.d("\nudsendelse = " + u);
         JSONObject obj = new JSONObject(hent(u.getStreamsUrl()));

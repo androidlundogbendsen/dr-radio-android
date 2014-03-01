@@ -246,7 +246,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       intent.putExtra(Intent.EXTRA_TEXT, udsendelse.titel + "\n\n"
           + udsendelse.beskrivelse + "\n\n" +
           "http://dr.dk/" + kanal.slug + "/" + udsendelse.programserieSlug + "/" + udsendelse.slug + "\n\n" +
-          findBedsteStreamUrl(kanal.streams)
+          kanal.findBedsteStream().url
       );
         http:
 //www.dr.dk/p1/mennesker-og-medier/mennesker-og-medier-100
@@ -259,14 +259,15 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
             .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.streams), new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialog, int which) {
+                udsendelse.streams.get(which).foretrukken = true;
                 DRData.instans.aktuelKanal = kanal;
-                DRData.instans.afspiller.setUrl(udsendelse.streams.get(which).url);
+                DRData.instans.afspiller.setLydkilde(kanal);
                 DRData.instans.afspiller.startAfspilning();
               }
             }).show();
       } else {
         DRData.instans.aktuelKanal = kanal;
-        DRData.instans.afspiller.setUrl(findBedsteStreamUrl(udsendelse.streams).url);
+        DRData.instans.afspiller.setLydkilde(udsendelse);
         DRData.instans.afspiller.startAfspilning();
       }
     } else if (v.getId() == R.id.hent) {
@@ -274,7 +275,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       if (Build.VERSION.SDK_INT < 9) {
         App.langToast("Beklager, din telefon er for gammel");
       }
-      Uri uri = Uri.parse(findBedsteStreamUrl(udsendelse.streams).url);
+      Uri uri = Uri.parse(kanal.findBedsteStream().url);
 
       Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS).mkdirs();
 

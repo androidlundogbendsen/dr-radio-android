@@ -8,6 +8,7 @@ public class Lydstream {
   public DRJson.StreamType type;
   //public DRJson.StreamKind kind;
   public DRJson.StreamQuality kvalitet;
+  public boolean foretrukken;
 
   @Override
   public String toString() {
