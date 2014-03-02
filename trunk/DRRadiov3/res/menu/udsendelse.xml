@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+            android:id="@+id/hør"
+            android:title="Hør udsendelse"
+            android:orderInCategory="1"
+            android:icon="@drawable/dri_lyd2_blaa"
+            app:showAsAction="always"/>
+    <item
+            android:id="@+id/hent"
+            android:title="Del"
+            android:orderInCategory="1"
+            android:icon="@drawable/dri_hent_blaa"
+            app:showAsAction="ifRoom"/>
+    <item
+            android:id="@+id/del"
+            android:title="Del"
+            android:orderInCategory="1"
+            android:icon="@android:drawable/ic_menu_share"
+            app:showAsAction="ifRoom"/>
+</menu>

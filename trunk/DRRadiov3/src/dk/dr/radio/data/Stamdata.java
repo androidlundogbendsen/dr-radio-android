@@ -119,7 +119,7 @@ public class Stamdata {
         k.slug = o.getString(DRJson.Slug.name());
         kanalFraSlug.put(k.slug, k);
         k.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
-        Log.d(k.kode + " k.lydUrl=" + k.streams);
+        //Log.d(k.kode + " k.lydUrl=" + k.streams);
       } catch (Exception e) {
         Log.e(e);
       }

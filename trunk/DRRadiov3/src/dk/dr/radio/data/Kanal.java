@@ -64,13 +64,6 @@ public class Kanal extends Lydkilde {
     return "http://www.dr.dk/tjenester/mu-apps/playlist/" + u.slug + "/" + slug;
   }
 
-  public Udsendelse findUdsendelseFraSlug(String slug) {
-    for (Udsendelse u : udsendelser) {
-      if (u.slug.equals(slug)) return u;
-    }
-    return null;
-  }
-
   @Override
   public Kanal kanal() {
     return this;

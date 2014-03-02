@@ -24,6 +24,7 @@ import dk.dr.radio.akt.diverse.VisFragment_akt;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Kanal;
+import dk.dr.radio.data.Programserie;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
@@ -35,6 +36,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
   private JSONObject data;
   private AQuery aq;
   private String programserieSlug;
+  private Programserie ps;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -42,27 +44,34 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     programserieSlug = getArguments().getString(DRJson.SeriesSlug.name());
     Log.d(this + " viser " + programserieSlug);
 
-    // svarer til v3_programserie.json
-    // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true
-    String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true";
-    Log.d("XXX url=" + url);
-    App.sætErIGang(true);
-    new AQuery(App.instans).ajax(url, String.class, 60000, new AjaxCallback<String>() {
-      @Override
-      public void callback(String url, String json, AjaxStatus status) {
-        App.sætErIGang(false);
-        Log.d("XXX url " + url + "   status=" + status.getCode());
-        if (json != null && !"null".equals(json)) try {
-          data = new JSONObject(json);
-          opdaterSkærm();
-          return;
-        } catch (Exception e) {
-          Log.d("Parsefejl: " + e + " for json=" + json);
-          e.printStackTrace();
+    ps = DRData.instans.programserieFraSlug.get(programserieSlug);
+    if (ps == null) {
+      // svarer til v3_programserie.json
+      // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true
+      // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true&includeStreams=true
+      String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true";
+      Log.d("XXX url=" + url);
+      App.sætErIGang(true);
+      new AQuery(App.instans).ajax(url, String.class, 24 * 60 * 60 * 1000, new AjaxCallback<String>() {
+        @Override
+        public void callback(String url, String json, AjaxStatus status) {
+          App.sætErIGang(false);
+          Log.d("XXX url " + url + "   status=" + status.getCode());
+          if (json != null && !"null".equals(json)) try {
+            data = new JSONObject(json);
+            ps = DRJson.parsProgramserie(data);
+            ps.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+            DRData.instans.programserieFraSlug.put(programserieSlug, ps);
+            opdaterSkærm();
+            return;
+          } catch (Exception e) {
+            Log.d("Parsefejl: " + e + " for json=" + json);
+            e.printStackTrace();
+          }
+          aq.id(R.id.tom).text(url + "   status=" + status.getCode() + "\njson=" + json);
         }
-        aq.id(R.id.tom).text(url + "   status=" + status.getCode() + "\njson=" + json);
-      }
-    });
+      });
+    }
   }
 
   @Override
@@ -75,13 +84,6 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     return rod;
   }
 
-  /*
-    @Override
-    public void onResume() {
-      super.onResume();
-      ((Hovedaktivitet) getActivity()).sætTitel(getArguments().getString(P_kode));
-    }
-  */
   private void opdaterSkærm() {
     try {
       Log.d("opdaterSkærm " + data.toString(2));
@@ -106,43 +108,6 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
       return liste.size();
     }
 
-    /*
-       {
-       "Explicit" : true,
-       "Subtitle" : "",
-       "Urn" : "urn:dr:mu:bundle:4f3b8b29860d9a33ccfdb775",
-       "TotalPrograms" : 313,
-       "Channel" : "dr.dk/mas/whatson/channel/P3",
-       "Title" : "Monte Carlo på P3",
-       "Webpage" : "http://www.dr.dk/p3/programmer/monte-carlo",
-       "Description" : "Nu kan du dagligt fra 14-16 komme en tur til  Monte Carlo, hvor Peter Falktoft og Esben Bjerre vil guide dig rundt.\r\nDu kan læne dig tilbage og nyde turen og være på en lytter, når Peter og Esben vender ugens store og små kulturelle begivenheder, kigger på ugens bedste tv og spørger hvad du har #HørtOverHækken.\r\n",
-       "Images" : null,
-       "Slug" : "monte-carlo",
-       "ChannelType" : 0,
-       },
-
-          {
-             "BroadcastStartTime" : "2013-12-20T14:04:00+01:00",
-             "Subtitle" : "",
-             "Urn" : "urn:dr:mu:programcard:52a901e46187a2197cc3d14f",
-             "Title" : "Monte Carlo",
-             "SeriesSlug" : "monte-carlo",
-             "ProductionNumber" : "13331315515",
-             "Streams" : null,
-             "Slug" : "monte-carlo-355",
-             "LatestBroadcast" : "2013-12-20T14:04:00+01:00",
-             "Channel" : "dr.dk/mas/whatson/channel/P3",
-             "FirstBroadcast" : "2013-12-20T14:04:00+01:00",
-             "SpotTitle" : null,
-             "Playlist" : null,
-             "Broadcasts" : null,
-             "PreviousProgramSlug" : "monte-carlo-354",
-             "SpotTeaser" : null,
-             "Episode" : 313,
-             "Description" : "Peter Falktoft og Esben Bjerre vender ugens store og små begivenheder med et satirisk blik, kigger på ugens bedste tv og spørger lytterne hvad de har #HørtOverHækken.",
-             "NextProgramSlug" : null
-          },
-     */
     @Override
     public View getView(int position, View v, ViewGroup parent) {
       if (v == null) v = getLayoutInflater(null).inflate(R.layout.elem_udvikler, parent, false);

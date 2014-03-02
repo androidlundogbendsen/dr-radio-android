@@ -11,6 +11,9 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -33,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.akt.diverse.Basisadapter;
 import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
@@ -97,7 +101,31 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     // Hent sendeplan for den pågældende dag. Døgnskifte sker kl 5, så det kan være dagen før
     hentSendeplanForDag(aq, new Date(System.currentTimeMillis() - 5 * 60 * 60 * 1000), true);
     udvikling_checkDrSkrifter(rod, this + " rod");
+    setHasOptionsMenu(true);
+    DRData.instans.afspiller.observatører.add(this);
     return rod;
+  }
+
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    DRData.instans.afspiller.observatører.remove(this);
+
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.kanal, menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.hør) {
+      hør();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   public static DateFormat datoFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -120,7 +148,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         if (json != null && !"null".equals(json)) try {
 
           if (idag) {
-            kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json), kanal), dato);
+            kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json), kanal, DRData.instans), dato);
             opdaterListe();
             scrollTilAktuelUdsendelse();
           } else {
@@ -130,7 +158,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
             View v = listView.getChildAt(1);
             int næstøversteSynligOffset = (v == null) ? 0 : v.getTop();
 
-            kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json), kanal), dato);
+            kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json), kanal, DRData.instans), dato);
             opdaterListe();
 
             int næstøversteSynligNytIndex = liste.indexOf(næstøversteSynlig);
@@ -193,6 +221,9 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     opdaterAktuelUdsendelse(vh);
     //MediaPlayer mp = DRData.instans.afspiller.getMediaPlayer();
     //Log.d("mp pos="+mp.getCurrentPosition() + "  af "+mp.getDuration());
+    if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET && DRData.instans.afspiller.getLydkilde() != kanal) {
+      DRData.instans.afspiller.setLydkilde(kanal);
+    }
   }
 
 
@@ -274,8 +305,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         vh.starttidbjælke = a.id(R.id.starttidbjælke).getView();
         vh.slutttidbjælke = a.id(R.id.slutttidbjælke).getView();
         //a.id(R.id.højttalerikon).clicked(new UdsendelseClickListener(vh));
-        a.id(R.id.højttalerikon).gone();  // Bruges ikke mere i dette design
-        a.id(R.id.hør_live).text(" HØR " + kanal.navn.toUpperCase() + " LIVE").clicked(Kanal_frag.this);
+        a.id(R.id.hør_live).clicked(Kanal_frag.this);
         a.id(R.id.slutttid).typeface(App.skrift_normal).text(udsendelse.slutTidKl);
         if (type == TIDLIGERE_SENERE) {
           vh.titel = a.id(R.id.titel).typeface(App.skrift_fed).getTextView();
@@ -336,6 +366,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         vh.titel.setText(udsendelse.titel);
         a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
       }
+      a.id(R.id.højttalerikon).visibility(udsendelse.kanHentes ? View.VISIBLE : View.GONE);
 
       return v;
     }
@@ -411,6 +442,9 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         opdaterSenestSpillet(vh.aq, u);
       }
 
+      boolean spillerDenneKanal = DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET && DRData.instans.afspiller.getLydkilde() == kanal;
+      vh.aq.id(R.id.hør_live).enabled(!spillerDenneKanal).text((spillerDenneKanal ? " SPILLER " : " HØR ") + kanal.navn.toUpperCase() + " LIVE");
+
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
@@ -435,23 +469,27 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     } else if (kanal.streams == null) {
       Log.rapporterOgvisFejl(getActivity(), new IllegalStateException("kanal.streams er null"));
     } else {
-      if (App.udvikling) App.kortToast("kanal.streams=" + kanal.streams);
-      if (App.prefs.getBoolean("manuelStreamvalg", false)) {
-        new AlertDialog.Builder(getActivity())
-            .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.streams), new DialogInterface.OnClickListener() {
-              @Override
-              public void onClick(DialogInterface dialog, int which) {
-                kanal.streams.get(which).foretrukken = true;
-                DRData.instans.aktuelKanal = kanal;
-                DRData.instans.afspiller.setLydkilde(kanal);
-                DRData.instans.afspiller.startAfspilning();
-              }
-            }).show();
-      } else {
-        DRData.instans.aktuelKanal = kanal;
-        DRData.instans.afspiller.setLydkilde(kanal);
-        DRData.instans.afspiller.startAfspilning();
-      }
+      hør();
+    }
+  }
+
+  private void hør() {
+    if (App.udvikling) App.kortToast("kanal.streams=" + kanal.streams);
+    if (App.prefs.getBoolean("manuelStreamvalg", false)) {
+      new AlertDialog.Builder(getActivity())
+          .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.streams), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              kanal.streams.get(which).foretrukken = true;
+              DRData.instans.aktuelKanal = kanal;
+              DRData.instans.afspiller.setLydkilde(kanal);
+              DRData.instans.afspiller.startAfspilning();
+            }
+          }).show();
+    } else {
+      DRData.instans.aktuelKanal = kanal;
+      DRData.instans.afspiller.setLydkilde(kanal);
+      DRData.instans.afspiller.startAfspilning();
     }
   }
 
