@@ -220,9 +220,6 @@ public class Afspiller {
     App.instans.stopService(new Intent(App.instans, HoldAppIHukommelsenService.class));
     if (wifilock != null) wifilock.release();
     // Informer evt aktivitet der lytter
-    for (Runnable observatør : observatører) {
-      observatør.run();
-    }
   }
 
 
@@ -251,6 +248,10 @@ public class Afspiller {
 
     for (int id : appWidgetId) {
       AfspillerWidget.opdaterUdseende(App.instans, mAppWidgetManager, id);
+    }
+
+    for (Runnable observatør : observatører) {
+      observatør.run();
     }
   }
 
@@ -299,12 +300,7 @@ public class Afspiller {
     public void onPrepared(MediaPlayer mp) {
       Log.d("onPrepared " + mpTils());
       afspillerstatus = Status.SPILLER; //No longer buffering
-      if (observatører != null) {
-        opdaterWidgets();
-        for (Runnable observer : observatører) {
-          observer.run();
-        }
-      }
+      opdaterWidgets();
       // Det ser ud til kaldet til start() kan tage lang tid på Android 4.1 Jelly Bean
       // (i hvert fald på Samsung Galaxy S III), så vi kalder det i baggrunden
       new Thread() {

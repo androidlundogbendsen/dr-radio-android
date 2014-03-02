@@ -26,7 +26,7 @@ public enum DRJson {
   StartTime, EndTime,
   Streams,
   Uri, Played, Artist, Image,
-  Type, Kind, Quality, Kbps, ChannelSlug;
+  Type, Kind, Quality, Kbps, ChannelSlug, TotalPrograms, Programs, FirstBroadcast, Watchable;
 
   public enum StreamType {
     Shoutcast, // 0 tidligere 'Streaming'
@@ -84,10 +84,26 @@ public enum DRJson {
   public static final DateFormat datoformat = new SimpleDateFormat("d. MMM. yyyy", dansk);
 
 
+  private static Udsendelse getUdsendelse(DRData drData, JSONObject o) throws JSONException {
+    String slug = o.optString(DRJson.Slug.name());  // Bemærk - kan være tom!
+    Udsendelse u = drData.udsendelseFraSlug.get(slug);
+    if (u == null) {
+      u = new Udsendelse();
+      u.slug = slug;
+      drData.udsendelseFraSlug.put(slug, u);
+    }
+    u.titel = o.getString(DRJson.Title.name());
+    u.beskrivelse = o.getString(DRJson.Description.name());
+    u.programserieSlug = o.optString(DRJson.SeriesSlug.name());  // Bemærk - kan være tom!
+    u.urn = o.optString(DRJson.Urn.name());  // Bemærk - kan være tom!
+    return u;
+  }
+
   /**
    * Parser udsendelser for kanal. A la http://www.dr.dk/tjenester/mu-apps/schedule/P3/0
+   * Deduplikerer objekterne undervejs
    */
-  public static ArrayList<Udsendelse> parseUdsendelserForKanal(JSONArray jsonArray, Kanal kanal) throws JSONException, ParseException {
+  public static ArrayList<Udsendelse> parseUdsendelserForKanal(JSONArray jsonArray, Kanal kanal, DRData drData) throws JSONException, ParseException {
     String iDagDatoStr = datoformat.format(new Date());
     String iMorgenDatoStr = datoformat.format(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
     String iGårDatoStr = datoformat.format(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000));
@@ -95,7 +111,9 @@ public enum DRJson {
     ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
     for (int n = 0; n < jsonArray.length(); n++) {
       JSONObject o = jsonArray.getJSONObject(n);
-      Udsendelse u = new Udsendelse();
+      Udsendelse u = getUdsendelse(drData, o);
+      u.kanalSlug = o.optString(DRJson.ChannelSlug.name(), kanal.slug);  // Bemærk - kan være tom..
+      u.kanHentes = o.getBoolean(DRJson.Watchable.name());
       u.startTid = DRJson.servertidsformat.parse(o.getString(DRJson.StartTime.name()));
       u.startTidKl = klokkenformat.format(u.startTid);
       u.slutTid = DRJson.servertidsformat.parse(o.getString(DRJson.EndTime.name()));
@@ -107,12 +125,22 @@ public enum DRJson {
       else if (datoStr.equals(iGårDatoStr)) u.startTidKl += " - i går";
       else u.startTidKl += " - " + datoStr;
 
-      u.titel = o.getString(DRJson.Title.name());
-      u.beskrivelse = o.getString(DRJson.Description.name());
-      u.slug = o.optString(DRJson.Slug.name());  // Bemærk - kan være tom!
-      u.kanalSlug = o.optString(DRJson.ChannelSlug.name(), kanal.slug);  // Bemærk - kan være tom..
-      u.programserieSlug = o.optString(DRJson.SeriesSlug.name());  // Bemærk - kan være tom!
-      u.urn = o.optString(DRJson.Urn.name());  // Bemærk - kan være tom!
+      uliste.add(u);
+    }
+    return uliste;
+  }
+
+  /**
+   * Parser udsendelser for kanal. A la http://www.dr.dk/tjenester/mu-apps/schedule/P3/0
+   * Deduplikerer objekterne undervejs
+   */
+  public static ArrayList<Udsendelse> parseUdsendelserForProgramserie(JSONArray jsonArray, DRData drData) throws JSONException, ParseException {
+    ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
+    for (int n = 0; n < jsonArray.length(); n++) {
+      JSONObject o = jsonArray.getJSONObject(n);
+      Udsendelse u = getUdsendelse(drData, o);
+      u.kanalSlug = o.getString(DRJson.ChannelSlug.name());
+      u.startTid = DRJson.servertidsformat.parse(o.getString(DRJson.FirstBroadcast.name()));
       uliste.add(u);
     }
     return uliste;
@@ -173,4 +201,29 @@ public enum DRJson {
       }
     return lydData;
   }
+
+  /*
+  {
+  Channel: "dr.dk/mas/whatson/channel/P3",
+  Webpage: "http://www.dr.dk/p3/programmer/monte-carlo",
+  Explicit: true,
+  TotalPrograms: 365,
+  ChannelType: 0,
+  Programs: [],
+  Slug: "monte-carlo",
+  Urn: "urn:dr:mu:bundle:4f3b8b29860d9a33ccfdb775",
+  Title: "Monte Carlo på P3",
+  Subtitle: "",
+  Description: "Nu kan du dagligt fra 14-16 komme en tur til Monte Carlo, hvor Peter Falktoft og Esben Bjerre vil guide dig rundt. Du kan læne dig tilbage og nyde turen og være på en lytter, når Peter og Esben vender ugens store og små kulturelle begivenheder, kigger på ugens bedste tv og spørger hvad du har #HørtOverHækken. "
+  }*/
+  public static Programserie parsProgramserie(JSONObject o) throws JSONException {
+    Programserie ps = new Programserie();
+    ps.titel = o.getString(DRJson.Title.name());
+    ps.beskrivelse = o.optString(DRJson.Description.name());
+    ps.slug = o.getString(DRJson.Slug.name());
+    ps.urn = o.optString(DRJson.Urn.name());
+    ps.antalUdsendelser = o.getInt(DRJson.TotalPrograms.name());
+    return ps;
+  }
+
 }

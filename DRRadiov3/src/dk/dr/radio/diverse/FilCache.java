@@ -137,7 +137,7 @@ public class FilCache {
           log("Netværksfejl, vi venter lidt og prøver igen");
           log(responseCode + " " + httpForb.getResponseMessage() + " for " + url);
           try {
-            Thread.sleep(50);
+            Thread.sleep(1000); // Det kan tage op mod 3 sekunder for DRs servere at svare hvis det ikke er cachet i Varnish
           } catch (InterruptedException ex) {
           }
           // try { Thread.sleep(100); } catch (InterruptedException ex) { }
@@ -163,7 +163,8 @@ public class FilCache {
           is = new GZIPInputStream(is); // Pak data ud
         }
         kopierOgLuk(is, fos);
-        if (App.udvikling) log(httpForb.getHeaderField("Content-Length") + " blev til " + new File(cacheFilnavn).length());
+        if (App.udvikling)
+          log(httpForb.getHeaderField("Content-Length") + " blev til " + new File(cacheFilnavn).length());
         cacheFil.delete();
         new File(cacheFilnavn + "_tmp").renameTo(cacheFil);
 

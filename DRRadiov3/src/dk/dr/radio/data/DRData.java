@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 
 import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.diverse.FilCache;
@@ -43,13 +44,16 @@ public class DRData {
   public Afspiller afspiller;
   public Kanal aktuelKanal;
 
+  public HashMap<String, Udsendelse> udsendelseFraSlug = new HashMap<String, Udsendelse>();
+  public HashMap<String, Programserie> programserieFraSlug = new HashMap<String, Programserie>();
+
   public final Rapportering rapportering = new Rapportering();
 
   /**
    * Til afprøvning
    */
   public static void main(String[] a) throws Exception {
-    DRData i = new DRData();
+    DRData i = DRData.instans = new DRData();
     FilCache.init(new File("/tmp/drradio-cache"));
     DRJson.servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // +01:00 springes over da kolon i +01:00 er ikke-standard Java
 
@@ -71,27 +75,60 @@ public class DRData {
     }
 */
     for (Kanal kanal : i.stamdata.kanaler) {
-      Log.d("\n\nkanal = " + kanal);
-      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(hent(kanal.getUdsendelserUrl())), kanal), "0");
+      Log.d("\n\n===========================================\n\nkanal = " + kanal);
+      if (Kanal.P4kode.equals(kanal.kode)) continue;
+      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(hent(kanal.getUdsendelserUrl())), kanal, DRData.instans), "0");
       for (Udsendelse u : kanal.udsendelser) {
         Log.d("\nudsendelse = " + u);
         JSONObject obj = new JSONObject(hent(u.getStreamsUrl()));
         //Log.d(obj.toString(2));
         u.streams = DRJson.parsStreams(obj.getJSONArray(DRJson.Streams.name()));
         if (u.streams.size() == 0) Log.d("Ingen lydstreams");
+        if (u.streams.size() == 0 && u.kanHentes) throw new IllegalStateException();
+        if (u.streams.size() > 0 && !u.kanHentes) throw new IllegalStateException();
 
-        u.playliste = DRJson.parsePlayliste(new JSONArray(hent(kanal.getPlaylisteUrl(u))));
-        Log.d("u.playliste= " + u.playliste);
+        try {
+          u.playliste = DRJson.parsePlayliste(new JSONArray(hent(kanal.getPlaylisteUrl(u))));
+          Log.d("u.playliste= " + u.playliste);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+
+
+        Programserie ps = i.programserieFraSlug.get(u.programserieSlug);
+        if (ps == null) {
+          String str = hent(u.getProgramserieUrl());
+          if ("null".equals(str)) continue;
+          JSONObject data = new JSONObject(str);
+          ps = DRJson.parsProgramserie(data);
+          ps.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+          i.programserieFraSlug.put(u.programserieSlug, ps);
+
+        }
       }
-      break;
+      //break;
     }
+  }
 
+  public Udsendelse deduplikér(Udsendelse u) {
+    Udsendelse u0 = udsendelseFraSlug.get(u.slug);
+    if (u0 == null) {
+      udsendelseFraSlug.put(u.slug, u);
+      return u;
+    }
+    if (u0 != u) {
+      Log.d("deduplikeret " + u0);
+    }
+    return u0;
   }
 
   private static String hent(String url) throws IOException {
     //String data = Diverse.læsStreng(new FileInputStream(FilCache.hentFil(url, false, true, 1000 * 60 * 60 * 24 * 7)));
+    Log.d(url);
+    url = url.replaceAll("Ø", "%C3%98");
+    url = url.replaceAll("Å", "%C3%85");
     String data = Diverse.læsStreng(new FileInputStream(FilCache.hentFil(url, false, true, 1000 * 60 * 60)));
-    //Log.d(data);
+    Log.d(data);
     return data;
 
   }

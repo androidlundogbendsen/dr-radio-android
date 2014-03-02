@@ -41,6 +41,12 @@ public class Basisfragment extends Fragment {
     super.onStart();
   }
 
+  protected void afbrydManglerData() {
+    Log.d("FRAGMENT AFBRYDES " + this + " " + getArguments());
+    if (!App.PRODUKTION) App.kortToast("FRAGMENT AFBRYDES " + this + " " + getArguments());
+    getFragmentManager().popBackStack();
+  }
+
   @Override
   public void onResume() {
     if (LOG_LIVSCYKLUS) Log.d("onResume " + this);

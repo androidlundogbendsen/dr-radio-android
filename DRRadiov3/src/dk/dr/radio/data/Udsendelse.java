@@ -20,6 +20,7 @@ public class Udsendelse extends Lydkilde {
   public String slutTidKl;
 
   public ArrayList<Playlisteelement> playliste;
+  public boolean kanHentes; // om der er nogle streams eller ej
 
   public Udsendelse(String s) {
     titel = s;
@@ -35,6 +36,14 @@ public class Udsendelse extends Lydkilde {
 
   // http://www.dr.dk/tjenester/mu-apps/program/monte-carlo-361
 
+
+  public String getProgramserieUrl() {
+    // svarer til v3_programserie.json
+    // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true
+    // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true&includeStreams=true
+
+    return "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true";
+  }
 
   public String getStreamsUrl() {
     // http://www.dr.dk/tjenester/mu-apps/program?urn=urn:dr:mu:programcard:52e6fa58a11f9d1588de9c49&includeStreams=true

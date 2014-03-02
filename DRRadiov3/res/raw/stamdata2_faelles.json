@@ -64,7 +64,7 @@
                "logo" : "channel-logo-p4-nordjylland",
                "urn" : "urn:dr:mu:bundle:4f3b8937860d9a33ccfdafdc",
                "title" : "P4 Nordjylland",
-               "scheduleIdent" : "AL4"
+               "scheduleIdent" : "ÅL4"
             },
             {
                "logo" : "channel-logo-p4-sjaelland",
@@ -88,7 +88,7 @@
                "logo" : "channel-logo-p4-oestjylland",
                "urn" : "urn:dr:mu:bundle:4f3b893a860d9a33ccfdafdf",
                "title" : "P4 Østjylland",
-               "scheduleIdent" : "AR4"
+               "scheduleIdent" : "ÅR4"
             }
          ],
          "urn" : "urn:dr:mu:bundle:4f3b8920860d9a33ccfdaf7c",

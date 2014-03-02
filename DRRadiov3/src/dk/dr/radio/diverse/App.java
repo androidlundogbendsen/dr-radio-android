@@ -60,6 +60,7 @@ public class App extends Application {
   public static final String P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING = "P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING";
   public static final String P4_FORETRUKKEN_AF_BRUGER = "P4_FORETRUKKEN_AF_BRUGER";
   public static final String FORETRUKKEN_KANAL = "FORETRUKKEN_kanal";
+  public static final boolean PRODUKTION = false;
   public static boolean EMULATOR = true;
   public static App instans;
   public static SharedPreferences prefs;
@@ -70,7 +71,7 @@ public class App extends Application {
   public static Handler forgrundstråd;
   public static Typeface skrift_normal;
   public static Typeface skrift_fed;
-  public static DownloadManager downloadService;
+  public static Hentning hentning;  // Understøttes ikke på Android 2.2, så er variablen null
 
 
   @Override
@@ -83,7 +84,11 @@ public class App extends Application {
     forgrundstråd = new Handler();
     connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    downloadService = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+    // HTTP-forbindelser havde en fejl præ froyo, men jeg har også set problemet på Xperia Play, der er 2.3.4 (!)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+      hentning = new Hentning();
+      hentning.downloadService = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+    }
     prefs = PreferenceManager.getDefaultSharedPreferences(this);
     udvikling = prefs.getBoolean("udvikling", false);
 
@@ -115,7 +120,7 @@ public class App extends Application {
       String pn = App.instans.getPackageName();
       Resources res = App.instans.getResources();
       for (Kanal k : i.stamdata.kanaler) {
-        k.kanallogo_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase(), "drawable", pn);
+        k.kanallogo_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase().replace('ø', 'o').replace('å', 'a'), "drawable", pn);
       }
 
       if (erOnline()) {
