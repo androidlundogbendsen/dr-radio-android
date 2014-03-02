@@ -136,10 +136,10 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
-            android:paddingLeft="8dp"
+            android:paddingLeft="4dp"
             android:paddingRight="16dp"
             android:drawableLeft="@drawable/dri_lyd_hvid"
-            android:text="HØR P3 LIVE"
+            android:text=" HØR P3 LIVE"
             android:textColor="@color/hvid"
             android:background="@drawable/knap_blaa_bg"/>
 

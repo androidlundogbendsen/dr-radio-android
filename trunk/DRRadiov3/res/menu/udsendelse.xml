@@ -4,13 +4,13 @@
             android:id="@+id/hør"
             android:title="Hør udsendelse"
             android:orderInCategory="1"
-            android:icon="@drawable/dri_lyd2_blaa"
+            android:icon="@drawable/dri_lyd2_hvid"
             app:showAsAction="always"/>
     <item
             android:id="@+id/hent"
-            android:title="Del"
+            android:title="Hent udsendelse"
             android:orderInCategory="1"
-            android:icon="@drawable/dri_hent_blaa"
+            android:icon="@drawable/dri_hent_graa40"
             app:showAsAction="ifRoom"/>
     <item
             android:id="@+id/del"
