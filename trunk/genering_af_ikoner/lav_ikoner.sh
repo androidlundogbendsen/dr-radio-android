@@ -8,27 +8,31 @@ do
 	if [ "$n" = "x" -o "x$n" = "x" ]; then continue; fi; 
 	echo "$i $n"; 
 	
-	for dpi in mdpi hdpi xhdpi; 
+#	for dpi in mdpi hdpi xhdpi xxhdpi; 
+	for dpi in xhdpi; 
 	do
-		dp=32
+		dp=32; #  men resten er 'polstring' til ikonet
+		dp_indh=24; # 32, men resten er 'polstring' til ikonet
 		faktor=1
 		if [ "$dpi" = "hdpi" ]; then faktor=1.5; fi; 
 		if [ "$dpi" = "xhdpi" ]; then faktor=2; fi; 
 		if [ "$dpi" = "xxhdpi" ]; then faktor=3; fi; 
 		xp=`echo "$dp * $faktor"|bc`
+		xpi=`echo "$dp_indh * $faktor"|bc`
+#		xp=512
+#		dpi=ios
 
 		sti=../DRRadiov3/res/drawable-${dpi}/
-#	konv="convert -background none -font dr-icons-Regular -pointsize $p  -gravity center"
-		konv="convert -background none -font dr-icons-Regular -size ${xp}x${xp}  -gravity center"
+#		sti=res/drawable-${dpi}/
+#		sti=res/drawable-${dpi}/
+		mkdir -p $sti
+		konv="convert -background none -font dr-icons-Regular -size ${xpi}x${xpi} -gravity center -trim -extent ${xp}x${xp}"
 
+#		fn="$sti/${n}.png"; $konv -fill black label:"$i" $fn; 
 		fn="$sti/${n}_blaa.png"; $konv -fill '#55b9c4' label:"$i" $fn; 
 		fn="$sti/${n}_graa40.png"; $konv -fill '#999999' label:"$i" $fn; 
 		fn="$sti/${n}_hvid.png";   $konv -fill white label:"$i" $fn; 
 
-
-#convert -scale 36x36 ic_padlock.png ../../res/drawable-ldpi/ic_launcher_padlock.png
-#convert -scale 48x48 ic_padlock.png ../../res/drawable-mdpi/ic_launcher_padlock.png
-#convert -scale 72x72 ic_padlock.png ../../res/drawable-hdpi/ic_launcher_padlock.png
 
 	done
 
