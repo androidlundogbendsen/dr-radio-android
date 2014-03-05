@@ -191,6 +191,9 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     if (fragmentErSynligt) {
       scrollTilAktuelUdsendelse();
       run();
+      if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET && DRData.instans.afspiller.getLydkilde() != kanal) {
+        DRData.instans.afspiller.setLydkilde(kanal);
+      }
     } else {
       App.forgrundstråd.removeCallbacks(this);
     }
@@ -221,9 +224,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     opdaterAktuelUdsendelse(vh);
     //MediaPlayer mp = DRData.instans.afspiller.getMediaPlayer();
     //Log.d("mp pos="+mp.getCurrentPosition() + "  af "+mp.getDuration());
-    if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET && DRData.instans.afspiller.getLydkilde() != kanal) {
-      DRData.instans.afspiller.setLydkilde(kanal);
-    }
   }
 
 
