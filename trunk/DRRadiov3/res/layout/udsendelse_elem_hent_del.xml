@@ -14,6 +14,7 @@
             android:layout_marginTop="8dp"
             android:paddingLeft="16dp"
             android:gravity="center_vertical"
+            android:textAlignment="center"
             android:text="UDSENDELSEN KAN ENDNU IKKE HENTES"
             android:enabled="false"
             android:textAppearance="?android:attr/textAppearanceSmall"

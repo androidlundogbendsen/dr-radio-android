@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="P3 Sporten"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textStyle="bold"/>
 
         <TextView
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text=" - 20. jan 2014"
                 android:layout_weight="1"/>
     </LinearLayout>
@@ -77,8 +77,10 @@
             android:layout_margin="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="For lige om lidt bliver fremdriftsreformen implementeret."
-            />
+            android:textColor="@color/grå80"
+            android:textAppearance="?android:attr/textAppearance"
+            android:text="De amerikanske brødre Joel og Ethan Coen har for længst skabt en række moderne klassikere, fx 'Fargo' og 'The Big Lebowski'. Nu når de et nyt højt punkt i deres karriere med 'Inside Llewyn Davis', en desillusioneret odysse rundt om en musikant, der bare aldrig slår igennem på 60'ernes folk-scene i New York. Hvad er det, de kan, de to brødre? spørger Filmland, der også anmelder den nye danske film, 'Klumpfisken'. Vært: Per Juul Carlsen. Filmland anmelder: Bullhead Hr. Peabody og Sherman Inside Llewyn Davis Klumpfisken www.dr.dk/film (Sendes også torsdag 19.03, lørdag 21.03 og søndag 1.03)."
+            android:fontFamily="serif"/>
 
     <!--
         <include

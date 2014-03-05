@@ -39,8 +39,8 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     aq = new AQuery(rod);
     start_stop_pauseknap = aq.id(R.id.start_stop_pauseknap).clicked(this).getImageView();
     progressbar = aq.id(R.id.progressBar).getProgressBar();
-    kanalTv = aq.id(R.id.kanal).typeface(App.skrift_normal).getTextView();
-    titelTv = aq.id(R.id.titel).typeface(App.skrift_fed).getTextView();
+    kanalTv = aq.id(R.id.kanal).typeface(App.skrift_gibson).getTextView();
+    titelTv = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
     DRData.instans.afspiller.observatører.add(this);
     DRData.instans.afspiller.forbindelseobservatører.add(this);
     run(); // opdatér views

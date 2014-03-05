@@ -7,5 +7,5 @@
     <!-- Værdier i skærmbilledet for kanalvalg -->
     <dimen name="kanalvalg_tekststr">20sp</dimen>
 
-    <dimen name="kanalvisning_aktuelUdsendelse_topmargen">-10dp</dimen>
+    <dimen name="kanalvisning_aktuelUdsendelse_topmargen">0dp</dimen>
 </resources>
