@@ -80,7 +80,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     View rod = inflater.inflate(R.layout.kanal_frag, container, false);
     aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
-    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_fed).getView());
+    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson_fed).getView());
     return rod;
   }
 

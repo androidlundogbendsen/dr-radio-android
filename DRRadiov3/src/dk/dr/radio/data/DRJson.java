@@ -26,20 +26,34 @@ public enum DRJson {
   StartTime, EndTime,
   Streams,
   Uri, Played, Artist, Image,
-  Type, Kind, Quality, Kbps, ChannelSlug, TotalPrograms, Programs, FirstBroadcast, Watchable;
+  Type, Kind, Quality, Kbps, ChannelSlug, TotalPrograms, Programs, FirstBroadcast, Watchable, DurationInSeconds, Format;
 
+  /*
+    public enum StreamType {
+      Shoutcast, // 0 tidligere 'Streaming'
+      HLS_fra_DRs_servere,  // 1 tidligere 'IOS' - virker p.t. ikke på Android
+      RTSP, // 2 tidligere 'Android' - udfases
+      HDS, // 3 Adobe  HTTP Dynamic Streaming
+      HLS_fra_Akamai, // 4 oprindeligt 'HLS'
+      HLS_med_probe_og_fast_understream,
+      HLS_byg_selv_m3u8_fil,
+      Ukendt;  // = -1 i JSON-svar
+      static StreamType[] v = values();
+    }
+    */
   public enum StreamType {
-    Shoutcast, // 0 tidligere 'Streaming'
+    Streaming_RTMP, // 0
     HLS_fra_DRs_servere,  // 1 tidligere 'IOS' - virker p.t. ikke på Android
     RTSP, // 2 tidligere 'Android' - udfases
     HDS, // 3 Adobe  HTTP Dynamic Streaming
-    HLS_fra_Akamai, // 4 oprindeligt 'HLS'
-    HLS_med_probe_og_fast_understream,
-    HLS_byg_selv_m3u8_fil,
+    HLS_fra_Akamai, // 4 oprindeligt 'HLS' - virker på Android 4
+    HTTP, // 5 Til on demand/hentning af lyd
+    Shoutcast, // 6 Til Android 2
     Ukendt;  // = -1 i JSON-svar
     static StreamType[] v = values();
 
   }
+
 
   public enum StreamKind {
     Audio,
@@ -81,7 +95,7 @@ public enum DRJson {
 
   public static final Locale dansk = new Locale("da", "DA");
   public static final DateFormat klokkenformat = new SimpleDateFormat("HH:mm", dansk);
-  public static final DateFormat datoformat = new SimpleDateFormat("d. MMM. yyyy", dansk);
+  public static final DateFormat datoformat = new SimpleDateFormat("d. MMM yyyy", dansk);
 
 
   private static Udsendelse getUdsendelse(DRData drData, JSONObject o) throws JSONException {
@@ -131,7 +145,7 @@ public enum DRJson {
   }
 
   /**
-   * Parser udsendelser for kanal. A la http://www.dr.dk/tjenester/mu-apps/schedule/P3/0
+   * Parser udsendelser for kanal. A la http://www.dr.dk/tjenester/mu-apps/series/sprogminuttet?type=radio&includePrograms=true
    * Deduplikerer objekterne undervejs
    */
   public static ArrayList<Udsendelse> parseUdsendelserForProgramserie(JSONArray jsonArray, DRData drData) throws JSONException, ParseException {
@@ -141,6 +155,7 @@ public enum DRJson {
       Udsendelse u = getUdsendelse(drData, o);
       u.kanalSlug = o.getString(DRJson.ChannelSlug.name());
       u.startTid = DRJson.servertidsformat.parse(o.getString(DRJson.FirstBroadcast.name()));
+      u.slutTid = new Date(u.startTid.getTime() + o.getInt(DRJson.DurationInSeconds.name()) * 1000);
       uliste.add(u);
     }
     return uliste;
@@ -195,6 +210,7 @@ public enum DRJson {
         //if (l.type == StreamType.IOS) continue; // Gamle HLS streams der ikke virker på Android
         if (o.getInt(Kind.name()) != StreamKind.Audio.ordinal()) continue;
         l.kvalitet = StreamQuality.values()[o.getInt(Quality.name())];
+        l.format = o.optString(Format.name());
         lydData.add(l);
         if (App.udvikling) Log.d("lydstream=" + l);
       } catch (Exception e) {

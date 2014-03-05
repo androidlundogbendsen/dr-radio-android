@@ -83,10 +83,10 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         }
         rod = inflater.inflate(R.layout.kanal_p4_frag, container, false);
         AQuery aq = new AQuery(rod);
-        aq.id(R.id.p4_vi_gætter_på_tekst).typeface(App.skrift_normal);
-        aq.id(R.id.p4_kanalnavn).text(kanal.navn).typeface(App.skrift_fed);
-        aq.id(R.id.p4_skift_distrikt).clicked(this).typeface(App.skrift_normal);
-        aq.id(R.id.p4_ok).clicked(this).typeface(App.skrift_normal);
+        aq.id(R.id.p4_vi_gætter_på_tekst).typeface(App.skrift_gibson);
+        aq.id(R.id.p4_kanalnavn).text(kanal.navn).typeface(App.skrift_gibson_fed);
+        aq.id(R.id.p4_skift_distrikt).clicked(this).typeface(App.skrift_gibson);
+        aq.id(R.id.p4_ok).clicked(this).typeface(App.skrift_gibson);
       }
     }
     kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
@@ -96,7 +96,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
     AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
-    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_fed).getView());
+    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson_fed).getView());
 
     // Hent sendeplan for den pågældende dag. Døgnskifte sker kl 5, så det kan være dagen før
     hentSendeplanForDag(aq, new Date(System.currentTimeMillis() - 5 * 60 * 60 * 1000), true);
@@ -301,23 +301,23 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
                     : R.layout.kanal_elem_tidligere_senere, parent, false);
         vh = new Viewholder();
         a = vh.aq = new AQuery(v);
-        vh.startid = a.id(R.id.startid).typeface(App.skrift_normal).getTextView();
+        vh.startid = a.id(R.id.startid).typeface(App.skrift_gibson).getTextView();
         vh.starttidbjælke = a.id(R.id.starttidbjælke).getView();
         vh.slutttidbjælke = a.id(R.id.slutttidbjælke).getView();
         //a.id(R.id.højttalerikon).clicked(new UdsendelseClickListener(vh));
         a.id(R.id.hør_live).clicked(Kanal_frag.this);
-        a.id(R.id.slutttid).typeface(App.skrift_normal).text(udsendelse.slutTidKl);
+        a.id(R.id.slutttid).typeface(App.skrift_gibson).text(udsendelse.slutTidKl);
         if (type == TIDLIGERE_SENERE) {
-          vh.titel = a.id(R.id.titel).typeface(App.skrift_fed).getTextView();
+          vh.titel = a.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
         } else if (type == AKTUEL) {
-          vh.titel = a.id(R.id.titel).typeface(App.skrift_fed).getTextView();
-          a.id(R.id.senest_spillet_overskrift).typeface(App.skrift_normal);
-          a.id(R.id.titel_og_kunstner).typeface(App.skrift_normal);
-          a.id(R.id.lige_nu).typeface(App.skrift_normal);
-          a.id(R.id.hør_live).typeface(App.skrift_normal);
+          vh.titel = a.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
+          a.id(R.id.senest_spillet_overskrift).typeface(App.skrift_gibson);
+          a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson);
+          a.id(R.id.lige_nu).typeface(App.skrift_gibson);
+          a.id(R.id.hør_live).typeface(App.skrift_gibson);
           v.setBackgroundResource(R.drawable.knap_hvid_bg);
         } else {
-          vh.titel = a.id(R.id.titel_og_kunstner).typeface(App.skrift_fed).getTextView();
+          vh.titel = a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson_fed).getTextView();
         }
         v.setTag(vh);
       } else {
@@ -345,7 +345,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         vh.startid.setText(udsendelse.startTidKl);
         vh.titel.setText(udsendelse.titel);
 
-        int br = bestemBilledebredde(listView, (View) a.id(R.id.billede).getView().getParent());
+        int br = bestemBilledebredde(listView, (View) a.id(R.id.billede).getView().getParent(), 100);
         int hø = br * højde9 / bredde16;
         String burl = skalérSlugBilledeUrl(udsendelse.slug, br, hø);
         a.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);

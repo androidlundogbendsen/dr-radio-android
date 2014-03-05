@@ -76,7 +76,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     }
     final AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).getListView();
-    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_fed).getView());
+    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson_fed).getView());
     listView.setOnItemClickListener(this);
 
     if (udsendelse.playliste != null) {
@@ -213,31 +213,31 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         vh = new Viewholder();
         aq = vh.aq = new AQuery(v);
         v.setTag(vh);
-        vh.startid = aq.id(R.id.startid).typeface(App.skrift_normal).getTextView();
-        vh.titel = aq.id(R.id.titel).typeface(App.skrift_fed).getTextView();
+        vh.startid = aq.id(R.id.startid).typeface(App.skrift_gibson).getTextView();
+        vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
         if (type == TOP) {
-          int br = bestemBilledebredde(listView, (View) aq.id(R.id.billede).getView().getParent());
+          int br = bestemBilledebredde(listView, (View) aq.id(R.id.billede).getView().getParent(), 100);
           int hø = br * højde9 / bredde16;
           String burl = skalérSlugBilledeUrl(udsendelse.slug, br, hø);
           aq.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
 
           aq.id(R.id.lige_nu).gone();
-          aq.id(R.id.playliste).typeface(App.skrift_normal).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.INVISIBLE);
-          aq.id(R.id.info).typeface(App.skrift_normal);
+          aq.id(R.id.playliste).typeface(App.skrift_gibson).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.INVISIBLE);
+          aq.id(R.id.info).typeface(App.skrift_gibson);
           vh.titel.setText(udsendelse.titel.toUpperCase());
           aq.id(R.id.logo).image(kanal.kanallogo_resid);
-          aq.id(R.id.titel2).typeface(App.skrift_fed).text(udsendelse.titel);
-          aq.id(R.id.dato).typeface(App.skrift_normal).text(" - " + DRJson.datoformat.format(udsendelse.startTid));
+          aq.id(R.id.titel2).typeface(App.skrift_gibson_fed).text(udsendelse.titel);
+          aq.id(R.id.dato).typeface(App.skrift_gibson).text(" - " + DRJson.datoformat.format(udsendelse.startTid));
 
-          aq.id(R.id.beskrivelse).text(udsendelse.beskrivelse).typeface(App.skrift_normal);
+          aq.id(R.id.beskrivelse).text(udsendelse.beskrivelse).typeface(App.skrift_georgia);
           Linkify.addLinks(aq.getTextView(), Linkify.ALL);
 
-          aq.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_normal);
-          aq.id(R.id.hent).clicked(Udsendelse_frag.this).typeface(App.skrift_normal);
+          aq.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
+          aq.id(R.id.hent).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
           if (App.hentning == null) aq.gone(); // Understøttes ikke på Android 2.2
-          aq.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_normal);
+          aq.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         } else if (type != ALLE_UDS) {
-          vh.titel = aq.id(R.id.titel_og_kunstner).typeface(App.skrift_normal).getTextView();
+          vh.titel = aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
         }
         aq.id(R.id.højttalerikon).visible().clicked(new UdsendelseClickListener(vh));
       } else {
@@ -327,7 +327,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     if (App.udvikling) App.kortToast("kanal.streams=" + kanal.streams);
     if (App.prefs.getBoolean("manuelStreamvalg", false)) {
       new AlertDialog.Builder(getActivity())
-          .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.streams), new DialogInterface.OnClickListener() {
+          .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, udsendelse.streams), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
               udsendelse.streams.get(which).foretrukken = true;

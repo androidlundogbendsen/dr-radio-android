@@ -129,7 +129,7 @@ public class Kanalvalg_v2_frag extends Basisfragment implements AdapterView.OnIt
         //billede.setImageResource(R.drawable.kanalappendix_p4f);
         textView.setVisibility(View.VISIBLE);
         textView.setText(kanal.navn);
-        textView.setTypeface(App.skrift_fed);
+        textView.setTypeface(App.skrift_gibson_fed);
       }
 
       return view;

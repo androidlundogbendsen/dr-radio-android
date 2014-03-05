@@ -69,8 +69,10 @@ public class App extends Application {
   public static NotificationManager notificationManager;
   public static boolean udvikling = false;
   public static Handler forgrundstråd;
-  public static Typeface skrift_normal;
-  public static Typeface skrift_fed;
+  public static Typeface skrift_gibson;
+  public static Typeface skrift_gibson_fed;
+  public static Typeface skrift_georgia;
+
   public static Hentning hentning;  // Understøttes ikke på Android 2.2, så er variablen null
 
 
@@ -172,14 +174,13 @@ public class App extends Application {
     }
 
     try { // DRs skrifttyper er ikke offentliggjort i SVN, derfor kan følgende fejle:
-      skrift_normal = Typeface.createFromAsset(getAssets(), "Gibson-Regular.otf");
-      skrift_fed = Typeface.createFromAsset(getAssets(), "Gibson-SemiBold.otf");
-      // TODO - se om vi kan spare 100kb ved at selv lave en fed variant
-      // skrift_fed =  Typeface.create(skrift_normal, Typeface.BOLD);
+      skrift_gibson = Typeface.createFromAsset(getAssets(), "Gibson-Regular.otf");
+      skrift_gibson_fed = Typeface.createFromAsset(getAssets(), "Gibson-SemiBold.otf");
+      skrift_georgia = Typeface.createFromAsset(getAssets(), "Georgia.ttf");
     } catch (Exception e) {
       Log.e("DRs skrifttyper er ikke tilgængelige", e);
-      skrift_normal = Typeface.DEFAULT;
-      skrift_fed = Typeface.DEFAULT_BOLD;
+      skrift_gibson = Typeface.DEFAULT;
+      skrift_gibson_fed = Typeface.DEFAULT_BOLD;
     }
   }
 

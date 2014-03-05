@@ -107,8 +107,8 @@ Forhold 1:1 for playlistebilleder - og de skal være 1/3-del i højden af de sto
    * @param rod         listen eller rod-viewet hvor billedet skal vises
    * @param paddingView containeren der har polstring/padding
    */
-  protected int bestemBilledebredde(View rod, View paddingView) {
-    int br = rod.getWidth();
+  protected int bestemBilledebredde(View rod, View paddingView, int procent) {
+    int br = rod.getWidth() * procent / 100;
     if (rod.getHeight() < br / 2) br = br / 2; // Halvbreddebilleder ved liggende visning
     br = br - paddingView.getPaddingRight() - paddingView.getPaddingLeft();
     //Log.d("QQQQQ listView.getWidth()=" + rod.getWidth() + " getHeight()=" + rod.getHeight());
@@ -235,10 +235,10 @@ Jeg bruger selv følgende macro'er i C til generering af URIs:
     } else if (view instanceof TextView) {
       TextView tv = ((TextView) view);
       Typeface tf = tv.getTypeface();
-      if (tv.getVisibility() == View.VISIBLE && tv.getText().length() > 0 && tf != App.skrift_normal && tf != App.skrift_fed) {
+      if (tv.getVisibility() == View.VISIBLE && tv.getText().length() > 0 && tf != App.skrift_gibson && tf != App.skrift_gibson_fed) {
         String resId = tv.getId() > 0 ? App.instans.getResources().getResourceEntryName(tv.getId()) : "(MANGLER ID)";
         Log.e("udvikling_checkDrSkrifter: TextView " + resId + " har forkert skrift: " + tf + " for " + beskrivelse, null);
-        tv.setTypeface(App.skrift_normal);
+        //tv.setTypeface(App.skrift_gibson);
       }
     }
   }

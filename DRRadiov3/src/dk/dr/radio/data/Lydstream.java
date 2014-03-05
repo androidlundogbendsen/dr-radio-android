@@ -9,9 +9,10 @@ public class Lydstream {
   //public DRJson.StreamKind kind;
   public DRJson.StreamQuality kvalitet;
   public boolean foretrukken;
+  public String format;
 
   @Override
   public String toString() {
-    return type + "/" + kvalitet + "/" + url;
+    return type + "/" + kvalitet + "/" + format + "/" + url;
   }
 }
