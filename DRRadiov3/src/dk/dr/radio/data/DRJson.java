@@ -72,12 +72,12 @@ public enum DRJson {
    */
   public static DateFormat servertidsformat_playlise = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-
+/*
   public static void main(String[] a) throws ParseException {
     System.out.println(servertidsformat.format(new Date()));
     System.out.println(servertidsformat.parse("2014-01-16T09:04:00+01:00"));
   }
-
+*/
 
   public static final Locale dansk = new Locale("da", "DA");
   public static final DateFormat klokkenformat = new SimpleDateFormat("HH:mm", dansk);
@@ -186,6 +186,7 @@ public enum DRJson {
         JSONObject o = jsonArray.getJSONObject(n);
         //Log.d("streamjson=" + o.toString());
         Lydstream l = new Lydstream();
+        //if (o.getInt("FileSize")!=0) { Log.d("streamjson=" + o.toString(2)); System.exit(0); }
         l.url = o.getString(DRJson.Uri.name());
         if (l.url.startsWith("rtmp:")) continue; // Skip Adobe Real-Time Messaging Protocol til Flash
         int type = o.getInt(Type.name());

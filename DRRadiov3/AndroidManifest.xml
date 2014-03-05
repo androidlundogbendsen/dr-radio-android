@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="dk.dr.radio.v3"
           android:versionCode="1"
-          android:versionName="0.0.1 afspiller">
+          android:versionName="0.0.2">
 
     <uses-sdk
-            android:minSdkVersion="8"
+            android:minSdkVersion="7"
             android:targetSdkVersion="19"/>
 
 
@@ -72,6 +72,13 @@
                 android:theme="@android:style/Theme.NoTitleBar"
         -->
 
+        <receiver android:name="dk.dr.radio.diverse.Hentning$DownloadServiceBR">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED"/>
+            </intent-filter>
+        </receiver>
+
         <!--
          * Tidligere AfspillerService - service-del der sørger for at app'en
          * bliver i hukommelsen mens der spilles lyd
@@ -107,6 +114,26 @@
                     android:name="android.appwidget.provider"
                     android:resource="@xml/afspiller_widgetinfo"/>
         </receiver>
+
+
+        <!-- Denne aktivitet fanger browsning af URLer der starter med http://javabog.dk/OOP/ -->
+        <activity android:name="dk.dr.radio.akt.diverse.FangBrowseIntent">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                        android:scheme="http"
+                        android:host="dr.dk"
+                        android:pathPrefix="/radio/ondemand/"/>
+                <data
+                        android:scheme="http"
+                        android:host="www.dr.dk"
+                        android:pathPrefix="/radio/ondemand/"/>
+            </intent-filter>
+        </activity>
 
 
     </application>
