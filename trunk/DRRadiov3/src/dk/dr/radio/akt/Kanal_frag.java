@@ -103,6 +103,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     udvikling_checkDrSkrifter(rod, this + " rod");
     setHasOptionsMenu(true);
     DRData.instans.afspiller.observatører.add(this);
+    App.netværk.observatører.add(this);
     return rod;
   }
 
@@ -110,6 +111,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   public void onDestroyView() {
     super.onDestroyView();
     DRData.instans.afspiller.observatører.remove(this);
+    App.netværk.observatører.remove(this);
 
   }
 
@@ -214,6 +216,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   @Override
   public void run() {
+    App.forgrundstråd.removeCallbacks(this);
     App.forgrundstråd.postDelayed(this, 15000);
     if (aktuelUdsendelseViewholder == null) return;
     Viewholder vh = aktuelUdsendelseViewholder;
@@ -443,7 +446,10 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       }
 
       boolean spillerDenneKanal = DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET && DRData.instans.afspiller.getLydkilde() == kanal;
-      vh.aq.id(R.id.hør_live).enabled(!spillerDenneKanal).text((spillerDenneKanal ? " SPILLER " : " HØR ") + kanal.navn.toUpperCase() + " LIVE");
+      boolean online = App.netværk.erOnline();
+      vh.aq.id(R.id.hør_live).enabled(!spillerDenneKanal && online).text(
+          !online ? "Internetforbindelse mangler" :
+              (spillerDenneKanal ? " SPILLER " : " HØR ") + kanal.navn.toUpperCase() + " LIVE");
 
     } catch (Exception e) {
       Log.rapporterFejl(e);
@@ -477,7 +483,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     if (App.udvikling) App.kortToast("kanal.streams=" + kanal.streams);
     if (App.prefs.getBoolean("manuelStreamvalg", false)) {
       new AlertDialog.Builder(getActivity())
-          .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.streams), new DialogInterface.OnClickListener() {
+          .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.findBedsteStreams(false).toArray()), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
               kanal.streams.get(which).foretrukken = true;

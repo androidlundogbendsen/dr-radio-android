@@ -224,9 +224,9 @@ public class Afspiller {
 
 
   public void setLydkilde(Lydkilde lydkilde) {
-    if (App.udvikling) App.kortToast("Spiller:\n" + lydkilde);
+    if (App.udvikling) App.kortToast("setLydkilde:\n" + lydkilde);
     this.lydkilde = lydkilde;
-    lydUrl = lydkilde.findBedsteStream().url;
+    lydUrl = lydkilde.findBedsteStream(false).url;
 
 
     if ((afspillerstatus == Status.SPILLER) || (afspillerstatus == Status.FORBINDER)) {

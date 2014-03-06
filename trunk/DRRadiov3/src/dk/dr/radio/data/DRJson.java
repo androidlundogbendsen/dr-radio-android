@@ -62,10 +62,10 @@ public enum DRJson {
   }
 
   public enum StreamQuality {
-    High,
-    Medium,
-    Low,
-    Variable;
+    High,     // 0
+    Medium,   // 1
+    Low,      // 2
+    Variable; // 3
     static StreamQuality[] v = values();
   }
 
@@ -211,6 +211,7 @@ public enum DRJson {
         if (o.getInt(Kind.name()) != StreamKind.Audio.ordinal()) continue;
         l.kvalitet = StreamQuality.values()[o.getInt(Quality.name())];
         l.format = o.optString(Format.name());
+        l.kbps = o.getInt(Kbps.name());
         lydData.add(l);
         if (App.udvikling) Log.d("lydstream=" + l);
       } catch (Exception e) {

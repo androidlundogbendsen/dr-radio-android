@@ -94,7 +94,7 @@ public class Basisaktivitet extends ActionBarActivity {
         startActivity(new Intent(MediaStore.INTENT_ACTION_MUSIC_PLAYER));
         return true;
       case 1643:
-        startActivity(new Intent(android.content.Intent.ACTION_VIEW).setDataAndType(Uri.parse(DRData.instans.afspiller.getLydkilde().findBedsteStream().url), "audio/*"));
+        startActivity(new Intent(android.content.Intent.ACTION_VIEW).setDataAndType(Uri.parse(DRData.instans.afspiller.getLydkilde().findBedsteStream(false).url), "audio/*"));
         return true;
       case 2645:
         finish();
