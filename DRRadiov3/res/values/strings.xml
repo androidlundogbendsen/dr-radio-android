@@ -7,31 +7,27 @@
     <string name="action_settings">Settings</string>
 
     <string-array name="lydformat_tekst">
-        <item>AAC (RTSP)</item>
+        <item>AAC (HLS)</item>
         <item>MP3 (Shoutcast)</item>
-        <!-- DRs HLS-format kan desværre ikke spilles
-                <item>AAC (HLS)</item>
-                <item>AAC (HLS2)</item>
-        -->
+        <item>Automatisk</item>
     </string-array>
 
     <string-array name="lydformat_kode">
-        <item>rtsp</item>
+        <item>hls</item>
         <item>shoutcast</item>
-        <!-- DRs HLS-format kan desværre ikke spilles
-                <item>httplive</item>
-                <item>httplive2</item>
-        -->
+        <item>auto</item>
     </string-array>
 
     <string-array name="lydkvalitet_tekst">
         <item>Standard</item>
         <item>Høj (192 kbps)</item>
+        <item>Automatisk</item>
     </string-array>
 
     <string-array name="lydkvalitet_kode">
         <item>standard</item>
         <item>høj</item>
+        <item>auto</item>
     </string-array>
 
 </resources>

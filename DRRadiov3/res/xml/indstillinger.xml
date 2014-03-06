@@ -10,16 +10,16 @@
     <ListPreference
             android:key="lydkvalitet"
             android:title="Lydkvalitet"
-            android:defaultValue="standard"
-            android:summary="Standard er 64kbps (MP3 dog 96kbps) og bruger ca. 1/2 MB data pr. minut.\nHøj kvalitet bruger ca. 1 1/2 MB/minut"
+            android:defaultValue="auto"
+            android:summary="Standard er 96kbps og bruger ca. 45 MB data per time.\nHøj kvalitet bruger ca. 90 MB/time"
             android:entries="@array/lydkvalitet_tekst"
             android:entryValues="@array/lydkvalitet_kode"/>
 
     <ListPreference
+            android:key="lydformat"
             android:title="Format"
             android:summary="Hvis det forvalgte format ikke virker kan du prøve et andet"
-            android:key="lydformat"
-            android:defaultValue="shoutcast"
+            android:defaultValue="auto"
             android:entries="@array/lydformat_tekst"
             android:entryValues="@array/lydformat_kode"/>
 
@@ -35,7 +35,7 @@
             android:summary="Hakker afspilningen når skærmen er slukket så prøv at krydse af her (bruger mere batteri). Nødvendigt på XPeria Play."/>
 
     <CheckBoxPreference
-            android:key="udvikler" android:title="Udvikler"
+            android:key="udvikling" android:title="Udvikler"
             android:defaultValue="false" android:summaryOff=""
             android:summaryOn="Til udviklere og fejlfinding. Appen skal genstartes før det træder i kraft"/>
 

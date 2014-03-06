@@ -30,6 +30,7 @@ import android.app.DownloadManager;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -64,8 +65,8 @@ public class App extends Application {
   public static boolean EMULATOR = true;
   public static App instans;
   public static SharedPreferences prefs;
-  private static ConnectivityManager connectivityManager;
-  private static String versionName = "(ukendt)";
+  public static ConnectivityManager connectivityManager;
+  public static String versionName = "(ukendt)";
   public static NotificationManager notificationManager;
   public static boolean udvikling = false;
   public static Handler forgrundstråd;
@@ -74,6 +75,7 @@ public class App extends Application {
   public static Typeface skrift_georgia;
 
   public static Hentning hentning;  // Understøttes ikke på Android 2.2, så er variablen null
+  public static final Netvaerksstatus netværk = new Netvaerksstatus();
 
 
   @Override
@@ -125,7 +127,12 @@ public class App extends Application {
         k.kanallogo_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase().replace('ø', 'o').replace('å', 'a'), "drawable", pn);
       }
 
-      if (erOnline()) {
+      IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+      registerReceiver(netværk, filter);
+      netværk.onReceive(this, null); // Få opdateret netværksstatus
+      //langToast("xxxx "+App.udvikling);
+
+      if (netværk.erOnline()) {
         new AsyncTask() {
           @Override
           protected Object doInBackground(Object[] params) {

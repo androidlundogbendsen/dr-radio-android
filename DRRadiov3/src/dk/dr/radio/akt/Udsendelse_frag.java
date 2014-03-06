@@ -294,7 +294,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 // http://www.dr.dk/radio/ondemand/p6beat/debut-65
 // http://www.dr.dk/radio/ondemand/ramasjangradio/ramasjang-formiddag-44#!/00:03
         "http://dr.dk/radio/ondemand/" + kanal.slug + "/" + udsendelse.slug + "\n\n" +
-        kanal.findBedsteStream().url
+        udsendelse.findBedsteStream(true).url
     );
 //www.dr.dk/p1/mennesker-og-medier/mennesker-og-medier-100
     startActivity(intent);
@@ -303,7 +303,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   @TargetApi(Build.VERSION_CODES.GINGERBREAD)
   private void hent() {
     if (udsendelse.streams == null || udsendelse.streams.size() == 0) return;
-    Uri uri = Uri.parse(udsendelse.findBedsteStream().url);
+    Uri uri = Uri.parse(udsendelse.findBedsteStream(true).url);
     Log.d("uri=" + uri);
 
     File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
@@ -327,7 +327,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     if (App.udvikling) App.kortToast("kanal.streams=" + kanal.streams);
     if (App.prefs.getBoolean("manuelStreamvalg", false)) {
       new AlertDialog.Builder(getActivity())
-          .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, udsendelse.streams), new DialogInterface.OnClickListener() {
+          .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, udsendelse.findBedsteStreams(false).toArray()), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
               udsendelse.streams.get(which).foretrukken = true;
