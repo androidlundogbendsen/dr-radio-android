@@ -1,7 +1,3 @@
 <resources>
-    <!--
-Project: DR Radio
-API Key: MN947VJVXZQXJBWZDRZ2
-    -->
-    <string name="flurry_nøgle">MN947VJVXZQXJBWZDRZ2</string>
+    <string name="flurry_nøgle">Flurry-nøgle ind her</string>
 </resources>
