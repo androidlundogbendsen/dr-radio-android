@@ -84,8 +84,8 @@ public class DRData {
         //Log.d(obj.toString(2));
         u.streams = DRJson.parsStreams(obj.getJSONArray(DRJson.Streams.name()));
         if (u.streams.size() == 0) Log.d("Ingen lydstreams");
-        if (u.streams.size() == 0 && u.kanHentes) throw new IllegalStateException();
-        if (u.streams.size() > 0 && !u.kanHentes) throw new IllegalStateException();
+        if (u.streams.size() == 0 && u.kanHøres) throw new IllegalStateException();
+        if (u.streams.size() > 0 && !u.kanHøres) throw new IllegalStateException();
 
         try {
           u.playliste = DRJson.parsePlayliste(new JSONArray(hent(kanal.getPlaylisteUrl(u))));
@@ -108,18 +108,6 @@ public class DRData {
       }
       //break;
     }
-  }
-
-  public Udsendelse deduplikér(Udsendelse u) {
-    Udsendelse u0 = udsendelseFraSlug.get(u.slug);
-    if (u0 == null) {
-      udsendelseFraSlug.put(u.slug, u);
-      return u;
-    }
-    if (u0 != u) {
-      Log.d("deduplikeret " + u0);
-    }
-    return u0;
   }
 
   private static String hent(String url) throws IOException {

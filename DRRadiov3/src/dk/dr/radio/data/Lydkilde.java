@@ -42,47 +42,52 @@ public abstract class Lydkilde {
 
     ArrayList<Lydstream> kandidater = new ArrayList<>(streams.size());
 
+    Lydstream sxxx = null;
       næste_stream:
-    for (Lydstream s : streams) {
-      int score = 100;
-      switch (s.type) {
-        case HLS_fra_Akamai:
-          if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) continue næste_stream;
-          if (tilHentning) continue næste_stream;
-          if ("hls".equals(ønsketformat)) score += 40;
-          if ("auto".equals(ønsketformat)) score += 20;
-          break; // bryd ud af switch
-        case HTTP:
-          if (tilHentning) score += 20;
-          break; // bryd ud af switch
-        case RTSP:
-          score -= 10; // RTSP udfases, foretræk andre
-        case Shoutcast:
-          if (tilHentning) continue næste_stream;
-          if ("shoutcast".equals(ønsketformat)) score += 40;
-          break; // bryd ud af switch
-        default:
-          continue næste_stream;
+    for (Lydstream s : streams)
+      try {
+        sxxx = s;
+        int score = 100;
+        switch (s.type) {
+          case HLS_fra_Akamai:
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) continue næste_stream;
+            if (tilHentning) continue næste_stream;
+            if ("hls".equals(ønsketformat)) score += 40;
+            if ("auto".equals(ønsketformat)) score += 20;
+            break; // bryd ud af switch
+          case HTTP:
+            if (tilHentning) score += 20;
+            break; // bryd ud af switch
+          case RTSP:
+            score -= 10; // RTSP udfases, foretræk andre
+          case Shoutcast:
+            if (tilHentning) continue næste_stream;
+            if ("shoutcast".equals(ønsketformat)) score += 40;
+            break; // bryd ud af switch
+          default:
+            continue næste_stream;
+        }
+        switch (s.kvalitet) {
+          case High:
+            if ("høj".equals(ønsketkvalitet)) score += 10;
+            if ("auto".equals(ønsketkvalitet) && App.netværk.status == Netvaerksstatus.Status.WIFI) score += 10;
+            break;
+          case Low:
+          case Medium:
+            if ("standard".equals(ønsketkvalitet)) score += 10;
+            if ("auto".equals(ønsketkvalitet) && App.netværk.status == Netvaerksstatus.Status.MOBIL) score += 10;
+            break;
+          case Variable:
+            if ("auto".equals(ønsketkvalitet)) score += 10;
+            break;
+        }
+        if (s.foretrukken) score += 1000;
+        s.score = score;
+        Log.d("findBedsteStreams " + s);
+        kandidater.add(s);
+      } catch (Exception e) {
+        Log.rapporterFejl(new Exception(this + " ls=" + sxxx, e));
       }
-      switch (s.kvalitet) {
-        case High:
-          if ("høj".equals(ønsketkvalitet)) score += 10;
-          if ("auto".equals(ønsketkvalitet) && App.netværk.status == Netvaerksstatus.Status.WIFI) score += 10;
-          break;
-        case Low:
-        case Medium:
-          if ("standard".equals(ønsketkvalitet)) score += 10;
-          if ("auto".equals(ønsketkvalitet) && App.netværk.status == Netvaerksstatus.Status.MOBIL) score += 10;
-          break;
-        case Variable:
-          if ("auto".equals(ønsketkvalitet)) score += 10;
-          break;
-      }
-      if (s.foretrukken) score += 1000;
-      s.score = score;
-      Log.d("findBedsteStreams " + s);
-      kandidater.add(s);
-    }
 
     Collections.sort(kandidater);
     return kandidater;

@@ -16,15 +16,15 @@
             android:id="@+id/billede"
             android:src="@drawable/eksempel_udsendelse"/>
 
-
-    <ImageButton
-            android:id="@+id/højttalerikon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="16dp"
-            android:src="@drawable/dri_lyd_hvid"/>
-
+    <!--
+        <ImageButton
+                android:id="@+id/hør"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/dri_lyd_hvid"/>
+    -->
 
     <LinearLayout
             android:id="@+id/lige_nu_og_titel_ll"

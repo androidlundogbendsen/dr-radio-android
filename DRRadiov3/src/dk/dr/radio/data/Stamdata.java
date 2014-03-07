@@ -34,7 +34,7 @@ public class Stamdata {
   /**
    * Grunddata
    */
-  private JSONObject android_json;
+  public JSONObject android_json;
   public JSONObject json;
 
   public List<String> kanalkoder = new ArrayList<String>();

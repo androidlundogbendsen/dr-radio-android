@@ -100,7 +100,7 @@ public enum DRJson {
 
   private static Udsendelse getUdsendelse(DRData drData, JSONObject o) throws JSONException {
     String slug = o.optString(DRJson.Slug.name());  // Bemærk - kan være tom!
-    Udsendelse u = drData.udsendelseFraSlug.get(slug);
+    Udsendelse u = null; //drData.udsendelseFraSlug.get(slug);
     if (u == null) {
       u = new Udsendelse();
       u.slug = slug;
@@ -127,7 +127,7 @@ public enum DRJson {
       JSONObject o = jsonArray.getJSONObject(n);
       Udsendelse u = getUdsendelse(drData, o);
       u.kanalSlug = o.optString(DRJson.ChannelSlug.name(), kanal.slug);  // Bemærk - kan være tom..
-      u.kanHentes = o.getBoolean(DRJson.Watchable.name());
+      u.kanHøres = o.getBoolean(DRJson.Watchable.name());
       u.startTid = DRJson.servertidsformat.parse(o.getString(DRJson.StartTime.name()));
       u.startTidKl = klokkenformat.format(u.startTid);
       u.slutTid = DRJson.servertidsformat.parse(o.getString(DRJson.EndTime.name()));

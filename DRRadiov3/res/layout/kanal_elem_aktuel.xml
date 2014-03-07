@@ -13,7 +13,7 @@
     -->
 
     <include
-            layout="@layout/elem_inkl_billede_med_titeloverlaegning"
+            layout="@layout/inkl_billede_med_titeloverlaegning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

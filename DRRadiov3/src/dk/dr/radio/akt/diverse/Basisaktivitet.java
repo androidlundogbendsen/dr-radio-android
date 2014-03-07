@@ -16,12 +16,14 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
+import com.flurry.android.FlurryAgent;
 
 import dk.dr.radio.akt.Indstillinger_akt;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.P4Stedplacering;
+import dk.dr.radio.v3.R;
 
 public class Basisaktivitet extends ActionBarActivity {
   protected final AQuery aq = new AQuery(this);
@@ -135,6 +137,7 @@ public class Basisaktivitet extends ActionBarActivity {
   protected void onResume() {
     super.onResume();
     if (App.udvikling) Log.d(this + " onResume()");
+    if (!App.EMULATOR) FlurryAgent.onStartSession(this, getString(R.string.flurry_nøgle));
     App.instans.onResume(this);
   }
 
@@ -142,6 +145,7 @@ public class Basisaktivitet extends ActionBarActivity {
   protected void onPause() {
     super.onPause();
     if (App.udvikling) Log.d(this + " onPause()");
+    if (!App.EMULATOR) FlurryAgent.onEndSession(this);
     App.instans.onPause();
   }
 }

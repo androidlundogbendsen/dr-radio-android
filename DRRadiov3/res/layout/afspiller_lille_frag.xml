@@ -20,6 +20,16 @@
             android:src="@drawable/dri_radio_pause_hvid"
             />
 
+    <!--
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/start_stop_pauseknap"
+                android:background="@drawable/kanalappendix_p1d"
+                />
+    -->
+
+
     <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

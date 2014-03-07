@@ -174,7 +174,7 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
           vh.kanal_og_varighed = aq.id(R.id.kanal_og_varighed).typeface(App.skrift_gibson).getTextView();
           vh.stiplet_linje = aq.id(R.id.stiplet_linje).getView();
         }
-        aq.id(R.id.højttalerikon).visible().clicked(new UdsendelseClickListener(vh));
+        //aq.id(R.id.højttalerikon).visible().clicked(new UdsendelseClickListener(vh));
       } else {
         vh = (Viewholder) v.getTag();
       }
@@ -219,7 +219,7 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
     Fragment f = new Udsendelse_frag();
     f.setArguments(new Intent()
         .putExtra(P_kode, kanal.kode)
-        .putExtra(DRJson.Slug.name(), udsendelse.slug).getExtras());
+        .putExtra(DRJson.Urn.name(), udsendelse.urn).getExtras());
     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
   }
 
