@@ -4,9 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +15,11 @@ import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.akt.diverse.PagerSlidingTabStrip;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Kanal;
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener {
+public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChangeListener {
 
   private ViewPager viewPager;
   private ArrayList<Kanal> kanaler = new ArrayList<Kanal>();
@@ -52,6 +51,7 @@ public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener
       if (kanalindex == -1) kanalindex = 3; // P4
       viewPager.setCurrentItem(kanalindex);
     }
+    tabs.setOnPageChangeListener(this);
 
     return rod;
   }
@@ -64,17 +64,19 @@ public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener
   }
 
   @Override
-  public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    if (viewPager == null) return;
-    viewPager.setCurrentItem(tab.getPosition());
+  public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
   }
 
   @Override
-  public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+  public void onPageSelected(int position) {
+    App.prefs.edit().putString(App.FORETRUKKEN_KANAL, kanaler.get(position).kode).commit();
+    DRData.instans.aktuelKanal = kanaler.get(position);
   }
 
   @Override
-  public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+  public void onPageScrollStateChanged(int state) {
+
   }
 
 
