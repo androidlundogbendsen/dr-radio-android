@@ -24,8 +24,8 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
   private AQuery aq;
   private ImageView start_stop_pauseknap;
   private ProgressBar progressbar;
-  private TextView kanalTv;
-  private TextView titelTv;
+  private TextView titel;
+  private TextView metainformation;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -39,8 +39,8 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     aq = new AQuery(rod);
     start_stop_pauseknap = aq.id(R.id.start_stop_pauseknap).clicked(this).getImageView();
     progressbar = aq.id(R.id.progressBar).getProgressBar();
-    kanalTv = aq.id(R.id.kanal).typeface(App.skrift_gibson).getTextView();
-    titelTv = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
+    titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
+    metainformation = aq.id(R.id.metainformation).typeface(App.skrift_gibson).getTextView();
     DRData.instans.afspiller.observatører.add(this);
     DRData.instans.afspiller.forbindelseobservatører.add(this);
     run(); // opdatér views
@@ -61,28 +61,27 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     Kanal k = lydkilde.kanal();
     Status status = DRData.instans.afspiller.getAfspillerstatus();
     boolean live = lydkilde.erStreaming() && status != Status.STOPPET;
-    kanalTv.setText(k.navn + (live ? " LIVE" : ""));
     Udsendelse udsendelse = lydkilde.getUdsendelse();
-    String titel = udsendelse == null ? "" : udsendelse.titel;
+    titel.setText(udsendelse == null ? "" : udsendelse.titel);
     switch (status) {
       case STOPPET:
         start_stop_pauseknap.setImageResource(R.drawable.afspiller_spil);
-        titelTv.setText(titel);
-        kanalTv.setTextColor(getResources().getColor(R.color.grå40));
         progressbar.setVisibility(View.INVISIBLE);
+        metainformation.setTextColor(getResources().getColor(R.color.grå40));
+        metainformation.setText(k.navn + (live ? " LIVE" : ""));
         break;
       case FORBINDER:
         start_stop_pauseknap.setImageResource(R.drawable.afspiller_pause);
         progressbar.setVisibility(View.VISIBLE);
-        kanalTv.setTextColor(getResources().getColor(R.color.blå));
         int fpct = DRData.instans.afspiller.getForbinderProcent();
-        titelTv.setText("Forbinder " + (fpct > 0 ? fpct : "") + titel);
+        metainformation.setTextColor(getResources().getColor(R.color.blå));
+        metainformation.setText("Forbinder " + (fpct > 0 ? fpct : ""));
         break;
       case SPILLER:
         start_stop_pauseknap.setImageResource(R.drawable.afspiller_pause);
-        kanalTv.setTextColor(getResources().getColor(R.color.blå));
-        titelTv.setText(titel);
         progressbar.setVisibility(View.INVISIBLE);
+        metainformation.setTextColor(getResources().getColor(R.color.blå));
+        metainformation.setText(k.navn + (live ? " LIVE" : ""));
         break;
     }
   }
