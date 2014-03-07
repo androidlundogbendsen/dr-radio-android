@@ -47,6 +47,11 @@ public class Kanaler_frag extends Basisfragment implements ActionBar.TabListener
 
     PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) rod.findViewById(R.id.tabs);
     tabs.setViewPager(viewPager);
+    if (savedInstanceState == null) {
+      int kanalindex = kanaler.indexOf(DRData.instans.aktuelKanal);
+      if (kanalindex == -1) kanalindex = 3; // P4
+      viewPager.setCurrentItem(kanalindex);
+    }
 
     return rod;
   }

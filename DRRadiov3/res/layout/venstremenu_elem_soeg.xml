@@ -1,13 +1,27 @@
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:padding="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:gravity="center_vertical"
+        android:descendantFocusability="blocksDescendants"
         android:layout_height="wrap_content">
 
     <EditText
-            android:layout_width="match_parent"
+            android:layout_width="0px"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:focusable="false"
+            android:clickable="false"
             android:id="@+id/tekst"
             android:hint="Søg efter program"/>
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:paddingLeft="16dp"
+            android:src="@drawable/dri_soeg_blaa"/>
+
 </LinearLayout>

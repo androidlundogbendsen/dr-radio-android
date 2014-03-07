@@ -1,7 +1,6 @@
 package dk.dr.radio.akt;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -22,7 +21,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.ListView;
 
 import com.androidquery.AQuery;
@@ -30,8 +28,9 @@ import com.androidquery.AQuery;
 import java.util.ArrayList;
 
 import dk.dr.radio.akt.diverse.Basisadapter;
+import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.diverse.App;
-import dk.dr.radio.skrald.Om_DRRadio_akt;
+import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
 
@@ -258,9 +257,6 @@ public class Venstremenu_frag extends Fragment {
 
 
   class Navigation_adapter extends Basisadapter {
-    public int LIVE_KANALER_INDEX;
-    private final LayoutInflater layoutInflater;
-    private AQuery aq;
     ArrayList<MenuElement> elem = new ArrayList<MenuElement>();
 
     @Override
@@ -282,7 +278,7 @@ public class Venstremenu_frag extends Fragment {
 
     @Override
     public boolean isEnabled(int position) {
-      return elem.get(position).type >= 2;
+      return elem.get(position).fragKlasse != null;
     }
 
 
@@ -292,88 +288,105 @@ public class Venstremenu_frag extends Fragment {
     }
 
     class MenuElement {
-      final int type;
-      final String data;
       final View layout;
+      private final Class<? extends Basisfragment> fragKlasse;
       public Runnable runnable;
 
-      MenuElement(int type, String data, View layout) {
-        this.type = type;
-        this.data = data;
-        this.layout = layout;
-      }
-
-      MenuElement(int type, String data, View layout, Runnable r) {
-        this.type = type;
-        this.data = data;
-        this.layout = layout;
+      MenuElement(View v, Runnable r, Class<? extends Basisfragment> frag) {
+        layout = v;
         runnable = r;
+        fragKlasse = frag;
       }
     }
 
 
-    private View aq(int nav_elem_soeg) {
-      View v = layoutInflater.inflate(nav_elem_soeg, null);
+    private View aq(int layout) {
+      View v = layoutInflater.inflate(layout, null);
       aq = new AQuery(v);
       return v;
     }
 
+    private final LayoutInflater layoutInflater;
+    private AQuery aq;
 
-    private void tilføj(boolean b, int venstremenu_elem_soeg, Object o) {
-      //me = new MenuElement()
+
+    private void tilføj(int layout, Runnable r, Class<? extends Basisfragment> frag) {
+      View rod = layoutInflater.inflate(layout, null);
+      aq = new AQuery(rod);
+      elem.add(new MenuElement(rod, r, frag));
+    }
+
+    private void tilføj(int layout, Class<? extends Basisfragment> frag) {
+      tilføj(layout, null, frag);
+    }
+
+    private void tilføj(int layout, Runnable r) {
+      tilføj(layout, r, null);
+    }
+
+    private void tilføj(int layout) {
+      tilføj(layout, null, null);
     }
 
     public Navigation_adapter(final Context themedContext) {
       layoutInflater = (LayoutInflater) themedContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-      //tilføj(true, R.layout.venstremenu_elem_soeg, null);
-      //aq.id(R.id.tekst).typeface(App.skrift_gibson);
-
       boolean gib = App.prefs.getBoolean("brugGibsonIVenstremenu", true);
 
-
-      elem.add(new MenuElement(0, null, aq(R.layout.venstremenu_elem_soeg)));
+      tilføj(R.layout.venstremenu_elem_soeg, Kanalvalg_v2_frag.class);
+      View rod = aq.getView();
+      //aq.id(R.id.tekst).getView().setTouchDelegate(new TouchDelegate(new Rect(0,0, 1000, 1000), rod));
+      aq.id(R.id.tekst).clicked(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          vælgMenu(getActivity(), 0);
+        }
+      });
       if (gib) aq.id(R.id.tekst).typeface(App.skrift_gibson);
 
-      elem.add(new MenuElement(3, null, aq(R.layout.venstremenu_elem_overskrift)));
-      aq.id(R.id.tekst).text(Html.fromHtml("<b>Senest lyttede</b>"));
-      if (gib) aq.typeface(App.skrift_gibson);
+      tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
-      elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_adskiller_tynd)));
+      tilføj(R.layout.venstremenu_elem_overskrift, Kanalvalg_v2_frag.class);
+      aq.id(R.id.tekst).text("Senest lyttede");
+      if (gib) aq.typeface(App.skrift_gibson_fed);
 
-      elem.add(new MenuElement(3, null, aq(R.layout.venstremenu_elem_overskrift)));
-      aq.id(R.id.tekst).text(Html.fromHtml("<b>Dine favoritprogrammer</b><br/>(2 nye udsendelser)"));
-      if (gib) aq.typeface(App.skrift_gibson);
+      tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
-      elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_adskiller_tynd)));
+      tilføj(R.layout.venstremenu_elem_favoritprogrammer, Kanalvalg_v2_frag.class);
+      aq.id(R.id.tekst2).text("(23 nye udsendelser)");
+      if (gib) aq.typeface(App.skrift_gibson).id(R.id.tekst).typeface(App.skrift_gibson_fed);
 
-      elem.add(new MenuElement(3, null, aq(R.layout.venstremenu_elem_overskrift)));
-      aq.id(R.id.tekst).text(Html.fromHtml("<b>Downloadede udsendelser</b> (13)"));
-      if (gib) aq.typeface(App.skrift_gibson);
+      tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
-      elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_adskiller_tyk)));
+      tilføj(R.layout.venstremenu_elem_hentede_udsendendelser, Kanalvalg_v2_frag.class);
+      aq.id(R.id.tekst2).text("(42)");
+      if (gib) aq.typeface(App.skrift_gibson).id(R.id.tekst).typeface(App.skrift_gibson_fed);
 
-      elem.add(new MenuElement(3, null, aq(R.layout.venstremenu_elem_overskrift)));
-      aq.id(R.id.tekst).text(Html.fromHtml("<b>Alle programmer A-Å"));
-      if (gib) aq.typeface(App.skrift_gibson);
+      tilføj(R.layout.venstremenu_elem_adskiller_tyk);
 
-      elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_adskiller_tynd)));
+      tilføj(R.layout.venstremenu_elem_overskrift, Kanalvalg_v2_frag.class);
+      aq.id(R.id.tekst).text(Html.fromHtml("Alle programmer A-Å"));
+      if (gib) aq.typeface(App.skrift_gibson_fed);
 
-      LIVE_KANALER_INDEX = elem.size();
-      elem.add(new MenuElement(4, null, aq(R.layout.venstremenu_elem_overskrift)));
-      aq.id(R.id.tekst).text(Html.fromHtml("<b>Live kanaler</b>"));
-      if (gib) aq.typeface(App.skrift_gibson);
+      tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
-      elem.add(new MenuElement(4, null, aq(R.layout.venstremenu_elem_overskrift), new Runnable() {
+      tilføj(R.layout.venstremenu_elem_overskrift, Kanalvalg_v2_frag.class);
+      aq.id(R.id.tekst).text("Live kanaler");
+      if (gib) aq.typeface(App.skrift_gibson_fed);
+
+      tilføj(R.layout.venstremenu_elem_overskrift, Kanalvalg_v2_frag.class);
+      aq.id(R.id.tekst).text("Kontakt / info / om");
+      if (gib) aq.typeface(App.skrift_gibson_fed);
+/*
+      elem.add(new MenuElement(aq(R.layout.venstremenu_elem_overskrift), new Runnable() {
         @Override
         public void run() {
           getActivity().startActivity(new Intent(getActivity(), Om_DRRadio_akt.class));
         }
       }));
-      aq.id(R.id.tekst).text(Html.fromHtml("<b>Kontakt / info / om</b>"));
-      if (gib) aq.typeface(App.skrift_gibson);
+      aq.id(R.id.tekst).text(Html.fromHtml("Kontakt / info / om"));
+      if (gib) aq.typeface(App.skrift_gibson_fed);
 
-      elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_udvikler)));
+      elem.add(new MenuElement(aq(R.layout.venstremenu_elem_udvikler)));
       aq.id(R.id.tekst).clicked(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -382,17 +395,17 @@ public class Venstremenu_frag extends Fragment {
         }
       });
 
-      elem.add(new MenuElement(1, null, aq(R.layout.venstremenu_elem_overskrift)));
-      aq.id(R.id.tekst).text(Html.fromHtml("<br/><br/>(fjernes):<br/><br/><b>HØR LIVE RADIO</b>"));
+      elem.add(new MenuElement(aq(R.layout.venstremenu_elem_overskrift)));
+      aq.id(R.id.tekst).text(Html.fromHtml("<br/><br/>(fjernes):<br/><br/>HØR LIVE RADIO"));
 
-      elem.add(new MenuElement(4, null, aq(R.layout.venstremenu_elem_overskrift), new Runnable() {
+      elem.add(new MenuElement(aq(R.layout.venstremenu_elem_overskrift), new Runnable() {
         @Override
         public void run() {
           startActivity(new Intent(getActivity(), Kanalvalg_v2_akt.class));
         }
       }));
-      aq.id(R.id.tekst).text(Html.fromHtml("<b>Kanalvalg fra v2</b>"));
-
+      aq.id(R.id.tekst).text(Html.fromHtml("Kanalvalg fra v2"));
+*/
 
     }
 
@@ -405,22 +418,15 @@ public class Venstremenu_frag extends Fragment {
         return;
       }
 
-      Bundle b = new Bundle();
-      Fragment f;
 
-      if (e.type == 4) {
-        f = new Kanaler_frag();
-      } else if (e.type == 2) {
-        f = new Kanalvalg_v2_frag();
-        //b.putString(Kanal_frag.P_kode, e.data);
-      } else {
-        App.kortToast("Ikke implementeret");
-        f = new Kanalvalg_v2_frag();
+      try {
+        Basisfragment f = e.fragKlasse.newInstance();
+        FragmentManager fragmentManager = akt.getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.indhold_frag, f).commit();
+      } catch (Exception e1) {
+        Log.rapporterFejl(e1);
       }
 
-      f.setArguments(b);
-      FragmentManager fragmentManager = akt.getSupportFragmentManager();
-      fragmentManager.beginTransaction().replace(R.id.indhold_frag, f).commit();
     }
 
   }
