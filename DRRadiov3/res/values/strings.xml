@@ -5,6 +5,7 @@
     <string name="navigation_drawer_open">Åbn venstremenu</string>
     <string name="navigation_drawer_close">Luk venstremenu</string>
     <string name="action_settings">Settings</string>
+    <string name="alle_udsendelser_understreget"><u>Alle udsendelser</u></string>
 
     <string-array name="lydformat_tekst">
         <item>AAC (HLS)</item>
