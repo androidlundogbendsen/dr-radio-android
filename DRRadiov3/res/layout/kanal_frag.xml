@@ -30,6 +30,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Intet indhold"/>
+            android:text="Indlæser, vent venligst"/>
 </FrameLayout>
 

@@ -3,6 +3,7 @@ package dk.dr.radio.akt;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -11,6 +12,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
 import android.view.LayoutInflater;
+import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -292,7 +294,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         vh.starttidbjælke = a.id(R.id.starttidbjælke).getView();
         vh.slutttidbjælke = a.id(R.id.slutttidbjælke).getView();
         //a.id(R.id.højttalerikon).clicked(new UdsendelseClickListener(vh));
-        a.id(R.id.hør_live).clicked(Kanal_frag.this);
         a.id(R.id.slutttid).typeface(App.skrift_gibson).text(udsendelse.slutTidKl);
         if (type == TIDLIGERE_SENERE) {
           vh.titel = a.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
@@ -301,7 +302,38 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           a.id(R.id.senest_spillet_overskrift).typeface(App.skrift_gibson);
           a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson);
           a.id(R.id.lige_nu).typeface(App.skrift_gibson);
-          a.id(R.id.hør_live).typeface(App.skrift_gibson);
+          a.id(R.id.hør_live).typeface(App.skrift_gibson).clicked(Kanal_frag.this);
+          // Knappen er meget vigtig, og har derfor et udvidet område hvor det også er den man rammer
+          // se http://developer.android.com/reference/android/view/TouchDelegate.html
+          final View hør = a.id(R.id.hør_live).getView();
+          hør.post(new Runnable() {
+            @Override
+            public void run() {
+              Rect r = new Rect();
+              hør.getHitRect(r);
+              int udvid = getResources().getDimensionPixelSize(R.dimen.hørknap_udvidet_klikområde);
+              r.top -= udvid;
+              r.bottom += udvid;
+              r.right += udvid;
+              r.left -= udvid;
+              Log.d("hør_udvidet_klikområde=" + r);
+              ((View) hør.getParent()).setTouchDelegate(new TouchDelegate(r, hør));
+            }
+          });
+          /*
+          final View parent2 = (View) hør.getParent();
+          parent2.post( new Runnable() {
+            // Post in the parent's message queue to make sure the parent
+            // lays out its children before we call getHitRect()
+            public void run() {
+              final Rect r = new Rect();
+              hør.getHitRect(r);
+              r.top -= 40;
+              r.bottom += 40;
+              parent2.setTouchDelegate( new TouchDelegate( r , hør));
+            }
+          });
+    */
           v.setBackgroundResource(R.drawable.knap_hvid_bg);
         } else {
           vh.titel = a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson_fed).getTextView();
@@ -462,6 +494,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     } else if (kanal.streams == null) {
       Log.rapporterOgvisFejl(getActivity(), new IllegalStateException("kanal.streams er null"));
     } else {
+      // hør_udvidet_klikområde eller hør
       hør();
     }
   }
