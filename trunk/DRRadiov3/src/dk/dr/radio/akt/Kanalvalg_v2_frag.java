@@ -19,6 +19,7 @@
 package dk.dr.radio.akt;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -189,6 +190,12 @@ public class Kanalvalg_v2_frag extends Basisfragment implements AdapterView.OnIt
     if (kanal.p4underkanal) {
       App.prefs.edit().putString(App.P4_FORETRUKKEN_AF_BRUGER, kanalkode).commit();
     }
+    App.prefs.edit().putString(App.FORETRUKKEN_KANAL, kanalkode).commit();
+    DRData.instans.afspiller.setLydkilde(kanal);
+    DRData.instans.aktuelKanal = kanal;
+
+    FragmentManager fragmentManager = getFragmentManager();
+    fragmentManager.beginTransaction().replace(R.id.indhold_frag, new Kanaler_frag()).commit();
     //Toast.makeText(this, "Klik på "+position+" "+kanal.longName, Toast.LENGTH_LONG).show();
 
     //if (kanalkode.equals(DRData.instans.aktuelKanal.kode)) setResult(RESULT_CANCELED);

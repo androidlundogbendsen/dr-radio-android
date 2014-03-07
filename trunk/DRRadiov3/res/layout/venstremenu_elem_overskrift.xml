@@ -2,7 +2,8 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:padding="16dp"
-          android:text="HØR LIVE RADIO"
+          android:text="Senest lyttede"
+          android:textStyle="bold"
           android:id="@+id/tekst"/>
         <!--
                   android:textAppearance="?android:attr/textAppearanceMedium"

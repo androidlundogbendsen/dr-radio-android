@@ -63,11 +63,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-                android:name="dk.dr.radio.akt.Kanalvalg_v2_akt"
-                android:label="Kanalvalg"
-                android:noHistory="true">
-        </activity>
         <!--
                 android:theme="@android:style/Theme.NoTitleBar"
         -->
