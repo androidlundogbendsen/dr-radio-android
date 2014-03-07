@@ -241,6 +241,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           aq.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         } else if (type != ALLE_UDS) {
           vh.titel = aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
+          aq.id(R.id.hør).visibility(udsendelse.kanHøres ? View.VISIBLE : View.GONE);
         }
         //aq.id(R.id.højttalerikon).visible().clicked(new UdsendelseClickListener(vh));
       } else {
@@ -255,7 +256,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         aq.id(R.id.hør).enabled(streamsKlar).visibility(udsendelse.kanHøres ? View.VISIBLE : View.GONE);
         aq.id(R.id.hent).enabled(streamsKlar).visibility(udsendelse.kanHøres && App.hentning != null ? View.VISIBLE : View.GONE);
         aq.id(R.id.kan_endnu_ikke_hentes).visibility(!udsendelse.kanHøres ? View.VISIBLE : View.GONE);
-      } else if (type != ALLE_UDS) {
+      } else if (type == SPILLER_NU || type == SPILLEDE) {
         Playlisteelement u = playliste.get(position - 1);
         vh.playlisteelement = u;
         vh.titel.setText(Html.fromHtml("<b>" + u.titel + "</b> &nbsp; | &nbsp;" + u.kunstner));
