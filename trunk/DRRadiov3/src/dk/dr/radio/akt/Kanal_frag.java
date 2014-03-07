@@ -11,9 +11,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -115,23 +112,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   }
 
-  @Override
-  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.kanal, menu);
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == R.id.hør) {
-      hør();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
-  }
-
   public static DateFormat datoFormat = new SimpleDateFormat("yyyy-MM-dd");
-
 
   private void hentSendeplanForDag(final AQuery aq, Date dag, final boolean idag) {
     final String dato = datoFormat.format(dag);
@@ -190,6 +171,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   public void setUserVisibleHint(boolean isVisibleToUser) {
     Log.d(kanal + " setUserVisibleHint " + isVisibleToUser + "  " + this);
     fragmentErSynligt = isVisibleToUser;
+    if (kanal == null) return;
     if (fragmentErSynligt) {
       scrollTilAktuelUdsendelse();
       run();
@@ -331,45 +313,48 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
       // Opdatér viewholderens data
       vh.udsendelse = udsendelse;
-      if (type == TIDLIGERE_SENERE) {
-        vh.titel.setText(udsendelse.titel);
+      switch (type) {
+        case AKTUEL:
+          aktuelUdsendelseViewholder = vh;
+          vh.startid.setText(udsendelse.startTidKl);
+          vh.titel.setText(udsendelse.titel);
 
-        if (antalHentedeSendeplaner++ < 7) {
-          a.id(R.id.progressBar).visible();   // De første 7 henter vi bare for brugeren
-          vh.titel.setVisibility(View.VISIBLE);
-          hentSendeplanForDag(new AQuery(rod), udsendelse.startTid, false);
-        } else {
-          a.id(R.id.progressBar).invisible(); // Derefter er det nok noget ser looper og brugeren må manuelt gøre det
-          vh.titel.setVisibility(View.VISIBLE);
-        }
+          int br = bestemBilledebredde(listView, (View) a.id(R.id.billede).getView().getParent(), 100);
+          int hø = br * højde9 / bredde16;
+          String burl = skalérSlugBilledeUrl(udsendelse.slug, br, hø);
+          a.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
 
-      } else if (type == AKTUEL) {
-        aktuelUdsendelseViewholder = vh;
-        vh.startid.setText(udsendelse.startTidKl);
-        vh.titel.setText(udsendelse.titel);
+          if (TITELTEKST_KUN_SORT_LIGE_BAG_TEKST) {
+            vh.titel.setBackgroundColor(0);
+            Spannable spanna = new SpannableString(udsendelse.titel.toUpperCase());
+            spanna.setSpan(new BackgroundColorSpan(0xFF000000), 0, udsendelse.titel.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            vh.titel.setText(spanna);
+          } else {
+            vh.titel.setText(udsendelse.titel.toUpperCase());
+          }
 
-        int br = bestemBilledebredde(listView, (View) a.id(R.id.billede).getView().getParent(), 100);
-        int hø = br * højde9 / bredde16;
-        String burl = skalérSlugBilledeUrl(udsendelse.slug, br, hø);
-        a.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
+          opdaterAktuelUdsendelse(vh);
+          opdaterSenestSpillet(a, udsendelse);
+          break;
+        case NORMAL:
+          vh.startid.setText(udsendelse.startTidKl);
+          vh.titel.setText(udsendelse.titel);
+          a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
+          a.id(R.id.hør).visibility(udsendelse.kanHøres ? View.VISIBLE : View.GONE);
+          break;
+        case TIDLIGERE_SENERE:
+          vh.titel.setText(udsendelse.titel);
 
-        if (TITELTEKST_KUN_SORT_LIGE_BAG_TEKST) {
-          vh.titel.setBackgroundColor(0);
-          Spannable spanna = new SpannableString(udsendelse.titel.toUpperCase());
-          spanna.setSpan(new BackgroundColorSpan(0xFF000000), 0, udsendelse.titel.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-          vh.titel.setText(spanna);
-        } else {
-          vh.titel.setText(udsendelse.titel.toUpperCase());
-        }
-
-        opdaterAktuelUdsendelse(vh);
-        opdaterSenestSpillet(a, udsendelse);
-      } else {
-        vh.startid.setText(udsendelse.startTidKl);
-        vh.titel.setText(udsendelse.titel);
-        a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
+          if (antalHentedeSendeplaner++ < 7) {
+            a.id(R.id.progressBar).visible();   // De første 7 henter vi bare for brugeren
+            vh.titel.setVisibility(View.VISIBLE);
+            hentSendeplanForDag(new AQuery(rod), udsendelse.startTid, false);
+          } else {
+            a.id(R.id.progressBar).invisible(); // Derefter er det nok noget ser looper og brugeren må manuelt gøre det
+            vh.titel.setVisibility(View.VISIBLE);
+          }
       }
-      a.id(R.id.højttalerikon).visibility(udsendelse.kanHentes ? View.VISIBLE : View.GONE);
+
 
       return v;
     }

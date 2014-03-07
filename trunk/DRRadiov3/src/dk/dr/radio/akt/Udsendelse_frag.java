@@ -55,8 +55,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   private Kanal kanal;
   protected View rod;
   private Udsendelse udsendelse;
-  private ArrayList<Playlisteelement> liste = new ArrayList<Playlisteelement>();
-  private boolean streams;
+  private ArrayList<Playlisteelement> playliste = new ArrayList<Playlisteelement>();
 
   @Override
   public String toString() {
@@ -79,8 +78,36 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson_fed).getView());
     listView.setOnItemClickListener(this);
 
+
+    if (udsendelse.kanHøres && !streamsErKlar()) {
+      App.sætErIGang(true);
+      aq.ajax(udsendelse.getStreamsUrl(), String.class, 1 * 60 * 1000, new AjaxCallback<String>() {
+        @Override
+        public void callback(String url, String json, AjaxStatus status) {
+          App.sætErIGang(false);
+          Log.d("XXX udsendelse.getStreamsUrl()= " + url + "   status=" + status.getCode());
+          if (json != null && !"null".equals(json)) try {
+            JSONObject o = new JSONObject(json);
+            udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
+            if (streamsErKlar() && DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
+              DRData.instans.afspiller.setLydkilde(udsendelse);
+            }
+            adapter.notifyDataSetChanged();
+            ActivityCompat.invalidateOptionsMenu(getActivity());
+          } catch (Exception e) {
+            Log.d("Parsefejl: " + e + " for json=" + json);
+            e.printStackTrace();
+          }
+        }
+      });
+    }
+
+    if (streamsErKlar() && DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
+      DRData.instans.afspiller.setLydkilde(udsendelse);
+    }
+
     if (udsendelse.playliste != null) {
-      liste = udsendelse.playliste;
+      playliste = udsendelse.playliste;
     } else {
       String url = kanal.getPlaylisteUrl(udsendelse); // http://www.dr.dk/tjenester/mu-apps/playlist/monte-carlo-352/p3
       Log.d("Henter playliste " + url);
@@ -100,45 +127,21 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         }
       });
     }
-    streams = udsendelse.streams != null && udsendelse.streams.size() > 0;
-    if (streams && DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
-      DRData.instans.afspiller.setLydkilde(udsendelse);
-    }
-
-    if (udsendelse.streams == null) {
-      App.sætErIGang(true);
-      aq.ajax(udsendelse.getStreamsUrl(), String.class, 1 * 60 * 60 * 1000, new AjaxCallback<String>() {
-        @Override
-        public void callback(String url, String json, AjaxStatus status) {
-          App.sætErIGang(false);
-          Log.d("XXX udsendelse.getStreamsUrl()= " + url + "   status=" + status.getCode());
-          if (json != null && !"null".equals(json)) try {
-            JSONObject o = new JSONObject(json);
-            udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
-            streams = udsendelse.streams != null && udsendelse.streams.size() > 0;
-            if (streams && DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
-              DRData.instans.afspiller.setLydkilde(udsendelse);
-            }
-            adapter.notifyDataSetChanged();
-            ActivityCompat.invalidateOptionsMenu(getActivity());
-          } catch (Exception e) {
-            Log.d("Parsefejl: " + e + " for json=" + json);
-            e.printStackTrace();
-          }
-        }
-      });
-    }
     udvikling_checkDrSkrifter(rod, this + " rod");
     setHasOptionsMenu(true);
     return rod;
+  }
+
+  private boolean streamsErKlar() {
+    return udsendelse.streams != null && udsendelse.streams.size() > 0;
   }
 
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.udsendelse, menu);
-    menu.findItem(R.id.hør).setVisible(streams);
-    menu.findItem(R.id.hent).setVisible(App.hentning != null && streams);
+    menu.findItem(R.id.hør).setVisible(udsendelse.kanHøres).setEnabled(streamsErKlar());
+    menu.findItem(R.id.hent).setVisible(App.hentning != null && udsendelse.kanHøres);
   }
 
   @Override
@@ -177,7 +180,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   private BaseAdapter adapter = new Basisadapter() {
     @Override
     public int getCount() {
-      return liste.size() + 2;
+      return playliste.size() + 2;
     }
 
     @Override
@@ -188,7 +191,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     @Override
     public int getItemViewType(int position) {
       if (position == 0) return TOP;
-      if (position > liste.size()) return ALLE_UDS;
+      if (position > playliste.size()) return ALLE_UDS;
       if (position == 1) return SPILLER_NU;
       return SPILLEDE;
     }
@@ -222,7 +225,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           aq.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
 
           aq.id(R.id.lige_nu).gone();
-          aq.id(R.id.playliste).typeface(App.skrift_gibson).visibility(udsendelse.streams != null && udsendelse.streams.size() > 0 ? View.VISIBLE : View.INVISIBLE);
+          aq.id(R.id.playliste).typeface(App.skrift_gibson).visibility(streamsErKlar() ? View.VISIBLE : View.INVISIBLE);
           aq.id(R.id.info).typeface(App.skrift_gibson);
           vh.titel.setText(udsendelse.titel.toUpperCase());
           aq.id(R.id.logo).image(kanal.kanallogo_resid);
@@ -239,7 +242,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         } else if (type != ALLE_UDS) {
           vh.titel = aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
         }
-        aq.id(R.id.højttalerikon).visible().clicked(new UdsendelseClickListener(vh));
+        //aq.id(R.id.højttalerikon).visible().clicked(new UdsendelseClickListener(vh));
       } else {
         vh = (Viewholder) v.getTag();
         aq = vh.aq;
@@ -247,13 +250,13 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
       // Opdatér viewholderens data
       if (type == TOP) {
-        boolean streams = udsendelse.streams != null && udsendelse.streams.size() > 0;
-        aq.id(R.id.højttalerikon).visibility(streams ? View.VISIBLE : View.GONE);
-        aq.id(R.id.hør).visibility(streams ? View.VISIBLE : View.GONE);
-        aq.id(R.id.hent).visibility(streams && App.hentning != null ? View.VISIBLE : View.GONE);
-        aq.id(R.id.kan_endnu_ikke_hentes).visibility(!streams ? View.VISIBLE : View.GONE);
+        //aq.id(R.id.højttalerikon).visibility(streams ? View.VISIBLE : View.GONE);
+        boolean streamsKlar = streamsErKlar();
+        aq.id(R.id.hør).enabled(streamsKlar).visibility(udsendelse.kanHøres ? View.VISIBLE : View.GONE);
+        aq.id(R.id.hent).enabled(streamsKlar).visibility(udsendelse.kanHøres && App.hentning != null ? View.VISIBLE : View.GONE);
+        aq.id(R.id.kan_endnu_ikke_hentes).visibility(!udsendelse.kanHøres ? View.VISIBLE : View.GONE);
       } else if (type != ALLE_UDS) {
-        Playlisteelement u = liste.get(position - 1);
+        Playlisteelement u = playliste.get(position - 1);
         vh.playlisteelement = u;
         vh.titel.setText(Html.fromHtml("<b>" + u.titel + "</b> &nbsp; | &nbsp;" + u.kunstner));
         vh.startid.setText(u.startTidKl);
@@ -285,61 +288,73 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   }
 
   private void del() {
-    Intent intent = new Intent(Intent.ACTION_SEND);
-    intent.setType("text/plain");
-    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-    intent.putExtra(Intent.EXTRA_SUBJECT, udsendelse.titel);
-    intent.putExtra(Intent.EXTRA_TEXT, udsendelse.titel + "\n\n"
-        + udsendelse.beskrivelse + "\n\n" +
+    try {
+      Intent intent = new Intent(Intent.ACTION_SEND);
+      intent.setType("text/plain");
+      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+      intent.putExtra(Intent.EXTRA_SUBJECT, udsendelse.titel);
+      intent.putExtra(Intent.EXTRA_TEXT, udsendelse.titel + "\n\n"
+          + udsendelse.beskrivelse + "\n\n" +
 // http://www.dr.dk/radio/ondemand/p6beat/debut-65
 // http://www.dr.dk/radio/ondemand/ramasjangradio/ramasjang-formiddag-44#!/00:03
-        "http://dr.dk/radio/ondemand/" + kanal.slug + "/" + udsendelse.slug + "\n\n" +
-        udsendelse.findBedsteStream(true).url
-    );
+          "http://dr.dk/radio/ondemand/" + kanal.slug + "/" + udsendelse.slug + "\n\n" +
+          udsendelse.findBedsteStream(true).url
+      );
 //www.dr.dk/p1/mennesker-og-medier/mennesker-og-medier-100
-    startActivity(intent);
+      startActivity(intent);
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
+    }
   }
 
   @TargetApi(Build.VERSION_CODES.GINGERBREAD)
   private void hent() {
-    if (udsendelse.streams == null || udsendelse.streams.size() == 0) return;
-    Uri uri = Uri.parse(udsendelse.findBedsteStream(true).url);
-    Log.d("uri=" + uri);
+    try {
+      if (!streamsErKlar()) return;
+      Uri uri = Uri.parse(udsendelse.findBedsteStream(true).url);
+      Log.d("uri=" + uri);
 
-    File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
-    dir.mkdirs();
-    DownloadManager.Request req = new DownloadManager.Request(uri);
+      File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
+      dir.mkdirs();
+      DownloadManager.Request req = new DownloadManager.Request(uri);
 
-    req.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-        .setAllowedOverRoaming(false)
-        .setTitle(udsendelse.titel)
-        .setDescription(udsendelse.beskrivelse)
-        .setDestinationInExternalPublicDir(Environment.DIRECTORY_PODCASTS, udsendelse.slug + ".mp3");
-    if (Build.VERSION.SDK_INT >= 11) req.allowScanningByMediaScanner();
+      req.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+          .setAllowedOverRoaming(false)
+          .setTitle(udsendelse.titel)
+          .setDescription(udsendelse.beskrivelse)
+          .setDestinationInExternalPublicDir(Environment.DIRECTORY_PODCASTS, udsendelse.slug + ".mp3");
+      if (Build.VERSION.SDK_INT >= 11) req.allowScanningByMediaScanner();
 
 
-    long downloadId = App.hentning.downloadService.enqueue(req);
-    App.langToast("downloadId=" + downloadId + "\n" + dir);
+      long downloadId = App.hentning.downloadService.enqueue(req);
+      App.langToast("downloadId=" + downloadId + "\n" + dir);
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
+    }
   }
 
   private void hør() {
-    if (udsendelse.streams == null || udsendelse.streams.size() == 0) return;
-    if (App.udvikling) App.kortToast("kanal.streams=" + kanal.streams);
-    if (App.prefs.getBoolean("manuelStreamvalg", false)) {
-      new AlertDialog.Builder(getActivity())
-          .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, udsendelse.findBedsteStreams(false).toArray()), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              udsendelse.streams.get(which).foretrukken = true;
-              DRData.instans.aktuelKanal = kanal;
-              DRData.instans.afspiller.setLydkilde(kanal);
-              DRData.instans.afspiller.startAfspilning();
-            }
-          }).show();
-    } else {
-      DRData.instans.aktuelKanal = kanal;
-      DRData.instans.afspiller.setLydkilde(udsendelse);
-      DRData.instans.afspiller.startAfspilning();
+    try {
+      if (!streamsErKlar()) return;
+      if (App.udvikling) App.kortToast("kanal.streams=" + kanal.streams);
+      if (App.prefs.getBoolean("manuelStreamvalg", false)) {
+        new AlertDialog.Builder(getActivity())
+            .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, udsendelse.findBedsteStreams(false).toArray()), new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int which) {
+                udsendelse.streams.get(which).foretrukken = true;
+                DRData.instans.aktuelKanal = kanal;
+                DRData.instans.afspiller.setLydkilde(kanal);
+                DRData.instans.afspiller.startAfspilning();
+              }
+            }).show();
+      } else {
+        DRData.instans.aktuelKanal = kanal;
+        DRData.instans.afspiller.setLydkilde(udsendelse);
+        DRData.instans.afspiller.startAfspilning();
+      }
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
     }
   }
 

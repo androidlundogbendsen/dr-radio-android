@@ -1,3 +1,7 @@
 <resources>
-    <string name="flurry_nøgle">ukendt</string>
+    <!--
+Project: DR Radio
+API Key: MN947VJVXZQXJBWZDRZ2
+    -->
+    <string name="flurry_nøgle">MN947VJVXZQXJBWZDRZ2</string>
 </resources>

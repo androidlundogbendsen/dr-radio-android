@@ -24,7 +24,6 @@
             android:layout_height="3dp"/>
 
 
-
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,16 +51,16 @@
                     android:id="@+id/titel_og_kunstner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="P3 Sporten  |  Polarkreis 18"
-                android:maxLines="2"
-                tools:ignore="HardcodedText"/>
+                    android:layout_weight="1"
+                    android:text="P3 Sporten  |  Polarkreis 18"
+                    android:maxLines="2"
+                    tools:ignore="HardcodedText"/>
         </LinearLayout>
 
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/højttalerikon"
+                android:id="@+id/hør"
                 android:src="@drawable/dri_lyd_blaa"/>
 
     </LinearLayout>
