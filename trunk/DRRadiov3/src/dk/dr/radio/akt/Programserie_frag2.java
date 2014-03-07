@@ -36,12 +36,11 @@ import dk.dr.radio.v3.R;
 public class Programserie_frag2 extends Basisfragment implements AdapterView.OnItemClickListener {
 
   private ListView listView;
-  private ArrayList<JSONObject> liste = new ArrayList<JSONObject>();
-  private JSONObject data;
   private String programserieSlug;
   private Programserie programserie;
   private Kanal kanal;
   private View rod;
+  private int antalHentedeSendeplaner;
 
   @Override
   public String toString() {
@@ -53,41 +52,17 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
     programserieSlug = getArguments().getString(DRJson.SeriesSlug.name());
     kanal = DRData.instans.stamdata.kanalFraKode.get(getArguments().getString(Kanal_frag.P_kode));
     Log.d("onCreateView " + this + " viser " + programserieSlug);
-
-    programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
-    if (programserie == null) {
-      // svarer til v3_programserie.json
-      // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true
-      // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true&includeStreams=true
-      String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true";
-      Log.d("XXX url=" + url);
-      App.sætErIGang(true);
-      new AQuery(App.instans).ajax(url, String.class, 24 * 60 * 60 * 1000, new AjaxCallback<String>() {
-        @Override
-        public void callback(String url, String json, AjaxStatus status) {
-          App.sætErIGang(false);
-          Log.d("XXX url " + url + "   status=" + status.getCode());
-          if (json != null && !"null".equals(json)) try {
-            data = new JSONObject(json);
-            programserie = DRJson.parsProgramserie(data);
-            programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
-            DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
-            adapter.notifyDataSetChanged();
-            return;
-          } catch (Exception e) {
-            Log.d("Parsefejl: " + e + " for json=" + json);
-            e.printStackTrace();
-          }
-          new AQuery(rod).id(R.id.tom).text(url + "   status=" + status.getCode() + "\njson=" + json);
-        }
-      });
-    }
-
-    rod = inflater.inflate(R.layout.kanal_frag, container, false);
     if (kanal == null) {
       afbrydManglerData();
       return rod;
     }
+
+    programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
+    if (programserie == null) {
+      hentUdsendelser(0);
+    }
+
+    rod = inflater.inflate(R.layout.kanal_frag, container, false);
     final AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson_fed).getView());
@@ -98,6 +73,38 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
     return rod;
   }
 
+  private void hentUdsendelser(final int offset) {
+    // svarer til v3_programserie.json
+    // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true
+    // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true&includeStreams=true
+    String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
+    Log.d("XXX url=" + url);
+    App.sætErIGang(true);
+    new AQuery(App.instans).ajax(url, String.class, 24 * 60 * 60 * 1000, new AjaxCallback<String>() {
+      @Override
+      public void callback(String url, String json, AjaxStatus status) {
+        App.sætErIGang(false);
+        Log.d("XXX url " + url + "   status=" + status.getCode());
+        if (json != null && !"null".equals(json)) try {
+          JSONObject data = new JSONObject(json);
+          if (offset == 0) {
+            programserie = DRJson.parsProgramserie(data);
+            programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+            DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
+          } else {
+            ArrayList<Udsendelse> flereUdsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+            programserie.udsendelser.addAll(flereUdsendelser);
+          }
+          adapter.notifyDataSetChanged();
+          return;
+        } catch (Exception e) {
+          Log.d("Parsefejl: " + e + " for json=" + json);
+          e.printStackTrace();
+        }
+        new AQuery(rod).id(R.id.tom).text(url + "   status=" + status.getCode() + "\njson=" + json);
+      }
+    });
+  }
 
 
   /**
@@ -114,25 +121,31 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
 
   static final int TOP = 0;
   static final int UDSENDELSE = 1;
+  static final int TIDLIGERE = 2;
 
   static final int[] layoutFraType = {
       R.layout.programserie_elem0_top,
-      R.layout.programserie_elem1_udsendelse};
+      R.layout.programserie_elem1_udsendelse,
+      R.layout.kanal_elem_tidligere_senere,
+  };
 
   private BaseAdapter adapter = new Basisadapter() {
     @Override
     public int getCount() {
-      return programserie != null ? programserie.udsendelser.size() + 1 : 0;
+      if (programserie == null) return 0;
+      if (programserie.antalUdsendelser == programserie.udsendelser.size()) return programserie.udsendelser.size() + 1;
+      return programserie.udsendelser.size() + 2; // Vis 'tidligere'-listeelement
     }
 
     @Override
     public int getViewTypeCount() {
-      return 2;
+      return 3;
     }
 
     @Override
     public int getItemViewType(int position) {
-      if (position == 0) return TOP;
+      if (position == 0 || programserie == null) return TOP;
+      if (position == programserie.udsendelser.size() + 1) return TIDLIGERE;
       return UDSENDELSE;
     }
 
@@ -167,20 +180,18 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
 
           aq.id(R.id.beskrivelse).text(programserie.beskrivelse).typeface(App.skrift_georgia);
           Linkify.addLinks(aq.getTextView(), Linkify.ALL);
-
-        } else {
+        } else { // if (type == UDSENDELSE eller TIDLIGERE) {
           vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
           vh.titel_og_dato = aq.id(R.id.titel_og_dato).typeface(App.skrift_gibson).getTextView();
           vh.kanal_og_varighed = aq.id(R.id.kanal_og_varighed).typeface(App.skrift_gibson).getTextView();
           vh.stiplet_linje = aq.id(R.id.stiplet_linje).getView();
         }
-        //aq.id(R.id.højttalerikon).visible().clicked(new UdsendelseClickListener(vh));
       } else {
         vh = (Viewholder) v.getTag();
       }
 
       // Opdatér viewholderens data
-      if (type != TOP) {
+      if (type == UDSENDELSE) {
         Udsendelse u = programserie.udsendelser.get(position - 1);
         vh.udsendelse = u;
         //vh.stiplet_linje.setVisibility(position > 1 ? View.VISIBLE : View.INVISIBLE); // Første stiplede linje væk
@@ -204,6 +215,16 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
         }
         Log.d("txt=" + txt);
         vh.kanal_og_varighed.setText(txt);
+      } else if (type == TIDLIGERE) {
+        if (antalHentedeSendeplaner++ < 7) {
+          vh.aq.id(R.id.progressBar).visible();   // De første 7 henter vi bare for brugeren
+          vh.titel.setVisibility(View.VISIBLE);
+          hentUdsendelser(programserie.udsendelser.size());
+        } else {
+          vh.aq.id(R.id.progressBar).invisible(); // Derefter må brugeren gøre det manuelt
+          vh.titel.setVisibility(View.VISIBLE);
+        }
+
       }
       udvikling_checkDrSkrifter(v, this + " position " + position);
       return v;
@@ -212,15 +233,22 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
 
 
   @Override
-  public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
+  public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
     if (position == 0) return;
+    if (position <= programserie.udsendelser.size()) {
+      Udsendelse udsendelse = programserie.udsendelser.get(position - 1);
+      Fragment f = new Udsendelse_frag();
+      f.setArguments(new Intent()
+          .putExtra(Udsendelse_frag.BLOKER_VIDERE_NAVIGERING, true)
+          .putExtra(P_kode, kanal.kode)
+          .putExtra(DRJson.Slug.name(), udsendelse.slug).getExtras());
+      getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+      return;
+    }
 
-    Udsendelse udsendelse = programserie.udsendelser.get(position - 1);
-    Fragment f = new Udsendelse_frag();
-    f.setArguments(new Intent()
-        .putExtra(P_kode, kanal.kode)
-        .putExtra(DRJson.Urn.name(), udsendelse.urn).getExtras());
-    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+    hentUdsendelser(programserie.udsendelser.size());
+    v.findViewById(R.id.titel).setVisibility(View.GONE);
+    v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
   }
 
   private class UdsendelseClickListener implements View.OnClickListener {

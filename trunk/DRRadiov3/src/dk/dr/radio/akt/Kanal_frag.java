@@ -195,7 +195,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   @Override
   public void onPause() {
     super.onPause();
-    //App.forgrundstråd.removeCallbacks(this);
+    App.forgrundstråd.removeCallbacks(this);
   }
 
   @Override
@@ -352,7 +352,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
             vh.titel.setVisibility(View.VISIBLE);
             hentSendeplanForDag(new AQuery(rod), udsendelse.startTid, false);
           } else {
-            a.id(R.id.progressBar).invisible(); // Derefter er det nok noget ser looper og brugeren må manuelt gøre det
+            a.id(R.id.progressBar).invisible(); // Derefter må brugeren gøre det manuelt
             vh.titel.setVisibility(View.VISIBLE);
           }
       }

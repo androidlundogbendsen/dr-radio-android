@@ -53,11 +53,13 @@ import dk.dr.radio.v3.R;
 
 public class Udsendelse_frag extends Basisfragment implements View.OnClickListener, AdapterView.OnItemClickListener {
 
+  public static final String BLOKER_VIDERE_NAVIGERING = "BLOKER_VIDERE_NAVIGERING";
   private ListView listView;
   private Kanal kanal;
   protected View rod;
   private Udsendelse udsendelse;
   private ArrayList<Playlisteelement> playliste = new ArrayList<Playlisteelement>();
+  private boolean blokerVidereNavigering;
 
   @Override
   public String toString() {
@@ -68,6 +70,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     kanal = DRData.instans.stamdata.kanalFraKode.get(getArguments().getString(Kanal_frag.P_kode));
     udsendelse = DRData.instans.udsendelseFraSlug.get(getArguments().getString(DRJson.Slug.name()));
+    blokerVidereNavigering = getArguments().getBoolean(BLOKER_VIDERE_NAVIGERING);
+
     Log.d("onCreateView " + this);
 
     rod = inflater.inflate(R.layout.kanal_frag, container, false);
@@ -182,7 +186,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   private BaseAdapter adapter = new Basisadapter() {
     @Override
     public int getCount() {
-      return playliste.size() + 2;
+      return playliste.size() + (blokerVidereNavigering ? 1 : 2);
     }
 
     @Override
