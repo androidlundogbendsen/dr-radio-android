@@ -33,32 +33,31 @@
 
     <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginLeft="8dp"
-            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
             android:orientation="vertical">
 
         <TextView
                 android:id="@+id/titel"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Smag på P3"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textStyle="bold"
                 android:maxLines="2"
                 tools:ignore="HardcodedText"
-                android:background="@color/grå80"
                 android:textColor="@color/hvid"/>
 
         <TextView
                 android:id="@+id/metainformation"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="P3 Live"
+                android:singleLine="true"
                 tools:ignore="HardcodedText"
-                android:background="@color/grå60"
                 android:textColor="@color/blå"/>
 
     </LinearLayout>
