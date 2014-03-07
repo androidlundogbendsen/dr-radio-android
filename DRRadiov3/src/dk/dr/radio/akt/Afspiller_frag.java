@@ -1,7 +1,9 @@
 package dk.dr.radio.akt;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -44,6 +46,23 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     DRData.instans.afspiller.observatører.add(this);
     DRData.instans.afspiller.forbindelseobservatører.add(this);
     run(); // opdatér views
+    // Knappen er meget vigtig, og har derfor et udvidet område hvor det også er den man rammer
+    // se http://developer.android.com/reference/android/view/TouchDelegate.html
+    start_stop_pauseknap.post(new Runnable() {
+      @Override
+      public void run() {
+        Rect r = new Rect();
+        start_stop_pauseknap.getHitRect(r);
+        int udvid = getResources().getDimensionPixelSize(R.dimen.hørknap_udvidet_klikområde);
+        r.top -= udvid;
+        r.bottom += udvid;
+        r.right += udvid;
+        r.left -= udvid;
+        Log.d("hør_udvidet_klikområde=" + r);
+        ((View) start_stop_pauseknap.getParent()).setTouchDelegate(new TouchDelegate(r, start_stop_pauseknap));
+      }
+    });
+
     return rod;
   }
 
