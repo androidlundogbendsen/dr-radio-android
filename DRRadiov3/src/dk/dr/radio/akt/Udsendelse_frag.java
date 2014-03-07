@@ -239,6 +239,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
           aq.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
           aq.id(R.id.hent).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
+          aq.id(R.id.kan_endnu_ikke_hentes).typeface(App.skrift_gibson);
           if (App.hentning == null) aq.gone(); // Understøttes ikke på Android 2.2
           aq.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         } else if (type != ALLE_UDS) {
