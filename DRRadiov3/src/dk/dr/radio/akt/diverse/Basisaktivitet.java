@@ -137,7 +137,10 @@ public class Basisaktivitet extends ActionBarActivity {
   protected void onResume() {
     super.onResume();
     if (App.udvikling) Log.d(this + " onResume()");
-    if (!App.EMULATOR) FlurryAgent.onStartSession(this, getString(R.string.flurry_nøgle));
+    if (!App.EMULATOR) {
+      FlurryAgent.setCaptureUncaughtExceptions(false); // Vi bruger p.t. BugSense
+      FlurryAgent.onStartSession(this, getString(R.string.flurry_nøgle));
+    }
     App.instans.onResume(this);
   }
 
