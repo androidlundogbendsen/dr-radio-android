@@ -59,7 +59,8 @@ public abstract class Lydkilde {
             if (tilHentning) score += 20;
             break; // bryd ud af switch
           case RTSP:
-            score -= 10; // RTSP udfases, foretræk andre
+            score -= 10; // RTSP udfases og har en enorm ventetid, foretræk andre
+            if (!tilHentning) score -= 20; // ... og har en enorm ventetid, foretræk andre
           case Shoutcast:
             if (tilHentning) continue næste_stream;
             if ("shoutcast".equals(ønsketformat)) score += 40;

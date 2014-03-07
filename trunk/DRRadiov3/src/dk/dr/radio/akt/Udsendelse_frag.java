@@ -30,12 +30,14 @@ import android.widget.TextView;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
+import com.flurry.android.FlurryAgent;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.akt.diverse.Basisadapter;
@@ -338,6 +340,12 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     try {
       if (!streamsErKlar()) return;
       if (App.udvikling) App.kortToast("kanal.streams=" + kanal.streams);
+      if (!App.EMULATOR) {
+        HashMap<String, String> param = new HashMap<String, String>();
+        param.put("kanal", kanal.kode);
+        param.put("udsendelse", udsendelse.slug);
+        FlurryAgent.logEvent("hør udsendelse", param);
+      }
       if (App.prefs.getBoolean("manuelStreamvalg", false)) {
         new AlertDialog.Builder(getActivity())
             .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, udsendelse.findBedsteStreams(false).toArray()), new DialogInterface.OnClickListener() {
@@ -345,7 +353,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
               public void onClick(DialogInterface dialog, int which) {
                 udsendelse.streams.get(which).foretrukken = true;
                 DRData.instans.aktuelKanal = kanal;
-                DRData.instans.afspiller.setLydkilde(kanal);
+                DRData.instans.afspiller.setLydkilde(udsendelse);
                 DRData.instans.afspiller.startAfspilning();
               }
             }).show();

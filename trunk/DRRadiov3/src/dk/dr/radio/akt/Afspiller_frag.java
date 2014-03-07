@@ -63,26 +63,26 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     boolean live = lydkilde.erStreaming() && status != Status.STOPPET;
     kanalTv.setText(k.navn + (live ? " LIVE" : ""));
     Udsendelse udsendelse = lydkilde.getUdsendelse();
-    String titel = udsendelse == null ? "" : " - " + udsendelse.titel;
+    String titel = udsendelse == null ? "" : udsendelse.titel;
     switch (status) {
       case STOPPET:
-        start_stop_pauseknap.setImageResource(R.drawable.dri_radio_spil_hvid);
-        titelTv.setText("Stoppet" + titel);
+        start_stop_pauseknap.setImageResource(R.drawable.afspiller_spil);
+        titelTv.setText(titel);
         kanalTv.setTextColor(getResources().getColor(R.color.grå40));
-        progressbar.setVisibility(View.GONE);
+        progressbar.setVisibility(View.INVISIBLE);
         break;
       case FORBINDER:
-        start_stop_pauseknap.setImageResource(R.drawable.dri_radio_pause_hvid);
+        start_stop_pauseknap.setImageResource(R.drawable.afspiller_pause);
         progressbar.setVisibility(View.VISIBLE);
         kanalTv.setTextColor(getResources().getColor(R.color.blå));
         int fpct = DRData.instans.afspiller.getForbinderProcent();
         titelTv.setText("Forbinder " + (fpct > 0 ? fpct : "") + titel);
         break;
       case SPILLER:
-        start_stop_pauseknap.setImageResource(R.drawable.dri_radio_stop_hvid);
+        start_stop_pauseknap.setImageResource(R.drawable.afspiller_pause);
         kanalTv.setTextColor(getResources().getColor(R.color.blå));
-        titelTv.setText("Afspiller" + titel);
-        progressbar.setVisibility(View.GONE);
+        titelTv.setText(titel);
+        progressbar.setVisibility(View.INVISIBLE);
         break;
     }
   }
