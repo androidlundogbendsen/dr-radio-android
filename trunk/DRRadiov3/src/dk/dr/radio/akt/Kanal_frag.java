@@ -320,20 +320,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
               ((View) hør.getParent()).setTouchDelegate(new TouchDelegate(r, hør));
             }
           });
-          /*
-          final View parent2 = (View) hør.getParent();
-          parent2.post( new Runnable() {
-            // Post in the parent's message queue to make sure the parent
-            // lays out its children before we call getHitRect()
-            public void run() {
-              final Rect r = new Rect();
-              hør.getHitRect(r);
-              r.top -= 40;
-              r.bottom += 40;
-              parent2.setTouchDelegate( new TouchDelegate( r , hør));
-            }
-          });
-    */
           v.setBackgroundResource(R.drawable.knap_hvid_bg);
         } else {
           vh.titel = a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson_fed).getTextView();
