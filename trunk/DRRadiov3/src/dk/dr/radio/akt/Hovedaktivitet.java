@@ -1,6 +1,7 @@
 package dk.dr.radio.akt;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 
 import dk.dr.radio.akt.diverse.Basisaktivitet;
@@ -25,6 +26,11 @@ public class Hovedaktivitet extends Basisaktivitet {
 
     // Set up the drawer.
     venstremenuFrag.setUp(R.id.navigation_frag, (DrawerLayout) findViewById(R.id.drawer_layout));
+
+    if (savedInstanceState == null) {
+      FragmentManager fragmentManager = getSupportFragmentManager();
+      fragmentManager.beginTransaction().replace(R.id.indhold_frag, new Kanaler_frag()).commit();
+    }
   }
 
 
