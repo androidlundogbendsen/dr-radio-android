@@ -1,3 +1,4 @@
 <resources>
-    <string name="bugsense_nøgle">Sæt din bugsense-nøgne ind her</string>
+    <!-- Indsæt din egen BugSense-nøgle her -->
+    <string name="bugsense_nøgle">00000000</string>
 </resources>
