@@ -76,11 +76,11 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       kanalkode = App.prefs.getString(App.P4_FORETRUKKEN_AF_BRUGER, null);
       if (kanalkode == null) {
         kanalkode = App.prefs.getString(App.P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, "KH4");
-        kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
+        kanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
         if (kanal == null) {
           Log.e("P4 IKKE FUNDET kanalkode=" + kanalkode, null);
-          kanalkode = DRData.instans.stamdata.p4koder.get(0);
-          kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
+          kanalkode = DRData.instans.grunddata.p4koder.get(0);
+          kanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
         }
         rod = inflater.inflate(R.layout.kanal_p4_frag, container, false);
         AQuery aq = new AQuery(rod);
@@ -90,7 +90,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         aq.id(R.id.p4_ok).clicked(this).typeface(App.skrift_gibson);
       }
     }
-    kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
+    kanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
     Log.d("onCreateView " + this);
 
     if (rod == null) rod = inflater.inflate(R.layout.kanal_frag, container, false);

@@ -30,7 +30,7 @@ import java.util.List;
 import dk.dr.radio.diverse.FilCache;
 import dk.dr.radio.diverse.Log;
 
-public class Stamdata {
+public class Grunddata {
   /**
    * Grunddata
    */
@@ -88,12 +88,12 @@ public class Stamdata {
   }
 
   /**
-   * Henter stamdata (faste data)
+   * Henter grunddata (faste data)
    *
    * @throws java.io.IOException hvis der er et problem med netværk
    *                             eller parsning (dvs interne fejl af forskellig art som bør rapporteres til udvikler)
    */
-  public void parseFællesStamdata(String str) throws JSONException {
+  public void parseFællesGrunddata(String str) throws JSONException {
     json = new JSONObject(str);
 
     parseKanaler(json.getJSONArray("channels"), false);

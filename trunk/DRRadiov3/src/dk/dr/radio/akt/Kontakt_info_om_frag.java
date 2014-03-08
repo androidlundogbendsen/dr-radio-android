@@ -42,7 +42,7 @@ public class Kontakt_info_om_frag extends Basisfragment implements OnClickListen
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View rod = inflater.inflate(R.layout.kontakt_info_om_frag, container, false);
 
-    String url = DRData.instans.stamdata.android_json.optString("kontakt_url", "http://dr.dk");
+    String url = DRData.instans.grunddata.android_json.optString("kontakt_url", "http://dr.dk");
 
     WebView webview = (WebView) rod.findViewById(R.id.webview);
 
@@ -68,10 +68,10 @@ public class Kontakt_info_om_frag extends Basisfragment implements OnClickListen
 
   public void onClick(View v) {
     String brødtekst = "";
-    brødtekst += DRData.instans.stamdata.android_json.optString("kontakt_brugerspørgsmål");
+    brødtekst += DRData.instans.grunddata.android_json.optString("kontakt_brugerspørgsmål");
     //brødtekst += "\nkanal: " + DRData.instans.afspiller.kanalNavn + " (" + DRData.instans.afspiller.kanalUrl + ")";
     brødtekst += "\n" + new MedieafspillerInfo().lavTelefoninfo(getActivity());
 
-    App.kontakt(getActivity(), DRData.instans.stamdata.android_json.optString("kontakt_titel", "Feedback på DR Radio Android App"), brødtekst, Log.getLog());
+    App.kontakt(getActivity(), DRData.instans.grunddata.android_json.optString("kontakt_titel", "Feedback på DR Radio Android App"), brødtekst, Log.getLog());
   }
 }

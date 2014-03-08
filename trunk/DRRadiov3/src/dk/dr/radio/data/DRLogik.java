@@ -60,7 +60,7 @@ public class DRLogik {
           }
           baggrundstrådSkalVente = true;
 
-          tjekForNyeStamdata();
+          tjekForNyeGrunddata();
 
         } catch (Exception ex) {
           Log.e(ex);
@@ -71,30 +71,30 @@ public class DRLogik {
 
 
   /**
-   * Tjek om en evt ny udgave af stamdata skal indlæses
+   * Tjek om en evt ny udgave af grunddata skal indlæses
    */
-  private void tjekForNyeStamdata() {
-    final String STAMDATA_SIDST_INDLÆST = "stamdata_sidst_indlæst";
-    long sidst = App.prefs.getLong(STAMDATA_SIDST_INDLÆST, 0);
+  private void tjekForNyeGrunddata() {
+    final String GRUNDDATA_SIDST_INDLÆST = "grunddata_sidst_indlæst";
+    long sidst = App.prefs.getLong(GRUNDDATA_SIDST_INDLÆST, 0);
     long nu = System.currentTimeMillis();
     long alder = (nu - sidst) / 1000 / 60;
     /*
-    if (alder >= 30) try { // stamdata er ældre end en halv time
+    if (alder >= 30) try { // grunddata er ældre end en halv time
       Log.d("Stamdata er " + alder + " minutter gamle, opdaterer dem...");
       // Opdater tid (hvad enten indlæsning lykkes eller ej)
-      App.prefs.edit().putLong(STAMDATA_SIDST_INDLÆST, nu).commit();
+      App.prefs.edit().putLong(GRUNDDATA_SIDST_INDLÆST, nu).commit();
 
-      String stamdatastr = JsonIndlaesning.hentUrlSomStreng(STAMDATA_URL);
+      String stamdatastr = JsonIndlaesning.hentUrlSomStreng(GRUNDDATA_URL);
       //Log.d(stamdatastr);
       final Stamdata stamdata2 = Stamdata.xxx_parseStamdatafil(stamdatastr);
 
-      MANGLER: Parsning af stamdata.parseAlleKanaler(alleKanalerStr);
+      MANGLER: Parsning af grunddata.parseAlleKanaler(alleKanalerStr);
 
       // Hentning og parsning gik godt - vi gemmer den nye udgave i prefs
-      App.prefs.edit().putString(STAMDATA_URL, stamdatastr).commit();
+      App.prefs.edit().putString(GRUNDDATA_URL, stamdatastr).commit();
 
     } catch (Exception e) {
-      Log.e("Fejl parsning af stamdata. Url=" + STAMDATA_URL, e);
+      Log.e("Fejl parsning af grunddata. Url=" + GRUNDDATA_URL, e);
     }
     */
   }

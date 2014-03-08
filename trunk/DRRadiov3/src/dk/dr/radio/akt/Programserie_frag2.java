@@ -50,7 +50,7 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     programserieSlug = getArguments().getString(DRJson.SeriesSlug.name());
-    kanal = DRData.instans.stamdata.kanalFraKode.get(getArguments().getString(Kanal_frag.P_kode));
+    kanal = DRData.instans.grunddata.kanalFraKode.get(getArguments().getString(Kanal_frag.P_kode));
     Log.d("onCreateView " + this + " viser " + programserieSlug);
     if (kanal == null) {
       afbrydManglerData();
