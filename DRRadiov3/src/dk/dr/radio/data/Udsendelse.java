@@ -53,7 +53,7 @@ public class Udsendelse extends Lydkilde {
 
   @Override
   public Kanal kanal() {
-    return DRData.instans.stamdata.kanalFraSlug.get(kanalSlug);
+    return DRData.instans.grunddata.kanalFraSlug.get(kanalSlug);
   }
 
   @Override

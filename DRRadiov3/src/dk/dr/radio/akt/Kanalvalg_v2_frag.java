@@ -54,8 +54,8 @@ public class Kanalvalg_v2_frag extends Basisfragment implements AdapterView.OnIt
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    overordnedeKanalkoder = DRData.instans.stamdata.kanalkoder;
-    p4koder = DRData.instans.stamdata.p4koder;
+    overordnedeKanalkoder = DRData.instans.grunddata.kanalkoder;
+    p4koder = DRData.instans.grunddata.p4koder;
     if (p4koder.get(0).equals(Kanal.P4kode)) p4koder.remove(0); // Selve P4 skal ikke vises som en del af underlisten
     p4indeks = overordnedeKanalkoder.indexOf(Kanal.P4kode);
 
@@ -63,9 +63,9 @@ public class Kanalvalg_v2_frag extends Basisfragment implements AdapterView.OnIt
     alleKanalkoder.addAll(p4indeks + 1, p4koder); // P4's underkanaler ligger lige under P4-indgangen
 
     for (String k : alleKanalkoder) {
-      if (DRData.instans.stamdata.kanalFraKode.get(k) == null) {
+      if (DRData.instans.grunddata.kanalFraKode.get(k) == null) {
         new IllegalStateException("Kanalkode mangler! Det her må ikke ske!").printStackTrace();
-        DRData.instans.stamdata.kanalFraKode.put(k, new Kanal()); // reparér problemet :-(
+        DRData.instans.grunddata.kanalFraKode.put(k, new Kanal()); // reparér problemet :-(
       }
     }
 
@@ -104,7 +104,7 @@ public class Kanalvalg_v2_frag extends Basisfragment implements AdapterView.OnIt
       LayoutInflater mInflater = getLayoutInflater(null);// (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
       String kanalkode = alleKanalkoder.get(position);
-      Kanal kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
+      Kanal kanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
       View view = mInflater.inflate(R.layout.kanalvalg_elem, null);
       ImageViewTilBlinde billede = (ImageViewTilBlinde) view.findViewById(R.id.billede);
       ImageViewTilBlinde ikon = (ImageViewTilBlinde) view.findViewById(R.id.ikon);
@@ -186,7 +186,7 @@ public class Kanalvalg_v2_frag extends Basisfragment implements AdapterView.OnIt
     String kanalkode = alleKanalkoder.get(position);
 
 
-    Kanal kanal = DRData.instans.stamdata.kanalFraKode.get(kanalkode);
+    Kanal kanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
     if (kanal.p4underkanal) {
       App.prefs.edit().putString(App.P4_FORETRUKKEN_AF_BRUGER, kanalkode).commit();
     }

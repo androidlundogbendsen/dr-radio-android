@@ -53,8 +53,8 @@ import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.akt.diverse.Basisaktivitet;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Diverse;
+import dk.dr.radio.data.Grunddata;
 import dk.dr.radio.data.Kanal;
-import dk.dr.radio.data.Stamdata;
 import dk.dr.radio.v3.R;
 
 public class App extends Application {
@@ -114,16 +114,16 @@ public class App extends Application {
 
     try {
       final DRData i = DRData.instans = new DRData();
-      i.stamdata = new Stamdata(); //.parseAndroidStamdata(Diverse.læsStreng(getResources().openRawResource(R.raw.stamdata1_android_v3_01)));
-      i.stamdata.parseFællesStamdata(Diverse.læsStreng(getResources().openRawResource(R.raw.stamdata2_faelles)));
+      i.grunddata = new Grunddata(); //.parseAndroidStamdata(Diverse.læsStreng(getResources().openRawResource(R.raw.stamdata1_android_v3_01)));
+      i.grunddata.parseFællesGrunddata(Diverse.læsStreng(getResources().openRawResource(R.raw.grunddata)));
 
       String kanal = prefs.getString(FORETRUKKEN_KANAL, null);
-      i.aktuelKanal = i.stamdata.kanalFraKode.get(kanal);
-      if (i.aktuelKanal == null) i.aktuelKanal = i.stamdata.forvalgtKanal;
+      i.aktuelKanal = i.grunddata.kanalFraKode.get(kanal);
+      if (i.aktuelKanal == null) i.aktuelKanal = i.grunddata.forvalgtKanal;
 
       String pn = App.instans.getPackageName();
       Resources res = App.instans.getResources();
-      for (Kanal k : i.stamdata.kanaler) {
+      for (Kanal k : i.grunddata.kanaler) {
         k.kanallogo_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase().replace('ø', 'o').replace('å', 'a'), "drawable", pn);
       }
 
@@ -137,7 +137,7 @@ public class App extends Application {
           @Override
           protected Object doInBackground(Object[] params) {
             try {
-              i.stamdata.hentSupplerendeDataBg();
+              i.grunddata.hentSupplerendeDataBg();
               if (prefs.getString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, null) == null) {
                 String p4kanal = P4Stedplacering.findP4KanalnavnFraIP();
                 if (App.udvikling) App.langToast("p4kanal: " + p4kanal);
@@ -155,25 +155,25 @@ public class App extends Application {
 
       DRData.instans.afspiller = new Afspiller();
       /*
-      // indlæs stamdata fra Prefs hvis de findes
-      String stamdatastr = prefs.getString(DRData.STAMDATA_URL, null);
+      // indlæs grunddata fra Prefs hvis de findes
+      String stamdatastr = prefs.getString(DRData.GRUNDDATA_URL, null);
 
       if (stamdatastr == null) {
-        // Indlæs fra raw this vi ikke har nogle cachede stamdata i prefs
+        // Indlæs fra raw this vi ikke har nogle cachede grunddata i prefs
         InputStream is = getResources().openRawResource(R.raw.stamdata1_android_v3_01);
         stamdatastr = Diverse.læsStreng(is);
       }
 
-      DRData.instans.stamdata = Stamdata.xxx_parseStamdatafil(stamdatastr);
-      String alleKanalerUrl = DRData.instans.stamdata.json.getString("alleKanalerUrl");
+      DRData.instans.grunddata = Stamdata.xxx_parseStamdatafil(stamdatastr);
+      String alleKanalerUrl = DRData.instans.grunddata.json.getString("alleKanalerUrl");
 
       String alleKanalerStr = prefs.getString(alleKanalerUrl, null);
       if (alleKanalerStr == null) {
-        // Indlæs fra raw this vi ikke har nogle cachede stamdata i prefs
+        // Indlæs fra raw this vi ikke har nogle cachede grunddata i prefs
         InputStream is = getResources().openRawResource(R.raw.skrald__alle_kanaler);
         alleKanalerStr = Diverse.læsStreng(is);
       }
-      DRData.instans.stamdata.skrald_parseAlleKanaler(alleKanalerStr);
+      DRData.instans.grunddata.skrald_parseAlleKanaler(alleKanalerStr);
       */
     } catch (Exception ex) {
       // TODO popop-advarsel til bruger om intern fejl og rapporter til udvikler-dialog
@@ -261,7 +261,7 @@ public class App extends Application {
   public static void kontakt(Activity akt, String emne, String txt, String vedhæftning) {
     String[] modtagere;
     try {
-      modtagere = Diverse.jsonArrayTilArrayListString(DRData.instans.stamdata.android_json.getJSONArray("kontakt_modtagere")).toArray(new String[0]);
+      modtagere = Diverse.jsonArrayTilArrayListString(DRData.instans.grunddata.android_json.getJSONArray("kontakt_modtagere")).toArray(new String[0]);
     } catch (Exception ex) {
       Log.e(ex);
       modtagere = new String[]{"jacob.nordfalk@gmail.com"};

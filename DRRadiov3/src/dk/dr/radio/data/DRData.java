@@ -38,9 +38,9 @@ import dk.dr.radio.diverse.Rapportering;
 public class DRData {
 
   public static DRData instans;
-  public static final String STAMDATA_URL = "http://javabog.dk/privat/stamdata_android_v3_013_01.json";
+  public static final String GRUNDDATA_URL = "http://javabog.dk/privat/drradiov3_grunddata.json";
 
-  public Stamdata stamdata;
+  public Grunddata grunddata;
   public Afspiller afspiller;
   public Kanal aktuelKanal;
 
@@ -58,15 +58,15 @@ public class DRData {
     FilCache.init(new File("/tmp/drradio-cache"));
     DRJson.servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // +01:00 springes over da kolon i +01:00 er ikke-standard Java
 
-//    i.stamdata = Stamdata.xxx_parseStamdatafil(Diverse.læsStreng(new FileInputStream("res/raw/stamdata1_android_v3_01.json")));
-//    i.stamdata.skrald_parseAlleKanaler(Diverse.læsStreng(new FileInputStream("res/raw/skrald__alle_kanaler.json")));
-//    i.stamdata = Stamdata.parseAndroidStamdata(Diverse.læsStreng(new FileInputStream("res/raw/stamdata1_android_v3_01.json")));
-    i.stamdata = new Stamdata();
-    i.stamdata.parseFællesStamdata(Diverse.læsStreng(new FileInputStream("res/raw/stamdata2_faelles.json")));
-    i.stamdata.hentSupplerendeDataBg();
+//    i.grunddata = Stamdata.xxx_parseStamdatafil(Diverse.læsStreng(new FileInputStream("res/raw/stamdata1_android_v3_01.json")));
+//    i.grunddata.skrald_parseAlleKanaler(Diverse.læsStreng(new FileInputStream("res/raw/skrald__alle_kanaler.json")));
+//    i.grunddata = Stamdata.parseAndroidStamdata(Diverse.læsStreng(new FileInputStream("res/raw/stamdata1_android_v3_01.json")));
+    i.grunddata = new Grunddata();
+    i.grunddata.parseFællesGrunddata(Diverse.læsStreng(new FileInputStream("res/raw/grunddata.json")));
+    i.grunddata.hentSupplerendeDataBg();
 
 /*
-    for (Kanal k : i.stamdata.kanaler) {
+    for (Kanal k : i.grunddata.kanaler) {
       if (k.p4underkanal) continue;
       Log.d("\n\nkanal = " + k);
       String f = FilCache.hentFil(k.logoUrl, true, true, 1000 * 60 * 60 * 24 * 7);
@@ -74,7 +74,7 @@ public class DRData {
       FilCache.hentFil(k.logoUrl2, true, true, 1000 * 60 * 60 * 24 * 7);
     }
 */
-    for (Kanal kanal : i.stamdata.kanaler) {
+    for (Kanal kanal : i.grunddata.kanaler) {
       Log.d("\n\n===========================================\n\nkanal = " + kanal);
       if (Kanal.P4kode.equals(kanal.kode)) continue;
       kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(hent(kanal.getUdsendelserUrl())), kanal, DRData.instans), "0");

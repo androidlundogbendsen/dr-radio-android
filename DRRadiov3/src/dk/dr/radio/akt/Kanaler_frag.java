@@ -28,7 +28,7 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    for (Kanal k : DRData.instans.stamdata.kanaler) {
+    for (Kanal k : DRData.instans.grunddata.kanaler) {
       if (!k.p4underkanal) kanaler.add(k);
     }
   }
