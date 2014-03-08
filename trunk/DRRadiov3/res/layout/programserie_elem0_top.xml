@@ -44,11 +44,11 @@
                 android:layout_weight="1"/>
 
 
-        <ToggleButton
+        <CheckBox
                 android:id="@+id/favorit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/dri_favorit_graa40"/>
+                android:button="@drawable/dri_favorit"/>
     </LinearLayout>
 
 
