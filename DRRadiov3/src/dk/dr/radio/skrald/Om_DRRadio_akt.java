@@ -18,37 +18,38 @@
 
 package dk.dr.radio.skrald;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewDatabase;
 import android.widget.ImageButton;
 
+import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.MedieafspillerInfo;
 import dk.dr.radio.v3.R;
 
-public class Om_DRRadio_akt extends Activity implements OnClickListener {
+public class Om_DRRadio_akt extends Basisfragment implements OnClickListener {
   WebView webview;
 
   @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.om_drradio_akt);
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    View rod = inflater.inflate(R.layout.om_drradio_akt, container, false);
 
     String aboutUrl = DRData.instans.stamdata.json.optString("about_url");
 
-    webview = (WebView) findViewById(R.id.about_webview);
+    webview = (WebView) rod.findViewById(R.id.about_webview);
 
     // Jacob: Fix for 'syg' webview-cache - se http://code.google.com/p/android/issues/detail?id=10789
-    WebViewDatabase webViewDB = WebViewDatabase.getInstance(this);
+    WebViewDatabase webViewDB = WebViewDatabase.getInstance(getActivity());
     if (webViewDB != null) {
       // OK, webviewet kan bruge sin cache
       webview.getSettings().setJavaScriptEnabled(true);
@@ -62,17 +63,18 @@ public class Om_DRRadio_akt extends Activity implements OnClickListener {
 
     webview.setBackgroundColor(Color.parseColor("#333333"));
 
-    ImageButton sendFeedbackButton = (ImageButton) findViewById(R.id.about_footer_button);
+    ImageButton sendFeedbackButton = (ImageButton) rod.findViewById(R.id.about_footer_button);
 
     sendFeedbackButton.setOnClickListener(this);
+    return rod;
   }
 
   public void onClick(View v) {
     String brødtekst = "";
     brødtekst += DRData.instans.stamdata.android_json.optString("feedback_brugerspørgsmål");
     //brødtekst += "\nkanal: " + DRData.instans.afspiller.kanalNavn + " (" + DRData.instans.afspiller.kanalUrl + ")";
-    brødtekst += "\n" + new MedieafspillerInfo().lavTelefoninfo(Om_DRRadio_akt.this);
+    brødtekst += "\n" + new MedieafspillerInfo().lavTelefoninfo(getActivity());
 
-    App.kontakt(this, "Feedback på DR Radio Android App", brødtekst, Log.getLog());
+    App.kontakt(getActivity(), "Feedback på DR Radio Android App", brødtekst, Log.getLog());
   }
 }
