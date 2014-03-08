@@ -40,7 +40,7 @@ public abstract class Lydkilde {
     String ønsketkvalitet = App.prefs.getString("lydkvalitet", "auto");
     String ønsketformat = App.prefs.getString("lydformat", "auto");
 
-    ArrayList<Lydstream> kandidater = new ArrayList<>(streams.size());
+    ArrayList<Lydstream> kandidater = new ArrayList<Lydstream>(streams.size());
 
     Lydstream sxxx = null;
       næste_stream:
