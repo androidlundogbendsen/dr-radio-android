@@ -17,7 +17,7 @@ public class SenestLyttede {
   }
 
   private void opretListe() {
-    liste = new ArrayList<>();
+    liste = new ArrayList<Lydkilde>();
     String[] linjer = App.prefs.getString(PREF_NØGLE, "").split("\n");
     for (String linje : linjer) {
       if (linje.length() == 0) continue;

@@ -13,7 +13,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +28,7 @@ import java.util.ArrayList;
 
 import dk.dr.radio.akt.diverse.Basisadapter;
 import dk.dr.radio.akt.diverse.Basisfragment;
+import dk.dr.radio.akt.diverse.Hentede_udsendelser_frag;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
@@ -332,7 +332,7 @@ public class Venstremenu_frag extends Fragment {
       layoutInflater = (LayoutInflater) themedContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       boolean gib = App.prefs.getBoolean("brugGibsonIVenstremenu", true);
 
-      tilføj(R.layout.venstremenu_elem_soeg, Kanalvalg_v2_frag.class);
+      tilføj(R.layout.venstremenu_elem_soeg, Soeg_efter_program_frag.class);
       View rod = aq.getView();
       //aq.id(R.id.tekst).getView().setTouchDelegate(new TouchDelegate(new Rect(0,0, 1000, 1000), rod));
       aq.id(R.id.tekst).clicked(new View.OnClickListener() {
@@ -357,21 +357,21 @@ public class Venstremenu_frag extends Fragment {
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
-      tilføj(R.layout.venstremenu_elem_favoritprogrammer, Senest_lyttede_frag.class);
+      tilføj(R.layout.venstremenu_elem_favoritprogrammer, Favoritprogrammer_frag.class);
       aq.id(R.id.tekst2).text("(23 nye udsendelser)");
       if (gib) aq.typeface(App.skrift_gibson).id(R.id.tekst).typeface(App.skrift_gibson_fed);
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
-      tilføj(R.layout.venstremenu_elem_hentede_udsendendelser, Senest_lyttede_frag.class);
+      tilføj(R.layout.venstremenu_elem_hentede_udsendendelser, Hentede_udsendelser_frag.class);
       aq.id(R.id.tekst2).text("(42)");
       if (gib) aq.typeface(App.skrift_gibson).id(R.id.tekst).typeface(App.skrift_gibson_fed);
 
-      tilføj(R.layout.venstremenu_elem_adskiller_tyk);
+//      tilføj(R.layout.venstremenu_elem_adskiller_tyk);
 
-      tilføj(R.layout.venstremenu_elem_overskrift, Kanalvalg_v2_frag.class);
-      aq.id(R.id.tekst).text(Html.fromHtml("Alle programmer A-Å"));
-      if (gib) aq.typeface(App.skrift_gibson_fed);
+//      tilføj(R.layout.venstremenu_elem_overskrift, Kanalvalg_v2_frag.class);
+//      aq.id(R.id.tekst).text(Html.fromHtml("Alle programmer A-Å"));
+//      if (gib) aq.typeface(App.skrift_gibson_fed);
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
