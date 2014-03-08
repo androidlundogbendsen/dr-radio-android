@@ -60,9 +60,8 @@ public class DRData {
 
 //    i.stamdata = Stamdata.xxx_parseStamdatafil(Diverse.læsStreng(new FileInputStream("res/raw/stamdata1_android_v3_01.json")));
 //    i.stamdata.skrald_parseAlleKanaler(Diverse.læsStreng(new FileInputStream("res/raw/skrald__alle_kanaler.json")));
-
-
-    i.stamdata = Stamdata.parseAndroidStamdata(Diverse.læsStreng(new FileInputStream("res/raw/stamdata1_android_v3_01.json")));
+//    i.stamdata = Stamdata.parseAndroidStamdata(Diverse.læsStreng(new FileInputStream("res/raw/stamdata1_android_v3_01.json")));
+    i.stamdata = new Stamdata();
     i.stamdata.parseFællesStamdata(Diverse.læsStreng(new FileInputStream("res/raw/stamdata2_faelles.json")));
     i.stamdata.hentSupplerendeDataBg();
 

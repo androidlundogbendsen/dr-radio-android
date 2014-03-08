@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:background="@color/grå70"
+              android:gravity="center_horizontal"
+              android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+    <TextView
+            android:id="@+id/titel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:padding="16dp"
+            android:textColor="@color/hvid"
+            android:textStyle="bold"
+            android:text="Om DR Radio">
+    </TextView>
+
+    <WebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:background="@color/hvid"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            />
+
+
+    <ImageButton
+            android:id="@+id/kontakt"
+            android:contentDescription="Skriv meddelelse til DR"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_margin="4dp"
+            android:background="@drawable/feedback_knap"/>
+
+</LinearLayout>
+

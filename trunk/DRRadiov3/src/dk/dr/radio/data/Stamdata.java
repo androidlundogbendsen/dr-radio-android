@@ -59,20 +59,6 @@ public class Stamdata {
   }
 
 
-  /**
-   * Henter stamdata (faste data)
-   *
-   * @throws java.io.IOException hvis der er et problem med netværk
-   *                             eller parsning (dvs interne fejl af forskellig art som bør rapporteres til udvikler)
-   */
-  public static Stamdata parseAndroidStamdata(String str) throws JSONException {
-    Stamdata d = new Stamdata();
-    JSONObject json = d.android_json = new JSONObject(str);
-
-
-    return d;
-  }
-
   private void parseKanaler(JSONArray jsonArray, boolean p4) throws JSONException {
 
 
@@ -101,11 +87,17 @@ public class Stamdata {
     }
   }
 
+  /**
+   * Henter stamdata (faste data)
+   *
+   * @throws java.io.IOException hvis der er et problem med netværk
+   *                             eller parsning (dvs interne fejl af forskellig art som bør rapporteres til udvikler)
+   */
   public void parseFællesStamdata(String str) throws JSONException {
-    Stamdata d = this;
-    JSONObject json = d.json = new JSONObject(str);
+    json = new JSONObject(str);
 
     parseKanaler(json.getJSONArray("channels"), false);
+    android_json = json.getJSONObject("android");
     if (forvalgtKanal == null) forvalgtKanal = kanaler.get(2); // Det er nok P3 :-)
   }
 

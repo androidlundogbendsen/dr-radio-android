@@ -346,7 +346,7 @@ public class Venstremenu_frag extends Fragment {
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
       tilføj(R.layout.venstremenu_elem_overskrift, Kanaler_frag.class);
-      aq.id(R.id.tekst).text("Hjem");
+      aq.id(R.id.tekst).text("Startside");
       if (gib) aq.typeface(App.skrift_gibson_fed);
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
@@ -367,11 +367,11 @@ public class Venstremenu_frag extends Fragment {
       aq.id(R.id.tekst2).text("(42)");
       if (gib) aq.typeface(App.skrift_gibson).id(R.id.tekst).typeface(App.skrift_gibson_fed);
 
-//      tilføj(R.layout.venstremenu_elem_adskiller_tyk);
+      tilføj(R.layout.venstremenu_elem_adskiller_tyk);
 
-//      tilføj(R.layout.venstremenu_elem_overskrift, Kanalvalg_v2_frag.class);
-//      aq.id(R.id.tekst).text(Html.fromHtml("Alle programmer A-Å"));
-//      if (gib) aq.typeface(App.skrift_gibson_fed);
+      tilføj(R.layout.venstremenu_elem_overskrift, Kanalvalg_v2_frag.class);
+      aq.id(R.id.tekst).text("Alle programmer A-Å - ... skal den laves?");
+      if (gib) aq.typeface(App.skrift_gibson_fed);
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
@@ -379,7 +379,7 @@ public class Venstremenu_frag extends Fragment {
       aq.id(R.id.tekst).text("Live kanaler");
       if (gib) aq.typeface(App.skrift_gibson_fed);
 
-      tilføj(R.layout.venstremenu_elem_overskrift, Kanalvalg_v2_frag.class);
+      tilføj(R.layout.venstremenu_elem_overskrift, Kontakt_info_om_frag.class);
       aq.id(R.id.tekst).text("Kontakt / info / om");
       if (gib) aq.typeface(App.skrift_gibson_fed);
 /*

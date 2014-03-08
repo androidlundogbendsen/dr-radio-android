@@ -16,10 +16,9 @@
 
  */
 
-package dk.dr.radio.skrald;
+package dk.dr.radio.akt;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -28,7 +27,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewDatabase;
-import android.widget.ImageButton;
+import android.widget.TextView;
 
 import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
@@ -37,44 +36,42 @@ import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.MedieafspillerInfo;
 import dk.dr.radio.v3.R;
 
-public class Om_DRRadio_akt extends Basisfragment implements OnClickListener {
-  WebView webview;
+public class Kontakt_info_om_frag extends Basisfragment implements OnClickListener {
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View rod = inflater.inflate(R.layout.om_drradio_akt, container, false);
+    View rod = inflater.inflate(R.layout.kontakt_info_om_frag, container, false);
 
-    String aboutUrl = DRData.instans.stamdata.json.optString("about_url");
+    String url = DRData.instans.stamdata.android_json.optString("kontakt_url", "http://dr.dk");
 
-    webview = (WebView) rod.findViewById(R.id.about_webview);
+    WebView webview = (WebView) rod.findViewById(R.id.webview);
 
     // Jacob: Fix for 'syg' webview-cache - se http://code.google.com/p/android/issues/detail?id=10789
     WebViewDatabase webViewDB = WebViewDatabase.getInstance(getActivity());
     if (webViewDB != null) {
       // OK, webviewet kan bruge sin cache
       webview.getSettings().setJavaScriptEnabled(true);
-      webview.loadUrl(aboutUrl);
+      webview.loadUrl(url);
       // hjælper det her??? webview.getSettings().setDatabasePath(...);
     } else {
       // Øv, vi viser URLen i en ekstern browser.
       // Når brugeren derefter trykker 'tilbage' ser han et tomt webview.
-      startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(aboutUrl)));
+      startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
 
-    webview.setBackgroundColor(Color.parseColor("#333333"));
+    TextView titel = (TextView) rod.findViewById(R.id.titel);
+    titel.setTypeface(App.skrift_gibson_fed);
 
-    ImageButton sendFeedbackButton = (ImageButton) rod.findViewById(R.id.about_footer_button);
-
-    sendFeedbackButton.setOnClickListener(this);
+    rod.findViewById(R.id.kontakt).setOnClickListener(this);
     return rod;
   }
 
   public void onClick(View v) {
     String brødtekst = "";
-    brødtekst += DRData.instans.stamdata.android_json.optString("feedback_brugerspørgsmål");
+    brødtekst += DRData.instans.stamdata.android_json.optString("kontakt_brugerspørgsmål");
     //brødtekst += "\nkanal: " + DRData.instans.afspiller.kanalNavn + " (" + DRData.instans.afspiller.kanalUrl + ")";
     brødtekst += "\n" + new MedieafspillerInfo().lavTelefoninfo(getActivity());
 
-    App.kontakt(getActivity(), "Feedback på DR Radio Android App", brødtekst, Log.getLog());
+    App.kontakt(getActivity(), DRData.instans.stamdata.android_json.optString("kontakt_titel", "Feedback på DR Radio Android App"), brødtekst, Log.getLog());
   }
 }
