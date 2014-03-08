@@ -47,7 +47,8 @@ public class DRData {
   public HashMap<String, Udsendelse> udsendelseFraSlug = new HashMap<String, Udsendelse>();
   public HashMap<String, Programserie> programserieFraSlug = new HashMap<String, Programserie>();
 
-  public final Rapportering rapportering = new Rapportering();
+  public Rapportering rapportering = new Rapportering();
+  public SenestLyttede senestLyttede = new SenestLyttede();
 
   /**
    * Til afprøvning
