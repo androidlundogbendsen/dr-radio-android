@@ -345,19 +345,25 @@ public class Venstremenu_frag extends Fragment {
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
-      tilføj(R.layout.venstremenu_elem_overskrift, Kanalvalg_v2_frag.class);
+      tilføj(R.layout.venstremenu_elem_overskrift, Kanaler_frag.class);
+      aq.id(R.id.tekst).text("Hjem");
+      if (gib) aq.typeface(App.skrift_gibson_fed);
+
+      tilføj(R.layout.venstremenu_elem_adskiller_tynd);
+
+      tilføj(R.layout.venstremenu_elem_overskrift, Senest_lyttede_frag.class);
       aq.id(R.id.tekst).text("Senest lyttede");
       if (gib) aq.typeface(App.skrift_gibson_fed);
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
-      tilføj(R.layout.venstremenu_elem_favoritprogrammer, Kanalvalg_v2_frag.class);
+      tilføj(R.layout.venstremenu_elem_favoritprogrammer, Senest_lyttede_frag.class);
       aq.id(R.id.tekst2).text("(23 nye udsendelser)");
       if (gib) aq.typeface(App.skrift_gibson).id(R.id.tekst).typeface(App.skrift_gibson_fed);
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
-      tilføj(R.layout.venstremenu_elem_hentede_udsendendelser, Kanalvalg_v2_frag.class);
+      tilføj(R.layout.venstremenu_elem_hentede_udsendendelser, Senest_lyttede_frag.class);
       aq.id(R.id.tekst2).text("(42)");
       if (gib) aq.typeface(App.skrift_gibson).id(R.id.tekst).typeface(App.skrift_gibson_fed);
 
