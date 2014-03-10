@@ -53,6 +53,12 @@
             android:defaultValue="false"
             android:summary="Ser også grimt ud. Kræver app-genstart"/>
 
+    <CheckBoxPreference
+            android:key="eksperiment_hørIkonerIKanaloversigt"
+            android:title="Vis 'hør' i kanaloversigt"
+            android:defaultValue="false"
+            android:summary="Vis om en udsendelse kan høres i kanaloversigten"/>
+
 
     <CheckBoxPreference
             android:key="manuelStreamvalg"

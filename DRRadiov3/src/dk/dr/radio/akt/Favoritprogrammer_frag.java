@@ -10,25 +10,29 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.androidquery.AQuery;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import dk.dr.radio.akt.diverse.Basisadapter;
 import dk.dr.radio.akt.diverse.Basisfragment;
+import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
-import dk.dr.radio.data.Lydkilde;
+import dk.dr.radio.data.Favoritter;
+import dk.dr.radio.data.Programserie;
+import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-public class Favoritprogrammer_frag extends Basisfragment implements AdapterView.OnItemClickListener {
+public class Favoritprogrammer_frag extends Basisfragment implements AdapterView.OnItemClickListener, Runnable {
 
   private ListView listView;
-  private ArrayList<Lydkilde> liste = new ArrayList<Lydkilde>();
+  private ArrayList<Object> liste = new ArrayList<Object>(); // Indeholder både udsendelser og -serier
   protected View rod;
+  Favoritter fav = DRData.instans.favoritter;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,34 +40,44 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
 
     AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
-    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson_fed).text("Favoritter").getView());
+    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson_fed).text("Ingen favoritter\nGå ind på en programserie og tryk på hjertet for at gøre det til en favorit").getView());
 
     udvikling_checkDrSkrifter(rod, this + " rod");
-    opdaterListe();
+    DRData.instans.favoritter.observatører.add(this);
+    run();
     return rod;
   }
 
+  @Override
+  public void onDestroyView() {
+    DRData.instans.favoritter.observatører.remove(this);
+    super.onDestroyView();
+  }
 
-  private void opdaterListe() {
+
+  @Override
+  public void run() {
+    liste.clear();
     try {
-      liste.clear();
-      //liste.addAll(DRData.instans.senestLyttede.getListe());
+      ArrayList<String> psss = new ArrayList<String>(fav.getProgramserieSlugSæt());
+      Collections.sort(psss);
+      Log.d(this + " psss = " + psss);
+      for (String programserieSlug : psss) {
+        Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
+        liste.add(programserie);
+        int antalNye = fav.getAntalNyeUdsendelser(programserieSlug);
+        for (int n = 0; n < antalNye; n++) {
+          if (programserie.udsendelser.size() <= antalNye) break;
+          liste.add(programserie.udsendelser.get(n));
+        }
+      }
+      Log.d(this + " liste = " + liste);
     } catch (Exception e1) {
       Log.rapporterFejl(e1);
     }
     adapter.notifyDataSetChanged();
   }
 
-
-  /**
-   * Viewholder designmønster - hold direkte referencer til de views og objekter der bruges hele tiden
-   */
-  private static class Viewholder {
-    public AQuery aq;
-    public TextView titel;
-    public TextView startid;
-    public Lydkilde lydkilde;
-  }
 
   private BaseAdapter adapter = new Basisadapter() {
     @Override
@@ -72,28 +86,42 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
     }
 
     @Override
+    public int getViewTypeCount() {
+      return 2;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+      Object obj = liste.get(position);
+      if (obj instanceof Programserie) {
+        return 0;
+      }
+      return 1;
+    }
+
+    @Override
     public View getView(int position, View v, ViewGroup parent) {
-      Viewholder vh;
-      AQuery a;
-      Lydkilde lydkilde = liste.get(position);
-      if (v == null) {
-        v = getLayoutInflater(null).inflate(R.layout.udsendelse_elem2_tid_titel_kunstner, parent, false);
-        vh = new Viewholder();
-        a = vh.aq = new AQuery(v);
-        vh.startid = a.id(R.id.startid).typeface(App.skrift_gibson).getTextView();
-        a.id(R.id.slutttid).gone();
-        v.setTag(vh);
+
+      Object obj = liste.get(position);
+      if (obj instanceof Programserie) {
+        Programserie ps = (Programserie) obj;
+        if (v == null) v = getLayoutInflater(null).inflate(R.layout.udsendelse_elem2_tid_titel_kunstner, parent, false);
+        AQuery aq = new AQuery(v);
+        aq.id(R.id.startid).text(ps.titel).typeface(App.skrift_gibson_fed);
+        aq.id(R.id.titel_og_kunstner).text(fav.getAntalNyeUdsendelser(ps.slug) + " nye udsendelser").typeface(App.skrift_gibson);
+        aq.id(R.id.hør).visibility(View.GONE);
+        aq.id(R.id.stiplet_linje).background(R.drawable.linje);
+        v.setBackgroundResource(R.color.hvid);
       } else {
-        vh = (Viewholder) v.getTag();
-        a = vh.aq;
+        Udsendelse udsendelse = (Udsendelse) obj;
+        if (v == null) v = getLayoutInflater(null).inflate(R.layout.udsendelse_elem2_tid_titel_kunstner, parent, false);
+        AQuery aq = new AQuery(v);
+        aq.id(R.id.startid).text(DRJson.datoformat.format(udsendelse.startTid)).typeface(App.skrift_gibson_fed);
+        aq.id(R.id.titel_og_kunstner).text(udsendelse.titel).typeface(App.skrift_gibson);
+        aq.id(R.id.hør).visibility(udsendelse.kanHøres ? View.VISIBLE : View.GONE);
+        aq.id(R.id.stiplet_linje).background(R.drawable.stiplet_linje);
       }
 
-      // Opdatér viewholderens data
-      vh.lydkilde = lydkilde;
-      vh.startid.setText("" + lydkilde);
-      //vh.titel.setText(lydkilde.titel);
-      //a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
-      //a.id(R.id.hør).visibility(lydkilde.kanHøres ? View.VISIBLE : View.GONE);
 
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
 
@@ -103,16 +131,26 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
 
   @Override
   public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
-    Lydkilde u = liste.get(position);
-    //startActivity(new Intent(getActivity(), VisFragment_akt.class)
-    //    .putExtra(P_kode, kanal.kode)
-    //    .putExtra(VisFragment_akt.KLASSE, Udsendelse_frag.class.getName()).putExtra(DRJson.Slug.name(), u.slug)); // Udsenselses-ID
+    Object obj = liste.get(position);
+    if (obj instanceof Programserie) {
+      Programserie programserie = (Programserie) obj;
+      Fragment f = new Programserie_frag2();
+      f.setArguments(new Intent()
+          .putExtra(DRJson.SeriesSlug.name(), programserie.slug).getExtras());
+      getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
 
-    Fragment f = new Udsendelse_frag();
-    f.setArguments(new Intent()
-        .putExtra(P_kode, u.kanal().kode)
-        .putExtra(DRJson.Slug.name(), u.slug).getExtras());
-    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+    } else {
+      Udsendelse udsendelse = (Udsendelse) obj;
+      Fragment f = new Udsendelse_frag();
+      f.setArguments(new Intent()
+//        .putExtra(Udsendelse_frag.BLOKER_VIDERE_NAVIGERING, true)
+//        .putExtra(P_kode, kanal.kode)
+          .putExtra(DRJson.Slug.name(), udsendelse.slug).getExtras());
+      getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+
+    }
+
   }
+
 }
 
