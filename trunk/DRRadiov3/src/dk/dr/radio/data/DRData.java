@@ -49,6 +49,7 @@ public class DRData {
 
   public Rapportering rapportering = new Rapportering();
   public SenestLyttede senestLyttede = new SenestLyttede();
+  public Favoritter favoritter = new Favoritter();
 
   /**
    * Til afprøvning

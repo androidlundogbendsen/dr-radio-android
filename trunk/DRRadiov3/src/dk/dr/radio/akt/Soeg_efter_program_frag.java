@@ -43,7 +43,16 @@ public class Soeg_efter_program_frag extends Basisfragment implements AdapterVie
     opdaterListe();
     return rod;
   }
+/*
+API: Søgning
+Medmindre type-parametren er angivet (tv eller radio), så vil denne returnere resultater fra både TV og radio.
+Kald
+http://www.dr.dk/tjenester/mu-apps/search/programs?q=monte vil returnere programmer
+http://www.dr.dk/tjenester/mu-apps/search/programs?q=monte&type=radio vil kun returnere radio programmer
+http://www.dr.dk/tjenester/mu-apps/search/series?q=monte vil returnere serier
+http://www.dr.dk/tjenester/mu-apps/search/series?q=monte&type=radio vil kun returnere radio serier
 
+ */
 
   private void opdaterListe() {
     try {

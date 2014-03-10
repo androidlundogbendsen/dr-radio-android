@@ -34,7 +34,7 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-public class Programserie_frag2 extends Basisfragment implements AdapterView.OnItemClickListener {
+public class Programserie_frag2 extends Basisfragment implements AdapterView.OnItemClickListener, View.OnClickListener {
 
   private ListView listView;
   private String programserieSlug;
@@ -52,12 +52,8 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     programserieSlug = getArguments().getString(DRJson.SeriesSlug.name());
-    kanal = DRData.instans.grunddata.kanalFraKode.get(getArguments().getString(Kanal_frag.P_kode));
     Log.d("onCreateView " + this + " viser " + programserieSlug);
-    if (kanal == null) {
-      afbrydManglerData();
-      return rod;
-    }
+    kanal = DRData.instans.grunddata.kanalFraKode.get(getArguments().getString(Kanal_frag.P_kode));
 
     programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
     if (programserie == null) {
@@ -70,8 +66,6 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson_fed).getView());
     listView.setOnItemClickListener(this);
 
-    favorit = aq.id(R.id.favorit).getCheckBox();
-
     udvikling_checkDrSkrifter(rod, this + " rod");
     return rod;
   }
@@ -83,7 +77,7 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
     String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
     Log.d("XXX url=" + url);
     App.sætErIGang(true);
-    new AQuery(App.instans).ajax(url, String.class, 24 * 60 * 60 * 1000, new AjaxCallback<String>() {
+    new AQuery(App.instans).ajax(url, String.class, 1 * 60 * 60 * 1000, new AjaxCallback<String>() {
       @Override
       public void callback(String url, String json, AjaxStatus status) {
         App.sætErIGang(false);
@@ -107,6 +101,11 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
         new AQuery(rod).id(R.id.tom).text(url + "   status=" + status.getCode() + "\njson=" + json);
       }
     });
+  }
+
+  @Override
+  public void onClick(View v) {
+    DRData.instans.favoritter.sætFavorit(programserieSlug, programserie.antalUdsendelser, favorit.isChecked());
   }
 
 
@@ -176,12 +175,16 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
           String burl = skalérSlugBilledeUrl(programserie.slug, br, hø);
           aq.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
 
-          aq.id(R.id.logo).image(kanal.kanallogo_resid);
+          if (kanal == null) aq.id(R.id.logo).gone();
+          else aq.id(R.id.logo).image(kanal.kanallogo_resid);
           aq.id(R.id.titel).typeface(App.skrift_gibson_fed).text(programserie.titel);
           aq.id(R.id.alle_udsendelser).typeface(App.skrift_gibson_fed).text(Html.fromHtml("<b>ALLE UDSENDELSER</b> (" + programserie.antalUdsendelser + ")"));
 
           aq.id(R.id.beskrivelse).text(programserie.beskrivelse).typeface(App.skrift_georgia);
           Linkify.addLinks(aq.getTextView(), Linkify.ALL);
+          favorit = aq.id(R.id.favorit).clicked(Programserie_frag2.this).getCheckBox();
+          favorit.setChecked(DRData.instans.favoritter.erFavorit(programserieSlug));
+
         } else { // if (type == UDSENDELSE eller TIDLIGERE) {
           vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson).getTextView();
           vh.varighed = aq.id(R.id.varighed).typeface(App.skrift_gibson).getTextView();
@@ -242,7 +245,7 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
       Fragment f = new Udsendelse_frag();
       f.setArguments(new Intent()
           .putExtra(Udsendelse_frag.BLOKER_VIDERE_NAVIGERING, true)
-          .putExtra(P_kode, kanal.kode)
+          .putExtra(P_kode, kanal == null ? null : kanal.kode)
           .putExtra(DRJson.Slug.name(), udsendelse.slug).getExtras());
       getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
       return;
@@ -251,20 +254,6 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
     hentUdsendelser(programserie.udsendelser.size());
     v.findViewById(R.id.titel).setVisibility(View.GONE);
     v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-  }
-
-  private class UdsendelseClickListener implements View.OnClickListener {
-
-    private final Viewholder viewHolder;
-
-    public UdsendelseClickListener(Viewholder vh) {
-      viewHolder = vh;
-    }
-
-    @Override
-    public void onClick(View v) {
-      App.langToast("fejl2");
-    }
   }
 }
 

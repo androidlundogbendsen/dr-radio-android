@@ -143,6 +143,7 @@ public class App extends Application {
                 if (App.udvikling) App.langToast("p4kanal: " + p4kanal);
                 prefs.edit().putString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, p4kanal).commit();
               }
+              DRData.instans.favoritter.opdaterAntalNyeUdsendelserBg();
             } catch (Exception e) {
               e.printStackTrace();
             }

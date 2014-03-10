@@ -116,10 +116,10 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   }
 
-  public static DateFormat datoFormat = new SimpleDateFormat("yyyy-MM-dd");
+  public static DateFormat apiDatoFormat = new SimpleDateFormat("yyyy-MM-dd");
 
   private void hentSendeplanForDag(final AQuery aq, Date dag, final boolean idag) {
-    final String dato = datoFormat.format(dag);
+    final String dato = apiDatoFormat.format(dag);
 
     String url = kanal.getUdsendelserUrl() + "/date/" + dato;
     Log.d("hentSendeplanForDag url=" + url);
@@ -236,6 +236,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     }
     Log.d("opdaterListe " + kanal.kode + "  aktuelUdsendelseIndex=" + aktuelUdsendelseIndex);
     adapter.notifyDataSetChanged();
+    eksperiment_hørIkonerIKanaloversigt = App.prefs.getBoolean("eksperiment_hørIkonerIKanaloversigt", false);
   }
 
 
@@ -253,6 +254,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   private Viewholder aktuelUdsendelseViewholder;
 
+  private boolean eksperiment_hørIkonerIKanaloversigt;
   private BaseAdapter adapter = new Basisadapter() {
     @Override
     public int getCount() {
@@ -360,7 +362,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           vh.startid.setText(udsendelse.startTidKl);
           vh.titel.setText(udsendelse.titel);
           a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
-          a.id(R.id.hør).visibility(udsendelse.kanHøres ? View.VISIBLE : View.GONE);
+          a.id(R.id.hør).visibility(udsendelse.kanHøres && eksperiment_hørIkonerIKanaloversigt ? View.VISIBLE : View.GONE);
           break;
         case TIDLIGERE_SENERE:
           vh.titel.setText(udsendelse.titel);

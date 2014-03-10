@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import dk.dr.radio.akt.diverse.Basisadapter;
 import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.akt.diverse.Hentede_udsendelser_frag;
+import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
@@ -39,7 +40,7 @@ import dk.dr.radio.v3.R;
  * Se <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for en nærmere beskrivelse.
  */
-public class Venstremenu_frag extends Fragment {
+public class Venstremenu_frag extends Fragment implements Runnable {
 
   /**
    * Remember the position of the selected item.
@@ -108,7 +109,22 @@ public class Venstremenu_frag extends Fragment {
     navAdapter = new Navigation_adapter(getActionBar().getThemedContext());
     navListView.setAdapter(navAdapter);
     navListView.setItemChecked(mCurrentSelectedPosition, true);
+    DRData.instans.favoritter.observatører.add(this);
     return navListView;
+  }
+
+  @Override
+  public void onDestroyView() {
+    DRData.instans.favoritter.observatører.remove(this);
+    super.onDestroyView();
+  }
+
+  /**
+   * Kaldes når favoritter opdateres
+   */
+  @Override
+  public void run() {
+    navAdapter.notifyDataSetChanged();
   }
 
 
@@ -358,7 +374,8 @@ public class Venstremenu_frag extends Fragment {
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
       tilføj(R.layout.venstremenu_elem_favoritprogrammer, Favoritprogrammer_frag.class);
-      aq.id(R.id.tekst2).text("(23 nye udsendelser)");
+      int antal = DRData.instans.favoritter.getAntalNyeUdsendelser();
+      aq.id(R.id.tekst2).text(antal == 0 ? "(ingen nye udsendelser)" : antal == 1 ? "(1 ny udsendelse)" : "(" + antal + " nye udsendelser)");
       if (gib) aq.typeface(App.skrift_gibson).id(R.id.tekst).typeface(App.skrift_gibson_fed);
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
