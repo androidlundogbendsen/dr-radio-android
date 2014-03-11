@@ -7,7 +7,6 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
@@ -116,10 +115,10 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   }
 
-  public static DateFormat apiDatoFormat = new SimpleDateFormat("yyyy-MM-dd");
+  public static DateFormat datoFormat = new SimpleDateFormat("yyyy-MM-dd");
 
   private void hentSendeplanForDag(final AQuery aq, Date dag, final boolean idag) {
-    final String dato = apiDatoFormat.format(dag);
+    final String dato = datoFormat.format(dag);
 
     String url = kanal.getUdsendelserUrl() + "/date/" + dato;
     Log.d("hentSendeplanForDag url=" + url);
@@ -236,7 +235,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     }
     Log.d("opdaterListe " + kanal.kode + "  aktuelUdsendelseIndex=" + aktuelUdsendelseIndex);
     adapter.notifyDataSetChanged();
-    eksperiment_hørIkonerIKanaloversigt = App.prefs.getBoolean("eksperiment_hørIkonerIKanaloversigt", false);
   }
 
 
@@ -254,7 +252,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   private Viewholder aktuelUdsendelseViewholder;
 
-  private boolean eksperiment_hørIkonerIKanaloversigt;
   private BaseAdapter adapter = new Basisadapter() {
     @Override
     public int getCount() {
@@ -362,7 +359,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           vh.startid.setText(udsendelse.startTidKl);
           vh.titel.setText(udsendelse.titel);
           a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
-          a.id(R.id.hør).visibility(udsendelse.kanHøres && eksperiment_hørIkonerIKanaloversigt ? View.VISIBLE : View.GONE);
+          a.id(R.id.hør).visibility(udsendelse.kanHøres ? View.VISIBLE : View.GONE);
           break;
         case TIDLIGERE_SENERE:
           vh.titel.setText(udsendelse.titel);
@@ -417,7 +414,11 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     if (u.playliste.size() > 0) {
       aq.id(R.id.senest_spillet_container).visible();
       Playlisteelement elem = u.playliste.get(0);
-      aq.id(R.id.titel_og_kunstner).text(Html.fromHtml("<b>" + elem.titel + "</b> &nbsp; | &nbsp;" + elem.kunstner));
+//      aq.id(R.id.titel_og_kunstner).text(Html.fromHtml("<b>" + elem.titel + "</b> &nbsp; | &nbsp;" + elem.kunstner));
+
+      Spannable spannable = new SpannableString(elem.titel + "  |  " + elem.kunstner);
+      spannable.setSpan(App.skrift_gibson_fed_span, 0, elem.titel.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+      aq.id(R.id.titel_og_kunstner).text(spannable);
 
       ImageView b = aq.id(R.id.senest_spillet_kunstnerbillede).getImageView();
       if (elem.billedeUrl.length() == 0) {
