@@ -79,6 +79,7 @@ public class App extends Application {
   public static Hentning hentning;  // Understøttes ikke på Android 2.2, så er variablen null
   public static final Netvaerksstatus netværk = new Netvaerksstatus();
   public static RequestQueue volleyRequestQueue;
+  public static EgenTypefaceSpan skrift_gibson_fed_span;
 
 
   @Override
@@ -195,6 +196,8 @@ public class App extends Application {
       skrift_gibson = Typeface.DEFAULT;
       skrift_gibson_fed = Typeface.DEFAULT_BOLD;
     }
+    skrift_gibson_fed_span = new EgenTypefaceSpan("Gibson fed", App.skrift_gibson_fed);
+
   }
 
 
