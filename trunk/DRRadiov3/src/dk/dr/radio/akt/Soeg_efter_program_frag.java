@@ -13,6 +13,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxCallback;
+import com.androidquery.callback.AjaxStatus;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 
@@ -21,6 +25,7 @@ import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Lydkilde;
+import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
@@ -28,7 +33,7 @@ import dk.dr.radio.v3.R;
 public class Soeg_efter_program_frag extends Basisfragment implements AdapterView.OnItemClickListener {
 
   private ListView listView;
-  private ArrayList<Lydkilde> liste = new ArrayList<Lydkilde>();
+  private ArrayList<Udsendelse> liste = new ArrayList<Udsendelse>();
   protected View rod;
 
   @Override
@@ -40,30 +45,35 @@ public class Soeg_efter_program_frag extends Basisfragment implements AdapterVie
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson_fed).text("Søg efter program").getView());
 
     udvikling_checkDrSkrifter(rod, this + " rod");
-    opdaterListe();
+/*
+Kald
+http://www.dr.dk/tjenester/mu-apps/search/programs?q=monte&type=radio vil kun returnere radio programmer
+http://www.dr.dk/tjenester/mu-apps/search/series?q=monte&type=radio vil kun returnere radio serier
+ */
+    String url = "http://www.dr.dk/tjenester/mu-apps/search/programs?q=monte&type=radio";
+    new AQuery(App.instans).ajax(url, String.class, 1 * 60 * 60 * 1000, new AjaxCallback<String>() {
+      @Override
+      public void callback(String url, String json, AjaxStatus status) {
+        App.sætErIGang(false);
+        Log.d("XXX url " + url + "   status=" + status.getCode());
+        if (json != null && !"null".equals(json)) try {
+          JSONArray data = new JSONArray(json);
+          Log.d("data = " + data.toString(2));
+          liste = DRJson.parseUdsendelserForProgramserie(data, DRData.instans);
+          Log.d("liste = " + liste);
+          adapter.notifyDataSetChanged();
+          return;
+        } catch (Exception e) {
+          Log.d("Parsefejl: " + e + " for json=" + json);
+          e.printStackTrace();
+        }
+        new AQuery(rod).id(R.id.tom).text(url + "   status=" + status.getCode() + "\njson=" + json);
+      }
+    });
+
+
     return rod;
   }
-/*
-API: Søgning
-Medmindre type-parametren er angivet (tv eller radio), så vil denne returnere resultater fra både TV og radio.
-Kald
-http://www.dr.dk/tjenester/mu-apps/search/programs?q=monte vil returnere programmer
-http://www.dr.dk/tjenester/mu-apps/search/programs?q=monte&type=radio vil kun returnere radio programmer
-http://www.dr.dk/tjenester/mu-apps/search/series?q=monte vil returnere serier
-http://www.dr.dk/tjenester/mu-apps/search/series?q=monte&type=radio vil kun returnere radio serier
-
- */
-
-  private void opdaterListe() {
-    try {
-      liste.clear();
-      liste.addAll(DRData.instans.senestLyttede.getListe());
-    } catch (Exception e1) {
-      Log.rapporterFejl(e1);
-    }
-    adapter.notifyDataSetChanged();
-  }
-
 
   /**
    * Viewholder designmønster - hold direkte referencer til de views og objekter der bruges hele tiden
