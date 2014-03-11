@@ -15,14 +15,16 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.androidquery.AQuery;
 
+import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -87,14 +89,27 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
     // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true&includeStreams=true
     String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
     Log.d("XXX url=" + url);
-    App.sætErIGang(true);
 
+
+    Cache.Entry response = App.volleyRequestQueue.getCache().get(url);
+    Log.d("XXXXXXXXXXXXXX Cache.Entry  e=" + response);
+    if (offset == 0 && response != null) try {
+      JSONObject data = new JSONObject(new String(response.data, HTTP.UTF_8));
+      programserie = DRJson.parsProgramserie(data);
+      programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+      DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    App.sætErIGang(true);
     Request<?> req = new JsonObjectRequest(url, null,
         new Response.Listener<JSONObject>() {
           @Override
           public void onResponse(JSONObject data) {
+            App.sætErIGang(false);
             try {
-              VolleyLog.v("Response:%n %s", data.toString(4));
+              Log.d("Response: " + data.toString(4));
               if (offset == 0) {
                 programserie = DRJson.parsProgramserie(data);
                 programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
@@ -111,11 +126,21 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
         }, new Response.ErrorListener() {
       @Override
       public void onErrorResponse(VolleyError error) {
+        App.sætErIGang(false);
+        Log.e("error.networkResponse=" + error.networkResponse, error);
+        //Log.d(error.networkResponse.headers);
         App.kortToast("Netværksfejl, prøv igen senere");
       }
     }
-    ).setTag(this).setRetryPolicy(new DefaultRetryPolicy(3 * 1000, 3, 1.5f));
-    ;
+    ) {
+      @Override
+      protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+        Log.d("YYYY servertid " + response.headers.get("Date"));
+        Log.d("YYYY servertid " + response.headers.get("Expires"));
+        Log.d("YYYY servertid " + response.headers);
+        return super.parseNetworkResponse(response);
+      }
+    }.setTag(this).setRetryPolicy(new DefaultRetryPolicy(3 * 1000, 3, 1.5f));
     App.volleyRequestQueue.add(req);
 
 /*
@@ -246,7 +271,7 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
         vh.stiplet_linje.setBackgroundResource(position > 1 ? R.drawable.stiplet_linje : R.drawable.linje); // Første stiplede linje er fuld
 
         vh.titel.setText(Html.fromHtml("<b>" + u.titel + "</b>&nbsp; - " + DRJson.datoformat.format(u.startTid)));
-        Log.d("DRJson.datoformat.format(u.startTid)=" + DRJson.datoformat.format(u.startTid));
+        //Log.d("DRJson.datoformat.format(u.startTid)=" + DRJson.datoformat.format(u.startTid));
 
         //String txt = u.kanal().navn + ", " + ((u.slutTid.getTime() - u.startTid.getTime())/1000/60 + " MIN");
         String txt = ""; //u.kanal().navn;
@@ -261,7 +286,7 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
           if (min > 1) txt += min + " MINUTTER";
           else if (min == 1) txt += timer + " MINUT";
         }
-        Log.d("txt=" + txt);
+        //Log.d("txt=" + txt);
         vh.varighed.setText(txt);
         vh.varighed.setVisibility(txt.length() > 0 ? View.VISIBLE : View.GONE);
       } else if (type == TIDLIGERE) {

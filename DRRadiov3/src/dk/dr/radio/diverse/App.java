@@ -32,12 +32,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
@@ -45,8 +45,13 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.HttpClientStack;
+import com.android.volley.toolbox.HttpStack;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.Volley;
 import com.bugsense.trace.BugSenseHandler;
+
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -104,19 +109,58 @@ public class App extends Application {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
       System.setProperty("http.keepAlive", "false");
     }
+    String packageName = getPackageName();
     try {
-      Class.forName("android.os.AsyncTask"); // Fix for http://code.google.com/p/android/issues/detail?id=20915
       //noinspection ConstantConditions
-      App.versionName = App.instans.getPackageManager().getPackageInfo(App.instans.getPackageName(), PackageManager.GET_ACTIVITIES).versionName;
+      App.versionName = getPackageManager().getPackageInfo(packageName, 0).versionName;
       if (EMULATOR) App.versionName += " UDV";
       App.versionName += "/" + Build.MODEL + " " + Build.PRODUCT;
+      Class.forName("android.os.AsyncTask"); // Fix for http://code.google.com/p/android/issues/detail?id=20915
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
 
     FilCache.init(getCacheDir());
 
-    volleyRequestQueue = Volley.newRequestQueue(this);
+
+    // Initialisering af Volley
+    File cacheDir = new File(getCacheDir(), "volley");
+    String userAgent = packageName + "/" + App.versionName;
+
+    HttpStack stack;
+    if (Build.VERSION.SDK_INT >= 9) {
+      stack = new HurlStack();
+    } else if (Build.VERSION.SDK_INT >= 8) {
+      // Prior to Gingerbread, HttpUrlConnection was unreliable.
+      // See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
+      stack = new HttpClientStack(AndroidHttpClient.newInstance(userAgent));
+    } else {
+      stack = new HttpClientStack(new DefaultHttpClient()); // Android 2.1
+    }
+    /*
+
+    Network network = new BasicNetwork(stack) {
+      @Override
+      public NetworkResponse performRequest(Request<?> request) throws VolleyError {
+        try {
+          return super.performRequest(request);
+        } catch (NoConnectionError e) {
+          Cache.Entry cacheEntry = request.getCacheEntry();
+          if(cacheEntry != null && cacheEntry.data != null){
+            Log.d("VVVVVVVVVVVVVV cacher "+request.getUrl());
+            return new NetworkResponse(HttpStatus.SC_NOT_MODIFIED, request.getCacheEntry().data, new HashMap<String, String>(), true);
+          }
+          else throw e;
+        }
+      }
+    };
+    RequestQueue queue = new RequestQueue(new DiskBasedCache(cacheDir), network);
+    queue.start();
+    volleyRequestQueue = queue;
+    */
+    //volleyRequestQueue = Volley.newRequestQueue(this);
+    volleyRequestQueue = Volley.newRequestQueue(this, stack);
+
 
     try {
       final DRData i = DRData.instans = new DRData();
@@ -220,6 +264,8 @@ public class App extends Application {
     boolean nu = erIGang > 0;
     if (udvikling) Log.d("erIGang = " + erIGang);
     if (før != nu && aktivitetIForgrunden != null) forgrundstråd.post(setProgressBarIndeterminateVisibility);
+    // Fejltjek
+    if (erIGang < 0) Log.e(new IllegalStateException("erIGang er " + erIGang));
   }
 
   private static Runnable setProgressBarIndeterminateVisibility = new Runnable() {
