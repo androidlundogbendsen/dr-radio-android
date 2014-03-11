@@ -8,6 +8,15 @@
         </shape>
     </item>
 
+
+    <item android:state_selected="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="4dp"/>
+            <solid android:color="@color/blå"/>
+            <stroke android:width="3dp" android:color="@color/grå20"/>
+        </shape>
+    </item>
+
     <item android:state_enabled="false">
         <shape android:shape="rectangle">
             <corners android:radius="4dp"/>
