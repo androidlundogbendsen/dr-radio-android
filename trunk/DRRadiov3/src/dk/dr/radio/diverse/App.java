@@ -44,6 +44,8 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.bugsense.trace.BugSenseHandler;
 
 import java.io.File;
@@ -76,6 +78,7 @@ public class App extends Application {
 
   public static Hentning hentning;  // Understøttes ikke på Android 2.2, så er variablen null
   public static final Netvaerksstatus netværk = new Netvaerksstatus();
+  public static RequestQueue volleyRequestQueue;
 
 
   @Override
@@ -111,6 +114,8 @@ public class App extends Application {
     }
 
     FilCache.init(getCacheDir());
+
+    volleyRequestQueue = Volley.newRequestQueue(this);
 
     try {
       final DRData i = DRData.instans = new DRData();
