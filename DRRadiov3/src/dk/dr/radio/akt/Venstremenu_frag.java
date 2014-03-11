@@ -88,7 +88,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
       mFromSavedInstanceState = true;
     } else {
-      mCurrentSelectedPosition = 9;
+      mCurrentSelectedPosition = 2; //9;
       navAdapter.vælgMenu(getActivity(), mCurrentSelectedPosition);
     }
 
@@ -300,7 +300,15 @@ public class Venstremenu_frag extends Fragment implements Runnable {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-      return elem.get(position).layout;
+      View l = elem.get(position).layout;
+      if (position == mCurrentSelectedPosition) {
+        Log.d("Selected posion,getView " + mCurrentSelectedPosition);
+        l.setBackgroundResource(R.drawable.knap_blaa_bg);
+      } else {
+        l.setBackgroundResource(R.drawable.knap_hvid_bg);
+      }
+      return l;
+      //return elem.get(position).layout;
     }
 
     class MenuElement {

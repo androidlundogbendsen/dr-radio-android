@@ -15,9 +15,13 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxCallback;
-import com.androidquery.callback.AjaxStatus;
 
 import org.json.JSONObject;
 
@@ -43,6 +47,7 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
   private View rod;
   private int antalHentedeSendeplaner;
   private CheckBox favorit;
+  private static final String TAG = "Programserie_frag";
 
   @Override
   public String toString() {
@@ -70,6 +75,12 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
     return rod;
   }
 
+  @Override
+  public void onDestroyView() {
+    App.volleyRequestQueue.cancelAll(this);
+    super.onDestroyView();
+  }
+
   private void hentUdsendelser(final int offset) {
     // svarer til v3_programserie.json
     // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true
@@ -77,6 +88,38 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
     String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
     Log.d("XXX url=" + url);
     App.sætErIGang(true);
+
+    Request<?> req = new JsonObjectRequest(url, null,
+        new Response.Listener<JSONObject>() {
+          @Override
+          public void onResponse(JSONObject data) {
+            try {
+              VolleyLog.v("Response:%n %s", data.toString(4));
+              if (offset == 0) {
+                programserie = DRJson.parsProgramserie(data);
+                programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+                DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
+              } else {
+                ArrayList<Udsendelse> flereUdsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+                programserie.udsendelser.addAll(flereUdsendelser);
+              }
+              adapter.notifyDataSetChanged();
+            } catch (Exception e) {
+              Log.e(e);
+            }
+          }
+        }, new Response.ErrorListener() {
+      @Override
+      public void onErrorResponse(VolleyError error) {
+        App.kortToast("Netværksfejl, prøv igen senere");
+      }
+    }
+    ).setTag(this).setRetryPolicy(new DefaultRetryPolicy(3 * 1000, 3, 1.5f));
+    ;
+    App.volleyRequestQueue.add(req);
+
+/*
+
     new AQuery(App.instans).ajax(url, String.class, 1 * 60 * 60 * 1000, new AjaxCallback<String>() {
       @Override
       public void callback(String url, String json, AjaxStatus status) {
@@ -101,6 +144,7 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
         new AQuery(rod).id(R.id.tom).text(url + "   status=" + status.getCode() + "\njson=" + json);
       }
     });
+*/
   }
 
   @Override
