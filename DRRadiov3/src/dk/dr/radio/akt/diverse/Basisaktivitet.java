@@ -37,7 +37,6 @@ public class Basisaktivitet extends ActionBarActivity {
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    Log.d("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
     //if (App.udvikling) {
     menu.add(0, 642, 0, "Udvikler");
     menu.add(0, 643, 0, "Vis log");

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -59,6 +60,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   private boolean fragmentErSynligt;
   private boolean p4;
   private int antalHentedeSendeplaner;
+  public static Kanal_frag senesteSynligeFragment;
 
   @Override
   public String toString() {
@@ -163,26 +165,41 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     });
   }
 
-  private void scrollTilAktuelUdsendelse() {
+  public void scrollTilAktuelUdsendelse() {
+    Log.d(this + " scrollTilAktuelUdsendelse()");
     if (aktuelUdsendelseIndex < 0) return;
     int topmargen = getResources().getDimensionPixelOffset(R.dimen.kanalvisning_aktuelUdsendelse_topmargen);
     listView.setSelectionFromTop(aktuelUdsendelseIndex, topmargen);
   }
 
 
+  public void scrollTilAktuelUdsendelseBlødt() {
+    Log.d(this + " scrollTilAktuelUdsendelseBlødt()");
+    if (aktuelUdsendelseIndex < 0) return;
+    int topmargen = getResources().getDimensionPixelOffset(R.dimen.kanalvisning_aktuelUdsendelse_topmargen);
+    if (Build.VERSION.SDK_INT >= 11) listView.smoothScrollToPositionFromTop(aktuelUdsendelseIndex, topmargen);
+    else listView.setSelectionFromTop(aktuelUdsendelseIndex, topmargen);
+  }
+
   @Override
   public void setUserVisibleHint(boolean isVisibleToUser) {
-    Log.d(kanal + " setUserVisibleHint " + isVisibleToUser + "  " + this);
+    Log.d(kanal + " QQQ setUserVisibleHint " + isVisibleToUser + "  " + this);
     fragmentErSynligt = isVisibleToUser;
-    if (kanal == null) return;
     if (fragmentErSynligt) {
-      scrollTilAktuelUdsendelse();
+      senesteSynligeFragment = this;
       run();
-      if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET && DRData.instans.afspiller.getLydkilde() != kanal) {
-        DRData.instans.afspiller.setLydkilde(kanal);
-      }
+      App.forgrundstråd.post(new Runnable() {
+        @Override
+        public void run() {
+          //scrollTilAktuelUdsendelse();
+          if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET && DRData.instans.afspiller.getLydkilde() != kanal) {
+            DRData.instans.afspiller.setLydkilde(kanal);
+          }
+        }
+      });
     } else {
       App.forgrundstråd.removeCallbacks(this);
+      if (senesteSynligeFragment == this) senesteSynligeFragment = null;
     }
     super.setUserVisibleHint(isVisibleToUser);
   }
@@ -197,6 +214,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   public void onPause() {
     super.onPause();
     App.forgrundstråd.removeCallbacks(this);
+    if (senesteSynligeFragment == this) senesteSynligeFragment = null;
+    Log.d(kanal + " QQQ onPause() " + this);
   }
 
   @Override
@@ -439,7 +458,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       long passeret = System.currentTimeMillis() - u.startTid.getTime() + FilCache.serverkorrektionTilKlienttidMs;
       long længde = u.slutTid.getTime() - u.startTid.getTime();
       int passeretPct = længde > 0 ? (int) (passeret * 100 / længde) : 0;
-      Log.d(kanal.kode + " passeretPct=" + passeretPct + " af længde=" + længde);
+      //Log.d(kanal.kode + " passeretPct=" + passeretPct + " af længde=" + længde);
       LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) vh.starttidbjælke.getLayoutParams();
       lp.weight = passeretPct;
       vh.starttidbjælke.setLayoutParams(lp);
