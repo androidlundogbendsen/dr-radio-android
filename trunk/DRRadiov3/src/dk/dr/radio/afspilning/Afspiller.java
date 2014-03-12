@@ -230,6 +230,10 @@ public class Afspiller {
 
 
   public void setLydkilde(Lydkilde lydkilde) {
+    if (lydkilde == null) {
+      Log.e(new IllegalStateException("setLydkilde(null"));
+      return;
+    }
     if (App.udvikling) App.kortToast("setLydkilde:\n" + lydkilde);
     this.lydkilde = lydkilde;
 

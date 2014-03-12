@@ -41,6 +41,7 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
+import dk.dr.radio.akt.Kanal_frag;
 import dk.dr.radio.v3.R;
 
 
@@ -254,6 +255,13 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
       @Override
       public void onClick(View v) {
         pager.setCurrentItem(position);
+        // XXX INDSAT TIL DR RADIO: “Nulstil” visning, når der tappes på kanalikon i toppen, så man kommer tilbage til NU-visning (belejligt hvis man har scrollet op el. ned i epg liste)
+        //if (delegatePageListener != null && delegatePageListener instanceof Kanaler_frag) {
+        //  ((Kanaler_frag) delegatePageListener).klikPåFane(position);
+        //}
+        // Grimt hack, men desværre umuligt at gøre på en anden måde
+        Kanal_frag.senesteSynligeFragment.scrollTilAktuelUdsendelseBlødt();
+        // XXX INDSAT TIL DR RADIO slut
       }
     });
 

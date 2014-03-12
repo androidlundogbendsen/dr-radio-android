@@ -1,7 +1,6 @@
 package dk.dr.radio.akt;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -65,18 +64,20 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
 
   @Override
   public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+//    Log.d("onPageScrolled( "+position+" "+positionOffset);
   }
 
   @Override
   public void onPageSelected(int position) {
+    // Husk foretrukken kanal
     App.prefs.edit().putString(App.FORETRUKKEN_KANAL, kanaler.get(position).kode).commit();
 //    DRData.instans.aktuelKanal = kanaler.get(position);
+//    Log.d("onPageSelected( "+position);
   }
 
   @Override
   public void onPageScrollStateChanged(int state) {
-
+//    Log.d("onPageScrollStateChanged( "+state);
   }
 
 
@@ -91,7 +92,7 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
     //public float getPageWidth(int position) { return(0.9f); }
 
     @Override
-    public Fragment getItem(int position) {
+    public Kanal_frag getItem(int position) {
       Kanal_frag f = new Kanal_frag();
       Bundle b = new Bundle();
       b.putString(Kanal_frag.P_kode, kanaler.get(position).kode);
