@@ -1,6 +1,7 @@
 package dk.dr.radio.akt;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -118,6 +119,7 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
         AQuery aq = new AQuery(v);
         aq.id(R.id.startid).text(DRJson.datoformat.format(udsendelse.startTid)).typeface(App.skrift_gibson_fed);
         aq.id(R.id.titel_og_kunstner).text(udsendelse.titel).typeface(App.skrift_gibson);
+        aq.id(R.id.titel_og_kunstner).textColor(udsendelse.kanHøres ? Color.BLACK : getResources().getColor(R.color.grå60));
         aq.id(R.id.hør).visibility(udsendelse.kanHøres ? View.VISIBLE : View.GONE);
         aq.id(R.id.stiplet_linje).background(R.drawable.stiplet_linje);
       }
