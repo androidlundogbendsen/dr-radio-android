@@ -167,9 +167,12 @@ public class App extends Application {
       i.grunddata = new Grunddata(); //.parseAndroidStamdata(Diverse.læsStreng(getResources().openRawResource(R.raw.stamdata1_android_v3_01)));
       i.grunddata.parseFællesGrunddata(Diverse.læsStreng(getResources().openRawResource(R.raw.grunddata)));
 
-      String kanal = prefs.getString(FORETRUKKEN_KANAL, null);
-      i.aktuelKanal = i.grunddata.kanalFraKode.get(kanal);
-      if (i.aktuelKanal == null) i.aktuelKanal = i.grunddata.forvalgtKanal;
+      String kanalkode = prefs.getString(FORETRUKKEN_KANAL, null);
+      Kanal aktuelKanal = i.grunddata.kanalFraKode.get(kanalkode);
+      if (aktuelKanal == null) aktuelKanal = i.grunddata.forvalgtKanal;
+
+      DRData.instans.afspiller = new Afspiller();
+      DRData.instans.afspiller.setLydkilde(aktuelKanal);
 
       String pn = App.instans.getPackageName();
       Resources res = App.instans.getResources();
@@ -191,7 +194,7 @@ public class App extends Application {
               if (prefs.getString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, null) == null) {
                 String p4kanal = P4Stedplacering.findP4KanalnavnFraIP();
                 if (App.udvikling) App.langToast("p4kanal: " + p4kanal);
-                prefs.edit().putString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, p4kanal).commit();
+                if (p4kanal != null) prefs.edit().putString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, p4kanal).commit();
               }
               DRData.instans.favoritter.opdaterAntalNyeUdsendelserBg();
             } catch (Exception e) {
@@ -204,7 +207,6 @@ public class App extends Application {
       }
 
 
-      DRData.instans.afspiller = new Afspiller();
       /*
       // indlæs grunddata fra Prefs hvis de findes
       String stamdatastr = prefs.getString(DRData.GRUNDDATA_URL, null);

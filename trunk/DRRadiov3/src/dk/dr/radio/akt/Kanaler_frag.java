@@ -47,8 +47,8 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
     PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) rod.findViewById(R.id.tabs);
     tabs.setViewPager(viewPager);
     if (savedInstanceState == null) {
-      int kanalindex = kanaler.indexOf(DRData.instans.aktuelKanal);
-      if (kanalindex == -1) kanalindex = 3; // P4
+      int kanalindex = kanaler.indexOf(DRData.instans.afspiller.getLydkilde().kanal());
+      if (kanalindex == -1) kanalindex = 2; // P3
       viewPager.setCurrentItem(kanalindex);
     }
     tabs.setOnPageChangeListener(this);
@@ -71,7 +71,7 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
   @Override
   public void onPageSelected(int position) {
     App.prefs.edit().putString(App.FORETRUKKEN_KANAL, kanaler.get(position).kode).commit();
-    DRData.instans.aktuelKanal = kanaler.get(position);
+//    DRData.instans.aktuelKanal = kanaler.get(position);
   }
 
   @Override

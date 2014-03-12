@@ -100,9 +100,11 @@ public class AfspillerWidget extends AppWidgetProvider {
 
     if (DRData.instans != null) {
       Resources res = App.instans.getResources();
-      String kanalkode = DRData.instans.aktuelKanal.kode;
+      //String kanalkode = DRData.instans.aktuelKanal.kode;
       // tjek om der er et billede i 'drawable' med det navn filnavn
-      int id = res.getIdentifier("kanal_" + kanalkode.toLowerCase(), "drawable", App.instans.getPackageName());
+
+      //int id = res.getIdentifier("kanal_" + kanalkode.toLowerCase(), "drawable", App.instans.getPackageName());
+      int id = DRData.instans.afspiller.getLydkilde().kanal().kanallogo_resid;
 
 
       if (id != 0) {
@@ -124,7 +126,7 @@ public class AfspillerWidget extends AppWidgetProvider {
         remoteViews.setTextViewText(R.id.udsendelseTitel, lk.getUdsendelse().titel);
         remoteViews.setTextViewText(R.id.kanalnavn, lk.kanal().navn);
       } else if (lk instanceof Kanal) {
-        remoteViews.setTextViewText(R.id.udsendelseTitel, lk.getUdsendelse().titel);
+        remoteViews.setTextViewText(R.id.udsendelseTitel, lk.kanal().navn);
         remoteViews.setTextViewText(R.id.kanalnavn, lk.kanal().navn);
       }
 
