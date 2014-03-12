@@ -82,7 +82,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     }
     final AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).getListView();
-    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson_fed).getView());
+    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).getView());
     listView.setOnItemClickListener(this);
 
 

@@ -99,7 +99,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
     AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
-    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson_fed).getView());
+    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).getView());
 
     // Hent sendeplan for den pågældende dag. Døgnskifte sker kl 5, så det kan være dagen før
     hentSendeplanForDag(aq, new Date(System.currentTimeMillis() - 5 * 60 * 60 * 1000), true);
@@ -442,9 +442,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       Playlisteelement elem = u.playliste.get(0);
 //      aq.id(R.id.titel_og_kunstner).text(Html.fromHtml("<b>" + elem.titel + "</b> &nbsp; | &nbsp;" + elem.kunstner));
 
-      Spannable spannable = new SpannableString(elem.titel + "  |  " + elem.kunstner);
-      spannable.setSpan(App.skrift_gibson_fed_span, 0, elem.titel.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-      aq.id(R.id.titel_og_kunstner).text(spannable);
+      aq.id(R.id.titel_og_kunstner).text(lavFedSkriftTil(elem.titel + "  |  " + elem.kunstner, elem.titel.length()));
 
       ImageView b = aq.id(R.id.senest_spillet_kunstnerbillede).getImageView();
       if (elem.billedeUrl.length() == 0) {

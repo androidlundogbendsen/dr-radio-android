@@ -41,7 +41,11 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
 
     AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
-    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson_fed).text("Ingen favoritter\nGå ind på en programserie og tryk på hjertet for at gøre det til en favorit").getView());
+    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).text(
+//        "Ingen favoritter\nGå ind på en programserie og tryk på hjertet for at gøre det til en favorit"
+        "Du har endnu ikke tilføjet nogle favoritprogrammer.\n" +
+            "Favoritprogrammer kan vælges ved at markere hjerte-ikonet ved de enkelte programserievisninger."
+    ).getView());
 
     udvikling_checkDrSkrifter(rod, this + " rod");
     DRData.instans.favoritter.observatører.add(this);

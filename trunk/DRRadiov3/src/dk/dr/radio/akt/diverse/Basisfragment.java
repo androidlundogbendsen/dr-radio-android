@@ -8,6 +8,8 @@ import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -244,4 +246,12 @@ Jeg bruger selv følgende macro'er i C til generering af URIs:
       //tv.setTypeface(App.skrift_gibson);
     }
   }
+
+
+  protected static Spannable lavFedSkriftTil(String tekst, int fedTil) {
+    Spannable spannable = new SpannableString(tekst);
+    spannable.setSpan(App.skrift_gibson_fed_span, 0, fedTil, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    return spannable;
+  }
+
 }
