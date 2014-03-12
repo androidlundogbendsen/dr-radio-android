@@ -70,7 +70,7 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
     rod = inflater.inflate(R.layout.kanal_frag, container, false);
     final AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).getListView();
-    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson_fed).getView());
+    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).getView());
     listView.setOnItemClickListener(this);
 
     udvikling_checkDrSkrifter(rod, this + " rod");
@@ -247,8 +247,8 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
           if (kanal == null) aq.id(R.id.logo).gone();
           else aq.id(R.id.logo).image(kanal.kanallogo_resid);
           aq.id(R.id.titel).typeface(App.skrift_gibson_fed).text(programserie.titel);
-          aq.id(R.id.alle_udsendelser).typeface(App.skrift_gibson_fed).text(Html.fromHtml("<b>ALLE UDSENDELSER</b> (" + programserie.antalUdsendelser + ")"));
-
+          String tekst = "ALLE UDSENDELSER";
+          aq.id(R.id.alle_udsendelser).typeface(App.skrift_gibson).text(lavFedSkriftTil(tekst + " (" + programserie.antalUdsendelser + ")", tekst.length()));
           aq.id(R.id.beskrivelse).text(programserie.beskrivelse).typeface(App.skrift_georgia);
           Linkify.addLinks(aq.getTextView(), Linkify.ALL);
           favorit = aq.id(R.id.favorit).clicked(Programserie_frag2.this).getCheckBox();

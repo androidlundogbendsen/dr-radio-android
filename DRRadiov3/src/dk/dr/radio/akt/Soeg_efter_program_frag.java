@@ -42,7 +42,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements AdapterVie
 
     AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
-    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson_fed).text("Søg efter program").getView());
+    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).text("Søg efter program").getView());
 
     udvikling_checkDrSkrifter(rod, this + " rod");
 /*
