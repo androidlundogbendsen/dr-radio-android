@@ -3,6 +3,7 @@ package dk.dr.radio.akt;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
@@ -383,6 +384,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           vh.startid.setText(udsendelse.startTidKl);
           vh.titel.setText(udsendelse.titel);
           a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
+          vh.titel.setTextColor(udsendelse.kanHøres ? Color.BLACK : getResources().getColor(R.color.grå60));
           a.id(R.id.hør).visibility(udsendelse.kanHøres ? View.VISIBLE : View.GONE);
           break;
         case TIDLIGERE_SENERE:
