@@ -18,28 +18,35 @@
 
 package dk.dr.radio.akt;
 
+import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.PreferenceActivity;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
-import android.view.MenuItem;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-public class Indstillinger_akt extends PreferenceActivity implements OnPreferenceChangeListener, Runnable {
+
+/**
+ * Bruges ikke p.t.
+ * Se http://stackoverflow.com/questions/10186697/preferenceactivity-android-4-0-and-earlier/11336098#11336098
+ */
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+public class Indstillinger_frag_skrald extends PreferenceFragment implements OnPreferenceChangeListener, Runnable {
   public static final String åbn_formatindstilling = "åbn_formatindstilling";
   private String aktueltLydformat;
   private ListPreference lydformatlp;
   Handler handler = new Handler();
 
+
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
+  public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     addPreferencesFromResource(R.xml.indstillinger);
 
@@ -63,31 +70,11 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
         lydformatlp.setEntryValues(lavDelarray(lydformatlp.getEntryValues(), 2));
       }
 
-      // Har brugeren trykket på "Format" på afspilleraktiviteten skal format åbnes direkte
-      if (getIntent().getBooleanExtra(åbn_formatindstilling, false)) try {
-        // Jeg synes toast alligevel er overflødig. Jacob
-        //Toast.makeText(this, lydformatlp.getSummary(), Toast.LENGTH_LONG).show();
-        ps.onItemClick(null, null, POS_lydformat, 0);
-      } catch (Exception ignored) {
-      } // Ignorer - se http://www.bugsense.com/dashboard/project/57c90f98/error/11696187
-
       lydformatlp.setOnPreferenceChangeListener(this);
       aktueltLydformat = lydformatlp.getValue();
     } catch (Exception ex) {
       Log.rapporterFejl(ex);
     }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-      getActionBar().setDisplayHomeAsUpEnabled(true);
-
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == android.R.id.home) {
-      finish();
-    }
-    return super.onOptionsItemSelected(item);
   }
 
   private CharSequence[] lavDelarray(CharSequence[] entries, int antal) {
