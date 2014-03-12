@@ -314,7 +314,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         vh.starttidbjælke = a.id(R.id.starttidbjælke).getView();
         vh.slutttidbjælke = a.id(R.id.slutttidbjælke).getView();
         //a.id(R.id.højttalerikon).clicked(new UdsendelseClickListener(vh));
-        a.id(R.id.slutttid).typeface(App.skrift_gibson).text(udsendelse.slutTidKl);
+        a.id(R.id.slutttid).typeface(App.skrift_gibson);
         if (type == TIDLIGERE_SENERE) {
           vh.titel = a.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
         } else if (type == AKTUEL) {
@@ -341,6 +341,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
             }
           });
           v.setBackgroundResource(R.drawable.knap_hvid_bg);
+          a.id(R.id.senest_spillet_container).invisible(); // Start uden 'senest spillet, indtil vi har info
+
         } else {
           vh.titel = a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson_fed).getTextView();
         }
@@ -357,6 +359,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         case AKTUEL:
           aktuelUdsendelseViewholder = vh;
           vh.startid.setText(udsendelse.startTidKl);
+          a.id(R.id.slutttid).text(udsendelse.slutTidKl);
           vh.titel.setText(udsendelse.titel);
 
           int br = bestemBilledebredde(listView, (View) a.id(R.id.billede).getView().getParent(), 100);
@@ -468,7 +471,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       vh.slutttidbjælke.setLayoutParams(lp);
       if (passeretPct >= 100) { // Hop til næste udsendelse
         opdaterListe();
-        scrollTilAktuelUdsendelse();
+        scrollTilAktuelUdsendelseBlødt();
       }
       if (u.playliste != null && u.playliste.size() > 0) {
         opdaterSenestSpillet(vh.aq, u);
