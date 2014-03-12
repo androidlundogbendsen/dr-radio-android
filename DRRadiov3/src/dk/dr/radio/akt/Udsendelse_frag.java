@@ -391,19 +391,5 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
     }
   }
-
-  private class UdsendelseClickListener implements View.OnClickListener {
-
-    private final Viewholder viewHolder;
-
-    public UdsendelseClickListener(Viewholder vh) {
-      viewHolder = vh;
-    }
-
-    @Override
-    public void onClick(View v) {
-      App.langToast("fejl2");
-    }
-  }
 }
 
