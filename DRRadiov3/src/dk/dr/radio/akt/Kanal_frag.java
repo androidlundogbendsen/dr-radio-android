@@ -499,6 +499,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
     if (App.udvikling) App.kortToast("kanal.streams=" + kanal.streams);
     if (App.prefs.getBoolean("manuelStreamvalg", false)) {
+      kanal.nulstilForetrukkenStream();
       new AlertDialog.Builder(getActivity())
           .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.findBedsteStreams(false).toArray()), new DialogInterface.OnClickListener() {
             @Override
@@ -530,8 +531,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       f.setArguments(new Intent()
           .putExtra(P_kode, kanal.kode)
           .putExtra(DRJson.Slug.name(), u.slug).getExtras());
-      //getFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
-      //getChildFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+      //Forkert: getFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+      //Forkert: getChildFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
       getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
     }
   }

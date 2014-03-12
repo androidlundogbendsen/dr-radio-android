@@ -353,6 +353,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         FlurryAgent.logEvent("hør udsendelse", param);
       }
       if (App.prefs.getBoolean("manuelStreamvalg", false)) {
+        udsendelse.nulstilForetrukkenStream();
         new AlertDialog.Builder(getActivity())
             .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, udsendelse.findBedsteStreams(false).toArray()), new DialogInterface.OnClickListener() {
               @Override

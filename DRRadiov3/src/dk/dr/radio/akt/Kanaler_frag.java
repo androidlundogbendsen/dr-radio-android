@@ -48,7 +48,7 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
     tabs.setViewPager(viewPager);
     if (savedInstanceState == null) {
       int kanalindex = kanaler.indexOf(DRData.instans.afspiller.getLydkilde().kanal());
-      if (kanalindex == -1) kanalindex = 2; // P3
+      if (kanalindex == -1) kanalindex = 3; // Hvis vi ikke rammer nogen af de overordnede kanaler, så er det P4
       viewPager.setCurrentItem(kanalindex);
     }
     tabs.setOnPageChangeListener(this);
