@@ -43,7 +43,7 @@
                 android:id="@+id/titel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="x P3 Live"
+                android:text="Radioavis"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textStyle="bold"
                 android:maxLines="2"
@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="x P3"
+                android:text="P3 - Forbinder"
                 android:singleLine="true"
                 tools:ignore="HardcodedText"
                 android:textColor="@color/blå"/>

@@ -34,6 +34,10 @@ public abstract class Lydkilde {
     return findBedsteStreams(tilHentning).get(0);
   }
 
+  public void nulstilForetrukkenStream() {
+    for (Lydstream s : streams) s.foretrukken = false;
+  }
+
 
   public List<Lydstream> findBedsteStreams(boolean tilHentning) {
     //Bedst bedst = new Bedst();
