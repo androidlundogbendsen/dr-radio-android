@@ -56,7 +56,7 @@ public class HoldAppIHukommelsenService extends Service {
     String kanalNavn = intent == null ? null : intent.getStringExtra("kanalNavn");
     if (kanalNavn == null) kanalNavn = "";
 
-    NotificationCompat.Builder b = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.notifikation_ikon).setContentTitle("DR Radio").setContentText(kanalNavn).setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, Hovedaktivitet.class), 0)).setContent(AfspillerWidget.lavRemoteViews(false));
+    NotificationCompat.Builder b = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.notifikation_ikon).setContentTitle("DR Radio").setContentText(kanalNavn).setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, Hovedaktivitet.class), 0)).setContent(AfspillerWidget.lavRemoteViews(false, true));
 
     //notification = new Notification(R.drawable.notifikation_ikon, null, 0);
     Notification notification = b.build();
