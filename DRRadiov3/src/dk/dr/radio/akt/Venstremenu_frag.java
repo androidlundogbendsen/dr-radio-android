@@ -303,9 +303,10 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       View l = elem.get(position).layout;
       if (position == mCurrentSelectedPosition) {
         Log.d("Selected posion,getView " + mCurrentSelectedPosition);
-        l.setBackgroundResource(R.drawable.knap_blaa_bg);
+//        l.setBackgroundResource(R.drawable.knap_blaa_bg);
+        l.setBackgroundResource(R.color.grå10);
       } else {
-        l.setBackgroundResource(R.drawable.knap_hvid_bg);
+        l.setBackgroundResource(0);
       }
       return l;
       //return elem.get(position).layout;
@@ -357,15 +358,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       boolean gib = App.prefs.getBoolean("brugGibsonIVenstremenu", true);
 
       tilføj(R.layout.venstremenu_elem_soeg, Soeg_efter_program_frag.class);
-      View rod = aq.getView();
-      //aq.id(R.id.tekst).getView().setTouchDelegate(new TouchDelegate(new Rect(0,0, 1000, 1000), rod));
-      aq.id(R.id.tekst).clicked(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          vælgMenu(getActivity(), 0);
-        }
-      });
-      if (gib) aq.id(R.id.tekst).typeface(App.skrift_gibson);
+      if (gib) aq.id(R.id.tekst).typeface(App.skrift_gibson_fed);
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
