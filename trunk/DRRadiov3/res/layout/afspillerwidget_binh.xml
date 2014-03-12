@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/yderstelayout"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="2dip"
+              android:layout_marginTop="2dip"
+              android:background="#00000000"
+              android:orientation="vertical">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/grå70"
+            android:orientation="horizontal">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <TextView
+                    android:id="@+id/udsendelseTitel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="Ramasjang: Formiddag"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/hvid"
+                    android:textStyle="bold"/>
+
+            <ImageView
+                    android:id="@+id/luk"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:scaleType="center"
+                    android:src="@drawable/dri_luk_hvid"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/grå70"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="4dp">
+
+        <RelativeLayout
+
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+        </RelativeLayout>
+
+        <ImageView
+                android:id="@+id/drLogo"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:scaleType="center"
+                android:src="@drawable/dr_logo"/>
+
+        <ImageView
+                android:id="@+id/kanalNavn"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:scaleType="center"
+                android:src="@drawable/kanalappendix_kh4"/>
+
+        <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <ImageView
+                android:id="@+id/start_stop_pauseknap"
+                android:layout_width="60dp"
+                android:layout_height="44dp"
+                android:layout_gravity="right"
+                android:scaleType="center"
+                android:src="@drawable/afspiller_spil"/>
+
+        <!--
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/start_stop_pauseknap"
+                android:background="@drawable/kanalappendix_p1d"/> -->
+
+    </LinearLayout>
+
+    <!-- android:background="@drawable/widget_baggrund" -->
+
+
+    <!-- <ImageView -->
+    <!-- android:id="@+id/ImageView01" -->
+    <!-- android:layout_width="60dp" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:layout_marginLeft="0dp" -->
+    <!-- android:scaleType="fitStart" -->
+    <!-- android:src="@drawable/kanalappendix_kh4" -->
+    <!-- android:visibility="visible" /> -->
+
+
+    <!-- <ImageView -->
+    <!-- android:id="@+id/billede" -->
+    <!-- android:layout_width="60dp" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:layout_gravity="left|center_vertical" -->
+    <!-- android:layout_marginLeft="0dp" -->
+    <!-- android:scaleType="fitStart" -->
+    <!-- android:src="@drawable/dr_logo" -->
+    <!-- android:visibility="visible" /> -->
+
+
+    <!-- <RelativeLayout -->
+    <!-- android:layout_width="0dp" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:layout_weight="1" > -->
+
+
+    <!-- <ImageView -->
+    <!-- android:layout_alignParentTop="true" -->
+    <!-- android:layout_alignParentRight="true" -->
+    <!-- android:src="@drawable/dri_luk_hvid" -->
+    <!-- android:layout_width="25dp" -->
+    <!-- android:layout_height="25dp" /> -->
+
+
+    <!-- <TextView -->
+    <!-- android:id="@+id/kanalnavn" -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:layout_alignParentTop="true" -->
+    <!-- android:layout_centerHorizontal="true" -->
+    <!-- android:layout_marginLeft="7dip" -->
+    <!-- android:text="DR P3 Ramasjang ultra live" -->
+    <!-- android:textSize="16sp" -->
+    <!-- android:textAppearance="?android:attr/textAppearanceLarge" -->
+    <!-- android:textColor="#505050" -->
+    <!-- android:visibility="visible" > -->
+    <!-- </TextView> -->
+
+
+    <!-- <RelativeLayout -->
+    <!-- android:layout_width="match_parent" -->
+    <!-- android:layout_height="30dp" -->
+    <!-- android:layout_alignParentBottom="true" > -->
+
+
+    <!-- <ImageButton -->
+    <!-- android:id="@+id/startStopKnap" -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="30dp" -->
+    <!-- android:layout_alignParentBottom="true" -->
+    <!-- android:layout_alignParentLeft="true" -->
+    <!-- android:layout_gravity="center_vertical" -->
+    <!-- android:layout_marginLeft="35dip" -->
+    <!-- android:background="#00000000" -->
+    <!-- android:scaleType="fitStart" -->
+    <!-- android:src="@drawable/widget_afspilning_start" > -->
+    <!-- </ImageButton> -->
+
+
+    <!-- <LinearLayout -->
+    <!-- android:id="@+id/progressBar" -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:layout_alignParentBottom="true" -->
+    <!-- android:layout_alignParentRight="true" -->
+    <!-- android:layout_gravity="right|center_vertical" -->
+    <!-- android:layout_marginRight="35dip" -->
+    <!-- android:visibility="visible" > -->
+
+
+    <!-- <ProgressBar -->
+    <!-- android:layout_width="30dp" -->
+    <!-- android:layout_height="30dp" /> -->
+    <!-- </LinearLayout> -->
+    <!-- </RelativeLayout> -->
+    <!-- </RelativeLayout> -->
+
+
+    <!-- <ImageButton -->
+    <!-- android:id="@+id/startStopKnap" -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:layout_gravity="center_vertical" -->
+    <!-- android:layout_marginLeft="20dip" -->
+    <!-- android:background="#00000000" -->
+    <!-- android:src="@drawable/widget_afspilning_start" > -->
+    <!-- </ImageButton> -->
+
+
+    <!-- <FrameLayout -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:layout_gravity="center_vertical" -->
+    <!-- android:layout_marginRight="20dip" -->
+    <!-- android:layout_weight="1" > -->
+
+
+    <!-- <ImageView -->
+    <!-- android:visibility="visible" -->
+    <!-- android:id="@+id/billede" -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:layout_gravity="left|center_vertical" -->
+    <!-- android:scaleType="fitStart" -->
+    <!-- android:src="@drawable/skrald__kanal_p3" -->
+    <!-- /> -->
+
+
+    <!-- <TextView -->
+    <!-- android:id="@+id/kanalnavn" -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:layout_gravity="center_vertical" -->
+    <!-- android:layout_marginLeft="20dip" -->
+    <!-- android:text="DR P3" -->
+    <!-- android:textAppearance="?android:attr/textAppearanceLarge" -->
+    <!-- android:textColor="#505050" -->
+    <!-- android:visibility="visible" > -->
+    <!-- </TextView> -->
+
+
+    <!--
+          fix for http://code.google.com/p/android/issues/detail?id=11040 :
+          ProgressBar's synlighed kan ikke ændres direkte, man er nødt til at indlejre den
+          i f.eks. et LinearLayout -->
+
+
+    <!-- <LinearLayout -->
+    <!-- android:id="@+id/progressBar" -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:layout_gravity="right|center_vertical" -->
+    <!-- android:visibility="visible" > -->
+
+
+    <!-- <ProgressBar -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="wrap_content" /> -->
+    <!-- </LinearLayout> -->
+    <!-- </FrameLayout> -->
+
+</LinearLayout>

@@ -18,6 +18,7 @@
 
 package dk.dr.radio.akt.diverse;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -36,10 +37,14 @@ import dk.dr.radio.afspilning.AfspillerReciever;
 import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.akt.Hovedaktivitet;
 import dk.dr.radio.data.DRData;
+import dk.dr.radio.data.Kanal;
+import dk.dr.radio.data.Lydkilde;
+import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
+@SuppressLint("NewApi")
 public class AfspillerWidget extends AppWidgetProvider {
 
 
@@ -73,15 +78,15 @@ public class AfspillerWidget extends AppWidgetProvider {
       //App.langToast("opdaterUdseende låseskærm=" + låseskærm);
     }
 
-    RemoteViews remoteViews = lavRemoteViews(låseskærm);
+    RemoteViews remoteViews = lavRemoteViews(låseskærm, false);
 
     appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
   }
 
-  public static RemoteViews lavRemoteViews(boolean låseskærm) {
+  public static RemoteViews lavRemoteViews(boolean låseskærm, boolean notifikation) {
 
 
-    RemoteViews remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspillerwidget);
+    RemoteViews remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspillerwidget_binh);
 
     Intent startStopI = new Intent(App.instans, AfspillerReciever.class);
     PendingIntent pi = PendingIntent.getBroadcast(App.instans, 0, startStopI, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -102,14 +107,25 @@ public class AfspillerWidget extends AppWidgetProvider {
 
       if (id != 0) {
         // Element med billede
-        remoteViews.setViewVisibility(R.id.kanalnavn, View.GONE);
+        remoteViews.setViewVisibility(R.id.kanalnavn, View.VISIBLE/*.GONE*/);
         remoteViews.setViewVisibility(R.id.billede, View.VISIBLE);
         remoteViews.setImageViewResource(R.id.billede, id);
       } else {
         // Element uden billede
         remoteViews.setViewVisibility(R.id.kanalnavn, View.VISIBLE);
-        remoteViews.setViewVisibility(R.id.billede, View.GONE);
-        remoteViews.setTextViewText(R.id.kanalnavn, DRData.instans.aktuelKanal.navn);
+        remoteViews.setViewVisibility(R.id.billede, View.VISIBLE/*.GONE*/);
+        //remoteViews.setTextViewText(R.id.kanalnavn, DRData.instans.aktuelKanal.navn);
+      }
+
+      Lydkilde lk = DRData.instans.afspiller.getLydkilde();
+      Log.d("Binh: kanal overskrift: " + lk);
+      if (lk == null) {
+      } else if (lk instanceof Udsendelse) {
+        remoteViews.setTextViewText(R.id.udsendelseTitel, lk.getUdsendelse().titel);
+        remoteViews.setTextViewText(R.id.kanalnavn, lk.kanal().navn);
+      } else if (lk instanceof Kanal) {
+        remoteViews.setTextViewText(R.id.udsendelseTitel, lk.getUdsendelse().titel);
+        remoteViews.setTextViewText(R.id.kanalnavn, lk.kanal().navn);
       }
 
 
