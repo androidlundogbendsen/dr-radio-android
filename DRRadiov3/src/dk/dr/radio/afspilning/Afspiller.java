@@ -110,6 +110,12 @@ public class Afspiller {
   private long onErrorTællerNultid;
 
   public void startAfspilning() {
+    if (!App.erOnline() || lydkilde.streams == null) {
+      App.kortToast("Kunne ikke oprette forbindelse");
+      return;
+    }
+    lydUrl = lydkilde.findBedsteStream(false).url;
+
     Log.d("startAfspilning() " + lydUrl);
 
     onErrorTæller = 0;
@@ -226,7 +232,6 @@ public class Afspiller {
   public void setLydkilde(Lydkilde lydkilde) {
     if (App.udvikling) App.kortToast("setLydkilde:\n" + lydkilde);
     this.lydkilde = lydkilde;
-    lydUrl = lydkilde.findBedsteStream(false).url;
 
 
     if ((afspillerstatus == Status.SPILLER) || (afspillerstatus == Status.FORBINDER)) {

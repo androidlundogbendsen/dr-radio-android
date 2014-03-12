@@ -113,7 +113,7 @@ public class Kanalvalg_v2_frag extends Basisfragment implements AdapterView.OnIt
       // Sæt åbne/luk-ikon for P4 og højttalerikon for kanal
       if (position == p4indeks) {
         sætP4åbnLukIkon(ikon);
-      } else if (DRData.instans.aktuelKanal.kode.equals(kanalkode)) {
+      } else if (DRData.instans.afspiller.getLydkilde().kanal().kode.equals(kanalkode)) {
         ikon.setImageResource(R.drawable.kanalvalg_spiller);
         ikon.blindetekst = "Spiller nu";
       } else ikon.setVisibility(View.INVISIBLE);
@@ -192,7 +192,6 @@ public class Kanalvalg_v2_frag extends Basisfragment implements AdapterView.OnIt
     }
     App.prefs.edit().putString(App.FORETRUKKEN_KANAL, kanalkode).commit();
     DRData.instans.afspiller.setLydkilde(kanal);
-    DRData.instans.aktuelKanal = kanal;
 
     FragmentManager fragmentManager = getFragmentManager();
     fragmentManager.beginTransaction().replace(R.id.indhold_frag, new Kanaler_frag()).commit();

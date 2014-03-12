@@ -76,7 +76,6 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
   @Override
   public void run() {
     Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
-    if (lydkilde == null) lydkilde = DRData.instans.aktuelKanal;
     Kanal k = lydkilde.kanal();
     Status status = DRData.instans.afspiller.getAfspillerstatus();
     boolean live = lydkilde.erStreaming() && status != Status.STOPPET;

@@ -504,13 +504,11 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
             @Override
             public void onClick(DialogInterface dialog, int which) {
               kanal.streams.get(which).foretrukken = true;
-              DRData.instans.aktuelKanal = kanal;
               DRData.instans.afspiller.setLydkilde(kanal);
               DRData.instans.afspiller.startAfspilning();
             }
           }).show();
     } else {
-      DRData.instans.aktuelKanal = kanal;
       DRData.instans.afspiller.setLydkilde(kanal);
       DRData.instans.afspiller.startAfspilning();
     }

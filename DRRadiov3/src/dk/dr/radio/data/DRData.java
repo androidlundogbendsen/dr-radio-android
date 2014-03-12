@@ -42,7 +42,7 @@ public class DRData {
 
   public Grunddata grunddata;
   public Afspiller afspiller;
-  public Kanal aktuelKanal;
+//  public Kanal aktuelKanal;
 
   public HashMap<String, Udsendelse> udsendelseFraSlug = new HashMap<String, Udsendelse>();
   public HashMap<String, Programserie> programserieFraSlug = new HashMap<String, Programserie>();

@@ -358,13 +358,11 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
               @Override
               public void onClick(DialogInterface dialog, int which) {
                 udsendelse.streams.get(which).foretrukken = true;
-                DRData.instans.aktuelKanal = kanal;
                 DRData.instans.afspiller.setLydkilde(udsendelse);
                 DRData.instans.afspiller.startAfspilning();
               }
             }).show();
       } else {
-        DRData.instans.aktuelKanal = kanal;
         DRData.instans.afspiller.setLydkilde(udsendelse);
         DRData.instans.afspiller.startAfspilning();
       }
