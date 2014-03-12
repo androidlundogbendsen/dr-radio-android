@@ -40,6 +40,18 @@ function geoip_longitude()    { return '12.5833'; }
 function geoip_postal_code()  { return ''; }
 function geoip_area_code()    { return ''; }
 function geoip_metro_code()   { return ''; }
+
+
+eller, hvis regionen er ukendt:
+    function geoip_country_name() { return 'Denmark'; }
+    function geoip_city()         { return ''; }
+    function geoip_region()       { return ''; }
+    function geoip_region_name()  { return ''; }
+    function geoip_latitude()     { return '56.0000'; }
+    function geoip_longitude()    { return '10.0000'; }
+    function geoip_postal_code()  { return ''; }
+    function geoip_area_code()    { return ''; }
+    function geoip_metro_code()   { return ''; }
      */
 
     for (String l : str.split("\n")) {
@@ -52,6 +64,11 @@ function geoip_metro_code()   { return ''; }
       }
     }
     if (lat == 0 || lon == 0) return null;
+    if (lat == 56 && lon == 10) {
+      Log.d("Ukendt sted");
+      //lat = 55.6667; lon = 12.5833;
+      return null; // prøv igen senere
+    }
 
     Log.d("p4Kanalnavn lat=" + lat + " lon=" + lon);
 
