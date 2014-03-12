@@ -17,7 +17,7 @@
             android:layout_width="60dp"
             android:layout_height="44dp"
             android:scaleType="center"
-            android:id="@+id/start_stop_pauseknap"
+            android:id="@+id/startStopKnap"
             android:src="@drawable/afspiller_spil"
             />
 
@@ -32,7 +32,7 @@
 
 
     <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0px"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginLeft="8dp"

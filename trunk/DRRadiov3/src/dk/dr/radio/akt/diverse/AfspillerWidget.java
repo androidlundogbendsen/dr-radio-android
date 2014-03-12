@@ -25,7 +25,6 @@ import android.appwidget.AppWidgetProvider;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -86,75 +85,67 @@ public class AfspillerWidget extends AppWidgetProvider {
   public static RemoteViews lavRemoteViews(boolean låseskærm, boolean notifikation) {
 
 
-    RemoteViews remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspillerwidget_binh);
-
-    Intent startStopI = new Intent(App.instans, AfspillerReciever.class);
-    PendingIntent pi = PendingIntent.getBroadcast(App.instans, 0, startStopI, PendingIntent.FLAG_UPDATE_CURRENT);
-    remoteViews.setOnClickPendingIntent(R.id.startStopKnap, pi);
-
-
-    Intent åbnAktivitetI = new Intent(App.instans, Hovedaktivitet.class);
-    PendingIntent pi2 = PendingIntent.getActivity(App.instans, 0, åbnAktivitetI, PendingIntent.FLAG_UPDATE_CURRENT);
-    remoteViews.setOnClickPendingIntent(R.id.yderstelayout, pi2);
-
-
-    if (DRData.instans != null) {
-      Resources res = App.instans.getResources();
-      //String kanalkode = DRData.instans.aktuelKanal.kode;
-      // tjek om der er et billede i 'drawable' med det navn filnavn
-
-      //int id = res.getIdentifier("kanal_" + kanalkode.toLowerCase(), "drawable", App.instans.getPackageName());
-      int id = DRData.instans.afspiller.getLydkilde().kanal().kanallogo_resid;
-
-
-      if (id != 0) {
-        // Element med billede
-        remoteViews.setViewVisibility(R.id.kanalnavn, View.VISIBLE/*.GONE*/);
-        remoteViews.setViewVisibility(R.id.billede, View.VISIBLE);
-        remoteViews.setImageViewResource(R.id.billede, id);
-      } else {
-        // Element uden billede
-        remoteViews.setViewVisibility(R.id.kanalnavn, View.VISIBLE);
-        remoteViews.setViewVisibility(R.id.billede, View.VISIBLE/*.GONE*/);
-        //remoteViews.setTextViewText(R.id.kanalnavn, DRData.instans.aktuelKanal.navn);
-      }
-
-      Lydkilde lk = DRData.instans.afspiller.getLydkilde();
-      Log.d("Binh: kanal overskrift: " + lk);
-      if (lk == null) {
-      } else if (lk instanceof Udsendelse) {
-        remoteViews.setTextViewText(R.id.udsendelseTitel, lk.getUdsendelse().titel);
-        remoteViews.setTextViewText(R.id.kanalnavn, lk.kanal().navn);
-      } else if (lk instanceof Kanal) {
-        remoteViews.setTextViewText(R.id.udsendelseTitel, lk.kanal().navn);
-        remoteViews.setTextViewText(R.id.kanalnavn, lk.kanal().navn);
-      }
-
-
-      Status afspillerstatus = DRData.instans.afspiller.getAfspillerstatus();
-
-      if (afspillerstatus == Status.STOPPET) {
-        remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.widget_afspilning_start);
-        remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
-      } else if (afspillerstatus == Status.FORBINDER) {
-        remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.widget_afspilning_stop);
-        remoteViews.setViewVisibility(R.id.progressBar, View.VISIBLE);
-      } else if (afspillerstatus == Status.SPILLER) {
-        remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.widget_afspilning_stop);
-        remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
-      } else {
-        Log.e(new Exception("Ugyldig afspillerstatus: " + afspillerstatus));
-        remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.kanalvalg_minus);
-        remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
-      }
+    RemoteViews remoteViews;
+    if (notifikation || låseskærm) {
+      remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation);
     } else {
-      // Ingen instans eller service oprettet - dvs afspiller kører ikke
-      remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.widget_afspilning_start);
-      remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
-      remoteViews.setViewVisibility(R.id.kanalnavn, View.GONE);
-      remoteViews.setViewVisibility(R.id.billede, View.GONE);
-      // Vis P3 i mangel af info om valgt kanal??
-      //remoteViews.setImageViewResource(R.id.billede, R.drawable.kanal_p3);
+      remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_levendeikon);
+    }
+
+    PendingIntent startStopPI = PendingIntent.getBroadcast(App.instans, 0, new Intent(App.instans, AfspillerReciever.class), PendingIntent.FLAG_UPDATE_CURRENT);
+    remoteViews.setOnClickPendingIntent(R.id.startStopKnap, startStopPI);
+
+
+    PendingIntent åbnAktivitetPI = PendingIntent.getActivity(App.instans, 0, new Intent(App.instans, Hovedaktivitet.class), PendingIntent.FLAG_UPDATE_CURRENT);
+    remoteViews.setOnClickPendingIntent(R.id.yderstelayout, åbnAktivitetPI);
+
+    /*
+    int id = DRData.instans.afspiller.getLydkilde().kanal().kanallogo_resid;
+
+    if (id != 0) {
+      // Element med billede
+      remoteViews.setViewVisibility(R.id.billede, View.VISIBLE);
+      remoteViews.setImageViewResource(R.id.billede, id);
+    } else {
+      // Element uden billede
+      remoteViews.setViewVisibility(R.id.kanalnavn, View.VISIBLE);
+      //remoteViews.setTextViewText(R.id.kanalnavn, DRData.instans.aktuelKanal.navn);
+    }
+    */
+
+    Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
+    Kanal k = lydkilde.kanal();
+    Status status = DRData.instans.afspiller.getAfspillerstatus();
+    //boolean live =  && status != Status.STOPPET;
+    if (lydkilde.erStreaming()) {
+      remoteViews.setTextViewText(R.id.titel, k.navn + " Live");
+    } else {
+      Udsendelse udsendelse = lydkilde.getUdsendelse();
+      remoteViews.setTextViewText(R.id.titel, udsendelse == null ? k.navn : udsendelse.titel);
+    }
+
+
+    Status afspillerstatus = DRData.instans.afspiller.getAfspillerstatus();
+    switch (status) {
+      case STOPPET:
+        remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_spil);
+        remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
+        remoteViews.setTextViewText(R.id.metainformation, k.navn);
+        //metainformation.setTextColor(getResources().getColor(R.color.grå40));
+        break;
+      case FORBINDER:
+        remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_pause);
+        remoteViews.setViewVisibility(R.id.progressBar, View.VISIBLE);
+        int fpct = DRData.instans.afspiller.getForbinderProcent();
+        //metainformation.setTextColor(getResources().getColor(R.color.blå));
+        remoteViews.setTextViewText(R.id.metainformation, "Forbinder " + (fpct > 0 ? fpct : ""));
+        break;
+      case SPILLER:
+        remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_pause);
+        remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
+        //metainformation.setTextColor(getResources().getColor(R.color.blå));
+        remoteViews.setTextViewText(R.id.metainformation, k.navn);
+        break;
     }
     return remoteViews;
   }

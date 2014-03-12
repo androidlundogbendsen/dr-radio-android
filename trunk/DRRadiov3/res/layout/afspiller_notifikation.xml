@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/yderstelayout"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="2dip"
+              android:layout_marginTop="2dip"
+              android:background="@color/grå70"
+              android:orientation="vertical">
+
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@color/grå70"
+            android:orientation="horizontal">
+
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:scaleType="center"
+                android:src="@drawable/dr_logo"/>
+
+        <LinearLayout
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginLeft="8dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+            <TextView
+                    android:id="@+id/titel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="P3 Live"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textStyle="bold"
+                    android:maxLines="2"
+                    tools:ignore="HardcodedText"
+                    android:textColor="@color/hvid"/>
+
+            <TextView
+                    android:id="@+id/metainformation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="P3"
+                    android:singleLine="true"
+                    tools:ignore="HardcodedText"
+                    android:textColor="@color/sort"/>
+
+        </LinearLayout>
+
+
+        <!-- fix for http://code.google.com/p/android/issues/detail?id=11040 :
+          ProgressBar's synlighed kan ikke ændres direkte, man er nødt til at indlejre den
+          i f.eks. et LinearLayout -->
+        <LinearLayout
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="16dip"
+                android:visibility="visible"
+                >
+
+            <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+        </LinearLayout>
+
+
+        <ImageView
+                android:id="@+id/luk"
+                android:layout_width="60dp"
+                android:layout_height="44dp"
+                android:layout_gravity="right"
+                android:scaleType="center"
+                    android:src="@drawable/dri_luk_hvid"/>
+    </LinearLayout>
+
+    <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/grå70"
+            android:gravity="center_vertical|right"
+            android:orientation="horizontal"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp">
+
+
+        <ImageView
+                android:id="@+id/startStopKnap"
+                android:layout_width="60dp"
+                android:layout_height="44dp"
+                android:layout_gravity="right"
+                android:scaleType="center"
+                android:src="@drawable/afspiller_spil"/>
+
+    </LinearLayout>
+
+</LinearLayout>

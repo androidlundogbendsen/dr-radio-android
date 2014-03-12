@@ -29,7 +29,7 @@ import dk.dr.radio.v3.R;
 
 public class Afspiller_frag extends Basisfragment implements Runnable, View.OnClickListener {
   private AQuery aq;
-  private ImageView start_stop_pauseknap;
+  private ImageView startStopKnap;
   private ProgressBar progressbar;
   private TextView titel;
   private TextView metainformation;
@@ -45,7 +45,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     View rod = inflater.inflate(R.layout.afspiller_lille_frag, container, false);
     aq = new AQuery(rod);
     rod.setOnClickListener(this); // Ved klik på baggrunden skal kanalforside eller aktuel udsendelsesside vises
-    start_stop_pauseknap = aq.id(R.id.start_stop_pauseknap).clicked(this).getImageView();
+    startStopKnap = aq.id(R.id.startStopKnap).clicked(this).getImageView();
     progressbar = aq.id(R.id.progressBar).getProgressBar();
     titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
     metainformation = aq.id(R.id.metainformation).typeface(App.skrift_gibson).getTextView();
@@ -54,18 +54,18 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     run(); // opdatér views
     // Knappen er meget vigtig, og har derfor et udvidet område hvor det også er den man rammer
     // se http://developer.android.com/reference/android/view/TouchDelegate.html
-    start_stop_pauseknap.post(new Runnable() {
+    startStopKnap.post(new Runnable() {
       @Override
       public void run() {
         Rect r = new Rect();
-        start_stop_pauseknap.getHitRect(r);
+        startStopKnap.getHitRect(r);
         int udvid = getResources().getDimensionPixelSize(R.dimen.hørknap_udvidet_klikområde);
         r.top -= udvid;
         r.bottom += udvid;
         r.right += udvid;
         r.left -= udvid;
         Log.d("hør_udvidet_klikområde=" + r);
-        ((View) start_stop_pauseknap.getParent()).setTouchDelegate(new TouchDelegate(r, start_stop_pauseknap));
+        ((View) startStopKnap.getParent()).setTouchDelegate(new TouchDelegate(r, startStopKnap));
       }
     });
 
@@ -93,20 +93,20 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     }
     switch (status) {
       case STOPPET:
-        start_stop_pauseknap.setImageResource(R.drawable.afspiller_spil);
+        startStopKnap.setImageResource(R.drawable.afspiller_spil);
         progressbar.setVisibility(View.INVISIBLE);
         metainformation.setText(k.navn);
         metainformation.setTextColor(getResources().getColor(R.color.grå40));
         break;
       case FORBINDER:
-        start_stop_pauseknap.setImageResource(R.drawable.afspiller_pause);
+        startStopKnap.setImageResource(R.drawable.afspiller_pause);
         progressbar.setVisibility(View.VISIBLE);
         int fpct = DRData.instans.afspiller.getForbinderProcent();
         metainformation.setTextColor(getResources().getColor(R.color.blå));
         metainformation.setText("Forbinder " + (fpct > 0 ? fpct : ""));
         break;
       case SPILLER:
-        start_stop_pauseknap.setImageResource(R.drawable.afspiller_pause);
+        startStopKnap.setImageResource(R.drawable.afspiller_pause);
         progressbar.setVisibility(View.INVISIBLE);
         metainformation.setTextColor(getResources().getColor(R.color.blå));
         metainformation.setText(k.navn);
@@ -116,20 +116,20 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     titel.setText(udsendelse == null ? "" : udsendelse.titel);
     switch (status) {
       case STOPPET:
-        start_stop_pauseknap.setImageResource(R.drawable.afspiller_spil);
+        startStopKnap.setImageResource(R.drawable.afspiller_spil);
         progressbar.setVisibility(View.INVISIBLE);
         metainformation.setTextColor(getResources().getColor(R.color.grå40));
         metainformation.setText(k.navn + (live ? " LIVE" : ""));
         break;
       case FORBINDER:
-        start_stop_pauseknap.setImageResource(R.drawable.afspiller_pause);
+        startStopKnap.setImageResource(R.drawable.afspiller_pause);
         progressbar.setVisibility(View.VISIBLE);
         int fpct = DRData.instans.afspiller.getForbinderProcent();
         metainformation.setTextColor(getResources().getColor(R.color.blå));
         metainformation.setText("Forbinder " + (fpct > 0 ? fpct : ""));
         break;
       case SPILLER:
-        start_stop_pauseknap.setImageResource(R.drawable.afspiller_pause);
+        startStopKnap.setImageResource(R.drawable.afspiller_pause);
         progressbar.setVisibility(View.INVISIBLE);
         metainformation.setTextColor(getResources().getColor(R.color.blå));
         metainformation.setText(k.navn + (live ? " LIVE" : ""));
@@ -140,7 +140,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
 
   @Override
   public void onClick(View v) {
-    if (v == start_stop_pauseknap) {
+    if (v == startStopKnap) {
       if (DRData.instans.afspiller.afspillerstatus == Status.STOPPET) {
         DRData.instans.afspiller.startAfspilning();
       } else {
