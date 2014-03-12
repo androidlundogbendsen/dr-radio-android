@@ -552,6 +552,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       Fragment f = new Udsendelse_frag();
       f.setArguments(new Intent()
           .putExtra(P_kode, kanal.kode)
+          .putExtra(Udsendelse_frag.VIS_SPILLER_NU, true)
           .putExtra(DRJson.Slug.name(), u.slug).getExtras());
       //Forkert: getFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
       //Forkert: getChildFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();

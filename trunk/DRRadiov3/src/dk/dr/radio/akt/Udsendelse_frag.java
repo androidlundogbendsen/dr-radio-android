@@ -54,12 +54,14 @@ import dk.dr.radio.v3.R;
 public class Udsendelse_frag extends Basisfragment implements View.OnClickListener, AdapterView.OnItemClickListener {
 
   public static final String BLOKER_VIDERE_NAVIGERING = "BLOKER_VIDERE_NAVIGERING";
+  public static final String VIS_SPILLER_NU = "VIS_SPILLER_NU";
   private ListView listView;
   private Kanal kanal;
   protected View rod;
   private Udsendelse udsendelse;
   private ArrayList<Playlisteelement> playliste = new ArrayList<Playlisteelement>();
   private boolean blokerVidereNavigering;
+  private boolean visSpillerNu;
 
   @Override
   public String toString() {
@@ -72,6 +74,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     udsendelse = DRData.instans.udsendelseFraSlug.get(getArguments().getString(DRJson.Slug.name()));
     if (kanal == null) kanal = udsendelse.kanal();
     blokerVidereNavigering = getArguments().getBoolean(BLOKER_VIDERE_NAVIGERING);
+    visSpillerNu = getArguments().getBoolean(VIS_SPILLER_NU, false);
 
     Log.d("onCreateView " + this);
 
@@ -199,7 +202,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     public int getItemViewType(int position) {
       if (position == 0) return TOP;
       if (position > playliste.size()) return ALLE_UDS;
-      if (position == 1) return SPILLER_NU;
+      if (visSpillerNu && position == 1) return SPILLER_NU;
       return SPILLEDE;
     }
 
@@ -236,8 +239,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           aq.id(R.id.info).typeface(App.skrift_gibson);
           vh.titel.setText(udsendelse.titel.toUpperCase());
           aq.id(R.id.logo).image(kanal.kanallogo_resid);
-          aq.id(R.id.titel2).typeface(App.skrift_gibson_fed).text(udsendelse.titel);
-          aq.id(R.id.dato).typeface(App.skrift_gibson).text(" - " + DRJson.datoformat.format(udsendelse.startTid));
+          aq.id(R.id.titel_og_tid).typeface(App.skrift_gibson).text(lavFedSkriftTil(udsendelse.titel + " - " + DRJson.datoformat.format(udsendelse.startTid), udsendelse.titel.length()));
 
           aq.id(R.id.beskrivelse).text(udsendelse.beskrivelse).typeface(App.skrift_georgia);
           Linkify.addLinks(aq.getTextView(), Linkify.ALL);

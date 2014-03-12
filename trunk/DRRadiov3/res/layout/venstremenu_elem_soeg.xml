@@ -8,15 +8,12 @@
         android:descendantFocusability="blocksDescendants"
         android:layout_height="wrap_content">
 
-    <EditText
-            android:layout_width="0px"
+    <TextView
+            android:text="Søg efter program"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:singleLine="true"
-            android:focusable="false"
-            android:clickable="false"
-            android:id="@+id/tekst"
-            android:hint="Søg efter program"/>
+            android:textStyle="bold"
+            android:id="@+id/tekst"/>
 
     <ImageView
             android:layout_width="wrap_content"
