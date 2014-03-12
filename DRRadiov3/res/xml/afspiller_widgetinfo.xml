@@ -2,12 +2,11 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
                     android:minWidth="40dp"
                     android:minHeight="40dp"
-
                     android:updatePeriodMillis="86400000"
-                    android:initialLayout="@layout/afspillerwidget_binh"
+                    android:initialLayout="@layout/afspiller_levendeikon"
                     android:resizeMode="horizontal|vertical"
                     android:widgetCategory="keyguard|home_screen"
-                    android:initialKeyguardLayout="@layout/afspillerwidget_binh"
+                    android:initialKeyguardLayout="@layout/afspiller_levendeikon"
         >
     <!--
                     android:minHeight="72dip"
