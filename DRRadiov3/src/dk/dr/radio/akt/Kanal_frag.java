@@ -337,7 +337,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
               r.bottom += udvid;
               r.right += udvid;
               r.left -= udvid;
-              Log.d("hør_udvidet_klikområde=" + r);
+              //Log.d("hør_udvidet_klikområde=" + r);
               ((View) hør.getParent()).setTouchDelegate(new TouchDelegate(r, hør));
             }
           });

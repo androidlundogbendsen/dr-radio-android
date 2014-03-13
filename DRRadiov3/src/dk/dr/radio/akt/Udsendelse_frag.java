@@ -12,7 +12,6 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.Html;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -269,7 +268,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       } else if (type == SPILLER_NU || type == SPILLEDE) {
         Playlisteelement u = playliste.get(position - 1);
         vh.playlisteelement = u;
-        vh.titel.setText(Html.fromHtml("<b>" + u.titel + "</b> &nbsp; | &nbsp;" + u.kunstner));
+        //vh.titel.setText(Html.fromHtml("<b>" + u.titel + "</b> &nbsp; | &nbsp;" + u.kunstner));
+        vh.titel.setText(lavFedSkriftTil(u.titel + " | " + u.kunstner, u.titel.length()));
         vh.startid.setText(u.startTidKl);
         if (type == SPILLER_NU) {
           ImageView im = aq.id(R.id.senest_spillet_kunstnerbillede).getImageView();

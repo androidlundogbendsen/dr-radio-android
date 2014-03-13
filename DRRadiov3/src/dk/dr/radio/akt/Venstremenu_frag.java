@@ -58,14 +58,14 @@ public class Venstremenu_frag extends Fragment implements Runnable {
    */
   private ActionBarDrawerToggle mDrawerToggle;
 
-  private DrawerLayout mDrawerLayout;
-  private ListView navListView;
-  private View mFragmentContainerView;
+  private DrawerLayout drawerLayout;
+  private ListView listView;
+  private View fragmentContainerView;
 
   private int mCurrentSelectedPosition = 0;
   private boolean mFromSavedInstanceState;
   private boolean mUserLearnedDrawer;
-  private Navigation_adapter navAdapter;
+  private VenstremenuAdapter venstremenuAdapter;
 
 
   @Override
@@ -89,7 +89,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       mFromSavedInstanceState = true;
     } else {
       mCurrentSelectedPosition = 2; //9;
-      navAdapter.vælgMenu(getActivity(), mCurrentSelectedPosition);
+      venstremenuAdapter.vælgMenu(getActivity(), mCurrentSelectedPosition);
     }
 
     // Select either the default item (0) or the last selected item.
@@ -98,19 +98,19 @@ public class Venstremenu_frag extends Fragment implements Runnable {
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    navListView = (ListView) inflater.inflate(R.layout.venstremenu_frag, container, false);
-    navListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    listView = (ListView) inflater.inflate(R.layout.venstremenu_frag, container, false);
+    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        selectItem(position);
-        navAdapter.vælgMenu(getActivity(), position);
+        boolean skift = venstremenuAdapter.vælgMenu(getActivity(), position);
+        if (skift) selectItem(position);
       }
     });
-    navAdapter = new Navigation_adapter(getActionBar().getThemedContext());
-    navListView.setAdapter(navAdapter);
-    navListView.setItemChecked(mCurrentSelectedPosition, true);
+    venstremenuAdapter = new VenstremenuAdapter(getActionBar().getThemedContext());
+    listView.setAdapter(venstremenuAdapter);
+    listView.setItemChecked(mCurrentSelectedPosition, true);
     DRData.instans.favoritter.observatører.add(this);
-    return navListView;
+    return listView;
   }
 
   @Override
@@ -120,30 +120,30 @@ public class Venstremenu_frag extends Fragment implements Runnable {
   }
 
   /**
-   * Kaldes når favoritter opdateres
+   * Kaldes når favoritter opdateres - så skal listens tekst opdateres
    */
   @Override
   public void run() {
-    navAdapter.notifyDataSetChanged();
+    venstremenuAdapter.notifyDataSetChanged();
   }
 
 
   public boolean isDrawerOpen() {
-    return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
+    return drawerLayout != null && drawerLayout.isDrawerOpen(fragmentContainerView);
   }
 
   /**
    * Users of this fragment must call this method to set up the navigation drawer interactions.
    *
-   * @param fragmentId   The android:id of this fragment in its activity's layout.
+   * @param fragmentContainerViewId   The android:id of this fragment in its activity's layout.
    * @param drawerLayout The DrawerLayout containing this fragment's UI.
    */
-  public void setUp(int fragmentId, DrawerLayout drawerLayout) {
-    mFragmentContainerView = getActivity().findViewById(fragmentId);
-    mDrawerLayout = drawerLayout;
+  public void setUp(int fragmentContainerViewId, DrawerLayout drawerLayout) {
+    fragmentContainerView = getActivity().findViewById(fragmentContainerViewId);
+    this.drawerLayout = drawerLayout;
 
     // set a custom shadow that overlays the main content when the drawer opens
-    mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+    this.drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
     // set up the drawer's list view with items and click listener
 
     ActionBar actionBar = getActionBar();
@@ -153,7 +153,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     // ActionBarDrawerToggle ties together the the proper interactions
     // between the navigation drawer and the action bar app icon.
     mDrawerToggle = new ActionBarDrawerToggle(getActivity(),                    /* host Activity */
-        mDrawerLayout,                    /* DrawerLayout object */
+        Venstremenu_frag.this.drawerLayout,                    /* DrawerLayout object */
         R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
         R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
         R.string.navigation_drawer_close  /* "close drawer" description for accessibility */) {
@@ -189,27 +189,27 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
     // per the navigation drawer design guidelines.
     if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
-      mDrawerLayout.openDrawer(mFragmentContainerView);
+      this.drawerLayout.openDrawer(fragmentContainerView);
     }
 
     // Defer code dependent on restoration of previous instance state.
-    mDrawerLayout.post(new Runnable() {
+    this.drawerLayout.post(new Runnable() {
       @Override
       public void run() {
         mDrawerToggle.syncState();
       }
     });
 
-    mDrawerLayout.setDrawerListener(mDrawerToggle);
+    this.drawerLayout.setDrawerListener(mDrawerToggle);
   }
 
   private void selectItem(int position) {
     mCurrentSelectedPosition = position;
-    if (navListView != null) {
-      navListView.setItemChecked(position, true);
+    if (listView != null) {
+      listView.setItemChecked(position, true);
     }
-    if (mDrawerLayout != null) {
-      mDrawerLayout.closeDrawer(mFragmentContainerView);
+    if (drawerLayout != null) {
+      drawerLayout.closeDrawer(fragmentContainerView);
     }
   }
 
@@ -230,7 +230,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     // If the drawer is open, show the global app actions in the action bar. See also
     // showGlobalContextActionBar, which controls the top-left area of the action bar.
-    if (mDrawerLayout != null && isDrawerOpen()) {
+    if (drawerLayout != null && isDrawerOpen()) {
       inflater.inflate(R.menu.venstremenu, menu);
       showGlobalContextActionBar();
     }
@@ -263,16 +263,16 @@ public class Venstremenu_frag extends Fragment implements Runnable {
   }
 
   public void visMenu() {
-    mDrawerLayout.openDrawer(mFragmentContainerView);
-    navListView.requestFocus();
+    drawerLayout.openDrawer(fragmentContainerView);
+    listView.requestFocus();
   }
 
   public void skjulMenu() {
-    mDrawerLayout.closeDrawer(mFragmentContainerView);
+    drawerLayout.closeDrawer(fragmentContainerView);
   }
 
 
-  class Navigation_adapter extends Basisadapter {
+  class VenstremenuAdapter extends Basisadapter {
     ArrayList<MenuElement> elem = new ArrayList<MenuElement>();
 
     @Override
@@ -358,7 +358,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       tilføj(layout, null, null);
     }
 
-    public Navigation_adapter(final Context themedContext) {
+    public VenstremenuAdapter(final Context themedContext) {
       layoutInflater = (LayoutInflater) themedContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       boolean gib = App.prefs.getBoolean("brugGibsonIVenstremenu", true);
 
@@ -408,13 +408,14 @@ public class Venstremenu_frag extends Fragment implements Runnable {
         @Override
         public void run() {
           startActivity(new Intent(getActivity(), Indstillinger_akt.class));
-          /*
+          /* Virker desværre ikke, da der ikke er en PreferenceFragment i kompatibilitetsbiblioteket
           App.kortToast("okxxxx");
           if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
             App.kortToast("ok");
-            FragmentManager fm = getFragmentManager();
-              fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            getActivity().getFragmentManager().beginTransaction().replace(R.id.indhold_frag, new Indstillinger_frag()).commit();
+            getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            FragmentActivity akt = getActivity();
+            ((ViewGroup) akt.findViewById(R.id.indhold_frag)).removeAllViews();
+            akt.getFragmentManager().beginTransaction().replace(R.id.indhold_frag, new Indstillinger_frag_skrald()).commit();
           } else {
             startActivity(new Intent(getActivity(),Indstillinger_akt.class));
           }
@@ -431,12 +432,17 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     }
 
 
-    public void vælgMenu(FragmentActivity akt, int position) {
+    /**
+     * @param akt
+     * @param position
+     * @return om der skal skiftes menupunkt (det skal der ikke hvis det er en Runnable, dvs en ny aktivet blev startet)
+     */
+    public boolean vælgMenu(FragmentActivity akt, int position) {
       MenuElement e = elem.get(position);
 
       if (e.runnable != null) {
         e.runnable.run();
-        return;
+        return false;
       }
 
 
@@ -446,7 +452,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       } catch (Exception e1) {
         Log.rapporterFejl(e1);
       }
-
+      return true;
     }
   }
 }
