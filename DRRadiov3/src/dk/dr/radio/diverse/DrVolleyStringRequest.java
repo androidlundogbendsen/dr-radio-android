@@ -1,6 +1,7 @@
 package dk.dr.radio.diverse;
 
 import com.android.volley.Cache;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -28,6 +29,7 @@ public class DrVolleyStringRequest extends StringRequest {
       Log.rapporterFejl(e);
       listener.onErrorResponse(new VolleyError(e));
     }
+    setRetryPolicy(new DefaultRetryPolicy(3 * 1000, 3, 1.5f));
   }
 
   @Override
