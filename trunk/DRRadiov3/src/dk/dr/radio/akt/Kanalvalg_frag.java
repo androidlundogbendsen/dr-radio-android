@@ -38,7 +38,7 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.ImageViewTilBlinde;
 import dk.dr.radio.v3.R;
 
-public class Kanalvalg_v2_frag extends Basisfragment implements AdapterView.OnItemClickListener {
+public class Kanalvalg_frag extends Basisfragment implements AdapterView.OnItemClickListener {
 
   private KanalAdapter kanaladapter;
   private View[] listeElementer;

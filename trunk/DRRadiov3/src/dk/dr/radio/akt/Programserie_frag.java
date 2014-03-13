@@ -14,16 +14,11 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.androidquery.AQuery;
 
-import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -36,10 +31,12 @@ import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Programserie;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.DrVolleyResonseListener;
+import dk.dr.radio.diverse.DrVolleyStringRequest;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-public class Programserie_frag2 extends Basisfragment implements AdapterView.OnItemClickListener, View.OnClickListener {
+public class Programserie_frag extends Basisfragment implements AdapterView.OnItemClickListener, View.OnClickListener {
 
   private ListView listView;
   private String programserieSlug;
@@ -48,7 +45,6 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
   private View rod;
   private int antalHentedeSendeplaner;
   private CheckBox favorit;
-  private static final String TAG = "Programserie_frag";
 
   @Override
   public String toString() {
@@ -86,14 +82,50 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
     // svarer til v3_programserie.json
     // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true
     // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true&includeStreams=true
-    String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
+    final String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
     Log.d("XXX url=" + url);
 
+    Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
+      @Override
+      public void fikSvar(String json, boolean fraCache) throws Exception {
+        Log.d("fikSvar(" + fraCache + " " + url);
+        if (json != null && !"null".equals(json)) try {
+          JSONObject data = new JSONObject(json);
+          if (offset == 0) {
+            programserie = DRJson.parsProgramserie(data);
+            programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+            DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
+          } else if (fraCache) {
+            return; // TODO brug cache til de følgende udsendelser (lidt kompliceret)
+          } else {
+            ArrayList<Udsendelse> flereUdsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+            programserie.udsendelser.addAll(flereUdsendelser);
+          }
+          adapter.notifyDataSetChanged();
+          return;
+        } catch (Exception e) {
+          Log.e(e);
+        }
+        new AQuery(rod).id(R.id.tom).text("netværksfejl");
+      }
+
+      @Override
+      protected void fikFejl(VolleyError error) {
+        App.sætErIGang(false);
+        Log.e("error.networkResponse=" + error.networkResponse, error);
+        //Log.d(error.networkResponse.headers);
+        App.kortToast("Netværksfejl, prøv igen senere");
+      }
+    }).setTag(this).setRetryPolicy(new DefaultRetryPolicy(3 * 1000, 3, 1.5f));
+    App.volleyRequestQueue.add(req);
+
+/*
 
     Cache.Entry response = App.volleyRequestQueue.getCache().get(url);
     Log.d("XXXXXXXXXXXXXX Cache.Entry  e=" + response);
+
     if (offset == 0 && response != null) try {
-      JSONObject data = new JSONObject(new String(response.data, HTTP.UTF_8));
+      JSONObject data = new JSONObject(new String(response.data, HttpHeaderParser.parseCharset(response.responseHeaders)));
       programserie = DRJson.parsProgramserie(data);
       programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
       DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
@@ -102,6 +134,66 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
     }
 
     App.sætErIGang(true);
+    Request<?> req = new DrVolleyStringRequest(url,
+        new Response.Listener<String>() {
+          @Override
+          public void onResponse(String json) {
+            App.sætErIGang(false);
+            if (json != null && !"null".equals(json)) try {
+              JSONObject data = new JSONObject(json);
+              if (offset == 0) {
+                programserie = DRJson.parsProgramserie(data);
+                programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+                DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
+              } else {
+                ArrayList<Udsendelse> flereUdsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+                programserie.udsendelser.addAll(flereUdsendelser);
+              }
+              adapter.notifyDataSetChanged();
+              return;
+            } catch (Exception e) {
+              Log.e(e);
+            }
+            new AQuery(rod).id(R.id.tom).text("netværksfejl");
+          }
+        }, new Response.ErrorListener() {
+      @Override
+      public void onErrorResponse(VolleyError error) {
+        App.sætErIGang(false);
+        Log.e("error.networkResponse=" + error.networkResponse, error);
+        //Log.d(error.networkResponse.headers);
+        App.kortToast("Netværksfejl, prøv igen senere");
+      }
+    }
+    ).setTag(this).setRetryPolicy(new DefaultRetryPolicy(3 * 1000, 3, 1.5f));
+    App.volleyRequestQueue.add(req);
+
+    new AQuery(App.instans).ajax(url, String.class, 1 * 60 * 60 * 1000, new AjaxCallback<String>() {
+      @Override
+      public void callback(String url, String json, AjaxStatus status) {
+        App.sætErIGang(false);
+        Log.d("XXX url " + url + "   status=" + status.getCode());
+        if (json != null && !"null".equals(json)) try {
+          JSONObject data = new JSONObject(json);
+          if (offset == 0) {
+            programserie = DRJson.parsProgramserie(data);
+            programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+            DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
+          } else {
+            ArrayList<Udsendelse> flereUdsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+            programserie.udsendelser.addAll(flereUdsendelser);
+          }
+          adapter.notifyDataSetChanged();
+          return;
+        } catch (Exception e) {
+          Log.d("Parsefejl: " + e + " for json=" + json);
+          e.printStackTrace();
+        }
+        new AQuery(rod).id(R.id.tom).text(url + "   status=" + status.getCode() + "\njson=" + json);
+      }
+    });
+
+
     Request<?> req = new JsonObjectRequest(url, null,
         new Response.Listener<JSONObject>() {
           @Override
@@ -141,34 +233,8 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
       }
     }.setTag(this).setRetryPolicy(new DefaultRetryPolicy(3 * 1000, 3, 1.5f));
     App.volleyRequestQueue.add(req);
-
-/*
-
-    new AQuery(App.instans).ajax(url, String.class, 1 * 60 * 60 * 1000, new AjaxCallback<String>() {
-      @Override
-      public void callback(String url, String json, AjaxStatus status) {
-        App.sætErIGang(false);
-        Log.d("XXX url " + url + "   status=" + status.getCode());
-        if (json != null && !"null".equals(json)) try {
-          JSONObject data = new JSONObject(json);
-          if (offset == 0) {
-            programserie = DRJson.parsProgramserie(data);
-            programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
-            DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
-          } else {
-            ArrayList<Udsendelse> flereUdsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
-            programserie.udsendelser.addAll(flereUdsendelser);
-          }
-          adapter.notifyDataSetChanged();
-          return;
-        } catch (Exception e) {
-          Log.d("Parsefejl: " + e + " for json=" + json);
-          e.printStackTrace();
-        }
-        new AQuery(rod).id(R.id.tom).text(url + "   status=" + status.getCode() + "\njson=" + json);
-      }
-    });
 */
+
   }
 
   @Override
@@ -250,7 +316,7 @@ public class Programserie_frag2 extends Basisfragment implements AdapterView.OnI
           aq.id(R.id.alle_udsendelser).typeface(App.skrift_gibson).text(lavFedSkriftTil(tekst + " (" + programserie.antalUdsendelser + ")", tekst.length()));
           aq.id(R.id.beskrivelse).text(programserie.beskrivelse).typeface(App.skrift_georgia);
           Linkify.addLinks(aq.getTextView(), Linkify.ALL);
-          favorit = aq.id(R.id.favorit).clicked(Programserie_frag2.this).getCheckBox();
+          favorit = aq.id(R.id.favorit).clicked(Programserie_frag.this).getCheckBox();
           favorit.setChecked(DRData.instans.favoritter.erFavorit(programserieSlug));
 
         } else { // if (type == UDSENDELSE eller TIDLIGERE) {
