@@ -1,9 +1,13 @@
 package dk.dr.radio.akt;
 
+//import android.R;
+import android.R.anim;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,6 +39,7 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
+
 public class Soeg_efter_program_frag extends Basisfragment implements
 		OnClickListener, AdapterView.OnItemClickListener {
 
@@ -42,23 +47,26 @@ public class Soeg_efter_program_frag extends Basisfragment implements
 	private EditText søgFelt;
 	private ArrayList<Udsendelse> liste = new ArrayList<Udsendelse>();
 	protected View rod;
-	private AQuery søgKnap;
+	private ImageView søgKnap;
 	private String url;
 	private TextView tomStr;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		rod = inflater.inflate(
-				R.layout.soeg_efter_program_frag/* kanal_frag */, container,
+		rod = inflater.inflate(R.layout.soeg_efter_program_frag/* kanal_frag */, container,
 				false);
 
-    AQuery aq = new AQuery(rod);
-    listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
-    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).text("Søg efter program").getView());
+		AQuery aq = new AQuery(rod);
+		listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this)
+				.getListView();
+		listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson_fed)
+				.text("Søg efter program").getView());
 
-		søgFelt = aq.id(R.id.soegFelt).getEditText();	
-		søgKnap = aq.id(R.id.soegKnap).clicked(this); 
+		søgFelt = aq.id(R.id.soegFelt).getEditText();
+		søgFelt.setBackgroundResource(android.R.drawable.editbox_background_normal);
+		søgKnap = aq.id(R.id.soegKnap).clicked(this).getImageView();
+		søgKnap.setBackgroundResource(R.drawable.knap_graa_bg);
 		tomStr = aq.id(R.id.tom).getTextView();
 
 		udvikling_checkDrSkrifter(rod, this + " rod");
@@ -149,11 +157,16 @@ public class Soeg_efter_program_frag extends Basisfragment implements
 			// Opdatér viewholderens data
 			vh.lydkilde = lydkilde;
 
-			SimpleDateFormat ft = new SimpleDateFormat("HH:mm:ss");
+			SimpleDateFormat ft = new SimpleDateFormat("HH:mm");
 			Date startTid = lydkilde.getUdsendelse().startTid;
-
+			
 			vh.startid.setText("" + ft.format(startTid));
-			vh.titel.setText(lydkilde.getUdsendelse().titel);
+
+			String titel = lydkilde.getUdsendelse().titel;
+			Spannable spannable = new SpannableString(titel);
+			spannable.setSpan(App.skrift_gibson_fed_span, 0, titel.length(),
+					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			vh.titel.setText(spannable);
 
 			// vh.titel.setText(lydkilde.titel);
 			// a.id(R.id.stiplet_linje).visibility(position ==
@@ -190,14 +203,14 @@ public class Soeg_efter_program_frag extends Basisfragment implements
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		
+	
 		søgStr = søgFelt.getText().toString();
-		
+
 		url = "http://www.dr.dk/tjenester/mu-apps/search/programs?q=" + søgStr
 				+ "&type=radio";
-		
-		new AQuery(App.instans).ajax(url, String.class,
-				1 * 60 * 60 * 1000, new AjaxCallback<String>() {
+
+		new AQuery(App.instans).ajax(url, String.class, 1 * 60 * 60 * 1000,
+				new AjaxCallback<String>() {
 					@Override
 					public void callback(String url, String json,
 							AjaxStatus status) {
@@ -208,19 +221,17 @@ public class Soeg_efter_program_frag extends Basisfragment implements
 							try {
 								JSONArray data = new JSONArray(json);
 								Log.d("data = " + data.toString(2));
-								liste = DRJson
-										.parseUdsendelserForProgramserie(
-												data, DRData.instans);
+								liste = DRJson.parseUdsendelserForProgramserie(
+										data, DRData.instans);
 								Log.d("liste = " + liste);
 								adapter.notifyDataSetChanged();
-								
-								if (liste.size() == 0){
+
+								if (liste.size() == 0) {
 									tomStr.setText("Søgning giver ingen resultat!");
 								}
 								return;
 							} catch (Exception e) {
-								Log.d("Parsefejl: " + e + " for json="
-										+ json);
+								Log.d("Parsefejl: " + e + " for json=" + json);
 								e.printStackTrace();
 							}
 						new AQuery(rod).id(R.id.tom).text(
