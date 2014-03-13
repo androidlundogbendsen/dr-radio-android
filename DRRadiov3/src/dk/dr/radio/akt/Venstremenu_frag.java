@@ -28,7 +28,6 @@ import java.util.ArrayList;
 
 import dk.dr.radio.akt.diverse.Basisadapter;
 import dk.dr.radio.akt.diverse.Basisfragment;
-import dk.dr.radio.akt.diverse.Hentede_udsendelser_frag;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
@@ -135,8 +134,8 @@ public class Venstremenu_frag extends Fragment implements Runnable {
   /**
    * Users of this fragment must call this method to set up the navigation drawer interactions.
    *
-   * @param fragmentContainerViewId   The android:id of this fragment in its activity's layout.
-   * @param drawerLayout The DrawerLayout containing this fragment's UI.
+   * @param fragmentContainerViewId The android:id of this fragment in its activity's layout.
+   * @param drawerLayout            The DrawerLayout containing this fragment's UI.
    */
   public void setUp(int fragmentContainerViewId, DrawerLayout drawerLayout) {
     fragmentContainerView = getActivity().findViewById(fragmentContainerViewId);
@@ -399,7 +398,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       */
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
-      tilføj(R.layout.venstremenu_elem_overskrift, Kanalvalg_v2_frag.class);
+      tilføj(R.layout.venstremenu_elem_overskrift, Kanalvalg_frag.class);
       aq.id(R.id.tekst).text("Live kanaler");
       if (gib) aq.typeface(App.skrift_gibson_fed);
 

@@ -383,7 +383,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
     if (adapter.getItemViewType(position) == ALLE_UDS) {
 
-      Fragment f = new Programserie_frag2();
+      Fragment f = new Programserie_frag();
       f.setArguments(new Intent()
           .putExtra(P_kode, kanal.kode)
           .putExtra(DRJson.Slug.name(), udsendelse.slug)

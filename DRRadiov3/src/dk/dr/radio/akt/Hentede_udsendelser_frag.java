@@ -1,4 +1,4 @@
-package dk.dr.radio.akt.diverse;
+package dk.dr.radio.akt;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +16,8 @@ import com.androidquery.AQuery;
 
 import java.util.ArrayList;
 
-import dk.dr.radio.akt.Udsendelse_frag;
+import dk.dr.radio.akt.diverse.Basisadapter;
+import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.diverse.App;

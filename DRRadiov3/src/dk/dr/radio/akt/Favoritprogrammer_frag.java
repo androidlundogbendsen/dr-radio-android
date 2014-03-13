@@ -140,7 +140,7 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
     Object obj = liste.get(position);
     if (obj instanceof Programserie) {
       Programserie programserie = (Programserie) obj;
-      Fragment f = new Programserie_frag2();
+      Fragment f = new Programserie_frag();
       f.setArguments(new Intent()
           .putExtra(DRJson.SeriesSlug.name(), programserie.slug).getExtras());
       getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
