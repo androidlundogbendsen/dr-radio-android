@@ -24,9 +24,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
 import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxCallback;
-import com.androidquery.callback.AjaxStatus;
 import com.flurry.android.FlurryAgent;
 
 import org.json.JSONArray;
@@ -47,6 +47,8 @@ import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Playlisteelement;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.DrVolleyResonseListener;
+import dk.dr.radio.diverse.DrVolleyStringRequest;
 import dk.dr.radio.diverse.FilCache;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
@@ -123,19 +125,15 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   private void hentSendeplanForDag(final AQuery aq, Date dag, final boolean idag) {
     final String dato = apiDatoFormat.format(dag);
 
-    String url = kanal.getUdsendelserUrl() + "/date/" + dato;
+    final String url = kanal.getUdsendelserUrl() + "/date/" + dato;
     Log.d("hentSendeplanForDag url=" + url);
 
-
-    // Cache værdier i en time
-    App.sætErIGang(true);
-    aq.ajax(url, String.class, 1000 * 60 * 60, new AjaxCallback<String>() {
+    Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
       @Override
-      public void callback(String url1, String json, AjaxStatus status) {
-        App.sætErIGang(false);
-        Log.d("hentSendeplanForDag url " + url1 + "   status=" + status.getCode());
+      public void fikSvar(String json, boolean fraCache) throws Exception {
+        Log.d("fikSvar(" + fraCache + " " + url);
+        Log.d("hentSendeplanForDag url " + url);
         if (json != null && !"null".equals(json)) try {
-
           if (idag) {
             kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json), kanal, DRData.instans), dato);
             opdaterListe();
@@ -161,9 +159,17 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         } catch (Exception e) {
           Log.rapporterFejl(e);
         }
-        aq.id(R.id.tom).text(url1 + "   status=" + status.getCode() + "\njson=" + json);
+        new AQuery(rod).id(R.id.tom).text("netværksfejl");
       }
-    });
+
+      @Override
+      protected void fikFejl(VolleyError error) {
+        Log.e("error.networkResponse=" + error.networkResponse, error);
+        //Log.d(error.networkResponse.headers);
+        App.kortToast("Netværksfejl, prøv igen senere");
+      }
+    }).setTag(this);
+    App.volleyRequestQueue.add(req);
   }
 
   public void scrollTilAktuelUdsendelse() {
@@ -412,15 +418,12 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       // optimering - brug kun final i enkelte tilfælde. Final forårsager at variabler lægges i heap i stedet for stakken) at garbage collectoren skal køre fordi final
       final Udsendelse u2 = u;
       final AQuery aq2 = aq;
-      String url = kanal.getPlaylisteUrl(u); // http://www.dr.dk/tjenester/mu-apps/playlist/monte-carlo-352/p3
+      final String url = kanal.getPlaylisteUrl(u); // http://www.dr.dk/tjenester/mu-apps/playlist/monte-carlo-352/p3
       Log.d("Henter playliste " + url);
-      App.sætErIGang(true);
-      // før aq.ajax(url, String.class, 1 * 60 * 60 * 1000, men det er p.t. nødvendigt at spørge hele tiden da vi kun får op til lige nu
-      aq.ajax(url, String.class, 15 * 1000, new AjaxCallback<String>() {
+      Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
         @Override
-        public void callback(String url, String json, AjaxStatus status) {
-          App.sætErIGang(false);
-          Log.d(kanal.kode + " opdaterSenestSpillet url " + url + "   status=" + status.getCode());
+        public void fikSvar(String json, boolean fraCache) throws Exception {
+          Log.d(kanal.kode + " opdaterSenestSpillet url " + url);
           if (json != null && !"null".equals(json)) try {
             u2.playliste = DRJson.parsePlayliste(new JSONArray(json));
             Log.d(kanal.kode + " parsePlayliste gav " + u2.playliste.size() + " elemener");
@@ -432,7 +435,14 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           }
           aq2.id(R.id.senest_spillet_container).gone();
         }
-      });
+
+        @Override
+        protected void fikFejl(VolleyError error) {
+          Log.e("error.networkResponse=" + error.networkResponse, error);
+          aq2.id(R.id.senest_spillet_container).gone();
+        }
+      }).setTag(this);
+      App.volleyRequestQueue.add(req);
       return;
     }
 

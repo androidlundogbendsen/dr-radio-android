@@ -14,7 +14,6 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.androidquery.AQuery;
@@ -111,12 +110,11 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
 
       @Override
       protected void fikFejl(VolleyError error) {
-        App.sætErIGang(false);
         Log.e("error.networkResponse=" + error.networkResponse, error);
         //Log.d(error.networkResponse.headers);
         App.kortToast("Netværksfejl, prøv igen senere");
       }
-    }).setTag(this).setRetryPolicy(new DefaultRetryPolicy(3 * 1000, 3, 1.5f));
+    }).setTag(this);
     App.volleyRequestQueue.add(req);
 
 /*
