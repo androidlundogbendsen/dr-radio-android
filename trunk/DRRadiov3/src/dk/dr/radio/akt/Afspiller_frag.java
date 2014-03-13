@@ -64,7 +64,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         r.bottom += udvid;
         r.right += udvid;
         r.left -= udvid;
-        Log.d("hør_udvidet_klikområde=" + r);
+        //Log.d("hør_udvidet_klikområde=" + r);
         ((View) startStopKnap.getParent()).setTouchDelegate(new TouchDelegate(r, startStopKnap));
       }
     });

@@ -22,10 +22,10 @@ public class Hovedaktivitet extends Basisaktivitet {
     //ActionBar actionBar = getSupportActionBar();
     //actionBar.setDisplayShowTitleEnabled(false);
 
-    venstremenuFrag = (Venstremenu_frag) getSupportFragmentManager().findFragmentById(R.id.navigation_frag);
+    venstremenuFrag = (Venstremenu_frag) getSupportFragmentManager().findFragmentById(R.id.venstremenu_frag);
 
     // Set up the drawer.
-    venstremenuFrag.setUp(R.id.navigation_frag, (DrawerLayout) findViewById(R.id.drawer_layout));
+    venstremenuFrag.setUp(R.id.venstremenu_frag, (DrawerLayout) findViewById(R.id.drawer_layout));
 
     if (savedInstanceState == null) {
       FragmentManager fragmentManager = getSupportFragmentManager();
