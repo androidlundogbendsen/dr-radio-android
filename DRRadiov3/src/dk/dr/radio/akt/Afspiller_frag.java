@@ -54,12 +54,12 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     run(); // opdatér views
     // Knappen er meget vigtig, og har derfor et udvidet område hvor det også er den man rammer
     // se http://developer.android.com/reference/android/view/TouchDelegate.html
+    final int udvid = getResources().getDimensionPixelSize(R.dimen.hørknap_udvidet_klikområde);
     startStopKnap.post(new Runnable() {
       @Override
       public void run() {
         Rect r = new Rect();
         startStopKnap.getHitRect(r);
-        int udvid = getResources().getDimensionPixelSize(R.dimen.hørknap_udvidet_klikområde);
         r.top -= udvid;
         r.bottom += udvid;
         r.right += udvid;
