@@ -102,7 +102,7 @@ public class Grunddata {
   }
 
 
-  public void hentSupplerendeDataBg() {
+  public void hentSupplerendeDataBg_KUN_TIL_UDVIKLING() {
     for (Kanal k : kanaler)
       try {
         String url = k.getStreamsUrl();

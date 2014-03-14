@@ -44,6 +44,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
@@ -52,6 +53,7 @@ import com.android.volley.toolbox.Volley;
 import com.bugsense.trace.BugSenseHandler;
 
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -59,12 +61,13 @@ import java.io.FileOutputStream;
 import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.akt.diverse.Basisaktivitet;
 import dk.dr.radio.data.DRData;
+import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Diverse;
 import dk.dr.radio.data.Grunddata;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.v3.R;
 
-public class App extends Application {
+public class App extends Application implements Runnable {
   public static final String P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING = "P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING";
   public static final String P4_FORETRUKKEN_AF_BRUGER = "P4_FORETRUKKEN_AF_BRUGER";
   public static final String FORETRUKKEN_KANAL = "FORETRUKKEN_kanal";
@@ -163,47 +166,37 @@ public class App extends Application {
 
 
     try {
-      final DRData i = DRData.instans = new DRData();
-      i.grunddata = new Grunddata(); //.parseAndroidStamdata(Diverse.læsStreng(getResources().openRawResource(R.raw.stamdata1_android_v3_01)));
-      i.grunddata.parseFællesGrunddata(Diverse.læsStreng(getResources().openRawResource(R.raw.grunddata)));
+      DRData.instans = new DRData();
+      DRData.instans.grunddata = new Grunddata();
+      DRData.instans.grunddata.parseFællesGrunddata(Diverse.læsStreng(getResources().openRawResource(R.raw.grunddata)));
 
       String kanalkode = prefs.getString(FORETRUKKEN_KANAL, null);
-      Kanal aktuelKanal = i.grunddata.kanalFraKode.get(kanalkode);
-      if (aktuelKanal == null) aktuelKanal = i.grunddata.forvalgtKanal;
+      Kanal aktuelKanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
+      if (aktuelKanal == null) aktuelKanal = DRData.instans.grunddata.forvalgtKanal;
 
       DRData.instans.afspiller = new Afspiller();
       DRData.instans.afspiller.setLydkilde(aktuelKanal);
 
       String pn = App.instans.getPackageName();
       Resources res = App.instans.getResources();
-      for (Kanal k : i.grunddata.kanaler) {
+      for (final Kanal k : DRData.instans.grunddata.kanaler) {
         k.kanallogo_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase().replace('ø', 'o').replace('å', 'a'), "drawable", pn);
+        //i.grunddata.hentSupplerendeDataBg_KUN_TIL_UDVIKLING();
       }
+
 
       IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
       registerReceiver(netværk, filter);
       netværk.onReceive(this, null); // Få opdateret netværksstatus
       //langToast("xxxx "+App.udvikling);
 
-      if (netværk.erOnline()) {
-        new AsyncTask() {
-          @Override
-          protected Object doInBackground(Object[] params) {
-            try {
-              i.grunddata.hentSupplerendeDataBg();
-              if (prefs.getString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, null) == null) {
-                String p4kanal = P4Stedplacering.findP4KanalnavnFraIP();
-                if (App.udvikling) App.langToast("p4kanal: " + p4kanal);
-                if (p4kanal != null) prefs.edit().putString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, p4kanal).commit();
-              }
-            } catch (Exception e) {
-              e.printStackTrace();
-            }
-
-            return null;
-          }
-        }.execute();
+      if (erOnline()) {
+        run(); // Initialisér onlinedata
+      } else {
+        netværk.observatører.add(this); // Vent på vi kommer online og lav så et tjek
       }
+
+
 
 
       /*
@@ -245,6 +238,60 @@ public class App extends Application {
     skrift_gibson_fed_span = new EgenTypefaceSpan("Gibson fed", App.skrift_gibson_fed);
 
     DRData.instans.favoritter.startOpdaterAntalNyeUdsendelser();
+  }
+
+  /**
+   * ONLINEINITIALISERING
+   */
+  public void run() {
+    boolean færdig = true;
+    // Tidligere hentSupplerendeDataBg
+    if (DRData.instans.grunddata.kanalFraSlug.size() < DRData.instans.grunddata.kanaler.size()) {
+      færdig = false;
+      Log.d("ONLINEINITIALISERING"
+          + " kanalFraSlug.size()=" + DRData.instans.grunddata.kanalFraSlug.size()
+          + " kanaler.size()=" + DRData.instans.grunddata.kanaler.size());
+
+      for (final Kanal k : DRData.instans.grunddata.kanaler) {
+        Request<?> req = new DrVolleyStringRequest(k.getStreamsUrl(), new DrVolleyResonseListener() {
+          @Override
+          public void fikSvar(String json, boolean fraCache) throws Exception {
+            JSONObject o = new JSONObject(json);
+            k.slug = o.getString(DRJson.Slug.name());
+            DRData.instans.grunddata.kanalFraSlug.put(k.slug, k);
+            k.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
+            Log.d("hentSupplerendeDataBg " + k.kode + " fraCache=" + fraCache + " => " + k.slug + " k.lydUrl=" + k.streams);
+          }
+        }) {
+          public Priority getPriority() {
+            return Priority.HIGH;
+          }
+        };
+        App.volleyRequestQueue.add(req);
+      }
+    }
+
+    if (prefs.getString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, null) == null) {
+      {
+        færdig = false;
+        new AsyncTask() {
+          @Override
+          protected Object doInBackground(Object[] params) {
+            try {
+              String p4kanal = P4Stedplacering.findP4KanalnavnFraIP();
+              if (App.udvikling) App.langToast("p4kanal: " + p4kanal);
+              if (p4kanal != null) prefs.edit().putString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, p4kanal).commit();
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
+            return null;
+          }
+        }.execute();
+      }
+    }
+    if (færdig) {
+      netværk.observatører.remove(this); // Hold ikke mere øje med om vi kommer online
+    }
   }
 
 

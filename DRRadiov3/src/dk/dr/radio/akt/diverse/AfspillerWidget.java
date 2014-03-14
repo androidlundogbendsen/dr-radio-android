@@ -87,13 +87,17 @@ public class AfspillerWidget extends AppWidgetProvider {
 
     RemoteViews remoteViews;
     if (notifikation || låseskærm) {
-      if (Build.VERSION.SDK_INT < 16) {
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
         // Kun lille layout på en linje understøttes
         remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_lille);
       } else {
         if (låseskærm) {
           remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_laase_skaerm);
         } else {
+          // A notification's big view appears only when the notification is expanded,
+          // which happens when the notification is at the top of the notification drawer,
+          // or when the user expands the notification with a gesture.
+          // Expanded notifications are available starting with Android 4.1.
           remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_stor1);
         }
       }

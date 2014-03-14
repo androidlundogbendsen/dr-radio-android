@@ -19,9 +19,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxCallback;
-import com.androidquery.callback.AjaxStatus;
 
 import org.json.JSONArray;
 
@@ -36,6 +35,8 @@ import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.DrVolleyResonseListener;
+import dk.dr.radio.diverse.DrVolleyStringRequest;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
@@ -77,39 +78,14 @@ public class Soeg_efter_program_frag extends Basisfragment implements
 		 * http://www.dr.dk/tjenester/mu-apps/search/series?q=monte&type=radio
 		 * vil kun returnere radio serier
 		 */
-    // String url =
-    // "http://www.dr.dk/tjenester/mu-apps/search/programs?q=monte&type=radio";
-
-    // url = "http://www.dr.dk/tjenester/mu-apps/search/programs?q=" +
-    // søgStr + "&type=radio" ;
-    // new AQuery(App.instans).ajax(url, String.class, 1 * 60 * 60 * 1000,
-    // new AjaxCallback<String>() {
-    // @Override
-    // public void callback(String url, String json,
-    // AjaxStatus status) {
-    // App.sætErIGang(false);
-    // Log.d("XXX url " + url + "   status="
-    // + status.getCode());
-    // if (json != null && !"null".equals(json))
-    // try {
-    // JSONArray data = new JSONArray(json);
-    // Log.d("data = " + data.toString(2));
-    // liste = DRJson.parseUdsendelserForProgramserie(
-    // data, DRData.instans);
-    // Log.d("liste = " + liste);
-    // adapter.notifyDataSetChanged();
-    // return;
-    // } catch (Exception e) {
-    // Log.d("Parsefejl: " + e + " for json=" + json);
-    // e.printStackTrace();
-    // }
-    // new AQuery(rod).id(R.id.tom).text(
-    // url + "   status=" + status.getCode()
-    // + "\njson=" + json);
-    // }
-    // });
 
     return rod;
+  }
+
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    App.volleyRequestQueue.cancelAll(this);
   }
 
   /**
@@ -202,46 +178,34 @@ public class Soeg_efter_program_frag extends Basisfragment implements
 
   @Override
   public void onClick(View v) {
-    // TODO Auto-generated method stub
 
     søgStr = søgFelt.getText().toString();
 
-    url = "http://www.dr.dk/tjenester/mu-apps/search/programs?q=" + søgStr
-        + "&type=radio";
+    url = "http://www.dr.dk/tjenester/mu-apps/search/programs?q=" + søgStr + "&type=radio";
 
-    App.sætErIGang(true);
-    new AQuery(App.instans).ajax(url, String.class, 1 * 60 * 60 * 1000,
-        new AjaxCallback<String>() {
-          @Override
-          public void callback(String url, String json,
-                               AjaxStatus status) {
-            App.sætErIGang(false);
-            Log.d("XXX url " + url + "   status="
-                + status.getCode());
-            if (json != null && !"null".equals(json))
-              try {
-                JSONArray data = new JSONArray(json);
-                Log.d("data = " + data.toString(2));
-                liste = DRJson.parseUdsendelserForProgramserie(
-                    data, DRData.instans);
-                Log.d("liste = " + liste);
-                adapter.notifyDataSetChanged();
+    Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
+      @Override
+      public void fikSvar(String json, boolean fraCache) throws Exception {
+        if (json != null && !"null".equals(json))
+          try {
+            JSONArray data = new JSONArray(json);
+            Log.d("data = " + data.toString(2));
+            liste = DRJson.parseUdsendelserForProgramserie(data, DRData.instans);
+            Log.d("liste = " + liste);
+            adapter.notifyDataSetChanged();
 
-                if (liste.size() == 0) {
-                  tomStr.setText("Søgning giver ingen resultat!");
-                }
-                return;
-              } catch (Exception e) {
-                Log.d("Parsefejl: " + e + " for json=" + json);
-                e.printStackTrace();
-              }
-            new AQuery(rod).id(R.id.tom).text(
-                url + "   status=" + status.getCode()
-                    + "\njson=" + json);
-            Log.d("Slut søgning!");
+            if (liste.size() == 0) {
+              tomStr.setText("Søgning giver ingen resultat!");
+            }
+            return;
+          } catch (Exception e) {
+            Log.d("Parsefejl: " + e + " for json=" + json);
+            e.printStackTrace();
           }
-
-        });
+        Log.d("Slut søgning!");
+      }
+    }).setTag(this);
+    App.volleyRequestQueue.add(req);
 
   }
 }
