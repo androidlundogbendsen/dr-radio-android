@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:descendantFocusability="blocksDescendants"
-        android:background="@drawable/knap_graa_bg"
+        android:background="@drawable/knap_graa10_bg"
         android:padding="16dp"
         android:orientation="horizontal">
 

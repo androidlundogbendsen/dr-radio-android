@@ -9,21 +9,23 @@
     <Button
             android:id="@+id/playliste"
             android:layout_width="0px"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             android:layout_weight="1"
+            android:layout_margin="1dp"
             android:layout_marginLeft="16dp"
             android:text="PLAYLISTE"
             android:textColor="@color/hvid"
-            android:background="@color/sort"/>
+            android:background="@drawable/knap_sort_bg"/>
 
     <Button
             android:id="@+id/info"
             android:layout_width="0px"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             android:layout_weight="1"
+            android:layout_margin="1dp"
             android:layout_marginRight="16dp"
             android:text="INFO"
             android:textColor="@color/hvid"
-            android:background="@color/grå40"/>
+            android:background="@drawable/knap_graa40_bg"/>
 
 </LinearLayout>

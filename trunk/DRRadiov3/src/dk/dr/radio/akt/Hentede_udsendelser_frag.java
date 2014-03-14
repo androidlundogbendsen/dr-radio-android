@@ -77,7 +77,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
       AQuery a;
       Lydkilde lydkilde = liste.get(position);
       if (v == null) {
-        v = getLayoutInflater(null).inflate(R.layout.udsendelse_elem2_tid_titel_kunstner, parent, false);
+        v = getLayoutInflater(null).inflate(R.layout.udsendelse_elem3_tid_titel_kunstner, parent, false);
         vh = new Viewholder();
         a = vh.aq = new AQuery(v);
         vh.startid = a.id(R.id.startid).typeface(App.skrift_gibson).getTextView();

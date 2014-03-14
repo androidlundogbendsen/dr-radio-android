@@ -37,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.akt.diverse.Basisadapter;
@@ -44,6 +45,7 @@ import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Kanal;
+import dk.dr.radio.data.Lydstream;
 import dk.dr.radio.data.Playlisteelement;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
@@ -309,7 +311,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       if (v == null) {
         v = getLayoutInflater(null).inflate(
             type == AKTUEL ? R.layout.kanal_elem_aktuel :        // Visning af den aktuelle udsendelse
-                type == NORMAL ? R.layout.udsendelse_elem2_tid_titel_kunstner   // De andre udsendelser
+                type == NORMAL ? R.layout.udsendelse_elem3_tid_titel_kunstner   // De andre udsendelser
                     : R.layout.kanal_elem_tidligere_senere, parent, false);
         vh = new Viewholder();
         a = vh.aq = new AQuery(v);
@@ -528,11 +530,13 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     if (App.udvikling) App.kortToast("kanal.streams=" + kanal.streams);
     if (App.prefs.getBoolean("manuelStreamvalg", false)) {
       kanal.nulstilForetrukkenStream();
+      final List<Lydstream> lydstreamList = kanal.findBedsteStreams(false);
       new AlertDialog.Builder(getActivity())
-          .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, kanal.findBedsteStreams(false).toArray()), new DialogInterface.OnClickListener() {
+          .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, lydstreamList), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-              kanal.streams.get(which).foretrukken = true;
+              Log.d("which=" + which);
+              lydstreamList.get(which).foretrukken = true;
               DRData.instans.afspiller.setLydkilde(kanal);
               DRData.instans.afspiller.startAfspilning();
             }
