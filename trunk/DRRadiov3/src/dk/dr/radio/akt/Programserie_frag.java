@@ -57,9 +57,9 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     kanal = DRData.instans.grunddata.kanalFraKode.get(getArguments().getString(Kanal_frag.P_kode));
 
     programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
-    if (programserie == null) {
-      hentUdsendelser(0);
-    }
+    //if (programserie == null) {
+    hentUdsendelser(0); // tjek altid for en frisk udgave
+    //}
 
     rod = inflater.inflate(R.layout.kanal_frag, container, false);
     final AQuery aq = new AQuery(rod);
