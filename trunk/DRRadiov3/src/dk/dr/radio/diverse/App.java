@@ -196,7 +196,6 @@ public class App extends Application {
                 if (App.udvikling) App.langToast("p4kanal: " + p4kanal);
                 if (p4kanal != null) prefs.edit().putString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, p4kanal).commit();
               }
-              DRData.instans.favoritter.opdaterAntalNyeUdsendelserBg();
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -245,6 +244,7 @@ public class App extends Application {
     }
     skrift_gibson_fed_span = new EgenTypefaceSpan("Gibson fed", App.skrift_gibson_fed);
 
+    DRData.instans.favoritter.startOpdaterAntalNyeUdsendelser();
   }
 
 
@@ -261,6 +261,12 @@ public class App extends Application {
   public static Activity senesteAktivitetIForgrunden = null;
   private static int erIGang = 0;
 
+  /**
+   * Signalerer over for brugeren at netværskommunikation er påbegyndt eller afsluttet.
+   * Forårsager at det 'drejende hjul' (ProgressBar) vises på den aktivitet der er synlig p.t.
+   *
+   * @param netværkErIGang true for påbegyndt og false for afsluttet.
+   */
   public static void sætErIGang(boolean netværkErIGang) {
     boolean før = erIGang > 0;
     erIGang += netværkErIGang ? 1 : -1;

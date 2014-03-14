@@ -1,8 +1,6 @@
 package dk.dr.radio.data;
 
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxCallback;
-import com.androidquery.callback.AjaxStatus;
+import com.android.volley.Request;
 
 import org.json.JSONObject;
 
@@ -13,6 +11,8 @@ import java.util.Map;
 import java.util.Set;
 
 import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.DrVolleyResonseListener;
+import dk.dr.radio.diverse.DrVolleyStringRequest;
 import dk.dr.radio.diverse.Log;
 
 /**
@@ -87,35 +87,49 @@ public class Favoritter {
   }
 
 
-  public void opdaterAntalNyeUdsendelserBg() {
+  public void startOpdaterAntalNyeUdsendelser() {
     tjekDataOprettet();
-    AQuery aq = new AQuery(App.instans);
-    int antalNyeIAlt = 0;
     for (Map.Entry<String, Integer> e : favoritTilStartnummer.entrySet()) {
-      String programserieSlug = e.getKey();
-      Integer startFraNummer = e.getValue();
+      final String programserieSlug = e.getKey();
+      final Integer startFraNummer = e.getValue();
       int offset = 0;
       String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
-      AjaxCallback<String> cb = new AjaxCallback<String>().url(url).type(String.class).expire(1 * 60 * 60 * 1000);
-      aq.sync(cb);
-      String json = cb.getResult();
-      AjaxStatus status = cb.getStatus();
-      Log.d(this + " url " + url + "   status=" + status.getCode());
-      Programserie programserie = null;
-      if (json != null && !"null".equals(json)) try {
-        JSONObject data = new JSONObject(json);
-        programserie = DRJson.parsProgramserie(data);
-        programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
-        DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
-      } catch (Exception ex) {
-        Log.d("Parsefejl: " + ex + " for json=" + json);
-        ex.printStackTrace();
-      }
-      if (programserie == null) programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
+      Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
+        @Override
+        public void fikSvar(String json, boolean fraCache) throws Exception {
+          Log.d("favoritter fikSvar(" + fraCache + " " + url);
+          Programserie programserie = null;
+          if (json != null && !"null".equals(json)) try {
+            JSONObject data = new JSONObject(json);
+            programserie = DRJson.parsProgramserie(data);
+            programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+            DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
+          } catch (Exception ex) {
+            Log.d("Parsefejl: " + ex + " for json=" + json);
+            ex.printStackTrace();
+          }
+          beregnAntalNyeUdsendelser();
+        }
+      }) {
+        public Priority getPriority() {
+          return Priority.LOW;
+        }
+      };
+      App.volleyRequestQueue.add(req);
+    }
+  }
+
+  private void beregnAntalNyeUdsendelser() {
+    int antalNyeIAlt = 0;
+    for (Map.Entry<String, Integer> e : favoritTilStartnummer.entrySet()) {
+      final String programserieSlug = e.getKey();
+      final Integer startFraNummer = e.getValue();
+      Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
       if (programserie != null) antalNyeIAlt += programserie.antalUdsendelser - startFraNummer;
+      else return; // Mangler info - vent med at opdatere antalNyeUdsendelser
     }
     antalNyeUdsendelser = antalNyeIAlt;
-    for (Runnable r : observatører) App.forgrundstråd.post(r);  // Informér observatører - i forgrundstråden
+    for (Runnable r : observatører) r.run();  // Informér observatører - i forgrundstråden
   }
 
   public Set<String> getProgramserieSlugSæt() {

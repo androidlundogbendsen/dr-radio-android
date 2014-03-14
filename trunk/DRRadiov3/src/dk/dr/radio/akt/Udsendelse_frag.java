@@ -26,9 +26,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
 import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxCallback;
-import com.androidquery.callback.AjaxStatus;
 import com.flurry.android.FlurryAgent;
 
 import org.json.JSONArray;
@@ -47,6 +47,8 @@ import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Playlisteelement;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.DrVolleyResonseListener;
+import dk.dr.radio.diverse.DrVolleyStringRequest;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
@@ -89,26 +91,31 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
 
     if (udsendelse.kanHøres && !streamsErKlar()) {
-      App.sætErIGang(true);
-      aq.ajax(udsendelse.getStreamsUrl(), String.class, 1 * 60 * 1000, new AjaxCallback<String>() {
+      Request<?> req = new DrVolleyStringRequest(udsendelse.getStreamsUrl(), new DrVolleyResonseListener() {
         @Override
-        public void callback(String url, String json, AjaxStatus status) {
-          App.sætErIGang(false);
-          Log.d("XXX udsendelse.getStreamsUrl()= " + url + "   status=" + status.getCode());
+        public void fikSvar(String json, boolean fraCache) throws Exception {
+          Log.d("fikSvar(" + fraCache + " " + url);
           if (json != null && !"null".equals(json)) try {
             JSONObject o = new JSONObject(json);
             udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
             if (streamsErKlar() && DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
               DRData.instans.afspiller.setLydkilde(udsendelse);
             }
-            adapter.notifyDataSetChanged();
-            ActivityCompat.invalidateOptionsMenu(getActivity());
+            adapter.notifyDataSetChanged(); // Opdatér views
+            ActivityCompat.invalidateOptionsMenu(getActivity());// Opdatér ActionBar
           } catch (Exception e) {
             Log.d("Parsefejl: " + e + " for json=" + json);
             e.printStackTrace();
           }
         }
-      });
+
+        @Override
+        protected void fikFejl(VolleyError error) {
+          Log.e("error.networkResponse=" + error.networkResponse, error);
+          App.kortToast("Netværksfejl, prøv igen senere");
+        }
+      }).setTag(this);
+      App.volleyRequestQueue.add(req);
     }
 
     if (streamsErKlar() && DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
@@ -120,12 +127,10 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     } else {
       String url = kanal.getPlaylisteUrl(udsendelse); // http://www.dr.dk/tjenester/mu-apps/playlist/monte-carlo-352/p3
       Log.d("Henter playliste " + url);
-      App.sætErIGang(true);
-      aq.ajax(url, String.class, 1 * 60 * 60 * 1000, new AjaxCallback<String>() {
+      Request<?> req = new DrVolleyStringRequest(udsendelse.getStreamsUrl(), new DrVolleyResonseListener() {
         @Override
-        public void callback(String url, String json, AjaxStatus status) {
-          App.sætErIGang(false);
-          Log.d("XXX url " + url + "   status=" + status.getCode());
+        public void fikSvar(String json, boolean fraCache) throws Exception {
+          Log.d("fikSvar(" + fraCache + " " + url);
           if (json != null && !"null".equals(json)) try {
             udsendelse.playliste = DRJson.parsePlayliste(new JSONArray(json));
             adapter.notifyDataSetChanged();
@@ -134,11 +139,18 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
             e.printStackTrace();
           }
         }
-      });
+      }).setTag(this);
+      App.volleyRequestQueue.add(req);
     }
     udvikling_checkDrSkrifter(rod, this + " rod");
     setHasOptionsMenu(true);
     return rod;
+  }
+
+  @Override
+  public void onDestroyView() {
+    App.volleyRequestQueue.cancelAll(this);
+    super.onDestroyView();
   }
 
   private boolean streamsErKlar() {
