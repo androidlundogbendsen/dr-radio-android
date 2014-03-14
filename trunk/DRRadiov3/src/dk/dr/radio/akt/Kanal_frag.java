@@ -329,13 +329,13 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           a.id(R.id.hør_live).typeface(App.skrift_gibson).clicked(Kanal_frag.this);
           // Knappen er meget vigtig, og har derfor et udvidet område hvor det også er den man rammer
           // se http://developer.android.com/reference/android/view/TouchDelegate.html
+          final int udvid = getResources().getDimensionPixelSize(R.dimen.hørknap_udvidet_klikområde);
           final View hør = a.id(R.id.hør_live).getView();
           hør.post(new Runnable() {
             @Override
             public void run() {
               Rect r = new Rect();
               hør.getHitRect(r);
-              int udvid = getResources().getDimensionPixelSize(R.dimen.hørknap_udvidet_klikområde);
               r.top -= udvid;
               r.bottom += udvid;
               r.right += udvid;
