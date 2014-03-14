@@ -288,8 +288,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           aq.id(R.id.logo).image(kanal.kanallogo_resid);
           aq.id(R.id.titel_og_tid).typeface(App.skrift_gibson).text(lavFedSkriftTil(udsendelse.titel + " - " + DRJson.datoformat.format(udsendelse.startTid), udsendelse.titel.length()));
 
-          aq.id(R.id.beskrivelse).text(udsendelse.beskrivelse).typeface(App.skrift_georgia);
-          Linkify.addLinks(aq.getTextView(), Linkify.ALL);
+          //aq.id(R.id.beskrivelse).text(udsendelse.beskrivelse).typeface(App.skrift_georgia);
+          //Linkify.addLinks(aq.getTextView(), Linkify.ALL);
 
           vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
           vh.titel.setText(udsendelse.titel.toUpperCase());
@@ -298,6 +298,9 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           aq.id(R.id.kan_endnu_ikke_hentes).typeface(App.skrift_gibson);
           if (App.hentning == null) aq.gone(); // Understøttes ikke på Android 2.2
           aq.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
+        } else if (type == INFO) {
+          aq.id(R.id.titel).text(udsendelse.beskrivelse).typeface(App.skrift_georgia);
+          Linkify.addLinks(aq.getTextView(), Linkify.ALL);
         } else if (type == SPILLER_NU || type == SPILLEDE) {
           vh.titel = aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
           aq.id(R.id.hør).visibility(udsendelse.kanHøres ? View.VISIBLE : View.GONE);
