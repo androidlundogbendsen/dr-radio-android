@@ -328,7 +328,6 @@ public class Afspiller {
       // Hvis forbindelsen mistes kommer der en onCompletion() og vi er derfor
       // nødt til at genstarte, medmindre brugeren trykkede stop
       if (afspillerstatus == Status.SPILLER) {
-        Log.d("Genstarter afspilning!");
         mediaPlayer.stop();
         // mediaPlayer.reset();
         // Da mediaPlayer.reset() erfaringsmæssigt kan hænge i dette tilfælde afregistrerer vi
@@ -343,10 +342,14 @@ public class Afspiller {
           }
         }.start();
 
-        mediaPlayer = new MediaPlayer();
-        sætMediaPlayerLytter(mediaPlayer, this); // registrér lyttere på den nye instans
-
-        startAfspilningIntern();
+        if (lydkilde.erStreaming()) {
+          Log.d("Genstarter afspilning!");
+          mediaPlayer = new MediaPlayer();
+          sætMediaPlayerLytter(mediaPlayer, this); // registrér lyttere på den nye instans
+          startAfspilningIntern();
+        } else {
+          opdaterWidgets();
+        }
       }
     }
 

@@ -500,14 +500,10 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   public void onClick(View v) {
     if (v.getId() == R.id.p4_skift_distrikt) {
       rod.findViewById(R.id.p4_vi_gætter_på_dialog).setVisibility(View.GONE);
-      //startActivity(new Intent(getActivity(), Kanalvalg_akt.class));
-
-      //startActivity(new Intent(getActivity(), VisFragment_akt.class)
-      //    .putExtra(VisFragment_akt.KLASSE, KanalerP4_frag.class.getName()));
-
-      //KanalerP4_frag f = new KanalerP4_frag();
-      //FragmentManager fragmentManager = getFragmentManager();
-      //fragmentManager.beginTransaction().replace( R.id.indhold_frag, f).commit();
+      Kanalvalg_frag.p4erÅbnet = true;
+      getActivity().getSupportFragmentManager().beginTransaction()
+          .replace(R.id.indhold_frag, new Kanalvalg_frag())
+          .commit();
 
     } else if (v.getId() == R.id.p4_ok) {
       rod.findViewById(R.id.p4_vi_gætter_på_dialog).setVisibility(View.GONE);
