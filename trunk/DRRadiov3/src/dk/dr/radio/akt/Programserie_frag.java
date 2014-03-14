@@ -105,7 +105,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
         } catch (Exception e) {
           Log.e(e);
         }
-        new AQuery(rod).id(R.id.tom).text("netværksfejl");
+        new AQuery(rod).id(R.id.tom).text("Siden kunne ikke vises");
       }
 
       @Override
