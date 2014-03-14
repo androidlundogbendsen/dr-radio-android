@@ -44,11 +44,33 @@ public class DrVolleyStringRequest extends StringRequest {
     setRetryPolicy(new DefaultRetryPolicy(3 * 1000, 3, 1.5f));
   }
 
+  /**
+   * I fald telefonens ur går forkert kan det ses her - alle HTTP-svar bliver jo stemplet med servertiden
+   */
+  private static long serverkorrektionTilKlienttidMs = 0;
+
+
+  public static long serverCurrentTimeMillis() {
+    return System.currentTimeMillis() + serverkorrektionTilKlienttidMs;
+  }
+
+
   @Override
   protected Response<String> parseNetworkResponse(NetworkResponse response) {
+/*
     Log.d("YYYY servertid " + response.headers.get("Date"));
     Log.d("YYYY servertid " + response.headers.get("Expires"));
     Log.d("YYYY servertid " + response.headers);
+*/
+    long servertid = HttpHeaderParser.parseDateAsEpoch(response.headers.get("Date"));
+    if (servertid > 0) {
+      long serverkorrektionTilKlienttidMs2 = servertid - System.currentTimeMillis();
+      if (Math.abs(serverkorrektionTilKlienttidMs - serverkorrektionTilKlienttidMs2) > 10000) {
+        Log.d("SERVERTID korrigerer tid - serverkorrektionTilKlienttidMs=" + serverkorrektionTilKlienttidMs2);
+        serverkorrektionTilKlienttidMs = serverkorrektionTilKlienttidMs2;
+      }
+    }
+
     return super.parseNetworkResponse(response);
   }
 

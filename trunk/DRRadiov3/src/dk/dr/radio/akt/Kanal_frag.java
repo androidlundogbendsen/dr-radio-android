@@ -49,7 +49,6 @@ import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.DrVolleyResonseListener;
 import dk.dr.radio.diverse.DrVolleyStringRequest;
-import dk.dr.radio.diverse.FilCache;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
@@ -104,7 +103,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).getView());
 
     // Hent sendeplan for den pågældende dag. Døgnskifte sker kl 5, så det kan være dagen før
-    hentSendeplanForDag(aq, new Date(System.currentTimeMillis() - 5 * 60 * 60 * 1000), true);
+    hentSendeplanForDag(aq, new Date(DrVolleyStringRequest.serverCurrentTimeMillis() - 5 * 60 * 60 * 1000), true);
     udvikling_checkDrSkrifter(rod, this + " rod");
     setHasOptionsMenu(true);
     DRData.instans.afspiller.observatører.add(this);
@@ -465,7 +464,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   private void opdaterAktuelUdsendelse(Viewholder vh) {
     try {
       Udsendelse u = vh.udsendelse;
-      long passeret = System.currentTimeMillis() - u.startTid.getTime() + FilCache.serverkorrektionTilKlienttidMs;
+      long passeret = DrVolleyStringRequest.serverCurrentTimeMillis() - u.startTid.getTime();
       long længde = u.slutTid.getTime() - u.startTid.getTime();
       int passeretPct = længde > 0 ? (int) (passeret * 100 / længde) : 0;
       //Log.d(kanal.kode + " passeretPct=" + passeretPct + " af længde=" + længde);
