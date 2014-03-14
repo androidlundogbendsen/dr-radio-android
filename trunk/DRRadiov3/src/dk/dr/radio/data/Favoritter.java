@@ -91,7 +91,6 @@ public class Favoritter {
     tjekDataOprettet();
     for (Map.Entry<String, Integer> e : favoritTilStartnummer.entrySet()) {
       final String programserieSlug = e.getKey();
-      final Integer startFraNummer = e.getValue();
       int offset = 0;
       String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
       Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
@@ -125,8 +124,16 @@ public class Favoritter {
       final String programserieSlug = e.getKey();
       final Integer startFraNummer = e.getValue();
       Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
-      if (programserie != null) antalNyeIAlt += programserie.antalUdsendelser - startFraNummer;
-      else return; // Mangler info - vent med at opdatere antalNyeUdsendelser
+      if (programserie != null) {
+        int nye = programserie.antalUdsendelser - startFraNummer;
+        if (nye < 0) {
+          Log.rapporterFejl(new IllegalStateException("Antal nye favoritter=" + nye + " for " + programserieSlug));
+          e.setValue(programserie.antalUdsendelser);
+          gem();
+          continue;
+        }
+        antalNyeIAlt += nye;
+      } else return; // Mangler info - vent med at opdatere antalNyeUdsendelser
     }
     antalNyeUdsendelser = antalNyeIAlt;
     for (Runnable r : observatører) r.run();  // Informér observatører - i forgrundstråden
