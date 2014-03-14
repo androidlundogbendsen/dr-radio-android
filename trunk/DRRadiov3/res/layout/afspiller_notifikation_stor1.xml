@@ -6,14 +6,12 @@
               android:layout_height="wrap_content"
               android:layout_marginBottom="2dip"
               android:layout_marginTop="2dip"
-              android:background="@color/grå70"
               android:orientation="vertical">
 
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="44dp"
-            android:background="@color/grå70"
             android:orientation="horizontal">
 
         <ImageView
@@ -48,10 +46,27 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="P3"
                     android:singleLine="true"
-                    tools:ignore="HardcodedText"
-                    android:textColor="@color/sort"/>
+                    tools:ignore="HardcodedText"/>
 
         </LinearLayout>
+
+
+        <ImageView
+                android:id="@+id/luk"
+                android:layout_width="60dp"
+                android:layout_height="44dp"
+                android:layout_gravity="right"
+                android:scaleType="center"
+                android:src="@drawable/dri_luk_hvid"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|right"
+            android:orientation="horizontal"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp">
 
 
         <!-- fix for http://code.google.com/p/android/issues/detail?id=11040 :
@@ -70,27 +85,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
+
         </LinearLayout>
-
-
-        <ImageView
-                android:id="@+id/luk"
-                android:layout_width="60dp"
-                android:layout_height="44dp"
-                android:layout_gravity="right"
-                android:scaleType="center"
-                    android:src="@drawable/dri_luk_hvid"/>
-    </LinearLayout>
-
-    <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/grå70"
-            android:gravity="center_vertical|right"
-            android:orientation="horizontal"
-            android:paddingBottom="4dp"
-            android:paddingTop="4dp">
 
 
         <ImageView

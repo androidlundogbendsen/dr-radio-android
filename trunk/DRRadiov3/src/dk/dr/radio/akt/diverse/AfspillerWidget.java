@@ -87,7 +87,16 @@ public class AfspillerWidget extends AppWidgetProvider {
 
     RemoteViews remoteViews;
     if (notifikation || låseskærm) {
-      remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation);
+      if (Build.VERSION.SDK_INT < 16) {
+        // Kun lille layout på en linje understøttes
+        remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_lille);
+      } else {
+        if (låseskærm) {
+          remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_laase_skaerm);
+        } else {
+          remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_stor1);
+        }
+      }
     } else {
       remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_levendeikon);
     }
@@ -98,6 +107,9 @@ public class AfspillerWidget extends AppWidgetProvider {
 
     PendingIntent åbnAktivitetPI = PendingIntent.getActivity(App.instans, 0, new Intent(App.instans, Hovedaktivitet.class), PendingIntent.FLAG_UPDATE_CURRENT);
     remoteViews.setOnClickPendingIntent(R.id.yderstelayout, åbnAktivitetPI);
+
+    PendingIntent lukNotifikation = PendingIntent.getActivity(App.instans, 0, new Intent(App.instans, AfspillerReciever.class), PendingIntent.FLAG_UPDATE_CURRENT);
+    remoteViews.setOnClickPendingIntent(R.id.luk, startStopPI);
 
     /*
     int id = DRData.instans.afspiller.getLydkilde().kanal().kanallogo_resid;
@@ -125,7 +137,6 @@ public class AfspillerWidget extends AppWidgetProvider {
     }
 
 
-    Status afspillerstatus = DRData.instans.afspiller.getAfspillerstatus();
     switch (status) {
       case STOPPET:
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_spil);

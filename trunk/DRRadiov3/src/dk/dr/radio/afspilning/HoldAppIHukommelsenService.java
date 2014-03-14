@@ -17,12 +17,15 @@
  */
 package dk.dr.radio.afspilning;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.widget.RemoteViews;
 
 import dk.dr.radio.akt.Hovedaktivitet;
 import dk.dr.radio.akt.diverse.AfspillerWidget;
@@ -48,28 +51,50 @@ public class HoldAppIHukommelsenService extends Service {
    */
   private static final int NOTIFIKATION_ID = 117;
 
-
+  @SuppressLint("NewApi")
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
-    Log.d("AfspillerService onStartCommand(" + intent + " " + flags + " " + startId);
+    Log.d("AfspillerService onStartCommand(" + intent + " " + flags + " "
+        + startId);
 
-    String kanalNavn = intent == null ? null : intent.getStringExtra("kanalNavn");
-    if (kanalNavn == null) kanalNavn = "";
+    String kanalNavn = intent == null ? null : intent
+        .getStringExtra("kanalNavn");
+    if (kanalNavn == null)
+      kanalNavn = "";
 
-    NotificationCompat.Builder b = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.notifikation_ikon).setContentTitle("DR Radio").setContentText(kanalNavn).setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, Hovedaktivitet.class), 0)).setContent(AfspillerWidget.lavRemoteViews(false, true));
+    NotificationCompat.Builder b = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.notifikation_ikon)
+        .setContentTitle("DR Radio")
+        .setContentText(kanalNavn)
+        .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this,
+            Hovedaktivitet.class), 0));
 
-    //notification = new Notification(R.drawable.notifikation_ikon, null, 0);
-    Notification notification = b.build();
+    // b.setContent(AfspillerWidget.lavRemoteViews(false, true));
 
-    // PendingIntent er til at pege på aktiviteten der skal startes hvis brugeren vælger notifikationen
+    Notification notification; //= b.build();
+
+    RemoteViews remoteViews = AfspillerWidget.lavRemoteViews(false, true);
+
+
+    if ((Build.VERSION.SDK_INT < 16)) {
+      b.setContent(remoteViews);
+      notification = b.build();
+    } else {
+      notification = b.build();
+      notification.bigContentView = remoteViews;
+
+    }
+
+    // PendingIntent er til at pege på aktiviteten der skal startes hvis
+    // brugeren vælger notifikationen
     notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT);
 
-
-    //notification.setLatestEventInfo(this, "Radio", kanalNavn, notification.contentIntent);
+    // notification.setLatestEventInfo(this, "Radio", kanalNavn,
+    // notification.contentIntent);
     startForeground(NOTIFIKATION_ID, notification);
+
+
     return START_STICKY;
   }
-
 
   @Override
   public void onDestroy() {
