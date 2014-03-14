@@ -1,5 +1,6 @@
 package dk.dr.radio.akt;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
@@ -203,17 +204,29 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       R.layout.udsendelse_elem5_vis_hele_playlisten,
       R.layout.udsendelse_elem6_alle_udsendelser};
 
+  boolean visInfo = false;
+  boolean visHelePlaylisten = false;
+
   void bygListe() {
     liste.clear();
     liste.add(TOP);
-    if (udsendelse.playliste != null && udsendelse.playliste.size() > 0) {
-      liste.add(PLAYLISTE_KAPITLER_INFO_OVERSKRIFT);
-      for (int i = 0; i < 4 && i < udsendelse.playliste.size(); i++) {
-        Playlisteelement e = udsendelse.playliste.get(i);
-        e.spillerNu = (i == 0 && visSpillerNu);
-        liste.add(e);
+    if (visInfo) {
+      liste.add(INFO);
+    } else {
+      if (udsendelse.playliste != null && udsendelse.playliste.size() > 0) {
+        liste.add(PLAYLISTE_KAPITLER_INFO_OVERSKRIFT);
+        if (visHelePlaylisten) {
+          if (visSpillerNu) udsendelse.playliste.get(0).spillerNu = true;
+          liste.addAll(udsendelse.playliste);
+        } else {
+          for (int i = 0; i < 4 && i < udsendelse.playliste.size(); i++) {
+            Playlisteelement e = udsendelse.playliste.get(i);
+            e.spillerNu = (i == 0 && visSpillerNu);
+            liste.add(e);
+          }
+          liste.add(VIS_HELE_PLAYLISTEN);
+        }
       }
-      liste.add(VIS_HELE_PLAYLISTEN);
     }
     if (!blokerVidereNavigering) liste.add(ALLE_UDS);
     adapter.notifyDataSetChanged();
@@ -287,6 +300,9 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           vh.titel = aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
           aq.id(R.id.hør).visibility(udsendelse.kanHøres ? View.VISIBLE : View.GONE);
         } else if (type == VIS_HELE_PLAYLISTEN) {
+
+          aq.id(R.id.playliste).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
+          aq.id(R.id.info).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         }
         //aq.id(R.id.højttalerikon).visible().clicked(new UdsendelseClickListener(vh));
       } else {
@@ -313,6 +329,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         } else {
           //v.setBackgroundResource(R.drawable.knap_hvid_bg);
           v.setBackgroundResource(0);
+
         }
       }
       udvikling_checkDrSkrifter(v, this + " position " + position);
@@ -329,12 +346,24 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       hør();
     } else if (v.getId() == R.id.hent) {
       hent();
+    } else if (v.getId() == R.id.info) {
+      visInfo = true;
+      bygListe();
+    } else if (v.getId() == R.id.playliste) {
+      visInfo = false;
+      bygListe();
+    } else if (v.getId() == R.id.vis_hele_playlisten) {
+      visHelePlaylisten = true;
+      bygListe();
     } else {
       App.langToast("fejl");
     }
   }
 
+
   private void del() {
+
+    Log.d("Udsendelse_frag " + "Del med nogen");
     try {
       Intent intent = new Intent(Intent.ACTION_SEND);
       intent.setType("text/plain");
@@ -354,6 +383,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     }
   }
 
+  @SuppressLint("NewApi")
   @TargetApi(Build.VERSION_CODES.GINGERBREAD)
   private void hent() {
     try {
