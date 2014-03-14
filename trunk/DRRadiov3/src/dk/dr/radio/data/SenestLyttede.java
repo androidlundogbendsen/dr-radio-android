@@ -25,4 +25,9 @@ public class SenestLyttede {
     }
   }
 
+  public void registrérLytning(Lydkilde lydkilde) {
+    getListe();
+    liste.remove(lydkilde);
+    liste.add(lydkilde);
+  }
 }
