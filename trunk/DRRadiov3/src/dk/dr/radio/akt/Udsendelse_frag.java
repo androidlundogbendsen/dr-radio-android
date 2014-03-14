@@ -38,6 +38,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.akt.diverse.Basisadapter;
@@ -45,6 +46,7 @@ import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Kanal;
+import dk.dr.radio.data.Lydstream;
 import dk.dr.radio.data.Playlisteelement;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
@@ -300,7 +302,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           vh.titel = aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
           aq.id(R.id.hør).visibility(udsendelse.kanHøres ? View.VISIBLE : View.GONE);
         } else if (type == VIS_HELE_PLAYLISTEN) {
-
+          aq.id(R.id.vis_hele_playlisten).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
+        } else if (type == PLAYLISTE_KAPITLER_INFO_OVERSKRIFT) {
           aq.id(R.id.playliste).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
           aq.id(R.id.info).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         }
@@ -422,11 +425,12 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       }
       if (App.prefs.getBoolean("manuelStreamvalg", false)) {
         udsendelse.nulstilForetrukkenStream();
+        final List<Lydstream> lydstreamList = udsendelse.findBedsteStreams(false);
         new AlertDialog.Builder(getActivity())
-            .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, udsendelse.findBedsteStreams(false).toArray()), new DialogInterface.OnClickListener() {
+            .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, lydstreamList), new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialog, int which) {
-                udsendelse.streams.get(which).foretrukken = true;
+                lydstreamList.get(which).foretrukken = true;
                 DRData.instans.afspiller.setLydkilde(udsendelse);
                 DRData.instans.afspiller.startAfspilning();
               }

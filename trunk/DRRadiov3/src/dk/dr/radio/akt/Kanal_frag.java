@@ -531,7 +531,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, lydstreamList), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-              Log.d("which=" + which);
               lydstreamList.get(which).foretrukken = true;
               DRData.instans.afspiller.setLydkilde(kanal);
               DRData.instans.afspiller.startAfspilning();
