@@ -90,7 +90,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     listView.setOnItemClickListener(this);
 
 
-    if (udsendelse.kanHøres && !streamsErKlar()) {
+//    if (udsendelse.kanHøres && !streamsErKlar())
+    {
       Request<?> req = new DrVolleyStringRequest(udsendelse.getStreamsUrl(), new DrVolleyResonseListener() {
         @Override
         public void fikSvar(String json, boolean fraCache) throws Exception {
@@ -98,7 +99,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           if (json != null && !"null".equals(json)) try {
             JSONObject o = new JSONObject(json);
             udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
-            if (streamsErKlar() && DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
+            udsendelse.kanHøres = streamsErKlar();
+            if (udsendelse.kanHøres && DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
               DRData.instans.afspiller.setLydkilde(udsendelse);
             }
             adapter.notifyDataSetChanged(); // Opdatér views
@@ -118,30 +120,28 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       App.volleyRequestQueue.add(req);
     }
 
-    if (streamsErKlar() && DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
-      DRData.instans.afspiller.setLydkilde(udsendelse);
-    }
+//    if (streamsErKlar() && DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
+//      DRData.instans.afspiller.setLydkilde(udsendelse);
+//    }
 
-    if (udsendelse.playliste != null) {
-      playliste = udsendelse.playliste;
-    } else {
-      String url = kanal.getPlaylisteUrl(udsendelse); // http://www.dr.dk/tjenester/mu-apps/playlist/monte-carlo-352/p3
-      Log.d("Henter playliste " + url);
-      Request<?> req = new DrVolleyStringRequest(udsendelse.getStreamsUrl(), new DrVolleyResonseListener() {
-        @Override
-        public void fikSvar(String json, boolean fraCache) throws Exception {
-          Log.d("fikSvar(" + fraCache + " " + url);
-          if (json != null && !"null".equals(json)) try {
-            udsendelse.playliste = DRJson.parsePlayliste(new JSONArray(json));
+    Request<?> req = new DrVolleyStringRequest(kanal.getPlaylisteUrl(udsendelse), new DrVolleyResonseListener() {
+      @Override
+      public void fikSvar(String json, boolean fraCache) throws Exception {
+        Log.d("fikSvar playliste(" + fraCache + " " + url);
+        if (json != null && !"null".equals(json)) try {
+          udsendelse.playliste = DRJson.parsePlayliste(new JSONArray(json));
+          if (udsendelse.playliste != null) {
+            playliste = udsendelse.playliste;
             adapter.notifyDataSetChanged();
-          } catch (Exception e) {
-            Log.d("Parsefejl: " + e + " for json=" + json);
-            e.printStackTrace();
           }
+        } catch (Exception e) {
+          Log.d("Parsefejl: " + e + " for json=" + json);
+          e.printStackTrace();
         }
-      }).setTag(this);
-      App.volleyRequestQueue.add(req);
-    }
+      }
+    }).setTag(this);
+    App.volleyRequestQueue.add(req);
+
     udvikling_checkDrSkrifter(rod, this + " rod");
     setHasOptionsMenu(true);
     return rod;
