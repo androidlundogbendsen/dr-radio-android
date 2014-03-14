@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dk.dr.radio.akt.diverse.AfspillerWidget;
+import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
@@ -115,6 +116,7 @@ public class Afspiller {
       return;
     }
     lydUrl = lydkilde.findBedsteStream(false).url;
+    DRData.instans.senestLyttede.registrérLytning(lydkilde);
 
     Log.d("startAfspilning() " + lydUrl);
 

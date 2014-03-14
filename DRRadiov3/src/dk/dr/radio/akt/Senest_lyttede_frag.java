@@ -20,7 +20,9 @@ import dk.dr.radio.akt.diverse.Basisadapter;
 import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
+import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Lydkilde;
+import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
@@ -38,6 +40,7 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
     AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).text("Ingen senest lyttede").getView());
+    opdaterListe();
 
     udvikling_checkDrSkrifter(rod, this + " rod");
     DRData.instans.afspiller.observatører.add(this);
@@ -76,16 +79,6 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
   }
 
 
-  /**
-   * Viewholder designmønster - hold direkte referencer til de views og objekter der bruges hele tiden
-   */
-  private static class Viewholder {
-    public AQuery aq;
-    public TextView titel;
-    public TextView startid;
-    public Lydkilde lydkilde;
-  }
-
   private BaseAdapter adapter = new Basisadapter() {
     @Override
     public int getCount() {
@@ -94,24 +87,22 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
-      Viewholder vh;
-      AQuery a;
-      Lydkilde lydkilde = liste.get(position);
       if (v == null) {
         v = getLayoutInflater(null).inflate(R.layout.udsendelse_elem3_tid_titel_kunstner, parent, false);
-        vh = new Viewholder();
-        a = vh.aq = new AQuery(v);
-        vh.startid = a.id(R.id.startid).typeface(App.skrift_gibson).getTextView();
-        a.id(R.id.slutttid).gone();
-        v.setTag(vh);
-      } else {
-        vh = (Viewholder) v.getTag();
-        a = vh.aq;
+        v.setBackgroundResource(0);
       }
+      TextView kanal = (TextView) v.findViewById(R.id.startid);
+      TextView titel = (TextView) v.findViewById(R.id.titel_og_kunstner);
 
-      // Opdatér viewholderens data
-      vh.lydkilde = lydkilde;
-      vh.startid.setText("" + lydkilde);
+      Lydkilde k = liste.get(position);
+      Udsendelse u = k.getUdsendelse();
+      kanal.setText(k.kanal().navn);
+      if (k instanceof Kanal) {
+        if (u != null) titel.append(u.titel + " (LIVE)");
+        else titel.setText("LIVE");
+      } else {
+        titel.setText(u.titel + " (" + DRJson.datoformat.format(u.startTid) + ")");
+      }
       //vh.titel.setText(lydkilde.titel);
       //a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
       //a.id(R.id.hør).visibility(lydkilde.kanHøres ? View.VISIBLE : View.GONE);
@@ -124,15 +115,18 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
 
   @Override
   public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
-    Lydkilde u = liste.get(position);
-    //startActivity(new Intent(getActivity(), VisFragment_akt.class)
-    //    .putExtra(P_kode, kanal.kode)
-    //    .putExtra(VisFragment_akt.KLASSE, Udsendelse_frag.class.getName()).putExtra(DRJson.Slug.name(), u.slug)); // Udsenselses-ID
 
     Fragment f = new Udsendelse_frag();
-    f.setArguments(new Intent()
-        .putExtra(P_kode, u.kanal().kode)
-        .putExtra(DRJson.Slug.name(), u.slug).getExtras());
+    Lydkilde k = liste.get(position);
+    if (k instanceof Kanal) {
+      f = new Kanal_frag();
+      f.setArguments(new Intent()
+          .putExtra(P_kode, k.kanal().kode).getExtras());
+    } else {
+      f = new Udsendelse_frag();
+      f.setArguments(new Intent()
+          .putExtra(DRJson.Slug.name(), k.slug).getExtras());
+    }
     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
   }
 }
