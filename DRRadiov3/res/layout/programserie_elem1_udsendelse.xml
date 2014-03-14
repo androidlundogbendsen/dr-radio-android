@@ -7,7 +7,7 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingBottom="16dp"
-        android:background="@drawable/knap_graa_bg"
+        android:background="@drawable/knap_graa10_bg"
         android:orientation="vertical">
 
     <View
@@ -19,17 +19,16 @@
             android:layout_height="3dp"/>
 
 
-
-        <TextView
-                android:id="@+id/titel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Pressen på P3 - 17. jan. 2014"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:textColor="@color/grå80"
-                tools:ignore="HardcodedText"
-                />
+    <TextView
+            android:id="@+id/titel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pressen på P3 - 17. jan. 2014"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold"
+            android:textColor="@color/grå80"
+            tools:ignore="HardcodedText"
+            />
 
     <TextView
             android:id="@+id/varighed"

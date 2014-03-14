@@ -10,9 +10,9 @@ public class Playlisteelement {
   public String titel;
   public String kunstner;
   public String billedeUrl;
-
   public Date startTid;
   public String startTidKl;
+  public boolean spillerNu;
 
   @Override
   public String toString() {

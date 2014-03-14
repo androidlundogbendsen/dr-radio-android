@@ -60,9 +60,9 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   private Kanal kanal;
   protected View rod;
   private Udsendelse udsendelse;
-  private ArrayList<Playlisteelement> playliste = new ArrayList<Playlisteelement>();
   private boolean blokerVidereNavigering;
   private boolean visSpillerNu;
+  private ArrayList<Object> liste = new ArrayList<Object>();
 
   @Override
   public String toString() {
@@ -130,10 +130,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         Log.d("fikSvar playliste(" + fraCache + " " + url);
         if (json != null && !"null".equals(json)) try {
           udsendelse.playliste = DRJson.parsePlayliste(new JSONArray(json));
-          if (udsendelse.playliste != null) {
-            playliste = udsendelse.playliste;
-            adapter.notifyDataSetChanged();
-          }
+          bygListe();
         } catch (Exception e) {
           Log.d("Parsefejl: " + e + " for json=" + json);
           e.printStackTrace();
@@ -144,6 +141,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
     udvikling_checkDrSkrifter(rod, this + " rod");
     setHasOptionsMenu(true);
+    bygListe();
+
     return rod;
   }
 
@@ -188,38 +187,62 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   }
 
   static final int TOP = 0;
-  static final int SPILLER_NU = 1;
-  static final int SPILLEDE = 2;
-  static final int ALLE_UDS = 3;
+  static final int PLAYLISTE_KAPITLER_INFO_OVERSKRIFT = 1;
+  static final int SPILLER_NU = 2;
+  static final int SPILLEDE = 3;
+  static final int INFO = 4;
+  static final int VIS_HELE_PLAYLISTEN = 5;
+  static final int ALLE_UDS = 6;
 
   static final int[] layoutFraType = {
       R.layout.udsendelse_elem0_top,
-      R.layout.udsendelse_elem1_spiller_nu,
-      R.layout.udsendelse_elem2_tid_titel_kunstner,
-      R.layout.udsendelse_elem3_alle_udsendelser};
+      R.layout.udsendelse_elem1_playliste_kapitler_info_overskrift,
+      R.layout.udsendelse_elem2_spiller_nu,
+      R.layout.udsendelse_elem3_tid_titel_kunstner,
+      R.layout.udsendelse_elem4_info,
+      R.layout.udsendelse_elem5_vis_hele_playlisten,
+      R.layout.udsendelse_elem6_alle_udsendelser};
+
+  void bygListe() {
+    liste.clear();
+    liste.add(TOP);
+    if (udsendelse.playliste != null && udsendelse.playliste.size() > 0) {
+      liste.add(PLAYLISTE_KAPITLER_INFO_OVERSKRIFT);
+      for (int i = 0; i < 4 && i < udsendelse.playliste.size(); i++) {
+        Playlisteelement e = udsendelse.playliste.get(i);
+        e.spillerNu = (i == 0 && visSpillerNu);
+        liste.add(e);
+      }
+      liste.add(VIS_HELE_PLAYLISTEN);
+    }
+    if (!blokerVidereNavigering) liste.add(ALLE_UDS);
+    adapter.notifyDataSetChanged();
+  }
+
 
   private BaseAdapter adapter = new Basisadapter() {
     @Override
     public int getCount() {
-      return playliste.size() + (blokerVidereNavigering ? 1 : 2);
+      return liste.size();
     }
 
     @Override
     public int getViewTypeCount() {
-      return 4;
+      return 7;
     }
 
     @Override
     public int getItemViewType(int position) {
-      if (position == 0) return TOP;
-      if (position > playliste.size()) return ALLE_UDS;
-      if (visSpillerNu && position == 1) return SPILLER_NU;
-      return SPILLEDE;
+      Object obj = liste.get(position);
+      if (obj instanceof Integer) return (Integer) obj;
+      // Så må det være et playlisteelement
+      Playlisteelement pl = (Playlisteelement) obj;
+      return pl.spillerNu ? SPILLER_NU : SPILLEDE;
     }
 
     @Override
     public boolean isEnabled(int position) {
-      return getItemViewType(position) == ALLE_UDS;
+      return getItemViewType(position) != TOP;
     }
 
     @Override
@@ -238,7 +261,6 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         aq = vh.aq = new AQuery(v);
         v.setTag(vh);
         vh.startid = aq.id(R.id.startid).typeface(App.skrift_gibson).getTextView();
-        vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
         if (type == TOP) {
           int br = bestemBilledebredde(listView, (View) aq.id(R.id.billede).getView().getParent(), 100);
           int hø = br * højde9 / bredde16;
@@ -248,21 +270,23 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           aq.id(R.id.lige_nu).gone();
           aq.id(R.id.playliste).typeface(App.skrift_gibson).visibility(streamsErKlar() ? View.VISIBLE : View.INVISIBLE);
           aq.id(R.id.info).typeface(App.skrift_gibson);
-          vh.titel.setText(udsendelse.titel.toUpperCase());
           aq.id(R.id.logo).image(kanal.kanallogo_resid);
           aq.id(R.id.titel_og_tid).typeface(App.skrift_gibson).text(lavFedSkriftTil(udsendelse.titel + " - " + DRJson.datoformat.format(udsendelse.startTid), udsendelse.titel.length()));
 
           aq.id(R.id.beskrivelse).text(udsendelse.beskrivelse).typeface(App.skrift_georgia);
           Linkify.addLinks(aq.getTextView(), Linkify.ALL);
 
+          vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
+          vh.titel.setText(udsendelse.titel.toUpperCase());
           aq.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
           aq.id(R.id.hent).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
           aq.id(R.id.kan_endnu_ikke_hentes).typeface(App.skrift_gibson);
           if (App.hentning == null) aq.gone(); // Understøttes ikke på Android 2.2
           aq.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
-        } else if (type != ALLE_UDS) {
+        } else if (type == SPILLER_NU || type == SPILLEDE) {
           vh.titel = aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
           aq.id(R.id.hør).visibility(udsendelse.kanHøres ? View.VISIBLE : View.GONE);
+        } else if (type == VIS_HELE_PLAYLISTEN) {
         }
         //aq.id(R.id.højttalerikon).visible().clicked(new UdsendelseClickListener(vh));
       } else {
@@ -278,7 +302,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         aq.id(R.id.hent).enabled(streamsKlar).visibility(udsendelse.kanHøres && App.hentning != null ? View.VISIBLE : View.GONE);
         aq.id(R.id.kan_endnu_ikke_hentes).visibility(!udsendelse.kanHøres ? View.VISIBLE : View.GONE);
       } else if (type == SPILLER_NU || type == SPILLEDE) {
-        Playlisteelement u = playliste.get(position - 1);
+        Playlisteelement u = (Playlisteelement) liste.get(position);
         vh.playlisteelement = u;
         //vh.titel.setText(Html.fromHtml("<b>" + u.titel + "</b> &nbsp; | &nbsp;" + u.kunstner));
         vh.titel.setText(lavFedSkriftTil(u.titel + " | " + u.kunstner, u.titel.length()));
@@ -288,7 +312,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           aq.image(skalérDiscoBilledeUrl(u.billedeUrl, im.getWidth(), im.getHeight()));
         } else {
           //v.setBackgroundResource(R.drawable.knap_hvid_bg);
-          v.setBackgroundResource(R.color.hvid);
+          v.setBackgroundResource(0);
         }
       }
       udvikling_checkDrSkrifter(v, this + " position " + position);

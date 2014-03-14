@@ -33,7 +33,7 @@ public class DrVolleyStringRequest extends StringRequest {
       public void run() {
         try {
           String json = new String(response.data, HttpHeaderParser.parseCharset(response.responseHeaders));
-          Log.d("XXXXXXXXXXXXXX Cache.Entry  e=" + response);
+          //Log.d("XXXXXXXXXXXXXX Cache.Entry  e=" + response);
           listener.fikSvar(json, true);
         } catch (Exception e) {
           Log.rapporterFejl(e);

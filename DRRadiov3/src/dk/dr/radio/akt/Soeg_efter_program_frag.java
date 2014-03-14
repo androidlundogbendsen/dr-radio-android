@@ -67,12 +67,12 @@ public class Soeg_efter_program_frag extends Basisfragment implements
     søgFelt = aq.id(R.id.soegFelt).getEditText();
     søgFelt.setBackgroundResource(android.R.drawable.editbox_background_normal);
     søgKnap = aq.id(R.id.soegKnap).clicked(this).getImageView();
-    søgKnap.setBackgroundResource(R.drawable.knap_graa_bg);
+    søgKnap.setBackgroundResource(R.drawable.knap_graa10_bg);
     tomStr = aq.id(R.id.tom).getTextView();
 
     udvikling_checkDrSkrifter(rod, this + " rod");
     /*
-		 * Kald
+     * Kald
 		 * http://www.dr.dk/tjenester/mu-apps/search/programs?q=monte&type=radio
 		 * vil kun returnere radio programmer
 		 * http://www.dr.dk/tjenester/mu-apps/search/series?q=monte&type=radio
@@ -112,7 +112,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
       Lydkilde lydkilde = liste.get(position);
       if (v == null) {
         v = getLayoutInflater(null).inflate(
-            R.layout.udsendelse_elem2_tid_titel_kunstner, parent,
+            R.layout.udsendelse_elem3_tid_titel_kunstner, parent,
             false);
         vh = new Viewholder();
         a = vh.aq = new AQuery(v);
