@@ -64,24 +64,15 @@ public class DRData {
 //    i.grunddata = Stamdata.parseAndroidStamdata(Diverse.læsStreng(new FileInputStream("res/raw/stamdata1_android_v3_01.json")));
     i.grunddata = new Grunddata();
     i.grunddata.parseFællesGrunddata(Diverse.læsStreng(new FileInputStream("res/raw/grunddata.json")));
-    i.grunddata.hentSupplerendeDataBg();
+    i.grunddata.hentSupplerendeDataBg_KUN_TIL_UDVIKLING();
 
-/*
-    for (Kanal k : i.grunddata.kanaler) {
-      if (k.p4underkanal) continue;
-      Log.d("\n\nkanal = " + k);
-      String f = FilCache.hentFil(k.logoUrl, true, true, 1000 * 60 * 60 * 24 * 7);
-      new File(f).renameTo(new File("/tmp/drawable-hdpi/kanalappendix_" + k.kode.toLowerCase() + ".png"));
-      FilCache.hentFil(k.logoUrl2, true, true, 1000 * 60 * 60 * 24 * 7);
-    }
-*/
     for (Kanal kanal : i.grunddata.kanaler) {
       Log.d("\n\n===========================================\n\nkanal = " + kanal);
       if (Kanal.P4kode.equals(kanal.kode)) continue;
-      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(hent(kanal.getUdsendelserUrl())), kanal, DRData.instans), "0");
+      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(main_hent(kanal.getUdsendelserUrl())), kanal, DRData.instans), "0");
       for (Udsendelse u : kanal.udsendelser) {
         Log.d("\nudsendelse = " + u);
-        JSONObject obj = new JSONObject(hent(u.getStreamsUrl()));
+        JSONObject obj = new JSONObject(main_hent(u.getStreamsUrl()));
         //Log.d(obj.toString(2));
         u.streams = DRJson.parsStreams(obj.getJSONArray(DRJson.Streams.name()));
         if (u.streams.size() == 0) Log.d("Ingen lydstreams");
@@ -89,7 +80,7 @@ public class DRData {
         if (u.streams.size() > 0 && !u.kanHøres) throw new IllegalStateException();
 
         try {
-          u.playliste = DRJson.parsePlayliste(new JSONArray(hent(kanal.getPlaylisteUrl(u))));
+          u.playliste = DRJson.parsePlayliste(new JSONArray(main_hent(kanal.getPlaylisteUrl(u))));
           Log.d("u.playliste= " + u.playliste);
         } catch (IOException e) {
           e.printStackTrace();
@@ -98,7 +89,7 @@ public class DRData {
 
         Programserie ps = i.programserieFraSlug.get(u.programserieSlug);
         if (ps == null) {
-          String str = hent(u.getProgramserieUrl());
+          String str = main_hent(u.getProgramserieUrl());
           if ("null".equals(str)) continue;
           JSONObject data = new JSONObject(str);
           ps = DRJson.parsProgramserie(data);
@@ -111,7 +102,7 @@ public class DRData {
     }
   }
 
-  private static String hent(String url) throws IOException {
+  private static String main_hent(String url) throws IOException {
     //String data = Diverse.læsStreng(new FileInputStream(FilCache.hentFil(url, false, true, 1000 * 60 * 60 * 24 * 7)));
     Log.d(url);
     url = url.replaceAll("Ø", "%C3%98");
