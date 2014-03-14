@@ -18,9 +18,12 @@ import android.widget.TextView;
 import com.androidquery.AQuery;
 import com.flurry.android.FlurryAgent;
 
+import java.util.Date;
+
 import dk.dr.radio.akt.Indstillinger_akt;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.DrVolleyStringRequest;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.P4Stedplacering;
 import dk.dr.radio.v3.R;
@@ -47,6 +50,7 @@ public class Basisaktivitet extends ActionBarActivity {
     menu.add(0, 3643, 0, "Indstillinger");
     menu.add(0, 646, 0, "Send fejlrapport");
     menu.add(0, 2645, 0, "System.exit");
+    menu.add(0, 13643, 0, "Vis servertid");
 
     //}
     return super.onCreateOptionsMenu(menu);
@@ -100,6 +104,9 @@ public class Basisaktivitet extends ActionBarActivity {
       case 2645:
         finish();
         System.exit(0);
+      case 13643:
+        App.langToast("Server:\n" + new Date(DrVolleyStringRequest.serverCurrentTimeMillis()) + "\n/Lokalt:\n" + new Date());
+        return true;
       case 3643:
         startActivity(new Intent(this, Indstillinger_akt.class));
         return true;

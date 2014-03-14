@@ -23,7 +23,7 @@ package dk.dr.radio.diverse;
  */
 public class Rapportering implements Runnable {
 
-  //  rapportering_sidsteonAfspilningStartet = System.currentTimeMillis();
+  //  rapportering_sidsteonAfspilningStartet = System.serverCurrentTimeMillis();
 
 
   public String lydformat;
