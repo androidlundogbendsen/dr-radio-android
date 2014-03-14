@@ -19,20 +19,28 @@ public class DrVolleyStringRequest extends StringRequest {
         super(url, listener, errorListener);
       }
       */
-  public DrVolleyStringRequest(String url, DrVolleyResonseListener listener) {
+  public DrVolleyStringRequest(String url, final DrVolleyResonseListener listener) {
     super(url, listener, listener);
     listener.url = url;
     lytter = listener;
-    try {
-      Cache.Entry response = App.volleyRequestQueue.getCache().get(url);
-      if (response == null) return; // Vi har ikke en cachet udgave
-      String json = new String(response.data, HttpHeaderParser.parseCharset(response.responseHeaders));
-      Log.d("XXXXXXXXXXXXXX Cache.Entry  e=" + response);
-      listener.fikSvar(json, true);
-    } catch (Exception e) {
-      Log.rapporterFejl(e);
-      listener.onErrorResponse(new VolleyError(e));
-    }
+    final Cache.Entry response = App.volleyRequestQueue.getCache().get(url);
+    if (response == null) return; // Vi har ikke en cachet udgave
+    // Kald først fikSvar når forgrundstråden er færdig med hvad den er i gang med
+    // - i tilfælde af at en forespørgsel er startet midt under en listeopdatering giver det problemer
+    // at opdatere listen omgående, da elementer så kan skifte position (og måske type) midt i det hele
+    App.forgrundstråd.post(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          String json = new String(response.data, HttpHeaderParser.parseCharset(response.responseHeaders));
+          Log.d("XXXXXXXXXXXXXX Cache.Entry  e=" + response);
+          listener.fikSvar(json, true);
+        } catch (Exception e) {
+          Log.rapporterFejl(e);
+          listener.onErrorResponse(new VolleyError(e));
+        }
+      }
+    });
     setRetryPolicy(new DefaultRetryPolicy(3 * 1000, 3, 1.5f));
   }
 
