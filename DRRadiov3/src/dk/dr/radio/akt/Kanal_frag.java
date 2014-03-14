@@ -253,15 +253,13 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       liste.clear();
       liste.add(tidligere);
       liste.addAll(nyuliste);
-
-      aktuelUdsendelseIndex = kanal.getAktuelUdsendelseIndex() + 1;
       liste.add(senere);
+      aktuelUdsendelseIndex = kanal.getAktuelUdsendelseIndex() + 1;
     } catch (Exception e1) {
       Log.rapporterFejl(e1);
     }
     Log.d("opdaterListe " + kanal.kode + "  aktuelUdsendelseIndex=" + aktuelUdsendelseIndex);
     adapter.notifyDataSetChanged();
-    eksperiment_hørIkonerIKanaloversigt = App.prefs.getBoolean("eksperiment_hørIkonerIKanaloversigt", false);
   }
 
 
@@ -279,7 +277,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   private Viewholder aktuelUdsendelseViewholder;
 
-  private boolean eksperiment_hørIkonerIKanaloversigt;
   private BaseAdapter adapter = new Basisadapter() {
     @Override
     public int getCount() {
