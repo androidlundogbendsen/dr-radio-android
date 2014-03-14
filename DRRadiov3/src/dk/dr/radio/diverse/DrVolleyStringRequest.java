@@ -12,13 +12,17 @@ import com.android.volley.toolbox.StringRequest;
  * Created by j on 13-03-14.
  */
 public class DrVolleyStringRequest extends StringRequest {
+  private final DrVolleyResonseListener lytter;
+
   /*
-  public DrVolleyStringRequest(String url, Response.Listener<String> listener, Response.ErrorListener errorListener) {
-    super(url, listener, errorListener);
-  }
-  */
+      public DrVolleyStringRequest(String url, Response.Listener<String> listener, Response.ErrorListener errorListener) {
+        super(url, listener, errorListener);
+      }
+      */
   public DrVolleyStringRequest(String url, DrVolleyResonseListener listener) {
     super(url, listener, listener);
+    listener.url = url;
+    lytter = listener;
     try {
       Cache.Entry response = App.volleyRequestQueue.getCache().get(url);
       if (response == null) return; // Vi har ikke en cachet udgave
@@ -39,7 +43,10 @@ public class DrVolleyStringRequest extends StringRequest {
     Log.d("YYYY servertid " + response.headers);
     return super.parseNetworkResponse(response);
   }
-  /*
 
-   */
+  @Override
+  public void cancel() {
+    super.cancel();
+    lytter.annulleret();
+  }
 }
