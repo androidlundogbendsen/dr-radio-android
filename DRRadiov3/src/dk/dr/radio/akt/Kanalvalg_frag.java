@@ -48,7 +48,7 @@ public class Kanalvalg_frag extends Basisfragment implements AdapterView.OnItemC
    * Om P4-underlisten er åbnet.
    * static da det er en nem måde at få listen til at huske om den er åben 'næsten altid'
    */
-  private static boolean p4erÅbnet;
+  public static boolean p4erÅbnet;
   private List<String> p4koder;
   private List<String> alleKanalkoder;
 

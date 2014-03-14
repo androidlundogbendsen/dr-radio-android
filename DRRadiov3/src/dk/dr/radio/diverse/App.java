@@ -24,6 +24,7 @@ package dk.dr.radio.diverse;
  */
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
 import android.app.DownloadManager;
@@ -50,6 +51,7 @@ import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.Volley;
+import com.androidquery.callback.BitmapAjaxCallback;
 import com.bugsense.trace.BugSenseHandler;
 
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -404,5 +406,20 @@ public class App extends Application implements Runnable {
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
+  }
+
+
+  @Override
+  public void onLowMemory(){
+    // Ryd op når der mangler RAM
+    BitmapAjaxCallback.clearCache();
+    super.onLowMemory();
+  }
+
+  @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+  @Override
+  public void onTrimMemory(int level) {
+    if (level>= TRIM_MEMORY_BACKGROUND) BitmapAjaxCallback.clearCache();
+    super.onTrimMemory(level);
   }
 }
