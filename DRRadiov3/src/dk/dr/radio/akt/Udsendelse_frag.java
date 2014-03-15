@@ -152,7 +152,6 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     bygListe();
 
     afspiller.observatører.add(this);
-    opdaterSeekBar.run();
     udvikling_checkDrSkrifter(rod, this + " rod");
     return rod;
   }
@@ -379,7 +378,10 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         boolean denneUdsSpiller = udsendelse==afspiller.getLydkilde() && afspiller.getAfspillerstatus()==Status.SPILLER;
         boolean denneUdsForbinder = udsendelse==afspiller.getLydkilde() && afspiller.getAfspillerstatus()==Status.FORBINDER;
         seekBar.setVisibility(denneUdsSpiller?View.VISIBLE : View.GONE);
-        if (denneUdsSpiller) seekBar.setMax(afspiller.getDuration());
+        if (denneUdsSpiller) {
+          seekBar.setMax(afspiller.getDuration());
+          opdaterSeekBar.run();
+        }
         aq.id(R.id.hør).enabled(streamsKlar && !denneUdsForbinder).visibility(udsendelse.kanHøres && !denneUdsSpiller? View.VISIBLE : View.GONE);
         aq.id(R.id.hent).enabled(streamsKlar).visibility(udsendelse.kanHøres && App.hentning != null ? View.VISIBLE : View.GONE);
         aq.id(R.id.kan_endnu_ikke_hentes).visibility(!udsendelse.kanHøres ? View.VISIBLE : View.GONE);
