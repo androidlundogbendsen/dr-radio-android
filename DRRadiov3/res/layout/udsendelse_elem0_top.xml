@@ -56,6 +56,23 @@
             android:textColor="@color/hvid"
             android:background="@drawable/knap_blaa_bg"/>
 
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="2:30"
+            android:singleLine="true"
+            android:id="@+id/seekBarTekst"/>
+
+    <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="8dp"
+            android:id="@+id/seekBar"/>
+
     <include
             layout="@layout/udsendelse_elem_hent_del"
             android:layout_width="match_parent"
