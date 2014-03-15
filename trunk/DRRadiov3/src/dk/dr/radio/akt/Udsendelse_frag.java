@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.format.DateUtils;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -40,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.akt.diverse.Basisadapter;
 import dk.dr.radio.akt.diverse.Basisfragment;
@@ -55,7 +58,7 @@ import dk.dr.radio.diverse.DrVolleyStringRequest;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-public class Udsendelse_frag extends Basisfragment implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class Udsendelse_frag extends Basisfragment implements View.OnClickListener, AdapterView.OnItemClickListener, SeekBar.OnSeekBarChangeListener, Runnable {
 
   public static final String BLOKER_VIDERE_NAVIGERING = "BLOKER_VIDERE_NAVIGERING";
   public static final String VIS_SPILLER_NU = "VIS_SPILLER_NU";
@@ -66,6 +69,9 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   private boolean blokerVidereNavigering;
   private boolean visSpillerNu;
   private ArrayList<Object> liste = new ArrayList<Object>();
+  Afspiller afspiller = DRData.instans.afspiller;
+  private TextView seekBarTekst;
+  private SeekBar seekBar;
 
   @Override
   public String toString() {
@@ -103,8 +109,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
             JSONObject o = new JSONObject(json);
             udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
             udsendelse.kanHøres = streamsErKlar();
-            if (udsendelse.kanHøres && DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
-              DRData.instans.afspiller.setLydkilde(udsendelse);
+            if (udsendelse.kanHøres && afspiller.getAfspillerstatus() == Status.STOPPET) {
+              afspiller.setLydkilde(udsendelse);
             }
             adapter.notifyDataSetChanged(); // Opdatér views
             ActivityCompat.invalidateOptionsMenu(getActivity());// Opdatér ActionBar
@@ -142,16 +148,19 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     }).setTag(this);
     App.volleyRequestQueue.add(req);
 
-    udvikling_checkDrSkrifter(rod, this + " rod");
     setHasOptionsMenu(true);
     bygListe();
 
+    afspiller.observatører.add(this);
+    opdaterSeekBar.run();
+    udvikling_checkDrSkrifter(rod, this + " rod");
     return rod;
   }
 
   @Override
   public void onDestroyView() {
     App.volleyRequestQueue.cancelAll(this);
+    afspiller.observatører.remove(this);
     super.onDestroyView();
   }
 
@@ -234,6 +243,47 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     adapter.notifyDataSetChanged();
   }
 
+  // Kaldes af DRData.instans.afspiller.observatører
+  @Override
+  public void run() {
+    opdaterSeekBar.run();
+    adapter.notifyDataSetChanged(); // Opdater knapper etc
+  }
+
+  Runnable opdaterSeekBar = new Runnable() {
+    @Override
+    public void run() {
+      App.forgrundstråd.removeCallbacks(this);
+      boolean denneUdsSpiller = udsendelse==afspiller.getLydkilde() && afspiller.getAfspillerstatus()==Status.SPILLER;
+      if (denneUdsSpiller) try {
+        if (seekBarTekst.getVisibility()==View.INVISIBLE) { // Kun hvis vi ikke er i gang med at søge i udsendelsen
+          seekBar.setProgress(afspiller.getCurrentPosition());
+        }
+        App.forgrundstråd.postDelayed(this, 10000);
+      } catch (Exception e) { Log.rapporterFejl(e); }
+    }
+  };
+
+  @Override
+  public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+    if (fromUser) {
+      DRData.instans.afspiller.seekTo(progress);
+      seekBarTekst.setText(DateUtils.formatElapsedTime(progress/1000));
+      int to = seekBar.getThumbOffset();
+      int x = (seekBar.getWidth()-to*2)*progress/seekBar.getMax();
+      seekBarTekst.setPadding(x, 0, 0, 0);
+    }
+  }
+
+  @Override
+  public void onStartTrackingTouch(SeekBar seekBar) {
+    seekBarTekst.setVisibility(View.VISIBLE);
+  }
+
+  @Override
+  public void onStopTrackingTouch(SeekBar seekBar) {
+    seekBarTekst.setVisibility(View.INVISIBLE);
+  }
 
   private BaseAdapter adapter = new Basisadapter() {
     @Override
@@ -294,6 +344,9 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
           vh.titel.setText(udsendelse.titel.toUpperCase());
           aq.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
+          seekBarTekst = aq.id(R.id.seekBarTekst).invisible().getTextView();
+          seekBar = aq.id(R.id.seekBar).getSeekBar();
+          seekBar.setOnSeekBarChangeListener(Udsendelse_frag.this);
           aq.id(R.id.hent).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
           aq.id(R.id.kan_endnu_ikke_hentes).typeface(App.skrift_gibson);
           if (App.hentning == null) aq.gone(); // Understøttes ikke på Android 2.2
@@ -320,7 +373,11 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       if (type == TOP) {
         //aq.id(R.id.højttalerikon).visibility(streams ? View.VISIBLE : View.GONE);
         boolean streamsKlar = streamsErKlar();
-        aq.id(R.id.hør).enabled(streamsKlar).visibility(udsendelse.kanHøres ? View.VISIBLE : View.GONE);
+        boolean denneUdsSpiller = udsendelse==afspiller.getLydkilde() && afspiller.getAfspillerstatus()==Status.SPILLER;
+        boolean denneUdsForbinder = udsendelse==afspiller.getLydkilde() && afspiller.getAfspillerstatus()==Status.FORBINDER;
+        seekBar.setVisibility(denneUdsSpiller?View.VISIBLE : View.GONE);
+        if (denneUdsSpiller) seekBar.setMax(afspiller.getDuration());
+        aq.id(R.id.hør).enabled(streamsKlar && !denneUdsForbinder).visibility(udsendelse.kanHøres && !denneUdsSpiller? View.VISIBLE : View.GONE);
         aq.id(R.id.hent).enabled(streamsKlar).visibility(udsendelse.kanHøres && App.hentning != null ? View.VISIBLE : View.GONE);
         aq.id(R.id.kan_endnu_ikke_hentes).visibility(!udsendelse.kanHøres ? View.VISIBLE : View.GONE);
       } else if (type == SPILLER_NU || type == SPILLEDE) {

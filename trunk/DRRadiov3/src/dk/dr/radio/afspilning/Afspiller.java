@@ -65,6 +65,8 @@ public class Afspiller {
   private String lydUrl;
   private int forbinderProcent;
   private Lydkilde lydkilde;
+  private int duration;
+  private int currentPosition;
 
   private static void sætMediaPlayerLytter(MediaPlayer mediaPlayer, MediaPlayerLytter lytter) {
     mediaPlayer.setOnCompletionListener(lytter);
@@ -165,7 +167,7 @@ public class Afspiller {
 
     afspillerstatus = Status.FORBINDER;
     sendOnAfspilningForbinder(-1);
-    opdaterWidgets();
+    opdaterObservatører();
     handler.removeCallbacks(startAfspilningIntern);
 
     // mediaPlayer.setDataSource() bør kaldes fra en baggrundstråd da det kan ske
@@ -221,7 +223,7 @@ public class Afspiller {
     sætMediaPlayerLytter(mediaPlayer, this.lytter); // registrér lyttere på den nye instans
 
     afspillerstatus = Status.STOPPET;
-    opdaterWidgets();
+    opdaterObservatører();
 
     //if (notification != null) notificationManager.cancelAll();
     // Stop afspillerservicen
@@ -248,11 +250,11 @@ public class Afspiller {
         e.printStackTrace();
       }
     }
-    opdaterWidgets();
+    opdaterObservatører();
   }
 
 
-  private void opdaterWidgets() {
+  private void opdaterObservatører() {
 
     AppWidgetManager mAppWidgetManager = AppWidgetManager.getInstance(App.instans);
     int[] appWidgetId = mAppWidgetManager.getAppWidgetIds(new ComponentName(App.instans, AfspillerWidget.class));
@@ -303,6 +305,17 @@ public class Afspiller {
     }
   }
 
+  public void seekTo(int progress) {
+    mediaPlayer.seekTo(progress);
+  }
+
+  public int getDuration() {
+    return mediaPlayer.getDuration();
+  }
+
+  public int getCurrentPosition() {
+    return mediaPlayer.getCurrentPosition();
+  }
 
   //
   //    TILBAGEKALD FRA MEDIAPLAYER
@@ -311,7 +324,7 @@ public class Afspiller {
     public void onPrepared(MediaPlayer mp) {
       Log.d("onPrepared " + mpTils());
       afspillerstatus = Status.SPILLER; //No longer buffering
-      opdaterWidgets();
+      opdaterObservatører();
       // Det ser ud til kaldet til start() kan tage lang tid på Android 4.1 Jelly Bean
       // (i hvert fald på Samsung Galaxy S III), så vi kalder det i baggrunden
       new Thread() {
@@ -348,7 +361,7 @@ public class Afspiller {
           sætMediaPlayerLytter(mediaPlayer, this); // registrér lyttere på den nye instans
           startAfspilningIntern();
         } else {
-          opdaterWidgets();
+          stopAfspilning();
         }
       }
     }
