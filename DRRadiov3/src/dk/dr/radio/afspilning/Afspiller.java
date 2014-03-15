@@ -34,6 +34,7 @@ import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -107,6 +108,16 @@ public class Afspiller {
     Opkaldshaandtering opkaldshåndtering = new Opkaldshaandtering(this);
     TelephonyManager tm = (TelephonyManager) App.instans.getSystemService(Context.TELEPHONY_SERVICE);
     tm.listen(opkaldshåndtering, PhoneStateListener.LISTEN_CALL_STATE);
+    /*
+    // Opret en beggrundstråd med en Handler til at sende Runnables ind i
+    new Thread() {
+      public void run() {
+        Looper.prepare();
+        baggrundstråd = new Handler();
+        Looper.loop();
+      }
+    }.start();
+    */
   }
 
   private int onErrorTæller;
@@ -302,8 +313,8 @@ public class Afspiller {
 
   private void sendOnAfspilningForbinder(int procent) {
     forbinderProcent = procent;
-    for (Runnable observer : forbindelseobservatører) {
-      observer.run();
+    for (Runnable runnable : forbindelseobservatører) {
+      runnable.run();
     }
   }
 
@@ -426,7 +437,7 @@ public class Afspiller {
 
     public void onSeekComplete(MediaPlayer mp) {
       Log.d("AfspillerService onSeekComplete");
-      opdaterObservatører();
+      //opdaterObservatører();
     }
   }
 }
