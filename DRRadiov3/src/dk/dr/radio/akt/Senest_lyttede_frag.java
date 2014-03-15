@@ -98,8 +98,8 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
       Udsendelse u = k.getUdsendelse();
       kanal.setText(k.kanal().navn);
       if (k instanceof Kanal) {
-        if (u != null) titel.append(u.titel + " (LIVE)");
-        else titel.setText("LIVE");
+        if (u != null) titel.append(u.titel + " (Direkte)");
+        else titel.setText("Direkte");
       } else {
         titel.setText(u.titel + " (" + DRJson.datoformat.format(u.startTid) + ")");
       }

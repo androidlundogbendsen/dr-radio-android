@@ -49,7 +49,7 @@ public class Basisaktivitet extends ActionBarActivity {
     menu.add(0, 1645, 0, "Del lyd 2");
     menu.add(0, 3643, 0, "Indstillinger");
     menu.add(0, 646, 0, "Send fejlrapport");
-    menu.add(0, 2645, 0, "System.exit");
+    menu.add(0, 2645, 0, "Status på hentninger");
     menu.add(0, 13643, 0, "Vis servertid");
 
     //}
@@ -102,8 +102,8 @@ public class Basisaktivitet extends ActionBarActivity {
         startActivity(new Intent(android.content.Intent.ACTION_VIEW).setDataAndType(Uri.parse(DRData.instans.afspiller.getLydkilde().findBedsteStream(false).url), "audio/*"));
         return true;
       case 2645:
-        finish();
-        System.exit(0);
+        App.hentning.status();
+        return true;
       case 13643:
         App.langToast("Server:\n" + new Date(DrVolleyStringRequest.serverCurrentTimeMillis()) + "\n/Lokalt:\n" + new Date());
         return true;

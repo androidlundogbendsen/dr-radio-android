@@ -519,7 +519,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     if (!App.EMULATOR) {
       HashMap<String, String> param = new HashMap<String, String>();
       param.put("kanal", kanal.kode);
-      FlurryAgent.logEvent("hør live kanal", param);
+      FlurryAgent.logEvent("hør direkte udsendelse", param);
     }
 
     if (App.udvikling) App.kortToast("kanal.streams=" + kanal.streams);
