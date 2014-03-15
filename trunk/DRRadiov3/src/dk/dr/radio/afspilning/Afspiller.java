@@ -263,7 +263,9 @@ public class Afspiller {
       AfspillerWidget.opdaterUdseende(App.instans, mAppWidgetManager, id);
     }
 
-    for (Runnable observatør : observatører) {
+    // Notificér alle i observatørlisen - fra en kopi, sådan at de kan fjerne
+    // sig selv fra listen uden at det giver ConcurrentModificationException
+    for (Runnable observatør : new ArrayList<Runnable>(observatører)) {
       observatør.run();
     }
   }
@@ -424,6 +426,7 @@ public class Afspiller {
 
     public void onSeekComplete(MediaPlayer mp) {
       Log.d("AfspillerService onSeekComplete");
+      opdaterObservatører();
     }
   }
 }

@@ -110,21 +110,19 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
       Object obj = liste.get(position);
       if (obj instanceof Programserie) {
         Programserie ps = (Programserie) obj;
-        if (v == null) v = getLayoutInflater(null).inflate(R.layout.udsendelse_elem3_tid_titel_kunstner, parent, false);
+        if (v == null) v = getLayoutInflater(null).inflate(R.layout.elem_tid_titel_kunstner, parent, false);
         AQuery aq = new AQuery(v);
         aq.id(R.id.startid).text(ps.titel).typeface(App.skrift_gibson_fed);
         aq.id(R.id.titel_og_kunstner).text(fav.getAntalNyeUdsendelser(ps.slug) + " nye udsendelser").typeface(App.skrift_gibson);
-        aq.id(R.id.hør).visibility(View.GONE);
         aq.id(R.id.stiplet_linje).background(R.drawable.linje);
         v.setBackgroundResource(R.color.hvid);
       } else {
         Udsendelse udsendelse = (Udsendelse) obj;
-        if (v == null) v = getLayoutInflater(null).inflate(R.layout.udsendelse_elem3_tid_titel_kunstner, parent, false);
+        if (v == null) v = getLayoutInflater(null).inflate(R.layout.elem_tid_titel_kunstner, parent, false);
         AQuery aq = new AQuery(v);
         aq.id(R.id.startid).text(DRJson.datoformat.format(udsendelse.startTid)).typeface(App.skrift_gibson_fed);
-        aq.id(R.id.titel_og_kunstner).text(udsendelse.titel).typeface(App.skrift_gibson);
-        aq.id(R.id.titel_og_kunstner).textColor(udsendelse.kanHøres ? Color.BLACK : getResources().getColor(R.color.grå60));
-        aq.id(R.id.hør).visibility(udsendelse.kanHøres ? View.VISIBLE : View.GONE);
+        aq.id(R.id.titel_og_kunstner).text(udsendelse.titel).typeface(App.skrift_gibson)
+                                     .textColor(udsendelse.kanHøres ? Color.BLACK : getResources().getColor(R.color.grå60));
         aq.id(R.id.stiplet_linje).background(R.drawable.stiplet_linje);
       }
 

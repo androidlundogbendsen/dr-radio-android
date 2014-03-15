@@ -356,7 +356,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           Linkify.addLinks(aq.getTextView(), Linkify.ALL);
         } else if (type == SPILLER_NU || type == SPILLEDE) {
           vh.titel = aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
-          aq.id(R.id.hør).visibility(udsendelse.kanHøres ? View.VISIBLE : View.GONE);
+          Playlisteelement u = (Playlisteelement) liste.get(position);
+          aq.id(R.id.hør).visibility(udsendelse.kanHøres && u.offsetMs>=0 ? View.VISIBLE : View.GONE);
         } else if (type == VIS_HELE_PLAYLISTEN) {
           aq.id(R.id.vis_hele_playlisten).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         } else if (type == PLAYLISTE_KAPITLER_INFO_OVERSKRIFT) {
@@ -511,7 +512,29 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     //startActivity(new Intent(getActivity(), VisFragment_akt.class).putExtras(getArguments())  // Kanalkode + slug
     //    .putExtra(VisFragment_akt.KLASSE, Programserie_frag.class.getName()).putExtra(DRJson.SeriesSlug.name(), udsendelse.programserieSlug));
 
-    if (adapter.getItemViewType(position) == ALLE_UDS) {
+    int type = adapter.getItemViewType(position);
+
+    if (type == SPILLEDE || type == SPILLER_NU) {
+      // Det må være et playlisteelement
+      final Playlisteelement pl = (Playlisteelement) liste.get(position);
+      if (afspiller.getLydkilde()==udsendelse && afspiller.getAfspillerstatus()==Status.SPILLER) {
+        afspiller.seekTo(pl.offsetMs);
+      } else {
+        afspiller.setLydkilde(udsendelse);
+        afspiller.startAfspilning();
+        afspiller.observatører.add(new Runnable() {
+          @Override
+          public void run() {
+            if (afspiller.getLydkilde()==udsendelse && afspiller.getAfspillerstatus()==Status.SPILLER) {
+              afspiller.seekTo(pl.offsetMs);
+              seekBar.setProgress(pl.offsetMs);
+              afspiller.observatører.remove(this);
+            }
+          }
+        });
+      }
+      seekBar.setProgress(pl.offsetMs);
+    } else if (type == ALLE_UDS) {
 
       Fragment f = new Programserie_frag();
       f.setArguments(new Intent()

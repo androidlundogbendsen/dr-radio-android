@@ -13,6 +13,7 @@ public class Playlisteelement {
   public Date startTid;
   public String startTidKl;
   public boolean spillerNu;
+  public int offsetMs;
 
   @Override
   public String toString() {
