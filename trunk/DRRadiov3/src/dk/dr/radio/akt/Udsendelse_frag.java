@@ -152,6 +152,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     bygListe();
 
     afspiller.observatører.add(this);
+    App.hentning.observatører.add(this);
     udvikling_checkDrSkrifter(rod, this + " rod");
     return rod;
   }
@@ -160,6 +161,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   public void onDestroyView() {
     App.volleyRequestQueue.cancelAll(this);
     afspiller.observatører.remove(this);
+    App.hentning.observatører.add(this);
     super.onDestroyView();
   }
 
@@ -441,8 +443,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           + udsendelse.beskrivelse + "\n\n" +
 // http://www.dr.dk/radio/ondemand/p6beat/debut-65
 // http://www.dr.dk/radio/ondemand/ramasjangradio/ramasjang-formiddag-44#!/00:03
-          "http://dr.dk/radio/ondemand/" + kanal.slug + "/" + udsendelse.slug + "\n\n" +
-          udsendelse.findBedsteStream(true).url
+          "http://dr.dk/radio/ondemand/" + kanal.slug + "/" + udsendelse.slug
+//          + "\n\n" + udsendelse.findBedsteStream(true).url
       );
 //www.dr.dk/p1/mennesker-og-medier/mennesker-og-medier-100
       startActivity(intent);

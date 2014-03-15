@@ -90,6 +90,7 @@ public class App extends Application implements Runnable {
   public static final Netvaerksstatus netværk = new Netvaerksstatus();
   public static RequestQueue volleyRequestQueue;
   public static EgenTypefaceSpan skrift_gibson_fed_span;
+  public static DatabaseHelper db;
 
 
   @Override
@@ -128,7 +129,6 @@ public class App extends Application implements Runnable {
 
 
     // Initialisering af Volley
-    File cacheDir = new File(getCacheDir(), "volley");
     String userAgent = packageName + "/" + App.versionName;
 
     HttpStack stack;
@@ -142,6 +142,7 @@ public class App extends Application implements Runnable {
       stack = new HttpClientStack(new DefaultHttpClient()); // Android 2.1
     }
     /*
+    File cacheDir = new File(getCacheDir(), "volley");
 
     Network network = new BasicNetwork(stack) {
       @Override
@@ -165,6 +166,7 @@ public class App extends Application implements Runnable {
     //volleyRequestQueue = Volley.newRequestQueue(this);
     volleyRequestQueue = Volley.newRequestQueue(this, stack);
 
+    db = new DatabaseHelper();
 
     try {
       DRData.instans = new DRData();

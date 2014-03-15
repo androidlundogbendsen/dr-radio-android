@@ -4,13 +4,18 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import dk.dr.radio.data.Udsendelse;
 
@@ -18,7 +23,9 @@ import dk.dr.radio.data.Udsendelse;
  * Created by j on 01-03-14.
  */
 public class Hentning {
-  public DownloadManager downloadService = (DownloadManager) App.instans.getSystemService(Context.DOWNLOAD_SERVICE);
+  private DownloadManager downloadService = (DownloadManager) App.instans.getSystemService(Context.DOWNLOAD_SERVICE);
+
+  public List<Runnable> observatører = new ArrayList<Runnable>();
 
   @SuppressLint("NewApi")
   @TargetApi(Build.VERSION_CODES.GINGERBREAD)
@@ -42,11 +49,23 @@ public class Hentning {
 
       long downloadId = App.hentning.downloadService.enqueue(req);
       App.langToast("downloadId=" + downloadId + "\n" + dir);
+      SQLiteDatabase db = App.db.getWritableDatabase();
+      db.beginTransaction();
+      try {
+        ContentValues cv = new ContentValues();
+        cv.put(DatabaseHelper.Hentede.downloadId.name(), downloadId);
+        cv.put(DatabaseHelper.Hentede.slug.name(), udsendelse.slug);
+        db.insert(DatabaseHelper.Hentede.TABEL, null, cv);
+        db.setTransactionSuccessful();
+      } finally {
+        db.endTransaction();
+      }
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
-
   }
+
+
 
   public static class DownloadServiceReciever extends BroadcastReceiver {
     @Override
@@ -61,7 +80,26 @@ public class Hentning {
         dm.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(dm);
       }
+      for (Runnable obs : App.hentning.observatører) obs.run();
     }
   }
 
+
+  @SuppressLint("NewApi")
+  @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+  public void status() {
+//    Cursor c= downloadService.query(new DownloadManager.Query().setFilterById(lastDownload));
+    Cursor c= downloadService.query(new DownloadManager.Query());
+
+    while (c.moveToNext())
+    {
+      Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)));
+      Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)));
+      Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_LAST_MODIFIED_TIMESTAMP)));
+      Log.d(c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
+      Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS)));
+      Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_REASON)));
+    }
+    c.close();
+  }
 }

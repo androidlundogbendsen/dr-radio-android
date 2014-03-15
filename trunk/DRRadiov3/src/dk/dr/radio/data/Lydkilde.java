@@ -63,8 +63,8 @@ public abstract class Lydkilde {
             if (tilHentning) score += 20;
             break; // bryd ud af switch
           case RTSP:
-            score -= 10; // RTSP udfases og har en enorm ventetid, foretræk andre
-            if (!tilHentning) score -= 20; // ... og har en enorm ventetid, foretræk andre
+            if (tilHentning) continue næste_stream;
+            score -= 40; // RTSP udfases og har en enorm ventetid, foretræk andre
           case Shoutcast:
             if (tilHentning) continue næste_stream;
             if ("shoutcast".equals(ønsketformat)) score += 40;
@@ -87,6 +87,7 @@ public abstract class Lydkilde {
             break;
         }
         if (s.foretrukken) score += 1000;
+        if ("mp3".equals(s.format)) score += 10; // mp3 er mere pålideligt end mp4
         s.score = score;
         Log.d("findBedsteStreams " + s);
         kandidater.add(s);

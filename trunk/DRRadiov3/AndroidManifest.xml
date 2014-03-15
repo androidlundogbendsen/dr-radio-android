@@ -105,7 +105,7 @@
         </receiver>
 
 
-        <!-- Denne aktivitet fanger browsning af URLer der starter med http://javabog.dk/OOP/ -->
+        <!-- Denne aktivitet fanger browsning af URLer der starter med http://dr.dk/radio/ondemand/ -->
         <activity android:name="dk.dr.radio.akt.diverse.FangBrowseIntent">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -114,11 +114,11 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
 
                 <data
-                        android:scheme="http"
+                        android:scheme="xxhttp"
                         android:host="dr.dk"
                         android:pathPrefix="/radio/ondemand/"/>
                 <data
-                        android:scheme="http"
+                        android:scheme="xxhttp"
                         android:host="www.dr.dk"
                         android:pathPrefix="/radio/ondemand/"/>
             </intent-filter>

@@ -84,9 +84,8 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
     Kanal k = lydkilde.kanal();
     Status status = DRData.instans.afspiller.getAfspillerstatus();
-    //boolean live =  && status != Status.STOPPET;
     if (lydkilde.erStreaming()) {
-      titel.setText(k.navn + " Live");
+      titel.setText(k.navn + " Direkte");
     } else {
       Udsendelse udsendelse = lydkilde.getUdsendelse();
       titel.setText(udsendelse == null ? k.navn : udsendelse.titel);
@@ -112,30 +111,6 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         metainformation.setText(k.navn);
         break;
     }
-/*
-    titel.setText(udsendelse == null ? "" : udsendelse.titel);
-    switch (status) {
-      case STOPPET:
-        startStopKnap.setImageResource(R.drawable.afspiller_spil);
-        progressbar.setVisibility(View.INVISIBLE);
-        metainformation.setTextColor(getResources().getColor(R.color.grå40));
-        metainformation.setText(k.navn + (live ? " LIVE" : ""));
-        break;
-      case FORBINDER:
-        startStopKnap.setImageResource(R.drawable.afspiller_pause);
-        progressbar.setVisibility(View.VISIBLE);
-        int fpct = DRData.instans.afspiller.getForbinderProcent();
-        metainformation.setTextColor(getResources().getColor(R.color.blå));
-        metainformation.setText("Forbinder " + (fpct > 0 ? fpct : ""));
-        break;
-      case SPILLER:
-        startStopKnap.setImageResource(R.drawable.afspiller_pause);
-        progressbar.setVisibility(View.INVISIBLE);
-        metainformation.setTextColor(getResources().getColor(R.color.blå));
-        metainformation.setText(k.navn + (live ? " LIVE" : ""));
-        break;
-    }
-* */
   }
 
   @Override
