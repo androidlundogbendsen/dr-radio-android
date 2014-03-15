@@ -189,8 +189,9 @@ public enum DRJson {
 
   /**
    * Parse en stream.
-   * F.eks. Streams-objekt fra http://www.dr.dk/tjenester/mu-apps/channel?urn=urn:dr:mu:bundle:4f3b8926860d9a33ccfdafb9&includeStreams=true
-   *
+   * F.eks. Streams-objekt fra
+   * http://www.dr.dk/tjenester/mu-apps/channel?urn=urn:dr:mu:bundle:4f3b8926860d9a33ccfdafb9&includeStreams=true
+   * http://www.dr.dk/tjenester/mu-apps/program?includeStreams=true&urn=urn:dr:mu:programcard:531520836187a20f086b5bf9
    * @param jsonArray
    * @return
    * @throws JSONException
@@ -212,7 +213,7 @@ public enum DRJson {
         //if (l.type == StreamType.IOS) continue; // Gamle HLS streams der ikke virker på Android
         if (o.getInt(Kind.name()) != StreamKind.Audio.ordinal()) continue;
         l.kvalitet = StreamQuality.values()[o.getInt(Quality.name())];
-        l.format = o.optString(Format.name());
+        l.format = o.optString(Format.name()); // null for direkte udsendelser
         l.kbps = o.getInt(Kbps.name());
         lydData.add(l);
         if (App.udvikling) Log.d("lydstream=" + l);

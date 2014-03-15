@@ -278,11 +278,13 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   @Override
   public void onStartTrackingTouch(SeekBar seekBar) {
     seekBarTekst.setVisibility(View.VISIBLE);
+    App.forgrundstråd.removeCallbacks(opdaterSeekBar);
   }
 
   @Override
   public void onStopTrackingTouch(SeekBar seekBar) {
     seekBarTekst.setVisibility(View.INVISIBLE);
+    App.forgrundstråd.postDelayed(this, 10000);
   }
 
   private BaseAdapter adapter = new Basisadapter() {
@@ -447,31 +449,9 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     }
   }
 
-  @SuppressLint("NewApi")
-  @TargetApi(Build.VERSION_CODES.GINGERBREAD)
   private void hent() {
-    try {
-      if (!streamsErKlar()) return;
-      Uri uri = Uri.parse(udsendelse.findBedsteStream(true).url);
-      Log.d("uri=" + uri);
-
-      File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
-      dir.mkdirs();
-      DownloadManager.Request req = new DownloadManager.Request(uri);
-
-      req.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-          .setAllowedOverRoaming(false)
-          .setTitle(udsendelse.titel)
-          .setDescription(udsendelse.beskrivelse)
-          .setDestinationInExternalPublicDir(Environment.DIRECTORY_PODCASTS, udsendelse.slug + ".mp3");
-      if (Build.VERSION.SDK_INT >= 11) req.allowScanningByMediaScanner();
-
-
-      long downloadId = App.hentning.downloadService.enqueue(req);
-      App.langToast("downloadId=" + downloadId + "\n" + dir);
-    } catch (Exception e) {
-      Log.rapporterFejl(e);
-    }
+    if (!streamsErKlar()) return;
+    App.hentning.hent(udsendelse);
   }
 
   private void hør() {
