@@ -27,7 +27,7 @@ public enum DRJson {
   StartTime, EndTime,
   Streams,
   Uri, Played, Artist, Image,
-  Type, Kind, Quality, Kbps, ChannelSlug, TotalPrograms, Programs, FirstBroadcast, Watchable, DurationInSeconds, Format;
+  Type, Kind, Quality, Kbps, ChannelSlug, TotalPrograms, Programs, FirstBroadcast, Watchable, DurationInSeconds, Format, OffsetMs;
 
   /*
     public enum StreamType {
@@ -181,6 +181,7 @@ public enum DRJson {
       u.billedeUrl = o.optString(DRJson.Image.name());
       u.startTid = DRJson.servertidsformat_playlise.parse(o.getString(DRJson.Played.name()));
       u.startTidKl = klokkenformat.format(u.startTid);
+      u.offsetMs = o.optInt(DRJson.OffsetMs.name(), -1);
       liste.add(u);
     }
     return liste;

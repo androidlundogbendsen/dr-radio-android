@@ -88,7 +88,7 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
     @Override
     public View getView(int position, View v, ViewGroup parent) {
       if (v == null) {
-        v = getLayoutInflater(null).inflate(R.layout.udsendelse_elem3_tid_titel_kunstner, parent, false);
+        v = getLayoutInflater(null).inflate(R.layout.elem_tid_titel_kunstner, parent, false);
         v.setBackgroundResource(0);
       }
       TextView kanal = (TextView) v.findViewById(R.id.startid);

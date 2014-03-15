@@ -311,7 +311,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       if (v == null) {
         v = getLayoutInflater(null).inflate(
             type == AKTUEL ? R.layout.kanal_elem_aktuel :        // Visning af den aktuelle udsendelse
-                type == NORMAL ? R.layout.udsendelse_elem3_tid_titel_kunstner   // De andre udsendelser
+                type == NORMAL ? R.layout.elem_tid_titel_kunstner   // De andre udsendelser
                     : R.layout.kanal_elem_tidligere_senere, parent, false);
         vh = new Viewholder();
         a = vh.aq = new AQuery(v);
@@ -389,7 +389,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           vh.titel.setText(udsendelse.titel);
           a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
           vh.titel.setTextColor(udsendelse.kanHøres ? Color.BLACK : getResources().getColor(R.color.grå60));
-          a.id(R.id.hør).visibility(udsendelse.kanHøres ? View.VISIBLE : View.GONE);
           break;
         case TIDLIGERE_SENERE:
           vh.titel.setText(udsendelse.titel);

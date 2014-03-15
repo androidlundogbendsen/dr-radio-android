@@ -112,7 +112,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
       Lydkilde lydkilde = liste.get(position);
       if (v == null) {
         v = getLayoutInflater(null).inflate(
-            R.layout.udsendelse_elem3_tid_titel_kunstner, parent,
+            R.layout.elem_tid_titel_kunstner, parent,
             false);
         vh = new Viewholder();
         a = vh.aq = new AQuery(v);
