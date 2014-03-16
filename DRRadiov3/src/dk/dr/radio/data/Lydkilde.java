@@ -17,6 +17,7 @@ public abstract class Lydkilde {
   public String urn;   // Bemærk - kan være tom!
   public String slug;  // Bemærk - kan være tom!
   public ArrayList<Lydstream> streams;
+  public Lydstream hentetStream;
 
   private static class Bedst {
     Lydstream bedsteLydstream;
@@ -35,6 +36,7 @@ public abstract class Lydkilde {
   }
 
   public void nulstilForetrukkenStream() {
+    if (streams==null) return;
     for (Lydstream s : streams) s.foretrukken = false;
   }
 
@@ -44,7 +46,9 @@ public abstract class Lydkilde {
     String ønsketkvalitet = App.prefs.getString("lydkvalitet", "auto");
     String ønsketformat = App.prefs.getString("lydformat", "auto");
 
-    ArrayList<Lydstream> kandidater = new ArrayList<Lydstream>(streams.size());
+    ArrayList<Lydstream> kandidater = new ArrayList<Lydstream>();
+    if (hentetStream!=null) kandidater.add(hentetStream);
+    if (streams==null) return kandidater;
 
     Lydstream sxxx = null;
       næste_stream:
@@ -61,6 +65,7 @@ public abstract class Lydkilde {
             break; // bryd ud af switch
           case HTTP:
             if (tilHentning) score += 20;
+            if ("shoutcast".equals(ønsketformat)) score += 40;
             break; // bryd ud af switch
           case RTSP:
             if (tilHentning) continue næste_stream;

@@ -1,6 +1,9 @@
 package dk.dr.radio.akt;
 
+import android.app.DownloadManager;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -10,25 +13,28 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.androidquery.AQuery;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import dk.dr.radio.akt.diverse.Basisadapter;
 import dk.dr.radio.akt.diverse.Basisfragment;
+import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
-import dk.dr.radio.data.Lydkilde;
+import dk.dr.radio.data.Programserie;
+import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Hentning;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-public class Hentede_udsendelser_frag extends Basisfragment implements AdapterView.OnItemClickListener {
-
+public class Hentede_udsendelser_frag extends Basisfragment implements AdapterView.OnItemClickListener, Runnable {
   private ListView listView;
-  private ArrayList<Lydkilde> liste = new ArrayList<Lydkilde>();
+  private ArrayList<Udsendelse> liste = new ArrayList<Udsendelse>();
   protected View rod;
+  Hentning hentede = App.hentning;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,34 +42,42 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
 
     AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
-    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).text("Hentede").getView());
+    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).text(
+        "Du har endnu ikke hentet nogen udsendelser."
+    ).getView());
+    listView.setCacheColorHint(Color.WHITE);
 
+    hentede.observatører.add(this);
+    run();
     udvikling_checkDrSkrifter(rod, this + " rod");
-    opdaterListe();
     return rod;
   }
 
+  @Override
+  public void onDestroyView() {
+    hentede.observatører.remove(this);
+    super.onDestroyView();
+  }
 
-  private void opdaterListe() {
+
+  @Override
+  public void run() {
+    liste.clear();
     try {
-      liste.clear();
-      //liste.addAll(DRData.instans.senestLyttede.getListe());
+      ArrayList<String> slugListe = new ArrayList<String>(hentede.getUdsendelseSlugSæt());
+      Collections.sort(slugListe);
+      Log.d(this + " psss = " + slugListe);
+      for (String slug : slugListe) {
+        Udsendelse u = DRData.instans.udsendelseFraSlug.get(slug);
+        liste.add(u);
+      }
+      Log.d(this + " liste = " + liste);
     } catch (Exception e1) {
       Log.rapporterFejl(e1);
     }
     adapter.notifyDataSetChanged();
   }
 
-
-  /**
-   * Viewholder designmønster - hold direkte referencer til de views og objekter der bruges hele tiden
-   */
-  private static class Viewholder {
-    public AQuery aq;
-    public TextView titel;
-    public TextView startid;
-    public Lydkilde lydkilde;
-  }
 
   private BaseAdapter adapter = new Basisadapter() {
     @Override
@@ -73,27 +87,37 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
-      Viewholder vh;
-      AQuery a;
-      Lydkilde lydkilde = liste.get(position);
-      if (v == null) {
-        v = getLayoutInflater(null).inflate(R.layout.elem_tid_titel_kunstner, parent, false);
-        vh = new Viewholder();
-        a = vh.aq = new AQuery(v);
-        vh.startid = a.id(R.id.startid).typeface(App.skrift_gibson).getTextView();
-        a.id(R.id.slutttid).gone();
-        v.setTag(vh);
-      } else {
-        vh = (Viewholder) v.getTag();
-        a = vh.aq;
-      }
 
-      // Opdatér viewholderens data
-      vh.lydkilde = lydkilde;
-      vh.startid.setText("" + lydkilde);
-      //vh.titel.setText(lydkilde.titel);
-      //a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
-      //a.id(R.id.hør).visibility(lydkilde.kanHøres ? View.VISIBLE : View.GONE);
+      Udsendelse udsendelse = liste.get(position);
+      if (v == null) v = getLayoutInflater(null).inflate(R.layout.elem_tid_titel_kunstner, parent, false);
+      v.setBackgroundResource(0);
+      AQuery aq = new AQuery(v);
+      if (udsendelse==null) {
+        udsendelse = new Udsendelse("Indlæser...");
+        // TODO baggrundsindlæsning
+        aq.id(R.id.startid).text("");
+      } else {
+        String txt = "";
+        Cursor c = hentede.getStatus(udsendelse);
+        int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+        if (status==DownloadManager.STATUS_SUCCESSFUL) {
+          txt = " - Klar";
+        } else if (status==DownloadManager.STATUS_FAILED) {
+          txt = " - Hentning mislykkedes";
+        } else {
+          txt = " - I gang...";
+        }
+        Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)));
+        Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_LAST_MODIFIED_TIMESTAMP)));
+        Log.d(c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
+        Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS)));
+        Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_REASON)));
+        c.close();
+
+        aq.id(R.id.startid).text(DRJson.datoformat.format(udsendelse.startTid) + txt).typeface(App.skrift_gibson);
+      }
+      aq.id(R.id.titel_og_kunstner).text(udsendelse.titel).typeface(App.skrift_gibson)
+          .textColor(udsendelse.kanHøres ? Color.BLACK : getResources().getColor(R.color.grå60));
 
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
 
@@ -103,16 +127,16 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
 
   @Override
   public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
-    Lydkilde u = liste.get(position);
-    //startActivity(new Intent(getActivity(), VisFragment_akt.class)
-    //    .putExtra(P_kode, kanal.kode)
-    //    .putExtra(VisFragment_akt.KLASSE, Udsendelse_frag.class.getName()).putExtra(DRJson.Slug.name(), u.slug)); // Udsenselses-ID
+    Udsendelse udsendelse = liste.get(position);
+      Fragment f = new Udsendelse_frag();
+      f.setArguments(new Intent()
+//        .putExtra(Udsendelse_frag.BLOKER_VIDERE_NAVIGERING, true)
+//        .putExtra(P_kode, kanal.kode)
+          .putExtra(DRJson.Slug.name(), udsendelse.slug).getExtras());
+      getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
 
-    Fragment f = new Udsendelse_frag();
-    f.setArguments(new Intent()
-        .putExtra(P_kode, u.kanal().kode)
-        .putExtra(DRJson.Slug.name(), u.slug).getExtras());
-    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+
   }
+
 }
 

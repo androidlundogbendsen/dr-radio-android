@@ -57,10 +57,6 @@
             </intent-filter>
         </activity>
 
-        <!--
-                android:theme="@android:style/Theme.NoTitleBar"
-        -->
-
         <receiver android:name="dk.dr.radio.diverse.Hentning$DownloadServiceReciever">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>

@@ -124,7 +124,7 @@ public class Afspiller {
   private long onErrorTællerNultid;
 
   public void startAfspilning() {
-    if (!App.erOnline() || lydkilde.streams == null) {
+    if (lydkilde.hentetStream==null && (!App.erOnline() || lydkilde.streams == null)) {
       App.kortToast("Kunne ikke oprette forbindelse");
       return;
     }

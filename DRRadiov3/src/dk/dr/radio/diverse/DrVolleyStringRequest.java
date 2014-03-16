@@ -4,6 +4,7 @@ import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
@@ -13,6 +14,12 @@ import com.android.volley.toolbox.StringRequest;
  */
 public class DrVolleyStringRequest extends StringRequest {
   private final DrVolleyResonseListener lytter;
+
+  /**
+   * DRs serverinfrastruktur caches med Varnish, men det kan tage op til 5 sekunder for den bagvedliggende
+   * serverinfrastruktur at svare
+   */
+  private static final RetryPolicy RETRY_POLICY = new DefaultRetryPolicy(5000, 3, 1.5f);
 
   /*
       public DrVolleyStringRequest(String url, Response.Listener<String> listener, Response.ErrorListener errorListener) {
@@ -41,7 +48,7 @@ public class DrVolleyStringRequest extends StringRequest {
         }
       }
     });
-    setRetryPolicy(new DefaultRetryPolicy(3 * 1000, 3, 1.5f));
+    setRetryPolicy(RETRY_POLICY);
   }
 
   /**
@@ -55,6 +62,9 @@ public class DrVolleyStringRequest extends StringRequest {
   }
 
 
+  /**
+   * Omdefineret så vi kan aflæse servertiden og korrigere hvis klientens ur ikke passer med serverens
+   */
   @Override
   protected Response<String> parseNetworkResponse(NetworkResponse response) {
 /*

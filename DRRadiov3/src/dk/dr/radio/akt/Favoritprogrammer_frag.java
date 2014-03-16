@@ -33,7 +33,7 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
   private ListView listView;
   private ArrayList<Object> liste = new ArrayList<Object>(); // Indeholder både udsendelser og -serier
   protected View rod;
-  Favoritter fav = DRData.instans.favoritter;
+  Favoritter favoritter = DRData.instans.favoritter;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,16 +46,17 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
         "Du har endnu ikke tilføjet nogle favoritprogrammer.\n" +
             "Favoritprogrammer kan vælges ved at markere hjerte-ikonet ved de enkelte programserievisninger."
     ).getView());
+    listView.setCacheColorHint(Color.WHITE);
 
-    udvikling_checkDrSkrifter(rod, this + " rod");
-    DRData.instans.favoritter.observatører.add(this);
+    favoritter.observatører.add(this);
     run();
+    udvikling_checkDrSkrifter(rod, this + " rod");
     return rod;
   }
 
   @Override
   public void onDestroyView() {
-    DRData.instans.favoritter.observatører.remove(this);
+    favoritter.observatører.remove(this);
     super.onDestroyView();
   }
 
@@ -64,13 +65,13 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
   public void run() {
     liste.clear();
     try {
-      ArrayList<String> psss = new ArrayList<String>(fav.getProgramserieSlugSæt());
+      ArrayList<String> psss = new ArrayList<String>(favoritter.getProgramserieSlugSæt());
       Collections.sort(psss);
       Log.d(this + " psss = " + psss);
       for (String programserieSlug : psss) {
         Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
         liste.add(programserie);
-        int antalNye = fav.getAntalNyeUdsendelser(programserieSlug);
+        int antalNye = favoritter.getAntalNyeUdsendelser(programserieSlug);
         for (int n = 0; n < antalNye; n++) {
           if (programserie.udsendelser.size() <= antalNye) break;
           liste.add(programserie.udsendelser.get(n));
@@ -113,17 +114,18 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
         if (v == null) v = getLayoutInflater(null).inflate(R.layout.elem_tid_titel_kunstner, parent, false);
         AQuery aq = new AQuery(v);
         aq.id(R.id.startid).text(ps.titel).typeface(App.skrift_gibson_fed);
-        aq.id(R.id.titel_og_kunstner).text(fav.getAntalNyeUdsendelser(ps.slug) + " nye udsendelser").typeface(App.skrift_gibson);
+        aq.id(R.id.titel_og_kunstner).text(favoritter.getAntalNyeUdsendelser(ps.slug) + " nye udsendelser").typeface(App.skrift_gibson_fed);
         aq.id(R.id.stiplet_linje).background(R.drawable.linje);
-        v.setBackgroundResource(R.color.hvid);
+        v.setBackgroundResource(0);
       } else {
         Udsendelse udsendelse = (Udsendelse) obj;
         if (v == null) v = getLayoutInflater(null).inflate(R.layout.elem_tid_titel_kunstner, parent, false);
         AQuery aq = new AQuery(v);
-        aq.id(R.id.startid).text(DRJson.datoformat.format(udsendelse.startTid)).typeface(App.skrift_gibson_fed);
+        aq.id(R.id.startid).text(DRJson.datoformat.format(udsendelse.startTid)).typeface(App.skrift_gibson);
         aq.id(R.id.titel_og_kunstner).text(udsendelse.titel).typeface(App.skrift_gibson)
                                      .textColor(udsendelse.kanHøres ? Color.BLACK : getResources().getColor(R.color.grå60));
         aq.id(R.id.stiplet_linje).background(R.drawable.stiplet_linje);
+        v.setBackgroundResource(0);
       }
 
 

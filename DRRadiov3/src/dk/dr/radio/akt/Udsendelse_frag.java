@@ -1,15 +1,11 @@
 package dk.dr.radio.akt;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -38,6 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -98,8 +95,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).getView());
     listView.setOnItemClickListener(this);
 
-
-//    if (udsendelse.kanHøres && !streamsErKlar())
+    tjekOmHentet(udsendelse);
+    if (udsendelse.hentetStream==null)
     {
       Request<?> req = new DrVolleyStringRequest(udsendelse.getStreamsUrl(), new DrVolleyResonseListener() {
         @Override
@@ -157,6 +154,36 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     return rod;
   }
 
+  private static void tjekOmHentet(Udsendelse udsendelse) {
+    if (udsendelse.hentetStream==null) {
+      if (App.hentning==null) return;
+      Cursor c = App.hentning.getStatus(udsendelse);
+      if (c==null) return;
+      try {
+        Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)));
+        Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)));
+        Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_LAST_MODIFIED_TIMESTAMP)));
+        Log.d(c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
+        Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS)));
+        Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_REASON)));
+
+        if (c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS))!=DownloadManager.STATUS_SUCCESSFUL) return;
+        String uri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+        File file = new File(URI.create(uri).getPath());
+        if (file.exists()) {
+          udsendelse.hentetStream = new Lydstream();
+          udsendelse.hentetStream.url = uri;
+          udsendelse.hentetStream.score = 500; // Rigtig god!
+          udsendelse.kanHøres = true;
+        } else {
+          Log.e(new IllegalStateException("Fil fandtes ikke alligevel??!"));
+        }
+      } finally {
+        c.close();
+      }
+    }
+  }
+
   @Override
   public void onDestroyView() {
     App.volleyRequestQueue.cancelAll(this);
@@ -166,7 +193,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   }
 
   private boolean streamsErKlar() {
-    return udsendelse.streams != null && udsendelse.streams.size() > 0;
+    return udsendelse.hentetStream!=null || udsendelse.streams != null && udsendelse.streams.size() > 0;
   }
 
   @Override
@@ -174,7 +201,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.udsendelse, menu);
     menu.findItem(R.id.hør).setVisible(udsendelse.kanHøres).setEnabled(streamsErKlar());
-    menu.findItem(R.id.hent).setVisible(App.hentning != null && udsendelse.kanHøres);
+    menu.findItem(R.id.hent).setVisible(App.hentning!=null && udsendelse.kanHøres && udsendelse.hentetStream==null);
   }
 
   @Override
@@ -244,9 +271,10 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     adapter.notifyDataSetChanged();
   }
 
-  // Kaldes af DRData.instans.afspiller.observatører
+  // Kaldes af afspiller og hentning
   @Override
   public void run() {
+    tjekOmHentet(udsendelse);
     opdaterSeekBar.run();
     adapter.notifyDataSetChanged(); // Opdater knapper etc
   }
@@ -347,6 +375,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
           vh.titel.setText(udsendelse.titel.toUpperCase());
           aq.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
+          if (udsendelse.hentetStream!=null) aq.text("HØR HENTET UDSENDELSE");
           seekBarTekst = aq.id(R.id.seekBarTekst).invisible().getTextView();
           seekBar = aq.id(R.id.seekBar).getSeekBar();
           seekBar.setOnSeekBarChangeListener(Udsendelse_frag.this);
@@ -385,7 +414,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           opdaterSeekBar.run();
         }
         aq.id(R.id.hør).enabled(streamsKlar && !denneUdsForbinder).visibility(udsendelse.kanHøres && !denneUdsSpiller? View.VISIBLE : View.GONE);
-        aq.id(R.id.hent).enabled(streamsKlar).visibility(udsendelse.kanHøres && App.hentning != null ? View.VISIBLE : View.GONE);
+        if (udsendelse.hentetStream!=null) aq.text("HØR HENTET UDSENDELSE");
+        aq.id(R.id.hent).enabled(streamsKlar).visibility(udsendelse.hentetStream==null && udsendelse.kanHøres && App.hentning != null ? View.VISIBLE : View.GONE);
         aq.id(R.id.kan_endnu_ikke_hentes).visibility(!udsendelse.kanHøres ? View.VISIBLE : View.GONE);
       } else if (type == SPILLER_NU || type == SPILLEDE) {
         Playlisteelement u = (Playlisteelement) liste.get(position);
