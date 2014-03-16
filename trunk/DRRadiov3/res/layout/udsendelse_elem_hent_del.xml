@@ -15,7 +15,7 @@
             android:paddingLeft="16dp"
             android:gravity="center_vertical"
             android:textAlignment="center"
-            android:text="UDSENDELSEN KAN ENDNU IKKE HENTES"
+            android:text="UDSENDELSEN KAN IKKE HENTES"
             android:enabled="false"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/grå40"

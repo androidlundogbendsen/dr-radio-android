@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+            android:key="fejlsøgning" android:title="Fejlsøgning"
+            android:defaultValue="false" android:summaryOff=""
+            android:summaryOn="Begynd i fejlsøgningstilstand. Appen skal genstartes før det træder i kraft"/>
+
+    <CheckBoxPreference
+            android:key="brugGibsonIVenstremenu"
+            android:title="Brug Gibson i venstre-menu"
+            android:defaultValue="true"
+            android:summary="Gibson ser grimt ud i venstremenu på visse enheder. Kræver app-genstart"/>
+
+
+    <CheckBoxPreference
+            android:key="kunSortLigeBagTekst"
+            android:title="Kun sort bag tekst i titler"
+            android:defaultValue="false"
+            android:summary="Ser også grimt ud. Kræver app-genstart"/>
+
+    <CheckBoxPreference
+            android:key="manuelStreamvalg"
+            android:title="Manuelt streamvalg"
+            android:defaultValue="false"
+            android:summary="Vælg manuelt mellem de tilgængelige streams, indtil API'et kan give korrekte streamtyper"/>
+
+
+    <!-- 	<EditTextPreference android:key="udviklerKontakt" android:title="Kontakt"
+        android:summary="Skriv din e-postadresse hvis du vil kunne kontaktes i forbindelse
+        med udvikling" android:defaultValue="" /> -->
+
+</PreferenceScreen>

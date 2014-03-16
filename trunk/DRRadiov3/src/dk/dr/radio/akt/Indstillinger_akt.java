@@ -29,6 +29,7 @@ import android.preference.PreferenceScreen;
 import android.view.MenuItem;
 
 import dk.dr.radio.data.DRData;
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
@@ -42,14 +43,17 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     addPreferencesFromResource(R.xml.indstillinger);
+    if (App.prefs.getBoolean("udviklerEkstra", false))
+      addPreferencesFromResource(R.xml.indstillinger_udvikling);
 
     try {
 
       // Find lydformat
       PreferenceScreen ps = this.getPreferenceScreen();
-      final int POS_lydformat = 1;
+      final int POS_lydformat = 2;
 
       lydformatlp = (ListPreference) ps.getRootAdapter().getItem(POS_lydformat);
+      lydformatlp.setEnabled(Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH);
       /*
       if (!DRData.NØGLE_lydformat.equals(lydformatlp.getKey())) {
         if (App.udvikling) throw new InternalError("lydformat har skiftet plads, ret i koden");
@@ -58,10 +62,12 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
 
       // Udfyld med værdier der er passende for denne enhed
       // Er det Android 2.2 eller derunder kan vi godt fjerne HLS og HLS2
+      /*
       if (Build.VERSION.SDK_INT < 9) {
         lydformatlp.setEntries(lavDelarray(lydformatlp.getEntries(), 2));
         lydformatlp.setEntryValues(lavDelarray(lydformatlp.getEntryValues(), 2));
       }
+      */
 
       // Har brugeren trykket på "Format" på afspilleraktiviteten skal format åbnes direkte
       if (getIntent().getBooleanExtra(åbn_formatindstilling, false)) try {
@@ -79,7 +85,12 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
       getActionBar().setDisplayHomeAsUpEnabled(true);
+  }
 
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    App.udviklerEkstra = App.prefs.getBoolean("udviklerEkstra", false);
   }
 
   @Override
@@ -114,6 +125,6 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
     aktueltLydformat = nytLydformat;
     DRData drdata = DRData.instans;
     //String url = drdata.findKanalUrlFraKode(drdata.aktuelKanal);
-    //drdata.afspiller.setLydkilde(drdata.aktuelKanal.longName, url);
+    DRData.instans.afspiller.setLydkilde(DRData.instans.afspiller.getLydkilde());
   }
 }

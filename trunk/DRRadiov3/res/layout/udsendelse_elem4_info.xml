@@ -8,7 +8,7 @@
         android:paddingRight="16dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-
+        android:background="@color/hvid"
         android:layout_margin="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
