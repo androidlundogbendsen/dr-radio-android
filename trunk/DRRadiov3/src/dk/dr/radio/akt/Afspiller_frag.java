@@ -95,19 +95,19 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         startStopKnap.setImageResource(R.drawable.afspiller_spil);
         progressbar.setVisibility(View.INVISIBLE);
         metainformation.setText(k.navn);
-        metainformation.setTextColor(getResources().getColor(R.color.grå40));
+        metainformation.setTextColor(App.color.grå40);
         break;
       case FORBINDER:
         startStopKnap.setImageResource(R.drawable.afspiller_pause);
         progressbar.setVisibility(View.VISIBLE);
         int fpct = DRData.instans.afspiller.getForbinderProcent();
-        metainformation.setTextColor(getResources().getColor(R.color.blå));
+        metainformation.setTextColor(App.color.blå);
         metainformation.setText("Forbinder " + (fpct > 0 ? fpct : ""));
         break;
       case SPILLER:
         startStopKnap.setImageResource(R.drawable.afspiller_pause);
         progressbar.setVisibility(View.INVISIBLE);
-        metainformation.setTextColor(getResources().getColor(R.color.blå));
+        metainformation.setTextColor(App.color.blå);
         metainformation.setText(k.navn);
         break;
     }

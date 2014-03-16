@@ -121,7 +121,7 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
         Udsendelse udsendelse = (Udsendelse) obj;
         aq.id(R.id.startid).text(DRJson.datoformat.format(udsendelse.startTid)).typeface(App.skrift_gibson);
         aq.id(R.id.titel_og_kunstner).text(udsendelse.titel).typeface(App.skrift_gibson)
-                                     .textColor(udsendelse.kanHøres ? Color.BLACK : getResources().getColor(R.color.grå60));
+                                     .textColor(udsendelse.kanHøres ? Color.BLACK : App.color.grå60);
         aq.id(R.id.stiplet_linje).background(R.drawable.stiplet_linje);
       }
       v.setBackgroundResource(0);

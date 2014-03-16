@@ -92,6 +92,8 @@ public class App extends Application implements Runnable {
   public static RequestQueue volleyRequestQueue;
   public static EgenTypefaceSpan skrift_gibson_fed_span;
   public static DatabaseHelper db;
+  public static DRFarver color;
+  public static Resources res;
 
 
   @Override
@@ -108,6 +110,7 @@ public class App extends Application implements Runnable {
     prefs = PreferenceManager.getDefaultSharedPreferences(this);
     udvikling = prefs.getBoolean("fejlsøgning", false);
     udviklerEkstra = prefs.getBoolean("udviklerEkstra", false);
+    res = App.instans.getResources();
 
     // HTTP-forbindelser havde en fejl præ froyo, men jeg har også set problemet på Xperia Play, der er 2.3.4 (!)
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
@@ -170,7 +173,7 @@ public class App extends Application implements Runnable {
     try {
       DRData.instans = new DRData();
       DRData.instans.grunddata = new Grunddata();
-      DRData.instans.grunddata.parseFællesGrunddata(Diverse.læsStreng(getResources().openRawResource(R.raw.grunddata)));
+      DRData.instans.grunddata.parseFællesGrunddata(Diverse.læsStreng(res.openRawResource(R.raw.grunddata)));
 
       String kanalkode = prefs.getString(FORETRUKKEN_KANAL, null);
       Kanal aktuelKanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
@@ -180,7 +183,6 @@ public class App extends Application implements Runnable {
       DRData.instans.afspiller.setLydkilde(aktuelKanal);
 
       String pn = App.instans.getPackageName();
-      Resources res = App.instans.getResources();
       for (final Kanal k : DRData.instans.grunddata.kanaler) {
         k.kanallogo_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase().replace('ø', 'o').replace('å', 'a'), "drawable", pn);
         //i.grunddata.hentSupplerendeDataBg_KUN_TIL_UDVIKLING();
@@ -238,6 +240,7 @@ public class App extends Application implements Runnable {
       skrift_georgia = Typeface.DEFAULT;
     }
     skrift_gibson_fed_span = new EgenTypefaceSpan("Gibson fed", App.skrift_gibson_fed);
+    App.color = new DRFarver();
 
     DRData.instans.favoritter.startOpdaterAntalNyeUdsendelser();
   }
@@ -424,5 +427,11 @@ public class App extends Application implements Runnable {
   public void onTrimMemory(int level) {
     if (level>= TRIM_MEMORY_BACKGROUND) BitmapAjaxCallback.clearCache();
     super.onTrimMemory(level);
+  }
+
+  public static class DRFarver {
+    public int grå40 = res.getColor(R.color.grå40);
+    public int blå = res.getColor(R.color.blå);
+    public int grå60 = res.getColor(R.color.grå60);
   }
 }

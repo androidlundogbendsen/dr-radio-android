@@ -389,7 +389,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           vh.startid.setText(udsendelse.startTidKl);
           vh.titel.setText(udsendelse.titel);
           a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
-          vh.titel.setTextColor(udsendelse.kanHøres ? Color.BLACK : getResources().getColor(R.color.grå60));
+          vh.titel.setTextColor(udsendelse.kanHøres ? Color.BLACK : App.color.grå60);
           break;
         case TIDLIGERE_SENERE:
           vh.titel.setText(udsendelse.titel);
