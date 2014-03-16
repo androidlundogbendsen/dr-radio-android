@@ -555,7 +555,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       //    .putExtra(P_kode, kanal.kode)
       //    .putExtra(VisFragment_akt.KLASSE, Udsendelse_frag.class.getName()).putExtra(DRJson.Slug.name(), u.slug)); // Udsenselses-ID
 
-      Fragment f = new Udsendelse_frag();
+      Fragment f = new Udsendelser_frag();
       f.setArguments(new Intent()
           .putExtra(P_kode, kanal.kode)
           .putExtra(Udsendelse_frag.VIS_SPILLER_NU, true)
