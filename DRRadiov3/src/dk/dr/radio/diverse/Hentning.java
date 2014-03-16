@@ -29,12 +29,23 @@ import dk.dr.radio.data.Udsendelse;
 @SuppressLint("NewApi")
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 public class Hentning {
-  private DownloadManager downloadService = (DownloadManager) App.instans.getSystemService(Context.DOWNLOAD_SERVICE);
+  private DownloadManager downloadService = null;
 
   private static final String PREF_NØGLE = "slugFraDownloadId";
   private HashMap<String, String> downloadIdFraSlug;
   private HashMap<String, String> slugFraDownloadId;
   public List<Runnable> observatører = new ArrayList<Runnable>();
+
+  public boolean virker() {
+    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
+  }
+
+  public Hentning(App app) {
+    if (virker()) {
+      downloadService = (DownloadManager) App.instans.getSystemService(Context.DOWNLOAD_SERVICE);
+    }
+  }
+
 
 
   private void tjekDataOprettet() {
@@ -91,6 +102,7 @@ public class Hentning {
    * @return
    */
   public Cursor getStatus(Udsendelse udsendelse) {
+    if (!virker()) return null;
     tjekDataOprettet();
     Log.d("getStatus downloadIdFraSlug = "+downloadIdFraSlug+"  u="+udsendelse);
     String downloadId = downloadIdFraSlug.get(udsendelse.slug);
@@ -151,6 +163,7 @@ public class Hentning {
 
 
   public void status() {
+    if (!virker()) return;
 //    Cursor c= downloadService.query(new DownloadManager.Query().setFilterById(lastDownload));
     Cursor c= downloadService.query(new DownloadManager.Query());
 

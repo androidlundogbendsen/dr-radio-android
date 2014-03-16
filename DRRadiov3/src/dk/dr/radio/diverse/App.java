@@ -103,10 +103,7 @@ public class App extends Application implements Runnable {
     forgrundstråd = new Handler();
     connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    // HTTP-forbindelser havde en fejl præ froyo, men jeg har også set problemet på Xperia Play, der er 2.3.4 (!)
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-      hentning = new Hentning();
-    }
+    hentning = new Hentning(this);
     prefs = PreferenceManager.getDefaultSharedPreferences(this);
     udvikling = prefs.getBoolean("udvikling", false);
 

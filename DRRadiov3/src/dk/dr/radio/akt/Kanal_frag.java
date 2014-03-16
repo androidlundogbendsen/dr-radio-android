@@ -133,6 +133,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       @Override
       public void fikSvar(String json, boolean fraCache) throws Exception {
         Log.d("fikSvar(" + fraCache + " " + url);
+        if (getActivity()==null) return;
         Log.d("hentSendeplanForDag url " + url);
         if (json != null && !"null".equals(json)) try {
           if (idag) {
@@ -421,6 +422,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         @Override
         public void fikSvar(String json, boolean fraCache) throws Exception {
           Log.d(kanal.kode + " opdaterSenestSpillet url " + url);
+          if (getActivity()==null) return;
           if (json != null && !"null".equals(json)) try {
             u2.playliste = DRJson.parsePlayliste(new JSONArray(json));
             Log.d(kanal.kode + " parsePlayliste gav " + u2.playliste.size() + " elemener");
