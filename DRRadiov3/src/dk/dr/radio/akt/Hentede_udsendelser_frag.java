@@ -92,6 +92,8 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
       if (v == null) v = getLayoutInflater(null).inflate(R.layout.elem_tid_titel_kunstner, parent, false);
       v.setBackgroundResource(0);
       AQuery aq = new AQuery(v);
+      aq.id(R.id.startid).typeface(App.skrift_gibson);
+      aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson);
       if (udsendelse==null) {
         udsendelse = new Udsendelse("Indlæser...");
         // TODO baggrundsindlæsning
@@ -99,25 +101,29 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
       } else {
         String txt = "";
         Cursor c = hentede.getStatus(udsendelse);
-        int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-        if (status==DownloadManager.STATUS_SUCCESSFUL) {
-          txt = " - Klar";
-        } else if (status==DownloadManager.STATUS_FAILED) {
-          txt = " - Hentning mislykkedes";
+        if (c==null) {
+          aq.id(R.id.startid).text("Ikke tilgængelig");
         } else {
-          txt = " - I gang...";
-        }
-        Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)));
-        Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_LAST_MODIFIED_TIMESTAMP)));
-        Log.d(c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
-        Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS)));
-        Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_REASON)));
-        c.close();
+          int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+          if (status==DownloadManager.STATUS_SUCCESSFUL) {
+            txt = " - Klar";
+          } else if (status==DownloadManager.STATUS_FAILED) {
+            txt = " - Hentning mislykkedes";
+          } else {
+            txt = " - I gang...";
+          }
+          Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)));
+          Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_LAST_MODIFIED_TIMESTAMP)));
+          Log.d(c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
+          Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS)));
+          Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_REASON)));
+          c.close();
 
-        aq.id(R.id.startid).text(DRJson.datoformat.format(udsendelse.startTid) + txt).typeface(App.skrift_gibson);
+          aq.id(R.id.startid).text(DRJson.datoformat.format(udsendelse.startTid) + txt);
+        }
       }
-      aq.id(R.id.titel_og_kunstner).text(udsendelse.titel).typeface(App.skrift_gibson)
-          .textColor(udsendelse.kanHøres ? Color.BLACK : getResources().getColor(R.color.grå60));
+      aq.id(R.id.titel_og_kunstner).text(udsendelse.titel)
+          .textColor(udsendelse.kanHøres ? Color.BLACK : App.color.grå60);
 
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
 
@@ -129,12 +135,12 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
   public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
     Udsendelse udsendelse = liste.get(position);
     if (udsendelse==null) return;
-      Fragment f = new Udsendelse_frag();
-      f.setArguments(new Intent()
+    Fragment f = new Udsendelse_frag();
+    f.setArguments(new Intent()
 //        .putExtra(Udsendelse_frag.BLOKER_VIDERE_NAVIGERING, true)
 //        .putExtra(P_kode, kanal.kode)
-          .putExtra(DRJson.Slug.name(), udsendelse.slug).getExtras());
-      getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+        .putExtra(DRJson.Slug.name(), udsendelse.slug).getExtras());
+    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
 
 
   }

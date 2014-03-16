@@ -129,9 +129,6 @@ public class Hentning {
     public void onReceive(Context context, Intent intent) {
       String action = intent.getAction();
       Log.d("DLS " + intent);
-      Bundle b = intent.getExtras();
-      b.size(); // forårsager at bundlen bliver unparcelet
-      Log.d("DLS " + b);
       if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) try {
         long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
         String slug = App.hentning.slugFraDownloadId.get("" + downloadId);

@@ -79,6 +79,10 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     kanal = DRData.instans.grunddata.kanalFraKode.get(getArguments().getString(Kanal_frag.P_kode));
     udsendelse = DRData.instans.udsendelseFraSlug.get(getArguments().getString(DRJson.Slug.name()));
+    if (udsendelse == null) {
+      afbrydManglerData();
+      return rod;
+    }
     if (kanal == null) kanal = udsendelse.kanal();
     blokerVidereNavigering = getArguments().getBoolean(BLOKER_VIDERE_NAVIGERING);
     visSpillerNu = getArguments().getBoolean(VIS_SPILLER_NU, false);
@@ -86,10 +90,6 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     Log.d("onCreateView " + this);
 
     rod = inflater.inflate(R.layout.kanal_frag, container, false);
-    if (kanal == null || udsendelse == null) {
-      afbrydManglerData();
-      return rod;
-    }
     final AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).getView());
