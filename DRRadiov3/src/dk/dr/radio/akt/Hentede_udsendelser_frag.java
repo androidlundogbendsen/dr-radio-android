@@ -128,6 +128,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
   @Override
   public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
     Udsendelse udsendelse = liste.get(position);
+    if (udsendelse==null) return;
       Fragment f = new Udsendelse_frag();
       f.setArguments(new Intent()
 //        .putExtra(Udsendelse_frag.BLOKER_VIDERE_NAVIGERING, true)

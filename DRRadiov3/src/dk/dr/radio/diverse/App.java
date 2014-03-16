@@ -80,7 +80,8 @@ public class App extends Application implements Runnable {
   public static ConnectivityManager connectivityManager;
   public static String versionName = "(ukendt)";
   public static NotificationManager notificationManager;
-  public static boolean udvikling = false;
+  public static boolean udvikling = false; // TODO - omdøb til fejlsøgning
+  public static boolean udviklerEkstra = false; // Vis ekstra muligheder til udviklere og fejlfinding
   public static Handler forgrundstråd;
   public static Typeface skrift_gibson;
   public static Typeface skrift_gibson_fed;
@@ -105,7 +106,8 @@ public class App extends Application implements Runnable {
     notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     hentning = new Hentning(this);
     prefs = PreferenceManager.getDefaultSharedPreferences(this);
-    udvikling = prefs.getBoolean("udvikling", false);
+    udvikling = prefs.getBoolean("fejlsøgning", false);
+    udviklerEkstra = prefs.getBoolean("udviklerEkstra", false);
 
     // HTTP-forbindelser havde en fejl præ froyo, men jeg har også set problemet på Xperia Play, der er 2.3.4 (!)
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
@@ -319,9 +321,12 @@ public class App extends Application implements Runnable {
     erIGang += netværkErIGang ? 1 : -1;
     boolean nu = erIGang > 0;
     if (udvikling) Log.d("erIGang = " + erIGang);
+    if (erIGang < 0) {
+      Log.e(new IllegalStateException("erIGang er " + erIGang));
+      erIGang = 0;
+    }
     if (før != nu && aktivitetIForgrunden != null) forgrundstråd.post(setProgressBarIndeterminateVisibility);
     // Fejltjek
-    if (erIGang < 0) Log.e(new IllegalStateException("erIGang er " + erIGang));
   }
 
   private static Runnable setProgressBarIndeterminateVisibility = new Runnable() {

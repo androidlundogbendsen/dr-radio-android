@@ -250,6 +250,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     liste.clear();
     liste.add(TOP);
     if (visInfo) {
+      liste.add(PLAYLISTE_KAPITLER_INFO_OVERSKRIFT);
       liste.add(INFO);
     } else {
       if (udsendelse.playliste != null && udsendelse.playliste.size() > 0) {
@@ -265,6 +266,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           }
           liste.add(VIS_HELE_PLAYLISTEN);
         }
+      } else {
+        liste.add(INFO);
       }
     }
     if (!blokerVidereNavigering) liste.add(ALLE_UDS);
@@ -428,9 +431,11 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           aq.image(skalérDiscoBilledeUrl(u.billedeUrl, im.getWidth(), im.getHeight()));
         } else {
           //v.setBackgroundResource(R.drawable.knap_hvid_bg);
-          v.setBackgroundResource(0);
-
+          v.setBackgroundResource(R.drawable.elem_hvid_bg);
         }
+      } else if (type == PLAYLISTE_KAPITLER_INFO_OVERSKRIFT) {
+        aq.id(R.id.playliste).background(visInfo?R.drawable.knap_graa40_bg : R.drawable.knap_sort_bg);
+        aq.id(R.id.info).background(visInfo?R.drawable.knap_sort_bg : R.drawable.knap_graa40_bg);
       }
       udvikling_checkDrSkrifter(v, this + " position " + position);
       return v;
@@ -529,6 +534,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     int type = adapter.getItemViewType(position);
 
     if (type == SPILLEDE || type == SPILLER_NU) {
+      if (!udsendelse.kanHøres) return;
       // Det må være et playlisteelement
       final Playlisteelement pl = (Playlisteelement) liste.get(position);
       if (afspiller.getLydkilde()==udsendelse && afspiller.getAfspillerstatus()==Status.SPILLER) {

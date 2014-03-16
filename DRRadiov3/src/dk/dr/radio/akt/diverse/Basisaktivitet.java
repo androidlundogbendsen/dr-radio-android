@@ -40,19 +40,16 @@ public class Basisaktivitet extends ActionBarActivity {
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    //if (App.udvikling) {
-    menu.add(0, 642, 0, "Udvikler");
-    menu.add(0, 643, 0, "Vis log");
-    menu.add(0, 644, 0, "Hent nyeste udvikler-version");
-    menu.add(0, 1644, 0, "Tjek P4-region ud fra IP-adresse");
-    menu.add(0, 645, 0, "Del lyd 1");
-    menu.add(0, 1645, 0, "Del lyd 2");
-    menu.add(0, 3643, 0, "Indstillinger");
-    menu.add(0, 646, 0, "Send fejlrapport");
-    menu.add(0, 2645, 0, "Status på hentninger");
-    menu.add(0, 13643, 0, "Vis servertid");
-
-    //}
+    if (App.udviklerEkstra) {
+      menu.add(0, 644, 0, "Hent nyeste udvikler-version");
+      menu.add(0, 1644, 0, "Tjek P4-region ud fra IP-adresse");
+      menu.add(0, 642, 0, "Fejlsøgning");
+      menu.add(0, 643, 0, "Vis log");
+      menu.add(0, 1643, 0, "Del lyd 2");
+      menu.add(0, 646, 0, "Send fejlrapport");
+      menu.add(0, 2645, 0, "Status på hentninger");
+      menu.add(0, 13643, 0, "Vis servertid");
+    }
     return super.onCreateOptionsMenu(menu);
   }
 
@@ -95,20 +92,15 @@ public class Basisaktivitet extends ActionBarActivity {
           }
         }.execute();
         return true;
-      case 645:
-        startActivity(new Intent(MediaStore.INTENT_ACTION_MUSIC_PLAYER));
-        return true;
       case 1643:
-        startActivity(new Intent(android.content.Intent.ACTION_VIEW).setDataAndType(Uri.parse(DRData.instans.afspiller.getLydkilde().findBedsteStream(false).url), "audio/*"));
+        startActivity(new Intent(android.content.Intent.ACTION_VIEW)
+            .setDataAndType(Uri.parse(DRData.instans.afspiller.getLydkilde().findBedsteStream(false).url), "audio/*"));
         return true;
       case 2645:
         App.hentning.status();
         return true;
       case 13643:
         App.langToast("Server:\n" + new Date(DrVolleyStringRequest.serverCurrentTimeMillis()) + "\n/Lokalt:\n" + new Date());
-        return true;
-      case 3643:
-        startActivity(new Intent(this, Indstillinger_akt.class));
         return true;
       case 643:
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
