@@ -156,7 +156,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
   private static void tjekOmHentet(Udsendelse udsendelse) {
     if (udsendelse.hentetStream==null) {
-      if (App.hentning==null) return;
+      if (!App.hentning.virker()) return;
       Cursor c = App.hentning.getStatus(udsendelse);
       if (c==null) return;
       try {
@@ -201,7 +201,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.udsendelse, menu);
     menu.findItem(R.id.hør).setVisible(udsendelse.kanHøres).setEnabled(streamsErKlar());
-    menu.findItem(R.id.hent).setVisible(App.hentning!=null && udsendelse.kanHøres && udsendelse.hentetStream==null);
+    menu.findItem(R.id.hent).setVisible(App.hentning.virker() && udsendelse.kanHøres && udsendelse.hentetStream==null);
   }
 
   @Override
@@ -381,7 +381,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           seekBar.setOnSeekBarChangeListener(Udsendelse_frag.this);
           aq.id(R.id.hent).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
           aq.id(R.id.kan_endnu_ikke_hentes).typeface(App.skrift_gibson);
-          if (App.hentning == null) aq.gone(); // Understøttes ikke på Android 2.2
+          if (!App.hentning.virker()) aq.gone(); // Understøttes ikke på Android 2.2
           aq.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         } else if (type == INFO) {
           aq.id(R.id.titel).text(udsendelse.beskrivelse).typeface(App.skrift_georgia);
@@ -415,7 +415,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         }
         aq.id(R.id.hør).enabled(streamsKlar && !denneUdsForbinder).visibility(udsendelse.kanHøres && !denneUdsSpiller? View.VISIBLE : View.GONE);
         if (udsendelse.hentetStream!=null) aq.text("HØR HENTET UDSENDELSE");
-        aq.id(R.id.hent).enabled(streamsKlar).visibility(udsendelse.hentetStream==null && udsendelse.kanHøres && App.hentning != null ? View.VISIBLE : View.GONE);
+        aq.id(R.id.hent).enabled(streamsKlar).visibility(udsendelse.hentetStream==null && udsendelse.kanHøres && App.hentning.virker() ? View.VISIBLE : View.GONE);
         aq.id(R.id.kan_endnu_ikke_hentes).visibility(!udsendelse.kanHøres ? View.VISIBLE : View.GONE);
       } else if (type == SPILLER_NU || type == SPILLEDE) {
         Playlisteelement u = (Playlisteelement) liste.get(position);
