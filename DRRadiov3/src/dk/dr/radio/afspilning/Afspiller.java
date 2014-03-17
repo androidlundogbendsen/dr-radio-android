@@ -109,7 +109,7 @@ public class Afspiller {
     TelephonyManager tm = (TelephonyManager) App.instans.getSystemService(Context.TELEPHONY_SERVICE);
     tm.listen(opkaldshåndtering, PhoneStateListener.LISTEN_CALL_STATE);
     /*
-    // Opret en beggrundstråd med en Handler til at sende Runnables ind i
+    // Opret en baggrundstråd med en Handler til at sende Runnables ind i
     new Thread() {
       public void run() {
         Looper.prepare();

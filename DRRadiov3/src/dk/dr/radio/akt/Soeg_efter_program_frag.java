@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,6 +23,7 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.androidquery.AQuery;
+import com.androidquery.AbstractAQuery;
 
 import org.json.JSONArray;
 
@@ -65,10 +68,39 @@ public class Soeg_efter_program_frag extends Basisfragment implements
         .text("Søg efter program").getView());
 
     søgFelt = aq.id(R.id.soegFelt).getEditText();
+    
     søgFelt.setBackgroundResource(android.R.drawable.editbox_background_normal);
     søgKnap = aq.id(R.id.soegKnap).clicked(this).getImageView();
     søgKnap.setBackgroundResource(R.drawable.knap_graa10_bg);
+    søgKnap.setVisibility(View.INVISIBLE);
     tomStr = aq.id(R.id.tom).getTextView();
+    
+    søgFelt.addTextChangedListener(new TextWatcher() {
+		
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count,
+				int after) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void afterTextChanged(Editable s) {
+			// TODO Auto-generated method stub
+			if (søgFelt.getText().toString().length() > 0)
+				søgKnap.setVisibility(View.VISIBLE);
+			else
+				søgKnap.setVisibility(View.INVISIBLE);
+				
+			
+		}
+	});
 
     udvikling_checkDrSkrifter(rod, this + " rod");
     /*
@@ -133,10 +165,10 @@ public class Soeg_efter_program_frag extends Basisfragment implements
       // Opdatér viewholderens data
       vh.lydkilde = lydkilde;
 
-      SimpleDateFormat ft = new SimpleDateFormat("HH:mm");
+//      SimpleDateFormat ft = new SimpleDateFormat("HH:mm");
       Date startTid = lydkilde.getUdsendelse().startTid;
 
-      vh.startid.setText("" + ft.format(startTid));
+      vh.startid.setText(DRJson.datoformat.format(startTid)/*"" + ft.format(startTid)*/);
 
       String titel = lydkilde.getUdsendelse().titel;
       Spannable spannable = new SpannableString(titel);
@@ -178,6 +210,8 @@ public class Soeg_efter_program_frag extends Basisfragment implements
 
   @Override
   public void onClick(View v) {
+	Log.d("Liste " + liste);
+	
 
     søgStr = søgFelt.getText().toString();
 
