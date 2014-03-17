@@ -69,6 +69,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   Afspiller afspiller = DRData.instans.afspiller;
   private TextView seekBarTekst;
   private SeekBar seekBar;
+  private boolean fragmentErSynligt;
 
   @Override
   public String toString() {
@@ -106,7 +107,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
             JSONObject o = new JSONObject(json);
             udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
             udsendelse.kanHøres = streamsErKlar();
-            if (udsendelse.kanHøres && afspiller.getAfspillerstatus() == Status.STOPPET) {
+            if (fragmentErSynligt && udsendelse.kanHøres && afspiller.getAfspillerstatus() == Status.STOPPET) {
               afspiller.setLydkilde(udsendelse);
             }
             adapter.notifyDataSetChanged(); // Opdatér views
@@ -152,6 +153,23 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     App.hentning.observatører.add(this);
     udvikling_checkDrSkrifter(rod, this + " rod");
     return rod;
+  }
+
+  @Override
+  public void setUserVisibleHint(boolean isVisibleToUser) {
+    Log.d(" QQQ setUserVisibleHint " + isVisibleToUser + "  " + this);
+    fragmentErSynligt = isVisibleToUser;
+    if (fragmentErSynligt) {
+      App.forgrundstråd.post(new Runnable() {
+        @Override
+        public void run() {
+          if (udsendelse.kanHøres && afspiller.getAfspillerstatus() == Status.STOPPET) {
+            afspiller.setLydkilde(udsendelse);
+          }
+        }
+      });
+    }
+    super.setUserVisibleHint(isVisibleToUser);
   }
 
   private static void tjekOmHentet(Udsendelse udsendelse) {
@@ -341,7 +359,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
     @Override
     public boolean isEnabled(int position) {
-      return getItemViewType(position) != TOP;
+      int type = getItemViewType(position);
+      return  type==SPILLER_NU || type==SPILLEDE || type==ALLE_UDS;
     }
 
     @Override
