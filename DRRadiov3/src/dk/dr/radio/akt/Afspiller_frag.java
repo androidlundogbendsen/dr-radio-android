@@ -83,6 +83,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
   public void run() {
     Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
     Kanal k = lydkilde.kanal();
+    if (k==null) return;
     Status status = DRData.instans.afspiller.getAfspillerstatus();
     if (lydkilde.erStreaming()) {
       titel.setText(k.navn + " Direkte");
