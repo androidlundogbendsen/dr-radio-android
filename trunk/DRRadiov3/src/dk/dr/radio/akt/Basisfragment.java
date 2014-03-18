@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package dk.dr.radio.akt.diverse;
+package dk.dr.radio.akt;
 
 import android.app.Activity;
 import android.graphics.Typeface;

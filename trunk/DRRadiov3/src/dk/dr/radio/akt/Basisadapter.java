@@ -1,4 +1,4 @@
-package dk.dr.radio.akt.diverse;
+package dk.dr.radio.akt;
 
 import android.widget.BaseAdapter;
 

@@ -26,8 +26,6 @@ import com.androidquery.AQuery;
 
 import java.util.ArrayList;
 
-import dk.dr.radio.akt.diverse.Basisadapter;
-import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;

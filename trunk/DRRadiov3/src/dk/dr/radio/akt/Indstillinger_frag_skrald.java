@@ -59,7 +59,7 @@ public class Indstillinger_frag_skrald extends PreferenceFragment implements OnP
       lydformatlp = (ListPreference) ps.getRootAdapter().getItem(POS_lydformat);
       /*
       if (!DRData.NØGLE_lydformat.equals(lydformatlp.getKey())) {
-        if (App.udvikling) throw new InternalError("lydformat har skiftet plads, ret i koden");
+        if (App.fejlsøgning) throw new InternalError("lydformat har skiftet plads, ret i koden");
         return; // drop resten af initialiseringen i produktion
       }*/
 

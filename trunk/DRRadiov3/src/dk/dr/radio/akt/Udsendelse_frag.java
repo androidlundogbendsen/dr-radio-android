@@ -41,8 +41,6 @@ import java.util.List;
 
 import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.afspilning.Status;
-import dk.dr.radio.akt.diverse.Basisadapter;
-import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Kanal;
@@ -515,7 +513,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   private void hør() {
     try {
       if (!streamsErKlar()) return;
-      if (App.udvikling) App.kortToast("kanal.streams=" + kanal.streams);
+      if (App.fejlsøgning) App.kortToast("kanal.streams=" + kanal.streams);
       if (!App.EMULATOR) {
         HashMap<String, String> param = new HashMap<String, String>();
         param.put("kanal", kanal.kode);

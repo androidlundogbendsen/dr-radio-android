@@ -1,4 +1,4 @@
-package dk.dr.radio.akt.diverse;
+package dk.dr.radio.akt;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +19,6 @@ import com.flurry.android.FlurryAgent;
 
 import java.util.Date;
 
-import dk.dr.radio.akt.Indstillinger_akt;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.DrVolleyStringRequest;
@@ -70,8 +68,8 @@ public class Basisaktivitet extends ActionBarActivity {
         return true;
         */
       case 642:
-        App.udvikling = !App.udvikling;
-        App.kortToast("Log.udvikling = " + App.udvikling);
+        App.fejlsøgning = !App.fejlsøgning;
+        App.kortToast("Log.fejlsøgning = " + App.fejlsøgning);
         return true;
       case 644:
         // scp /home/j/android/dr-radio-android/DRRadiov3/out/production/DRRadiov3/DRRadiov3.apk j:javabog.dk/privat/
@@ -134,7 +132,7 @@ public class Basisaktivitet extends ActionBarActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    if (App.udvikling) Log.d(this + " onResume()");
+    if (App.fejlsøgning) Log.d(this + " onResume()");
     if (!App.EMULATOR) {
       FlurryAgent.setCaptureUncaughtExceptions(false); // Vi bruger p.t. BugSense
       FlurryAgent.onStartSession(this, getString(R.string.flurry_nøgle));
@@ -145,7 +143,7 @@ public class Basisaktivitet extends ActionBarActivity {
   @Override
   protected void onPause() {
     super.onPause();
-    if (App.udvikling) Log.d(this + " onPause()");
+    if (App.fejlsøgning) Log.d(this + " onPause()");
     if (!App.EMULATOR) FlurryAgent.onEndSession(this);
     App.instans.onPause();
   }

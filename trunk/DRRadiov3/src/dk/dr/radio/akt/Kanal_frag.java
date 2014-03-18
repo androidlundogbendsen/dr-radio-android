@@ -40,8 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import dk.dr.radio.afspilning.Status;
-import dk.dr.radio.akt.diverse.Basisadapter;
-import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Kanal;
@@ -524,7 +522,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       FlurryAgent.logEvent("hør direkte udsendelse", param);
     }
 
-    if (App.udvikling) App.kortToast("kanal.streams=" + kanal.streams);
+    if (App.fejlsøgning) App.kortToast("kanal.streams=" + kanal.streams);
     if (App.prefs.getBoolean("manuelStreamvalg", false)) {
       kanal.nulstilForetrukkenStream();
       final List<Lydstream> lydstreamList = kanal.findBedsteStreams(false);

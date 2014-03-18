@@ -56,7 +56,7 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
       lydformatlp.setEnabled(Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH);
       /*
       if (!DRData.NØGLE_lydformat.equals(lydformatlp.getKey())) {
-        if (App.udvikling) throw new InternalError("lydformat har skiftet plads, ret i koden");
+        if (App.fejlsøgning) throw new InternalError("lydformat har skiftet plads, ret i koden");
         return; // drop resten af initialiseringen i produktion
       }*/
 

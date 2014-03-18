@@ -28,7 +28,7 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import dk.dr.radio.akt.Hovedaktivitet;
-import dk.dr.radio.akt.diverse.AfspillerWidget;
+import dk.dr.radio.diverse.AfspillerIkonOgNotifikation;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
@@ -72,7 +72,7 @@ public class HoldAppIHukommelsenService extends Service {
 
     Notification notification; //= b.build();
 
-    RemoteViews remoteViews = AfspillerWidget.lavRemoteViews(false, true);
+    RemoteViews remoteViews = AfspillerIkonOgNotifikation.lavRemoteViews(false, true);
 
 
     if ((Build.VERSION.SDK_INT < 16)) {

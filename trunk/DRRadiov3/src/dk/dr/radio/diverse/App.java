@@ -27,7 +27,6 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
-import android.app.DownloadManager;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -61,7 +60,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import dk.dr.radio.afspilning.Afspiller;
-import dk.dr.radio.akt.diverse.Basisaktivitet;
+import dk.dr.radio.akt.Basisaktivitet;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Diverse;
@@ -80,7 +79,7 @@ public class App extends Application implements Runnable {
   public static ConnectivityManager connectivityManager;
   public static String versionName = "(ukendt)";
   public static NotificationManager notificationManager;
-  public static boolean udvikling = false; // TODO - omdøb til fejlsøgning
+  public static boolean fejlsøgning = false; // TODO - omdøb til fejlsøgning
   public static boolean udviklerEkstra = false; // Vis ekstra muligheder til udviklere og fejlfinding
   public static Handler forgrundstråd;
   public static Typeface skrift_gibson;
@@ -108,7 +107,7 @@ public class App extends Application implements Runnable {
     notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     hentning = new Hentning(this);
     prefs = PreferenceManager.getDefaultSharedPreferences(this);
-    udvikling = prefs.getBoolean("fejlsøgning", false);
+    fejlsøgning = prefs.getBoolean("fejlsøgning", false);
     udviklerEkstra = prefs.getBoolean("udviklerEkstra", false);
     res = App.instans.getResources();
 
@@ -192,7 +191,7 @@ public class App extends Application implements Runnable {
       IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
       registerReceiver(netværk, filter);
       netværk.onReceive(this, null); // Få opdateret netværksstatus
-      //langToast("xxxx "+App.udvikling);
+      //langToast("xxxx "+App.fejlsøgning);
 
       if (erOnline()) {
         run(); // Initialisér onlinedata
@@ -284,7 +283,7 @@ public class App extends Application implements Runnable {
           protected Object doInBackground(Object[] params) {
             try {
               String p4kanal = P4Stedplacering.findP4KanalnavnFraIP();
-              if (App.udvikling) App.langToast("p4kanal: " + p4kanal);
+              if (App.fejlsøgning) App.langToast("p4kanal: " + p4kanal);
               if (p4kanal != null) prefs.edit().putString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, p4kanal).commit();
               Log.rapporterFejl(new Exception("Ny enhed - fundet P4-kanal "+p4kanal));
             } catch (Exception e) {
@@ -324,7 +323,7 @@ public class App extends Application implements Runnable {
     boolean før = erIGang > 0;
     erIGang += netværkErIGang ? 1 : -1;
     boolean nu = erIGang > 0;
-    if (udvikling) Log.d("erIGang = " + erIGang);
+    if (fejlsøgning) Log.d("erIGang = " + erIGang);
     if (erIGang < 0) {
       Log.e(new IllegalStateException("erIGang er " + erIGang));
       erIGang = 0;

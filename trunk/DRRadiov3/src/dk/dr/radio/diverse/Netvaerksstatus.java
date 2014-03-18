@@ -27,7 +27,7 @@ public class Netvaerksstatus extends BroadcastReceiver {
   @Override
   public void onReceive(Context context, Intent intent) {
     NetworkInfo networkInfo = App.connectivityManager.getActiveNetworkInfo();
-    if (App.udvikling) App.kortToast("Netvaerksstatus\n" + intent + "\n" + networkInfo);
+    if (App.fejlsøgning) App.kortToast("Netvaerksstatus\n" + intent + "\n" + networkInfo);
 
     Status nyStatus;
 
@@ -41,7 +41,7 @@ public class Netvaerksstatus extends BroadcastReceiver {
 
     if (status != nyStatus) {
       status = nyStatus;
-      if (App.udvikling) App.kortToast("Netvaerksstatus\n" + status);
+      if (App.fejlsøgning) App.kortToast("Netvaerksstatus\n" + status);
       for (Runnable o : observatører) o.run();
     }
   }

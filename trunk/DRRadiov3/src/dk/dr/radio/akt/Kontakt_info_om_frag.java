@@ -29,7 +29,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewDatabase;
 import android.widget.TextView;
 
-import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;

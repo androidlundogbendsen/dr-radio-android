@@ -23,16 +23,12 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.androidquery.AQuery;
-import com.androidquery.AbstractAQuery;
 
 import org.json.JSONArray;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import dk.dr.radio.akt.diverse.Basisadapter;
-import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Lydkilde;
