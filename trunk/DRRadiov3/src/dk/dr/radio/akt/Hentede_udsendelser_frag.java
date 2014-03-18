@@ -45,8 +45,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
     ).getView());
     listView.setCacheColorHint(Color.WHITE);
     
-    TextView overskrift = aq.id(R.id.overskrift).typeface(App.skrift_gibson).text("Downloaded udsendelser liste").getTextView();
-    overskrift.setVisibility(View.VISIBLE);
+    aq.id(R.id.overskrift).typeface(App.skrift_gibson).text("Downloadede udsendelser").getTextView();
 
 
     hentede.observatører.add(this);

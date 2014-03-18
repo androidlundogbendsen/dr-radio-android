@@ -47,8 +47,7 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
     ).getView());
     listView.setCacheColorHint(Color.WHITE);
     
-    TextView overskrift = aq.id(R.id.overskrift).typeface(App.skrift_gibson).text("Favoritter liste").getTextView();
-    overskrift.setVisibility(View.VISIBLE);
+    aq.id(R.id.overskrift).typeface(App.skrift_gibson).text("Dine favoritprogrammer").getTextView();
 
     favoritter.observatører.add(this);
     run();
@@ -155,7 +154,7 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
       Fragment f = new Udsendelse_frag();
       f.setArguments(new Intent()
 //        .putExtra(Udsendelse_frag.BLOKER_VIDERE_NAVIGERING, true)
-//        .putExtra(P_kode, kanal.kode)
+//        .putExtra(P_kode, titel.kode)
           .putExtra(DRJson.Slug.name(), udsendelse.slug)
           .getExtras());
       getActivity().getSupportFragmentManager().beginTransaction()

@@ -83,8 +83,8 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
   
   private static class Viewholder {
 	    public AQuery aq;
+	    public TextView metainformation;
 	    public TextView titel;
-	    public TextView kanal;
 	    public Lydkilde lydkilde;
 	  }
 
@@ -108,9 +108,8 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
         
         vh = new Viewholder();
         a = vh.aq = new AQuery(v);
-        vh.kanal = a.id(R.id.startid).typeface(App.skrift_gibson).getTextView();
-        
-        vh.titel = a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson_fed).getTextView();
+        vh.titel = a.id(R.id.startid).typeface(App.skrift_gibson_fed).getTextView();
+        vh.metainformation = a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
         
         v.setTag(vh);
         
@@ -121,18 +120,18 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
       
       vh.lydkilde = lydkilde;
       
-//      TextView kanal = (TextView) v.findViewById(R.id.startid);
+//      TextView titel = (TextView) v.findViewById(R.id.startid);
 //      TextView titel = (TextView) v.findViewById(R.id.titel_og_kunstner);
 
       Lydkilde k = liste.get(position);
       Udsendelse u = k.getUdsendelse();
-      //kanal.setText(k.kanal().navn);
-      Spannable spannable = new SpannableString(k.kanal().navn);
-      spannable.setSpan(App.skrift_gibson_fed_span, 0, k.kanal().navn.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);  
-      vh.kanal.setText(spannable /*k.kanal().navn*/);
-      
+      //titel.setText(k.titel().navn);
+      //Spannable spannable = new SpannableString(k.kanal().navn);
+      //spannable.setSpan(App.skrift_gibson_fed_span, 0, k.kanal().navn.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+      vh.titel.setText(k.kanal().navn);
+
       String titelStr = "";// u.titel;
-      if (k instanceof Kanal) {            
+      if (k instanceof Kanal) {
         if (u != null) {
         	titelStr = u.titel + " (Direkte)"; 
         	//titel.append(u.titel + " (Direkte)");
@@ -146,10 +145,10 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
         //titel.setText(u.titel + " (" + DRJson.datoformat.format(u.startTid) + ")");
       }
       
-      spannable = new SpannableString(titelStr);
-      spannable.setSpan(App.skrift_gibson, 0, titelStr.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);  
+      //spannable = new SpannableString(titelStr);
+      //spannable.setSpan(App.skrift_gibson, 0, titelStr.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	    
-      vh.titel.setText(spannable);
+      vh.metainformation.setText(titelStr);
       
       //vh.titel.setText(lydkilde.titel);
       //a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
