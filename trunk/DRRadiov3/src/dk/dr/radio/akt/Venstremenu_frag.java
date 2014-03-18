@@ -228,7 +228,6 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     // If the drawer is open, show the global app actions in the action bar. See also
     // showGlobalContextActionBar, which controls the top-left area of the action bar.
     if (drawerLayout != null && isDrawerOpen()) {
-      inflater.inflate(R.menu.venstremenu, menu);
       showGlobalContextActionBar();
     }
     super.onCreateOptionsMenu(menu, inflater);
