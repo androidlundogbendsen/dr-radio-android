@@ -1,33 +1,56 @@
 package dk.dr.radio.data;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.Serialisering;
 
 /**
  * Created by j on 08-03-14.
  */
 public class SenestLyttede {
-  private static final String PREF_NØGLE = "senest lyttede";
   private ArrayList<Lydkilde> liste;
+  private String FILNAVN = App.instans.getFilesDir()+"/SenestLyttede.ser";
 
   public ArrayList<Lydkilde> getListe() {
-    if (liste == null) opretListe();
+    tjekListeOprettet();
     return liste;
   }
 
-  private void opretListe() {
-    liste = new ArrayList<Lydkilde>();
-    String[] linjer = App.prefs.getString(PREF_NØGLE, "").split("\n");
-    for (String linje : linjer) {
-      if (linje.length() == 0) continue;
-
+  private void tjekListeOprettet() {
+    if (liste!=null) return;
+    if (new File(FILNAVN).exists()) try {
+      liste = (ArrayList<Lydkilde>) Serialisering.hent(FILNAVN);
+      return;
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
     }
+    liste = new ArrayList<Lydkilde>();
   }
 
   public void registrérLytning(Lydkilde lydkilde) {
-    getListe();
+    tjekListeOprettet();
     liste.remove(lydkilde);
     liste.add(lydkilde);
+    if (liste.size()>20) liste.remove(0); // Husk kun de seneste 20
+    App.forgrundstråd.removeCallbacks(gemListe);
+    App.forgrundstråd.postDelayed(gemListe, 30000); // Gem listen om 30 sekunder
   }
+
+  private Runnable gemListe = new Runnable() {
+    @Override
+    public void run() {
+      App.forgrundstråd.removeCallbacks(gemListe);
+      try {
+        long tid = System.currentTimeMillis();
+        Serialisering.gem(liste, FILNAVN);
+        Log.d("SenestLyttede: Gemning tog "+(System.currentTimeMillis()-tid)+" ms - filstr:" + new File(FILNAVN).length());
+      } catch (IOException e) {
+        Log.rapporterFejl(e);
+      }
+    }
+  };
 }

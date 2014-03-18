@@ -2,6 +2,7 @@ package dk.dr.radio.data;
 
 import android.os.Build;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,22 +14,17 @@ import dk.dr.radio.diverse.Netvaerksstatus;
 /**
  * En lydkilde der kan spilles af afspilleren
  */
-public abstract class Lydkilde {
+public abstract class Lydkilde implements Serializable {
   public String urn;   // Bemærk - kan være tom!
   public String slug;  // Bemærk - kan være tom!
-  public ArrayList<Lydstream> streams;
-  public Lydstream hentetStream;
+  public transient ArrayList<Lydstream> streams;
+  public transient Lydstream hentetStream;
 
-  private static class Bedst {
-    Lydstream bedsteLydstream;
-    int bedsteScore = Integer.MIN_VALUE;
-
-    void tjekBedst(Lydstream s, int score) {
-      if (bedsteScore < score) {
-        bedsteScore = score;
-        bedsteLydstream = s;
-      }
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (o==null) return false;
+    if (o instanceof Lydkilde && slug!=null) return slug.equals(((Lydkilde)o).slug);
+    return super.equals(o);
   }
 
   public Lydstream findBedsteStream(boolean tilHentning) {

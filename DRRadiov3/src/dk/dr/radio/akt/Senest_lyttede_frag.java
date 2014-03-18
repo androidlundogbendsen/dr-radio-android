@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.androidquery.AQuery;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
@@ -75,6 +76,7 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
     try {
       liste.clear();
       liste.addAll(DRData.instans.senestLyttede.getListe());
+      Collections.reverse(liste);
     } catch (Exception e1) {
       Log.rapporterFejl(e1);
     }
@@ -124,7 +126,6 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
 //      TextView titel = (TextView) v.findViewById(R.id.titel_og_kunstner);
 
       Lydkilde k = liste.get(position);
-      Udsendelse u = k.getUdsendelse();
       //titel.setText(k.titel().navn);
       //Spannable spannable = new SpannableString(k.kanal().navn);
       //spannable.setSpan(App.skrift_gibson_fed_span, 0, k.kanal().navn.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -132,16 +133,9 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
 
       String titelStr = "";// u.titel;
       if (k instanceof Kanal) {
-        if (u != null) {
-        	titelStr = u.titel + " (Direkte)"; 
-        	//titel.append(u.titel + " (Direkte)");
-        }
-        else {
-        	titelStr = "Direkte";
-        	//titel.setText("Direkte");
-        }        
-      } else {    	  
-    	  titelStr = u.titel;
+        titelStr = ((Kanal) k).navn + " (Direkte)";
+      } else {
+        titelStr = ((Udsendelse) k).titel;
         //titel.setText(u.titel + " (" + DRJson.datoformat.format(u.startTid) + ")");
       }
       
@@ -168,9 +162,12 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
     if (k instanceof Kanal) {
       f = new Kanal_frag();
       f.setArguments(new Intent()
-          .putExtra(P_kode, k.kanal().kode)
+          .putExtra(P_kode, ((Kanal) k).kode)
           .getExtras());
     } else {
+      if (!DRData.instans.udsendelseFraSlug.containsKey(k.slug)) {
+        DRData.instans.udsendelseFraSlug.put(k.slug, (Udsendelse) k);
+      }
       f = new Udsendelse_frag();
       f.setArguments(new Intent()
           .putExtra(DRJson.Slug.name(), k.slug)
