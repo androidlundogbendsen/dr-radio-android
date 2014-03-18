@@ -121,13 +121,19 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
     if (k instanceof Kanal) {
       f = new Kanal_frag();
       f.setArguments(new Intent()
-          .putExtra(P_kode, k.kanal().kode).getExtras());
+          .putExtra(P_kode, k.kanal().kode)
+          .getExtras());
     } else {
       f = new Udsendelse_frag();
       f.setArguments(new Intent()
-          .putExtra(DRJson.Slug.name(), k.slug).getExtras());
+          .putExtra(DRJson.Slug.name(), k.slug)
+          .getExtras());
     }
-    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.indhold_frag, f)
+        .addToBackStack(null)
+        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        .commit();
   }
 }
 

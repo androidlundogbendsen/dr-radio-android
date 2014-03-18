@@ -447,7 +447,9 @@ public class Venstremenu_frag extends Fragment implements Runnable {
 
       try {
         Basisfragment f = e.fragKlasse.newInstance();
-        akt.getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).commit();
+        akt.getSupportFragmentManager().beginTransaction()
+            .replace(R.id.indhold_frag, f)
+            .commit();
       } catch (Exception e1) {
         Log.rapporterFejl(e1);
       }

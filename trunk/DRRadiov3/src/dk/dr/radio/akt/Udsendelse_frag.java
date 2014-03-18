@@ -579,8 +579,13 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       f.setArguments(new Intent()
           .putExtra(P_kode, kanal.kode)
           .putExtra(DRJson.Slug.name(), udsendelse.slug)
-          .putExtra(DRJson.SeriesSlug.name(), udsendelse.programserieSlug).getExtras());
-      getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+          .putExtra(DRJson.SeriesSlug.name(), udsendelse.programserieSlug)
+          .getExtras());
+      getActivity().getSupportFragmentManager().beginTransaction()
+          .replace(R.id.indhold_frag, f)
+          .addToBackStack(null)
+          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+          .commit();
     }
   }
 }

@@ -262,8 +262,13 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
       f.setArguments(new Intent()
           .putExtra(Udsendelse_frag.BLOKER_VIDERE_NAVIGERING, true)
           .putExtra(P_kode, kanal == null ? null : kanal.kode)
-          .putExtra(DRJson.Slug.name(), udsendelse.slug).getExtras());
-      getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+          .putExtra(DRJson.Slug.name(), udsendelse.slug)
+          .getExtras());
+      getActivity().getSupportFragmentManager().beginTransaction()
+          .replace(R.id.indhold_frag, f)
+          .addToBackStack(null)
+          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+          .commit();
       return;
     }
 

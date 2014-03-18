@@ -286,6 +286,7 @@ public class App extends Application implements Runnable {
               String p4kanal = P4Stedplacering.findP4KanalnavnFraIP();
               if (App.udvikling) App.langToast("p4kanal: " + p4kanal);
               if (p4kanal != null) prefs.edit().putString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, p4kanal).commit();
+              Log.rapporterFejl(new Exception("Ny enhed - fundet P4-kanal "+p4kanal));
             } catch (Exception e) {
               e.printStackTrace();
             }

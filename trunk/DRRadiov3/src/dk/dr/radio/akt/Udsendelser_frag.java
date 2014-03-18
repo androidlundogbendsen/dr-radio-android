@@ -191,7 +191,8 @@ public class Udsendelser_frag extends Basisfragment {
       f.setArguments(new Intent()
           .putExtra(Kanal_frag.P_kode, kanal.kode)
           .putExtra(Udsendelse_frag.VIS_SPILLER_NU, true)
-          .putExtra(DRJson.Slug.name(), u.slug).getExtras());
+          .putExtra(DRJson.Slug.name(), u.slug)
+          .getExtras());
       return f;
     }
 
