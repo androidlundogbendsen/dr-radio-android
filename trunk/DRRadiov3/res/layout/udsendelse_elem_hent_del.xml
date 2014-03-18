@@ -31,7 +31,7 @@
             android:paddingLeft="16dp"
             android:drawableLeft="@drawable/dri_hent_blaa"
             android:gravity="center_vertical"
-            android:text=" HENT"
+            android:text=" DOWNLOAD"
             android:textColor="@color/blå"
             android:background="@drawable/knap_hvid_bg"/>
 

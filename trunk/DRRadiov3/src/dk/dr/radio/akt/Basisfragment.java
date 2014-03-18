@@ -178,8 +178,9 @@ Jeg bruger selv følgende macro'er i C til generering af URIs:
    * Billedeskalering af billeder på DRs servere.
    */
   public static String skalérSlugBilledeUrl(String slug, int bredde, int højde) {
-    Log.d("skalérSlugBilledeUrl "+slug+" "+bredde+"x"+højde);
-    return "http://asset.dr.dk/imagescaler/?file=/mu/programcard/imageuri/" + slug + "&w=" + bredde + "&h=" + højde + "&scaleAfter=crop";
+    String res = "http://asset.dr.dk/imagescaler/?file=/mu/programcard/imageuri/" + slug + "&w=" + bredde + "&h=" + højde + "&scaleAfter=crop";
+    Log.d("skalérSlugBilledeUrl "+slug+" "+bredde+"x"+højde +" giver: "+res);
+    return res;
   }
 
 
