@@ -1,8 +1,10 @@
 package dk.dr.radio.akt;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.v3.R;
 
 public class Hovedaktivitet extends Basisaktivitet {
@@ -15,6 +17,10 @@ public class Hovedaktivitet extends Basisaktivitet {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    if (App.prefs.getBoolean("tving_lodret_visning", true)) {
+      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
     setContentView(R.layout.hoved_akt);
 
     //ActionBar actionBar = getSupportActionBar();

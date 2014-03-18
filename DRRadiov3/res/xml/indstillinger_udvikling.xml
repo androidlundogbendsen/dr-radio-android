@@ -4,7 +4,31 @@
     <CheckBoxPreference
             android:key="fejlsøgning" android:title="Fejlsøgning"
             android:defaultValue="false" android:summaryOff=""
-            android:summaryOn="Begynd i fejlsøgningstilstand. Appen skal genstartes før det træder i kraft"/>
+            android:summaryOn="Sæt app i fejlsøgningstilstand (også efter genstart)"/>
+
+    <CheckBoxPreference
+            android:key="udsendelser_vandret_skift"
+            android:title="Vandret skift mellem udsendelser"
+            android:defaultValue="false"
+            android:summary="Bladr mellem udsendelser på den normale måde på Android, med vertikalt swipe"/>
+
+    <CheckBoxPreference
+            android:key="udsendelser_bladr_ikke"
+            android:title="Slå skift mellem udsendelser fra"
+            android:defaultValue="false"
+            android:summary="Slå bladring mellem udsendelser helt fra"/>
+
+    <CheckBoxPreference
+            android:key="tving_lodret_visning" android:title="Tving lodret visning"
+            android:defaultValue="true"
+            android:summary="... tving folk til at rejse deres tablet/telefon op (kræver genstart)"/>
+
+
+
+    <!-- 	<EditTextPreference android:key="udviklerKontakt" android:title="Kontakt"
+        android:summary="Skriv din e-postadresse hvis du vil kunne kontaktes i forbindelse
+        med udvikling" android:defaultValue="" /> -->
+
 
     <CheckBoxPreference
             android:key="brugGibsonIVenstremenu"
@@ -25,21 +49,5 @@
             android:defaultValue="false"
             android:summary="Vælg manuelt mellem de tilgængelige streams, indtil API'et kan give korrekte streamtyper"/>
 
-
-    <CheckBoxPreference
-            android:key="udsendelser_vandret_skift"
-            android:title="Vandret skift mellem udsendelser"
-            android:defaultValue="false"
-            android:summary="Bladr mellem udsendelser på den normale måde på Android, med vertikalt swipe"/>
-
-    <CheckBoxPreference
-            android:key="udsendelser_bladr_ikke"
-            android:title="Slå skift mellem udsendelser fra"
-            android:defaultValue="false"
-            android:summary="Slå bladring mellem udsendelser helt fra"/>
-
-    <!-- 	<EditTextPreference android:key="udviklerKontakt" android:title="Kontakt"
-        android:summary="Skriv din e-postadresse hvis du vil kunne kontaktes i forbindelse
-        med udvikling" android:defaultValue="" /> -->
 
 </PreferenceScreen>

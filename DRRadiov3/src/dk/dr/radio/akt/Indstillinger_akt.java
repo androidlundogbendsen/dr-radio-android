@@ -42,6 +42,7 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    App.prefs.edit().putBoolean("fejlsøgning", App.fejlsøgning);
     addPreferencesFromResource(R.xml.indstillinger);
     if (App.prefs.getBoolean("udviklerEkstra", false))
       addPreferencesFromResource(R.xml.indstillinger_udvikling);
@@ -91,6 +92,7 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
   protected void onDestroy() {
     super.onDestroy();
     App.udviklerEkstra = App.prefs.getBoolean("udviklerEkstra", false);
+    App.fejlsøgning = App.prefs.getBoolean("fejlsøgning", false);
   }
 
   @Override
