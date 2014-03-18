@@ -14,10 +14,11 @@
             android:orientation="horizontal" >
 
             <EditText
-                    android:id="@+id/soegFelt"
-                    android:layout_alignParentLeft="true"
+                android:id="@+id/soegFelt"
+                android:layout_alignParentLeft="true"
                 android:layout_marginRight="60dp"
                 android:hint="Søg efter program"
+                android:singleLine="true"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
