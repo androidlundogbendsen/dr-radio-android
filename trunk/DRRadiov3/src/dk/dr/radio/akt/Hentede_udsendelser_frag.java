@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.androidquery.AQuery;
 
@@ -35,7 +36,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    rod = inflater.inflate(R.layout.kanal_frag, container, false);
+    rod = inflater.inflate(R.layout.senest_lyttede, container, false);
 
     AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
@@ -43,6 +44,10 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
         "Du har endnu ikke hentet nogen udsendelser."
     ).getView());
     listView.setCacheColorHint(Color.WHITE);
+    
+    TextView overskrift = aq.id(R.id.overskrift).typeface(App.skrift_gibson).text("Downloaded udsendelser liste").getTextView();
+    overskrift.setVisibility(View.VISIBLE);
+
 
     hentede.observatører.add(this);
     run();
