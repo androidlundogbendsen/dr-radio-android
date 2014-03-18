@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,13 +35,16 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    rod = inflater.inflate(R.layout.kanal_frag, container, false);
+    rod = inflater.inflate(R.layout.senest_lyttede, container, false);
 
     AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).text("Ingen senest lyttede").getView());
     opdaterListe();
-
+    
+    TextView overskrift = aq.id(R.id.overskrift).typeface(App.skrift_gibson).text("Senest lyttede").getTextView();
+    overskrift.setVisibility(View.VISIBLE);
+    
     udvikling_checkDrSkrifter(rod, this + " rod");
     DRData.instans.afspiller.observatører.add(this);
     App.netværk.observatører.add(this);
@@ -95,12 +100,35 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
       Lydkilde k = liste.get(position);
       Udsendelse u = k.getUdsendelse();
       kanal.setText(k.kanal().navn);
-      if (k instanceof Kanal) {
-        if (u != null) titel.append(u.titel + " (Direkte)");
-        else titel.setText("Direkte");
+      
+      
+      String titelStr = "";// u.titel;
+      if (k instanceof Kanal) {    
+    	  
+          
+        if (u != null) {
+        	titelStr = u.titel;
+        	titelStr = u.titel + " (Direkte)"; 
+        	//titel.append(u.titel + " (Direkte)");
+        }
+        else {
+        	titelStr = "Direkte";
+        	//titel.setText("Direkte");
+        }
+        
       } else {
-        titel.setText(u.titel + " (" + DRJson.datoformat.format(u.startTid) + ")");
+    	  
+    	  titelStr = u.titel;
+        //titel.setText(u.titel + " (" + DRJson.datoformat.format(u.startTid) + ")");
       }
+      
+      Spannable spannable = new SpannableString(titelStr);
+      spannable.setSpan(App.skrift_gibson_fed_span, 0, titelStr.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);  
+	  
+      
+     
+      
+      
       //vh.titel.setText(lydkilde.titel);
       //a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
       //a.id(R.id.hør).visibility(lydkilde.kanHøres ? View.VISIBLE : View.GONE);
