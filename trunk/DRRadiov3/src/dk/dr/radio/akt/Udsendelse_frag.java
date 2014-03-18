@@ -216,8 +216,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.udsendelse, menu);
-    menu.findItem(R.id.hør).setVisible(udsendelse.kanHøres).setEnabled(streamsErKlar());
-    menu.findItem(R.id.hent).setVisible(App.hentning.virker() && udsendelse.kanHøres && udsendelse.hentetStream==null);
+    //menu.findItem(R.id.hør).setVisible(udsendelse.kanHøres).setEnabled(streamsErKlar());
+    //menu.findItem(R.id.hent).setVisible(App.hentning.virker() && udsendelse.kanHøres && udsendelse.hentetStream==null);
   }
 
   @Override
