@@ -1,9 +1,11 @@
 package dk.dr.radio.akt;
 
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +25,17 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
   private ViewPager viewPager;
   private ArrayList<Kanal> kanaler = new ArrayList<Kanal>();
 
+
+  private Venstremenu_frag venstremenuFrag;
+  private int mForgåendePosition = -1;
+  private int mNuværendePosition = -1;
+  private boolean visSlideMenu = false;
+
+
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+    super.onCreate(savedInstanceState);   
 
     for (Kanal k : DRData.instans.grunddata.kanaler) {
       if (!k.p4underkanal) kanaler.add(k);
@@ -38,10 +48,11 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
     View rod = inflater.inflate(R.layout.kanaler_frag, container, false);
 
     viewPager = (ViewPager) rod.findViewById(R.id.pager);
-    // Da ViewPager er indlejret i et fragment skal adapteren virke på den indlejrede (child)
-    // fragmentmanageren - ikke på aktivitens (getFragmentManager)
     viewPager.setAdapter(new KanalAdapter(getChildFragmentManager()));
 
+    venstremenuFrag = (Venstremenu_frag) getFragmentManager().findFragmentById(R.id.venstremenu_frag);
+
+    
 
     PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) rod.findViewById(R.id.tabs);
     tabs.setViewPager(viewPager);
@@ -64,20 +75,44 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
 
   @Override
   public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//    Log.d("onPageScrolled( "+position+" "+positionOffset);
-  }
+    Log.d("onPageScrolled( "+position+" "+positionOffset); 
+     mNuværendePosition = position;
+   }
+  
 
   @Override
   public void onPageSelected(int position) {
     // Husk foretrukken kanal
     App.prefs.edit().putString(App.FORETRUKKEN_KANAL, kanaler.get(position).kode).commit();
 //    DRData.instans.aktuelKanal = kanaler.get(position);
-//    Log.d("onPageSelected( "+position);
+    Log.d("onPageSelected( "+position);
+    
+    mForgåendePosition = position;
   }
 
   @Override
   public void onPageScrollStateChanged(int state) {
-//    Log.d("onPageScrollStateChanged( "+state);
+    Log.d("onPageScrollStateChanged( "+state);
+    
+    Log.d("mNuværendePosition "+mNuværendePosition+", mForgåendePosition "+mForgåendePosition ); 
+    
+    if (state ==1 && mForgåendePosition == 0 && mNuværendePosition == 0){
+    	//visSlideMenu = (mForgåendePosition == 0 && mNuværendePosition == 0) ;
+    	venstremenuFrag.visMenu();
+    	mForgåendePosition = -1;
+    	mNuværendePosition = -1;
+    }
+    if (state == 0 && (mForgåendePosition == -1 && mNuværendePosition == 0 )) {
+    	//visSlideMenu = (mForgåendePosition == -1 && mNuværendePosition == 0 ) ; 
+    	venstremenuFrag.visMenu();
+    }
+    
+    /*if (visSlideMenu){
+    	venstremenuFrag.visMenu();
+    	visSlideMenu = false;
+    }*/
+    
+    
   }
 
 
