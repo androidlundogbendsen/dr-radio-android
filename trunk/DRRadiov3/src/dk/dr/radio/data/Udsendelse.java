@@ -19,7 +19,7 @@ public class Udsendelse extends Lydkilde {
   public Date slutTid;
   public String slutTidKl;
 
-  public ArrayList<Playlisteelement> playliste;
+  public transient ArrayList<Playlisteelement> playliste;
   public boolean kanHøres; // om der er nogle streams eller ej
 
   public Udsendelse(String s) {

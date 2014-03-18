@@ -34,8 +34,8 @@ public class Kanal extends Lydkilde {
   public int kanallogo_resid;
   public boolean p4underkanal;
   public String lognøgle = "";
-  public ArrayList<Udsendelse> udsendelser = new ArrayList<Udsendelse>();
-  public SortedMap<String, ArrayList<Udsendelse>> udsendelserPerDag = new TreeMap<String, ArrayList<Udsendelse>>();
+  public transient ArrayList<Udsendelse> udsendelser = new ArrayList<Udsendelse>();
+  public transient SortedMap<String, ArrayList<Udsendelse>> udsendelserPerDag = new TreeMap<String, ArrayList<Udsendelse>>();
 
   @Override
   public String toString() {

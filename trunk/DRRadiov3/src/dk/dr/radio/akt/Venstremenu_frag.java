@@ -433,7 +433,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     }
 
     public void vælgMenu(FragmentActivity akt, int position) {
-      new Exception().printStackTrace();
+      //new Exception().printStackTrace();
       MenuElement e = elem.get(position);
       skjulMenu();
       if (e.runnable != null) {

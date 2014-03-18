@@ -141,7 +141,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   }
 
   private void startOpdaterSpilleliste() {
-    new Exception("startOpdaterSpilleliste() for "+this).printStackTrace();
+    //new Exception("startOpdaterSpilleliste() for "+this).printStackTrace();
     Request<?> req = new DrVolleyStringRequest(kanal.getPlaylisteUrl(udsendelse), new DrVolleyResonseListener() {
       @Override
       public void fikSvar(String json, boolean fraCache) throws Exception {
