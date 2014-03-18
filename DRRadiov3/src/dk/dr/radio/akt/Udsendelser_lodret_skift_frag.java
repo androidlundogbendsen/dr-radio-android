@@ -89,7 +89,7 @@ public class Udsendelser_lodret_skift_frag extends Basisfragment {
     } else {
       liste.add(udsendelse);
       viewPager.setAdapter(adapter);
-      hentUdsendelser(0);
+      if (programserie==null) hentUdsendelser(0);
     }
     return viewPager;
   }

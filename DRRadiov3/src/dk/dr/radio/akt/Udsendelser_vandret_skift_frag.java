@@ -71,7 +71,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment {
     } else {
       liste.add(udsendelse);
       viewPager.setAdapter(adapter);
-      hentUdsendelser(0);
+      if (programserie==null) hentUdsendelser(0);
     }
     return rod;
   }

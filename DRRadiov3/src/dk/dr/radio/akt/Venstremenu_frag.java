@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.androidquery.AQuery;
 
@@ -305,7 +306,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-      View l = elem.get(position).layout;
+      View l = elem.get(position).getView();
       if (position == mCurrentSelectedPosition) {
         Log.d("Selected posion,getView " + mCurrentSelectedPosition);
 //        l.setBackgroundResource(R.drawable.knap_blaa_bg);
@@ -318,14 +319,18 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     }
 
     class MenuElement {
-      final View layout;
+      final View view;
       private final Class<? extends Basisfragment> fragKlasse;
       public Runnable runnable;
 
       MenuElement(View v, Runnable r, Class<? extends Basisfragment> frag) {
-        layout = v;
+        view = v;
         runnable = r;
         fragKlasse = frag;
+      }
+
+      public View getView() {
+        return view;
       }
     }
 
@@ -340,10 +345,13 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     private AQuery aq;
 
 
+    private void tilføj(MenuElement me) {
+      aq = new AQuery(me.view);
+      elem.add(me);
+    }
+
     private void tilføj(int layout, Runnable r, Class<? extends Basisfragment> frag) {
-      View rod = layoutInflater.inflate(layout, null);
-      aq = new AQuery(rod);
-      elem.add(new MenuElement(rod, r, frag));
+      tilføj(new MenuElement(layoutInflater.inflate(layout, null), r, frag));
     }
 
     private void tilføj(int layout, Class<? extends Basisfragment> frag) {
@@ -380,10 +388,16 @@ public class Venstremenu_frag extends Fragment implements Runnable {
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
-      tilføj(R.layout.venstremenu_elem_favoritprogrammer, Favoritprogrammer_frag.class);
-      int antal = DRData.instans.favoritter.getAntalNyeUdsendelser();
-      aq.id(R.id.tekst2).text(antal == 0 ? "(ingen nye udsendelser)" : antal == 1 ? "(1 ny udsendelse)" : "(" + antal + " nye udsendelser)");
-      if (gib) aq.typeface(App.skrift_gibson).id(R.id.tekst).typeface(App.skrift_gibson_fed);
+      tilføj(new MenuElement(layoutInflater.inflate(R.layout.venstremenu_elem_favoritprogrammer, null), null, Favoritprogrammer_frag.class) {
+        @Override
+        public View getView() {
+          TextView tekst2 = (TextView) view.findViewById(R.id.tekst2);
+          int antal = DRData.instans.favoritter.getAntalNyeUdsendelser();
+          tekst2.setText(antal == 0 ? "(ingen nye udsendelser)" : antal == 1 ? "(1 ny udsendelse)" : "(" + antal + " nye udsendelser)");
+          return view;
+        }
+      });
+      if (gib) aq.id(R.id.tekst).typeface(App.skrift_gibson_fed).id(R.id.tekst2).typeface(App.skrift_gibson);
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 

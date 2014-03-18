@@ -80,16 +80,17 @@ public class Favoritter {
     tjekDataOprettet();
     for (Map.Entry<String, String> e : favoritTilStartnummer.entrySet()) {
       final String programserieSlug = e.getKey();
+      Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
+      if (programserie!=null) continue; // Allerede hentet
       int offset = 0;
       String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
       Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
         @Override
         public void fikSvar(String json, boolean fraCache) throws Exception {
           Log.d("favoritter fikSvar(" + fraCache + " " + url);
-          Programserie programserie = null;
           if (json != null && !"null".equals(json)) try {
             JSONObject data = new JSONObject(json);
-            programserie = DRJson.parsProgramserie(data);
+            Programserie programserie = DRJson.parsProgramserie(data);
             programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
             DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
           } catch (Exception ex) {

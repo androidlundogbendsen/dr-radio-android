@@ -66,15 +66,14 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
   public void run() {
     liste.clear();
     try {
-      ArrayList<String> psss = new ArrayList<String>(favoritter.getProgramserieSlugSæt());
-      Collections.sort(psss);
-      Log.d(this + " psss = " + psss);
-      for (String programserieSlug : psss) {
+      ArrayList<String> pss = new ArrayList<String>(favoritter.getProgramserieSlugSæt());
+      Collections.sort(pss);
+      Log.d(this + " psss = " + pss);
+      for (String programserieSlug : pss) {
         Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
         liste.add(programserie);
         int antalNye = favoritter.getAntalNyeUdsendelser(programserieSlug);
-        for (int n = 0; n < antalNye; n++) {
-          if (programserie.udsendelser.size() <= antalNye) break;
+        for (int n = 0; n<antalNye && n<programserie.udsendelser.size(); n++) {
           liste.add(programserie.udsendelser.get(n));
         }
       }
@@ -117,7 +116,7 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
         Programserie ps = (Programserie) obj;
         aq.id(R.id.startid).text(ps.titel).typeface(App.skrift_gibson_fed);
         aq.id(R.id.titel_og_kunstner).text(favoritter.getAntalNyeUdsendelser(ps.slug) + " nye udsendelser").typeface(App.skrift_gibson_fed);
-        aq.id(R.id.stiplet_linje).background(R.drawable.linje);
+        aq.id(R.id.stiplet_linje).background(R.drawable.linje).visibility(position==0?View.INVISIBLE:View.VISIBLE);
       } else {
         Udsendelse udsendelse = (Udsendelse) obj;
         aq.id(R.id.startid).text(DRJson.datoformat.format(udsendelse.startTid)).typeface(App.skrift_gibson);
