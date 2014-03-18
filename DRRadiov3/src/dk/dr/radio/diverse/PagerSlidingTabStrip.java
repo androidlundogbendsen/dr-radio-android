@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dk.dr.radio.akt.diverse;
+package dk.dr.radio.diverse;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

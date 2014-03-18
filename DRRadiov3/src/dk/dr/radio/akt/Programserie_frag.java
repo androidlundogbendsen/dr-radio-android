@@ -22,8 +22,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import dk.dr.radio.akt.diverse.Basisadapter;
-import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Kanal;

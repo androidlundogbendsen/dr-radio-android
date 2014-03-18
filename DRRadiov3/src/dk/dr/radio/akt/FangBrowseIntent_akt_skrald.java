@@ -1,4 +1,4 @@
-package dk.dr.radio.akt.diverse;
+package dk.dr.radio.akt;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,7 +8,7 @@ import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FangBrowseIntent extends Activity {
+public class FangBrowseIntent_akt_skrald extends Activity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +16,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import dk.dr.radio.akt.diverse.Basisfragment;
-import dk.dr.radio.akt.diverse.PagerSlidingTabStrip;
-import dk.dr.radio.akt.diverse.VerticalViewPager;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Kanal;
@@ -29,7 +25,7 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.DrVolleyResonseListener;
 import dk.dr.radio.diverse.DrVolleyStringRequest;
 import dk.dr.radio.diverse.Log;
-import dk.dr.radio.v3.R;
+import dk.dr.radio.diverse.VerticalViewPager;
 
 public class Udsendelser_frag extends Basisfragment {
 

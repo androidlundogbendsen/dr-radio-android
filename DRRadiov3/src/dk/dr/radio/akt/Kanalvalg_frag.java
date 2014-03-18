@@ -31,7 +31,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.diverse.App;

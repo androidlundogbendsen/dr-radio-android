@@ -1,23 +1,20 @@
 package dk.dr.radio.akt;
 
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-import dk.dr.radio.akt.diverse.Basisfragment;
-import dk.dr.radio.akt.diverse.PagerSlidingTabStrip;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.PagerSlidingTabStrip;
 import dk.dr.radio.v3.R;
 
 public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChangeListener {

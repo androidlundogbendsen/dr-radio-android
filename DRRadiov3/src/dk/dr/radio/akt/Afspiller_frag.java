@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.androidquery.AQuery;
 
 import dk.dr.radio.afspilning.Status;
-import dk.dr.radio.akt.diverse.Basisfragment;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Kanal;

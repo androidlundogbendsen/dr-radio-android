@@ -34,7 +34,6 @@ import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.PowerManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -42,7 +41,7 @@ import android.telephony.TelephonyManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import dk.dr.radio.akt.diverse.AfspillerWidget;
+import dk.dr.radio.diverse.AfspillerIkonOgNotifikation;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.diverse.App;
@@ -166,7 +165,7 @@ public class Afspiller {
       setDataSourceLyd = true;
       String str = "Det tog " + (System.currentTimeMillis() - setDataSourceTid) / 100 / 10.0 + " sek før lyden kom";
       Log.d(str);
-      if (App.udvikling) {
+      if (App.fejlsøgning) {
         App.langToast(str);
       }
     }
@@ -249,7 +248,7 @@ public class Afspiller {
       Log.e(new IllegalStateException("setLydkilde(null"));
       return;
     }
-    if (App.udvikling) App.kortToast("setLydkilde:\n" + lydkilde);
+    if (App.fejlsøgning) App.kortToast("setLydkilde:\n" + lydkilde);
     this.lydkilde = lydkilde;
 
 
@@ -268,10 +267,10 @@ public class Afspiller {
   private void opdaterObservatører() {
 
     AppWidgetManager mAppWidgetManager = AppWidgetManager.getInstance(App.instans);
-    int[] appWidgetId = mAppWidgetManager.getAppWidgetIds(new ComponentName(App.instans, AfspillerWidget.class));
+    int[] appWidgetId = mAppWidgetManager.getAppWidgetIds(new ComponentName(App.instans, AfspillerIkonOgNotifikation.class));
 
     for (int id : appWidgetId) {
-      AfspillerWidget.opdaterUdseende(App.instans, mAppWidgetManager, id);
+      AfspillerIkonOgNotifikation.opdaterUdseende(App.instans, mAppWidgetManager, id);
     }
 
     // Notificér alle i observatørlisen - fra en kopi, sådan at de kan fjerne
@@ -407,7 +406,7 @@ public class Afspiller {
         // 2) der højest er 1 fejl pr 20 sekunder så prøv igen
         long dt = System.currentTimeMillis() - onErrorTællerNultid;
 
-        if (onErrorTæller++ < (App.udvikling ? 2 : 10) || (dt / onErrorTæller > 20000)) {
+        if (onErrorTæller++ < (App.fejlsøgning ? 2 : 10) || (dt / onErrorTæller > 20000)) {
           mediaPlayer.stop();
           mediaPlayer.reset();
 

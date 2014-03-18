@@ -1,10 +1,8 @@
 package dk.dr.radio.akt;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 
-import dk.dr.radio.akt.diverse.Basisaktivitet;
 import dk.dr.radio.v3.R;
 
 public class Hovedaktivitet extends Basisaktivitet {

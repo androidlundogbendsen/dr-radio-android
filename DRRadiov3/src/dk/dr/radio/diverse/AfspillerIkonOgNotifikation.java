@@ -16,7 +16,7 @@
 
  */
 
-package dk.dr.radio.akt.diverse;
+package dk.dr.radio.diverse;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
@@ -44,7 +44,7 @@ import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
 @SuppressLint("NewApi")
-public class AfspillerWidget extends AppWidgetProvider {
+public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
 
 
   @Override

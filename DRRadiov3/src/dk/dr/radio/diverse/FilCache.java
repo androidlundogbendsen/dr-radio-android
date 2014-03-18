@@ -69,11 +69,11 @@ public class FilCache {
     String cacheFilnavn = findLokaltFilnavn(url);
     File cacheFil = new File(cacheFilnavn);
 
-    if (App.udvikling) log("cacheFil lastModified " + new Date(cacheFil.lastModified()) + " for " + url);
+    if (App.fejlsøgning) log("cacheFil lastModified " + new Date(cacheFil.lastModified()) + " for " + url);
     long nu = System.currentTimeMillis();
 
     if (cacheFil.exists() && ændrerSigIkke) {
-      if (App.udvikling) log("Læser " + cacheFilnavn);
+      if (App.fejlsøgning) log("Læser " + cacheFilnavn);
       return cacheFilnavn;
     } else {
       long hentHvisNyereEnd = cacheFil.lastModified();
@@ -139,7 +139,7 @@ public class FilCache {
           continue;
         }
 
-        if (App.udvikling) log("Henter " + url + " og gemmer i " + cacheFilnavn);
+        if (App.fejlsøgning) log("Henter " + url + " og gemmer i " + cacheFilnavn);
         InputStream is = httpForb.getInputStream();
         FileOutputStream fos = new FileOutputStream(cacheFilnavn + "_tmp");
         String indkodning = httpForb.getHeaderField("Content-Encoding");
@@ -148,7 +148,7 @@ public class FilCache {
           is = new GZIPInputStream(is); // Pak data ud
         }
         kopierOgLuk(is, fos);
-        if (App.udvikling)
+        if (App.fejlsøgning)
           log(httpForb.getHeaderField("Content-Length") + " blev til " + new File(cacheFilnavn).length());
         cacheFil.delete();
         new File(cacheFilnavn + "_tmp").renameTo(cacheFil);
@@ -180,7 +180,7 @@ public class FilCache {
     String cacheFilnavn = url.replace('?', '_').replace('/', '_').replace('&', '_'); // f.eks.
     // byvejr_dag1?by=2500&mode=long
     cacheFilnavn = lagerDir + "/" + cacheFilnavn;
-    if (App.udvikling) log("URL: " + url + "  -> " + cacheFilnavn);
+    if (App.fejlsøgning) log("URL: " + url + "  -> " + cacheFilnavn);
     return cacheFilnavn;
   }
 
