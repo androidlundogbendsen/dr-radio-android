@@ -35,11 +35,6 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
   private TextView metainformation;
 
   @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-  }
-
-  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     Log.d("Viser fragment " + this);
     View rod = inflater.inflate(R.layout.afspiller_lille_frag, container, false);
@@ -49,9 +44,6 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     progressbar = aq.id(R.id.progressBar).getProgressBar();
     titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
     metainformation = aq.id(R.id.metainformation).typeface(App.skrift_gibson).getTextView();
-    DRData.instans.afspiller.observatører.add(this);
-    DRData.instans.afspiller.forbindelseobservatører.add(this);
-    run(); // opdatér views
     // Knappen er meget vigtig, og har derfor et udvidet område hvor det også er den man rammer
     // se http://developer.android.com/reference/android/view/TouchDelegate.html
     final int udvid = getResources().getDimensionPixelSize(R.dimen.hørknap_udvidet_klikområde);
@@ -68,6 +60,9 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         ((View) startStopKnap.getParent()).setTouchDelegate(new TouchDelegate(r, startStopKnap));
       }
     });
+    DRData.instans.afspiller.observatører.add(this);
+    DRData.instans.afspiller.forbindelseobservatører.add(this);
+    run(); // opdatér views
 
     return rod;
   }
@@ -138,9 +133,12 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
             .putExtra(DRJson.Slug.name(), udsendelse.slug).getExtras());
         //Forkert: getFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
         //Forkert: getChildFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+        getActivity().getSupportFragmentManager().beginTransaction()
+            .replace(R.id.indhold_frag, f)
+            .addToBackStack(null)
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            .commit();
       }
     }
   }
 }
-

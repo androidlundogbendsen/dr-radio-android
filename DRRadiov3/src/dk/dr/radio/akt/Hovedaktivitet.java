@@ -28,8 +28,9 @@ public class Hovedaktivitet extends Basisaktivitet {
     venstremenuFrag.setUp(R.id.venstremenu_frag, (DrawerLayout) findViewById(R.id.drawer_layout));
 
     if (savedInstanceState == null) {
-      FragmentManager fragmentManager = getSupportFragmentManager();
-      fragmentManager.beginTransaction().replace(R.id.indhold_frag, new Kanaler_frag()).commit();
+      getSupportFragmentManager().beginTransaction()
+          .replace(R.id.indhold_frag, new Kanaler_frag())
+          .commit();
     }
   }
 
