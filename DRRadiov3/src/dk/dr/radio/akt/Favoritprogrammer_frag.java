@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.androidquery.AQuery;
 
@@ -35,7 +36,7 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    rod = inflater.inflate(R.layout.kanal_frag, container, false);
+    rod = inflater.inflate(R.layout.senest_lyttede, container, false);
 
     AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
@@ -45,6 +46,9 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
             "Favoritprogrammer kan vælges ved at markere hjerte-ikonet ved de enkelte programserievisninger."
     ).getView());
     listView.setCacheColorHint(Color.WHITE);
+    
+    TextView overskrift = aq.id(R.id.overskrift).typeface(App.skrift_gibson).text("Favoritter liste").getTextView();
+    overskrift.setVisibility(View.VISIBLE);
 
     favoritter.observatører.add(this);
     run();
