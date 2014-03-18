@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -90,7 +91,8 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     }
 
     // Select either the default item (0) or the last selected item.
-    selectItem(mCurrentSelectedPosition);
+    sætListemarkering(mCurrentSelectedPosition);
+    skjulMenu();
   }
 
   @Override
@@ -99,8 +101,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        boolean skift = venstremenuAdapter.vælgMenu(getActivity(), position);
-        if (skift) selectItem(position);
+        venstremenuAdapter.vælgMenu(getActivity(), position);
       }
     });
     venstremenuAdapter = new VenstremenuAdapter(getActionBar().getThemedContext());
@@ -200,13 +201,10 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     this.drawerLayout.setDrawerListener(mDrawerToggle);
   }
 
-  private void selectItem(int position) {
+  public void sætListemarkering(int position) {
     mCurrentSelectedPosition = position;
     if (listView != null) {
       listView.setItemChecked(position, true);
-    }
-    if (drawerLayout != null) {
-      drawerLayout.closeDrawer(fragmentContainerView);
     }
   }
 
@@ -264,10 +262,13 @@ public class Venstremenu_frag extends Fragment implements Runnable {
   }
 
   public void skjulMenu() {
-    drawerLayout.closeDrawer(fragmentContainerView);
+    if (drawerLayout != null) {
+      drawerLayout.closeDrawer(fragmentContainerView);
+    }
   }
 
 
+  public static int FORSIDE_INDEX = 3;
   class VenstremenuAdapter extends Basisadapter {
     ArrayList<MenuElement> elem = new ArrayList<MenuElement>();
 
@@ -363,6 +364,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
+      FORSIDE_INDEX = elem.size();
       tilføj(R.layout.venstremenu_elem_overskrift, Kanaler_frag.class);
       aq.id(R.id.tekst).text("Forside");
       if (gib) aq.typeface(App.skrift_gibson_fed);
@@ -427,30 +429,30 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       if (gib) aq.typeface(App.skrift_gibson_fed);
     }
 
-
-    /**
-     * @param akt
-     * @param position
-     * @return om der skal skiftes menupunkt (det skal der ikke hvis det er en Runnable, dvs en ny aktivet blev startet)
-     */
-    public boolean vælgMenu(FragmentActivity akt, int position) {
+    public void vælgMenu(FragmentActivity akt, int position) {
       MenuElement e = elem.get(position);
-
+      skjulMenu();
       if (e.runnable != null) {
         e.runnable.run();
-        return false;
+        sætListemarkering(-1); // Ingen listemarkering
+        return;
       }
 
+      sætListemarkering(position);
 
       try {
+        FragmentManager fm = akt.getSupportFragmentManager();
+        // Fjern backstak - så vi starter forfra i 'roden'
+        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        Log.d("Venstremenu viser "+e.fragKlasse);
         Basisfragment f = e.fragKlasse.newInstance();
-        akt.getSupportFragmentManager().beginTransaction()
+        fm.beginTransaction()
             .replace(R.id.indhold_frag, f)
+            .addToBackStack("Venstremenu")
             .commit();
       } catch (Exception e1) {
         Log.rapporterFejl(e1);
       }
-      return true;
     }
   }
 }
