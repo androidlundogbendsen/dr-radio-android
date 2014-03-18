@@ -10,6 +10,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -86,8 +87,10 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
       mFromSavedInstanceState = true;
     } else {
-      mCurrentSelectedPosition = 2; //9;
-      venstremenuAdapter.vælgMenu(getActivity(), mCurrentSelectedPosition);
+      mCurrentSelectedPosition = FORSIDE_INDEX; //9;
+      //venstremenuAdapter.vælgMenu(getActivity(), mCurrentSelectedPosition);
+      sætListemarkering(mCurrentSelectedPosition);
+
     }
 
     // Select either the default item (0) or the last selected item.
@@ -430,6 +433,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     }
 
     public void vælgMenu(FragmentActivity akt, int position) {
+      new Exception().printStackTrace();
       MenuElement e = elem.get(position);
       skjulMenu();
       if (e.runnable != null) {
@@ -446,10 +450,11 @@ public class Venstremenu_frag extends Fragment implements Runnable {
         fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         Log.d("Venstremenu viser "+e.fragKlasse);
         Basisfragment f = e.fragKlasse.newInstance();
-        fm.beginTransaction()
-            .replace(R.id.indhold_frag, f)
-            .addToBackStack("Venstremenu")
-            .commit();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.indhold_frag, f);
+        // Tilbageknappen skal gå til forsiden - undtagen hvis vi ER på forsiden
+        if (position!=FORSIDE_INDEX) ft.addToBackStack("Venstremenu");
+        ft.commit();
       } catch (Exception e1) {
         Log.rapporterFejl(e1);
       }
