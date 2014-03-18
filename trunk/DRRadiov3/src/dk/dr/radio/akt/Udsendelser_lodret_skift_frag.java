@@ -27,7 +27,7 @@ import dk.dr.radio.diverse.DrVolleyStringRequest;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.VerticalViewPager;
 
-public class Udsendelser_frag extends Basisfragment {
+public class Udsendelser_lodret_skift_frag extends Basisfragment {
 
   private VerticalViewPager viewPager;
 
