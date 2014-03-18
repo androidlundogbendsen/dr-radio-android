@@ -194,7 +194,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
           String tekst = "ALLE UDSENDELSER";
           aq.id(R.id.alle_udsendelser).typeface(App.skrift_gibson).text(lavFedSkriftTil(tekst + " (" + programserie.antalUdsendelser + ")", tekst.length()));
           aq.id(R.id.beskrivelse).text(programserie.beskrivelse).typeface(App.skrift_georgia);
-          Linkify.addLinks(aq.getTextView(), Linkify.ALL);
+          Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS);
           favorit = aq.id(R.id.favorit).clicked(Programserie_frag.this).getCheckBox();
           favorit.setChecked(DRData.instans.favoritter.erFavorit(programserieSlug));
 

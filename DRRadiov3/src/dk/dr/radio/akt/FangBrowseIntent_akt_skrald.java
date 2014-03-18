@@ -22,14 +22,12 @@ public class FangBrowseIntent_akt_skrald extends Activity {
 
     if (urlFraIntent == null) {
       TextView tv = new TextView(this);
-      tv.setText("Dette eksempel viser hvordan man fanger et browserintent.\n"
-          + "Gå ind på http://javabog.dk og vælg et kapitel fra grundbogen, "
-          + "f.eks http://javabog.dk/OOP/kapitel3.jsp ");
-      Linkify.addLinks(tv, Linkify.ALL);
+      tv.setText("Dette eksempel viser hvordan man fanger et browserintent. ");
+      Linkify.addLinks(tv, Linkify.WEB_URLS);
       setContentView(tv);
     } else {
       // Ok, der var en URL med i intentet
-      Toast.makeText(this, "AndroidElementer viser\n" + urlFraIntent, Toast.LENGTH_LONG).show();
+      Toast.makeText(this, " viser\n" + urlFraIntent, Toast.LENGTH_LONG).show();
       Toast.makeText(this, "Intent var\n" + i, Toast.LENGTH_LONG).show();
 
       WebView webView = new WebView(this);
