@@ -28,6 +28,9 @@ import android.widget.TextView;
 import com.androidquery.AQuery;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
@@ -66,6 +69,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
   private boolean mFromSavedInstanceState;
   private boolean mUserLearnedDrawer;
   private VenstremenuAdapter venstremenuAdapter;
+  private HashMap<Class,Integer> fragmentklasseTilMenuposition = new HashMap<Class, Integer>();
 
 
   @Override
@@ -90,8 +94,6 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     } else {
       mCurrentSelectedPosition = FORSIDE_INDEX; //9;
       //venstremenuAdapter.vælgMenu(getActivity(), mCurrentSelectedPosition);
-      sætListemarkering(mCurrentSelectedPosition);
-
     }
 
     // Select either the default item (0) or the last selected item.
@@ -185,6 +187,24 @@ public class Venstremenu_frag extends Fragment implements Runnable {
         }
 
         getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+
+
+        // Løb listen af fragmenter igennem bagfra.
+        // Valgt menupunkt svarer til det første fragment der passer med noget i menuen
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        List<Fragment> fragments = new ArrayList<Fragment>(fm.getFragments());
+        Collections.reverse(fragments);
+        for(Fragment fragment : fragments) {
+          Log.d("fragment="+fragment);
+          if(fragment != null && fragment.isVisible()) {
+            Integer pos = fragmentklasseTilMenuposition.get(fragment.getClass());
+            if (pos==null) continue;
+            Log.d("... fundet pos="+pos);
+            sætListemarkering(pos);
+          }
+//        return fragment;
+
+        }
       }
     };
 
@@ -240,8 +260,6 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     if (mDrawerToggle.onOptionsItemSelected(item)) {
       return true;
     }
-
-
     return super.onOptionsItemSelected(item);
   }
 
@@ -344,9 +362,9 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     private final LayoutInflater layoutInflater;
     private AQuery aq;
 
-
     private void tilføj(MenuElement me) {
       aq = new AQuery(me.view);
+      fragmentklasseTilMenuposition.put(me.fragKlasse, elem.size());
       elem.add(me);
     }
 

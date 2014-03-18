@@ -192,8 +192,10 @@ public class Kanalvalg_frag extends Basisfragment implements AdapterView.OnItemC
     App.prefs.edit().putString(App.FORETRUKKEN_KANAL, kanalkode).commit();
     DRData.instans.afspiller.setLydkilde(kanal);
 
-    FragmentManager fragmentManager = getFragmentManager();
-    fragmentManager.beginTransaction().replace(R.id.indhold_frag, new Kanaler_frag()).commit();
+    FragmentManager fm = getFragmentManager();
+    // Fjern backstak - så vi starter forfra i 'roden'
+    fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    fm.beginTransaction().replace(R.id.indhold_frag, new Kanaler_frag()).commit();
     //Toast.makeText(this, "Klik på "+position+" "+kanal.longName, Toast.LENGTH_LONG).show();
 
     //if (kanalkode.equals(DRData.instans.aktuelKanal.kode)) setResult(RESULT_CANCELED);
