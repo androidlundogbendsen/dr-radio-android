@@ -75,9 +75,10 @@ public class DrVolleyStringRequest extends StringRequest {
     long servertid = HttpHeaderParser.parseDateAsEpoch(response.headers.get("Date"));
     if (servertid > 0) {
       long serverkorrektionTilKlienttidMs2 = servertid - System.currentTimeMillis();
-      if (Math.abs(serverkorrektionTilKlienttidMs - serverkorrektionTilKlienttidMs2) > 10000) {
+      if (Math.abs(serverkorrektionTilKlienttidMs - serverkorrektionTilKlienttidMs2) > 30000) {
         Log.d("SERVERTID korrigerer tid - serverkorrektionTilKlienttidMs=" + serverkorrektionTilKlienttidMs2);
         serverkorrektionTilKlienttidMs = serverkorrektionTilKlienttidMs2;
+        new Exception().printStackTrace();
       }
     }
 
