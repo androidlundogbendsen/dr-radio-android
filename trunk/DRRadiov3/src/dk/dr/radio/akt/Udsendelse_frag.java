@@ -56,18 +56,18 @@ import dk.dr.radio.v3.R;
 public class Udsendelse_frag extends Basisfragment implements View.OnClickListener, AdapterView.OnItemClickListener, SeekBar.OnSeekBarChangeListener, Runnable {
 
   public static final String BLOKER_VIDERE_NAVIGERING = "BLOKER_VIDERE_NAVIGERING";
-  public static final String VIS_SPILLER_NU = "VIS_SPILLER_NU";
+  public static final String AKTUEL_UDSENDELSE_SLUG = "AKTUEL_UDSENDELSE_SLUG";
   private ListView listView;
   private Kanal kanal;
   protected View rod;
   private Udsendelse udsendelse;
   private boolean blokerVidereNavigering;
-  private boolean visSpillerNu;
   private ArrayList<Object> liste = new ArrayList<Object>();
   Afspiller afspiller = DRData.instans.afspiller;
   private TextView seekBarTekst;
   private SeekBar seekBar;
   private boolean fragmentErSynligt;
+  private boolean aktuelUdsendelsePåKanalen;
 
   @Override
   public String toString() {
@@ -83,8 +83,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       return rod;
     }
     if (kanal == null) kanal = udsendelse.kanal();
+    aktuelUdsendelsePåKanalen = udsendelse.slug.equals(getArguments().getString(AKTUEL_UDSENDELSE_SLUG));
     blokerVidereNavigering = getArguments().getBoolean(BLOKER_VIDERE_NAVIGERING);
-    visSpillerNu = getArguments().getBoolean(VIS_SPILLER_NU, false);
 
     Log.d("onCreateView " + this);
 
@@ -129,10 +129,24 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 //      DRData.instans.afspiller.setLydkilde(udsendelse);
 //    }
 
+    opdaterSpillelisteRunnable.run();
+
+    setHasOptionsMenu(true);
+    bygListe();
+
+    afspiller.observatører.add(this);
+    App.hentning.observatører.add(this);
+    udvikling_checkDrSkrifter(rod, this + " rod");
+    return rod;
+  }
+
+  private void startOpdaterSpilleliste() {
+    new Exception("startOpdaterSpilleliste() for "+this).printStackTrace();
     Request<?> req = new DrVolleyStringRequest(kanal.getPlaylisteUrl(udsendelse), new DrVolleyResonseListener() {
       @Override
       public void fikSvar(String json, boolean fraCache) throws Exception {
-        Log.d("fikSvar playliste(" + fraCache + " " + url);
+        Log.d("fikSvar playliste(" + fraCache + " " + url+"   "+this);
+        if (fraCache && udsendelse.playliste!=null) return; // Vi har allerede en liste, det må være den fra cachen
         if (json != null && !"null".equals(json)) try {
           udsendelse.playliste = DRJson.parsePlayliste(new JSONArray(json));
           bygListe();
@@ -143,15 +157,18 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       }
     }).setTag(this);
     App.volleyRequestQueue.add(req);
-
-    setHasOptionsMenu(true);
-    bygListe();
-
-    afspiller.observatører.add(this);
-    App.hentning.observatører.add(this);
-    udvikling_checkDrSkrifter(rod, this + " rod");
-    return rod;
   }
+
+  Runnable opdaterSpillelisteRunnable = new Runnable() {
+    @Override
+    public void run() {
+      App.forgrundstråd.removeCallbacks(opdaterSpillelisteRunnable);
+      startOpdaterSpilleliste();
+      if (aktuelUdsendelsePåKanalen) {
+        App.forgrundstråd.postDelayed(opdaterSpillelisteRunnable, 15000);
+      }
+    }
+  };
 
   @Override
   public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -272,12 +289,12 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       if (udsendelse.playliste != null && udsendelse.playliste.size() > 0) {
         liste.add(PLAYLISTE_KAPITLER_INFO_OVERSKRIFT);
         if (visHelePlaylisten) {
-          if (visSpillerNu) udsendelse.playliste.get(0).spillerNu = true;
+          if (aktuelUdsendelsePåKanalen) udsendelse.playliste.get(0).spillerNu = true;
           liste.addAll(udsendelse.playliste);
         } else {
           for (int i = 0; i < 4 && i < udsendelse.playliste.size(); i++) {
             Playlisteelement e = udsendelse.playliste.get(i);
-            e.spillerNu = (i == 0 && visSpillerNu);
+            e.spillerNu = (i == 0 && aktuelUdsendelsePåKanalen);
             liste.add(e);
           }
           liste.add(VIS_HELE_PLAYLISTEN);
@@ -307,7 +324,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         if (seekBarTekst.getVisibility()==View.INVISIBLE) { // Kun hvis vi ikke er i gang med at søge i udsendelsen
           seekBar.setProgress(afspiller.getCurrentPosition());
         }
-        App.forgrundstråd.postDelayed(this, 10000);
+        App.forgrundstråd.postDelayed(this, 15000);
       } catch (Exception e) { Log.rapporterFejl(e); }
     }
   };
@@ -384,7 +401,6 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           aq.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
 
           aq.id(R.id.lige_nu).gone();
-          aq.id(R.id.playliste).typeface(App.skrift_gibson).visibility(streamsErKlar() ? View.VISIBLE : View.INVISIBLE);
           aq.id(R.id.info).typeface(App.skrift_gibson);
           aq.id(R.id.logo).image(kanal.kanallogo_resid);
           aq.id(R.id.titel_og_tid).typeface(App.skrift_gibson).text(lavFedSkriftTil(udsendelse.titel + " - " + DRJson.datoformat.format(udsendelse.startTid), udsendelse.titel.length()));
@@ -395,7 +411,6 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
           vh.titel.setText(udsendelse.titel.toUpperCase());
           aq.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
-          if (udsendelse.hentetStream!=null) aq.text("HØR HENTET UDSENDELSE");
           seekBarTekst = aq.id(R.id.seekBarTekst).invisible().getTextView();
           seekBar = aq.id(R.id.seekBar).getSeekBar();
           seekBar.setOnSeekBarChangeListener(Udsendelse_frag.this);
@@ -433,8 +448,15 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           seekBar.setMax(afspiller.getDuration());
           opdaterSeekBar.run();
         }
-        aq.id(R.id.hør).enabled(streamsKlar && !denneUdsForbinder).visibility(udsendelse.kanHøres && !denneUdsSpiller? View.VISIBLE : View.GONE);
+        aq.id(R.id.hør).enabled(aktuelUdsendelsePåKanalen || streamsKlar && !denneUdsForbinder).visibility(aktuelUdsendelsePåKanalen || udsendelse.kanHøres && !denneUdsSpiller? View.VISIBLE : View.GONE);
         if (udsendelse.hentetStream!=null) aq.text("HØR HENTET UDSENDELSE");
+        if (aktuelUdsendelsePåKanalen) {
+          boolean spillerDenneKanal = DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET && DRData.instans.afspiller.getLydkilde() == kanal;
+          boolean online = App.netværk.erOnline();
+          vh.aq.id(R.id.hør_live).enabled(!spillerDenneKanal && online).text(
+              !online ? "Internetforbindelse mangler" :
+                  (spillerDenneKanal ? " SPILLER " : " HØR ") + kanal.navn.toUpperCase() + " LIVE");
+        }
         aq.id(R.id.hent).enabled(streamsKlar).visibility(udsendelse.hentetStream==null && udsendelse.kanHøres && App.hentning.virker() ? View.VISIBLE : View.GONE);
         aq.id(R.id.kan_endnu_ikke_hentes).visibility(!udsendelse.kanHøres ? View.VISIBLE : View.GONE);
       } else if (type == SPILLER_NU || type == SPILLEDE) {
@@ -512,6 +534,11 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
   private void hør() {
     try {
+      if (aktuelUdsendelsePåKanalen) {
+        // Så skal man lytte til livestreamet
+        Kanal_frag.hør(kanal, getActivity());
+        return;
+      }
       if (!streamsErKlar()) return;
       if (App.fejlsøgning) App.kortToast("kanal.streams=" + kanal.streams);
       if (!App.EMULATOR) {
