@@ -125,6 +125,8 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
       }
       aq.id(R.id.titel_og_kunstner).text(udsendelse.titel)
           .textColor(udsendelse.kanHøres ? Color.BLACK : App.color.grå60);
+      // Skjul stiplet linje over øverste listeelement
+      aq.id(R.id.stiplet_linje).visibility(position==0?View.INVISIBLE:View.VISIBLE);
 
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
 
