@@ -1,5 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
+<!--
     <item
             android:id="@+id/hør"
             android:title="Hør udsendelse"
@@ -12,6 +13,7 @@
             android:orderInCategory="1"
             android:icon="@drawable/dri_hent_graa40"
             app:showAsAction="always"/>
+            -->
     <item
             android:id="@+id/del"
             android:title="Del"
