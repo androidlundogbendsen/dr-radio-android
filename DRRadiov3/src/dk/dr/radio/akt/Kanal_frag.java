@@ -1,5 +1,6 @@
 package dk.dr.radio.akt;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -511,11 +512,11 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       Log.rapporterOgvisFejl(getActivity(), new IllegalStateException("kanal.streams er null"));
     } else {
       // hør_udvidet_klikområde eller hør
-      hør();
+      hør(kanal, getActivity());
     }
   }
 
-  private void hør() {
+  public static void hør(final Kanal kanal, Activity akt) {
     if (!App.EMULATOR) {
       HashMap<String, String> param = new HashMap<String, String>();
       param.put("kanal", kanal.kode);
@@ -526,8 +527,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     if (App.prefs.getBoolean("manuelStreamvalg", false)) {
       kanal.nulstilForetrukkenStream();
       final List<Lydstream> lydstreamList = kanal.findBedsteStreams(false);
-      new AlertDialog.Builder(getActivity())
-          .setAdapter(new ArrayAdapter(getActivity(), R.layout.skrald_vaelg_streamtype, lydstreamList), new DialogInterface.OnClickListener() {
+      new AlertDialog.Builder(akt)
+          .setAdapter(new ArrayAdapter(akt, R.layout.skrald_vaelg_streamtype, lydstreamList), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
               lydstreamList.get(which).foretrukken = true;
@@ -552,6 +553,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       //startActivity(new Intent(getActivity(), VisFragment_akt.class)
       //    .putExtra(P_kode, kanal.kode)
       //    .putExtra(VisFragment_akt.KLASSE, Udsendelse_frag.class.getName()).putExtra(DRJson.Slug.name(), u.slug)); // Udsenselses-ID
+      String aktuelUdsendelseSlug = aktuelUdsendelseIndex > 0 ? liste.get(aktuelUdsendelseIndex).slug : "";
+
 
       Fragment f =
           App.prefs.getBoolean("udsendelser_bladr_ikke", false)? new Udsendelse_frag():
@@ -559,11 +562,9 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
               new Udsendelser_lodret_skift_frag();
       f.setArguments(new Intent()
           .putExtra(P_kode, kanal.kode)
-          .putExtra(Udsendelse_frag.VIS_SPILLER_NU, true)
+          .putExtra(Udsendelse_frag.AKTUEL_UDSENDELSE_SLUG, aktuelUdsendelseSlug)
           .putExtra(DRJson.Slug.name(), u.slug)
           .getExtras());
-      //Forkert: getFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
-      //Forkert: getChildFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
       getActivity().getSupportFragmentManager().beginTransaction()
           .replace(R.id.indhold_frag, f)
           .addToBackStack(null)

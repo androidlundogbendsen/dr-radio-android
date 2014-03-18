@@ -168,7 +168,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment {
       Udsendelse_frag f = new Udsendelse_frag();
       f.setArguments(new Intent()
           .putExtra(Kanal_frag.P_kode, kanal.kode)
-          .putExtra(Udsendelse_frag.VIS_SPILLER_NU, true)
+          .putExtra(Udsendelse_frag.AKTUEL_UDSENDELSE_SLUG, getArguments().getString(Udsendelse_frag.AKTUEL_UDSENDELSE_SLUG))
           .putExtra(DRJson.Slug.name(), u.slug)
           .getExtras());
       return f;

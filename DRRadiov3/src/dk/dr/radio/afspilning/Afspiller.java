@@ -428,7 +428,7 @@ public class Afspiller {
     }
 
     public void onBufferingUpdate(MediaPlayer mp, int procent) {
-      Log.d("Afspiller onBufferingUpdate : " + procent + " " + mpTils());
+      if (App.fejlsøgning) Log.d("Afspiller onBufferingUpdate : " + procent + " " + mpTils());
       if (procent < -100) procent = -1; // Ignorér vilde tal
 
       sendOnAfspilningForbinder(procent);
