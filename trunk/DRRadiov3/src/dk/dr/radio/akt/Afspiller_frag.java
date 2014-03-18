@@ -121,8 +121,9 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
       Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
       FragmentManager fm = getFragmentManager();
       if (lydkilde.erStreaming()) {
-        // Vis kanaler (den aktuelle kanal vælges automatisk af Kanaler_frag)
+        // Fjern backstak - så vi starter forfra i 'roden'
         fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        // Vis kanaler (den aktuelle kanal vælges automatisk af Kanaler_frag)
         fm.beginTransaction().replace(R.id.indhold_frag, new Kanaler_frag()).commit();
       } else {
         Udsendelse udsendelse = lydkilde.getUdsendelse();

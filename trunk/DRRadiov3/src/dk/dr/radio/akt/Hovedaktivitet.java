@@ -29,6 +29,7 @@ public class Hovedaktivitet extends Basisaktivitet {
       getSupportFragmentManager().beginTransaction()
           .replace(R.id.indhold_frag, new Kanaler_frag())
           .commit();
+      venstremenuFrag.sætListemarkering(Venstremenu_frag.FORSIDE_INDEX); // "Forside
     }
   }
 
