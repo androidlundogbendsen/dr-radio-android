@@ -80,6 +80,13 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
     }
     adapter.notifyDataSetChanged();
   }
+  
+  private static class Viewholder {
+	    public AQuery aq;
+	    public TextView titel;
+	    public TextView kanal;
+	    public Lydkilde lydkilde;
+	  }
 
 
   private BaseAdapter adapter = new Basisadapter() {
@@ -90,49 +97,64 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
+    	
+    	Viewholder vh;
+        AQuery a;
+        Lydkilde lydkilde = liste.get(position);
+        
       if (v == null) {
         v = getLayoutInflater(null).inflate(R.layout.elem_tid_titel_kunstner, parent, false);
         v.setBackgroundResource(0);
-      }
-      TextView kanal = (TextView) v.findViewById(R.id.startid);
-      TextView titel = (TextView) v.findViewById(R.id.titel_og_kunstner);
+        
+        vh = new Viewholder();
+        a = vh.aq = new AQuery(v);
+        vh.kanal = a.id(R.id.startid).typeface(App.skrift_gibson).getTextView();
+        
+        vh.titel = a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson_fed).getTextView();
+        
+        v.setTag(vh);
+        
+      }else {
+          vh = (Viewholder) v.getTag();
+          a = vh.aq;
+        }
+      
+      vh.lydkilde = lydkilde;
+      
+//      TextView kanal = (TextView) v.findViewById(R.id.startid);
+//      TextView titel = (TextView) v.findViewById(R.id.titel_og_kunstner);
 
       Lydkilde k = liste.get(position);
       Udsendelse u = k.getUdsendelse();
-      kanal.setText(k.kanal().navn);
-      
+      //kanal.setText(k.kanal().navn);
+      Spannable spannable = new SpannableString(k.kanal().navn);
+      spannable.setSpan(App.skrift_gibson_fed_span, 0, k.kanal().navn.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);  
+      vh.kanal.setText(spannable /*k.kanal().navn*/);
       
       String titelStr = "";// u.titel;
-      if (k instanceof Kanal) {    
-    	  
-          
+      if (k instanceof Kanal) {            
         if (u != null) {
-        	titelStr = u.titel;
         	titelStr = u.titel + " (Direkte)"; 
         	//titel.append(u.titel + " (Direkte)");
         }
         else {
         	titelStr = "Direkte";
         	//titel.setText("Direkte");
-        }
-        
-      } else {
-    	  
+        }        
+      } else {    	  
     	  titelStr = u.titel;
         //titel.setText(u.titel + " (" + DRJson.datoformat.format(u.startTid) + ")");
       }
       
-      Spannable spannable = new SpannableString(titelStr);
-      spannable.setSpan(App.skrift_gibson_fed_span, 0, titelStr.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);  
-	  
-      
-     
-      
+      spannable = new SpannableString(titelStr);
+      spannable.setSpan(App.skrift_gibson, 0, titelStr.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);  
+	    
+      vh.titel.setText(spannable);
       
       //vh.titel.setText(lydkilde.titel);
       //a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
       //a.id(R.id.hør).visibility(lydkilde.kanHøres ? View.VISIBLE : View.GONE);
-
+      
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
 
       return v;
