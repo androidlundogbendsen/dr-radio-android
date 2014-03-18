@@ -19,15 +19,12 @@
             android:id="@+id/listView"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:cacheColorHint="@color/grå20"
             android:divider="@null"
             android:dividerHeight="0px"
-            android:fadingEdgeLength="4dp"
             android:requiresFadingEdge="vertical" />
         <!--
-    hurtigscroll
-                android:scrollbars="none"
-                android:fastScrollEnabled="true"/>
+            android:fadingEdgeLength="4dp"
+            android:cacheColorHint="@color/grå20"
 
 
     For mere kompleks tomhedsindikator, brug ViewStub - se

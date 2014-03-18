@@ -121,6 +121,8 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
         }
       
       vh.lydkilde = lydkilde;
+      // Skjul stiplet linje over øverste listeelement
+      vh.aq.id(R.id.stiplet_linje).visibility(position==0?View.INVISIBLE:View.VISIBLE);
       
 //      TextView titel = (TextView) v.findViewById(R.id.startid);
 //      TextView titel = (TextView) v.findViewById(R.id.titel_og_kunstner);
