@@ -42,7 +42,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
     ).getView());
     listView.setCacheColorHint(Color.WHITE);
     
-    aq.id(R.id.overskrift).typeface(App.skrift_gibson).text("Downloadede udsendelser").getTextView();
+    aq.id(R.id.overskrift).typeface(App.skrift_gibson_fed).text("DOWNLOADEDE UDSENDELSER").getTextView();
 
 
     hentning.observatører.add(this);
@@ -82,8 +82,8 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
         v.setBackgroundResource(0);
         aq = new AQuery(v);
         aq.id(R.id.hør).image(android.R.drawable.ic_menu_delete).clicked(Hentede_udsendelser_frag.this);
-        aq.id(R.id.startid).typeface(App.skrift_gibson);
-        aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson_fed);
+        aq.id(R.id.startid).typeface(App.skrift_gibson_fed);
+        aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson);
       } else {
         aq = new AQuery(v);
       }
@@ -95,7 +95,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
         String txt = "";
         Cursor c = hentning.getStatus(udsendelse);
         if (c==null) {
-          aq.id(R.id.startid).text("Ikke tilgængelig");
+          aq.id(R.id.titel_og_kunstner).text("Ikke tilgængelig");
         } else {
           int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
           if (status==DownloadManager.STATUS_SUCCESSFUL) {
@@ -112,13 +112,13 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
           Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_REASON)));
           c.close();
 
-          aq.id(R.id.startid).text(DRJson.datoformat.format(udsendelse.startTid) + txt);
+          aq.id(R.id.titel_og_kunstner).text(DRJson.datoformat.format(udsendelse.startTid) + txt);
         }
       }
-      aq.id(R.id.titel_og_kunstner).text(udsendelse.titel)
+      aq.id(R.id.startid).text(udsendelse.titel)
           .textColor(udsendelse.kanHøres ? Color.BLACK : App.color.grå60);
       // Skjul stiplet linje over øverste listeelement
-      aq.id(R.id.stiplet_linje).visibility(position==0?View.INVISIBLE:View.VISIBLE);
+      aq.id(R.id.stiplet_linje).background(position==0?R.drawable.linje:R.drawable.stiplet_linje);
 
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
 

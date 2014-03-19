@@ -46,7 +46,7 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
     ).getView());
     listView.setCacheColorHint(Color.WHITE);
     
-    aq.id(R.id.overskrift).typeface(App.skrift_gibson).text("Dine favoritprogrammer").getTextView();
+    aq.id(R.id.overskrift).typeface(App.skrift_gibson_fed).text("Dine favoritprogrammer").getTextView();
 
     favoritter.observatører.add(this);
     run();
@@ -103,16 +103,15 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
       Object obj = liste.get(position);
       if (obj instanceof Programserie) {
         Programserie ps = (Programserie) obj;
-        aq.id(R.id.startid).text(ps.titel).typeface(App.skrift_gibson_fed);
+        aq.id(R.id.startid).text(ps.titel).typeface(App.skrift_gibson_fed).textColor(Color.BLACK);
           int n = favoritter.getAntalNyeUdsendelser(ps.slug);
           String txt = (n == 1 ? n + " ny udsendelse" : n + " nye udsendelser");
           aq.id(R.id.titel_og_kunstner).text(txt).typeface(App.skrift_gibson);
-        aq.id(R.id.stiplet_linje).background(R.drawable.linje).visibility(position==0?View.INVISIBLE:View.VISIBLE);
+        aq.id(R.id.stiplet_linje).background(position==0?R.drawable.linje:R.drawable.stiplet_linje);
       } else {
         Udsendelse udsendelse = (Udsendelse) obj;
         aq.id(R.id.startid).text(DRJson.datoformat.format(udsendelse.startTid)).typeface(App.skrift_gibson);
-        aq.id(R.id.titel_og_kunstner).text(udsendelse.titel).typeface(App.skrift_gibson)
-                                     .textColor(udsendelse.kanHøres ? Color.BLACK : App.color.grå60);
+        aq.id(R.id.titel_og_kunstner).text(udsendelse.titel).typeface(App.skrift_gibson);
         aq.id(R.id.stiplet_linje).background(R.drawable.stiplet_linje);
       }
       v.setBackgroundResource(0);
