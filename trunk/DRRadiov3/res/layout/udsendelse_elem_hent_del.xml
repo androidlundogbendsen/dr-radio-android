@@ -35,7 +35,7 @@
             android:textColor="@color/blå"
             android:background="@drawable/knap_hvid_bg"/>
 
-    <Button
+    <!--Button
             android:id="@+id/del"
             android:layout_width="0px"
             android:layout_height="wrap_content"
@@ -46,6 +46,6 @@
             android:gravity="center_vertical"
             android:text=" DEL"
             android:textColor="@color/blå"
-            android:background="@drawable/knap_hvid_bg"/>
+            android:background="@drawable/knap_hvid_bg"/-->
 
 </LinearLayout>
