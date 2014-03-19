@@ -5,8 +5,8 @@
         "kontakt_modtagere": ["nordfalk@lundogbendsen.dk" ],
         "kontakt_titel": "Angående DR Radio v3 beta",
         "kontakt_brugerspørgsmål": "\nDR Radio v3 betatest\nHvis du oplever fejl med afspilning o.l., så vil vi meget gerne kontaktes.\nSkriv herunder\n-------------\n\n\n\n\n\n\n\n----- teknisk info til udviklerne -----\n\n",
-        "drift_statusmeddelelse": "Velkommen til DR Radio v3 betatest.\nTak fordi du hjælper os med at afprøve app'en.\nEfter at have brugt den et stykke tid bedes du trykke på 'Send feedback' og fortælle os din mening.\n\nBrugsstatistik og eventuelle programnedbrud indrapporteres automatisk og anonymt.\n(hvis du sender feedback kan vi dog knytte dig til de nedbrud der indrapporteres automatisk)"
-   },
+        "drift_statusmeddelelse": "Velkommen til DR Radio v3 betatest.\nTak fordi du hjælper os med at afprøve app'en.\nEfter at have brugt den et stykke tid bedes du trykke på 'Send feedback' og fortælle os din mening.\n\nBrugsstatistik og eventuelle programnedbrud indrapporteres automatisk og anonymt.\n(hvis du sender feedback kan vi se, hvilke nedbrud, der kommer fra din telefon)"
+    },
    "intervals" : {
       "settings" : 1800,
       "playlist" : 30

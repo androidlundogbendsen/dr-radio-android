@@ -56,14 +56,31 @@
             android:textColor="@color/hvid"
             android:background="@drawable/knap_blaa_bg"/>
 
-    <TextView
+    <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="2:30"
-            android:singleLine="true"
-            android:id="@+id/seekBarTekst"/>
+            android:layout_height="wrap_content">
+
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="16dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="42:30"
+                android:singleLine="true"
+                android:id="@+id/seekBarMaxTekst"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="2:30"
+                android:singleLine="true"
+                android:background="@color/hvid"
+                android:id="@+id/seekBarTekst"/>
+    </FrameLayout>
 
     <SeekBar
             android:layout_width="match_parent"
@@ -71,7 +88,10 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="8dp"
-            android:id="@+id/seekBar"/>
+            android:id="@+id/seekBar"
+            android:max="100"
+            android:progress="60"
+            android:progressDrawable="@drawable/seekbar_progress"/>
 
     <include
             layout="@layout/udsendelse_elem_hent_del"
@@ -80,6 +100,7 @@
 
 
     <!--
+            android:thumb="@drawable/seekbar_haandtag"
         <include
                 layout="@layout/udsendelse_elem_playliste_info_overskrift"
                 android:layout_width="match_parent"

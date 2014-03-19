@@ -18,6 +18,7 @@ import com.androidquery.AQuery;
 
 import java.util.ArrayList;
 
+import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
@@ -132,6 +133,10 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
   public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
     Udsendelse udsendelse = liste.get(position);
     if (udsendelse==null) return;
+    // Tjek om udsendelsen er i RAM, og put den ind hvis den ikke er
+    if (!DRData.instans.udsendelseFraSlug.containsKey(udsendelse.slug)) {
+      DRData.instans.udsendelseFraSlug.put(udsendelse.slug, udsendelse);
+    }
     Fragment f = new Udsendelse_frag();
     f.setArguments(new Intent()
 //        .putExtra(Udsendelse_frag.BLOKER_VIDERE_NAVIGERING, true)

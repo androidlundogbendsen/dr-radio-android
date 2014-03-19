@@ -65,6 +65,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   private ArrayList<Object> liste = new ArrayList<Object>();
   Afspiller afspiller = DRData.instans.afspiller;
   private TextView seekBarTekst;
+  private TextView seekBarMaxTekst;
+  private boolean seekBarBetjenesAktivt;
   private SeekBar seekBar;
   private boolean fragmentErSynligt;
   private boolean aktuelUdsendelsePåKanalen;
@@ -320,36 +322,55 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     public void run() {
       App.forgrundstråd.removeCallbacks(this);
       boolean denneUdsSpiller = udsendelse==afspiller.getLydkilde() && afspiller.getAfspillerstatus()==Status.SPILLER;
-      if (denneUdsSpiller) try {
-        if (seekBarTekst.getVisibility()==View.INVISIBLE) { // Kun hvis vi ikke er i gang med at søge i udsendelsen
-          seekBar.setProgress(afspiller.getCurrentPosition());
+//      Log.d("ÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆÆ "+denneUdsSpiller+"  "+seekBarBetjenesAktivt);
+      if (!denneUdsSpiller) return;
+      try {
+        if (!seekBarBetjenesAktivt) { // Kun hvis vi ikke er i gang med at søge i udsendelsen
+          int længdeMs = afspiller.getDuration();
+          if (længdeMs>0) {
+            seekBar.setMax(længdeMs);
+            seekBarMaxTekst.setText(DateUtils.formatElapsedTime(længdeMs / 1000));
+          } else {
+            seekBarMaxTekst.setText("");
+          }
+          seekBarMaxTekst.setText(længdeMs > 0 ? DateUtils.formatElapsedTime(afspiller.getDuration() / 1000) : "");
+          int pos = afspiller.getCurrentPosition();
+          Log.d("   pos "+pos+"   "+afspiller.getDuration());
+          seekBarTekst_opdater(pos);
+          seekBar.setProgress(pos);
         }
-        App.forgrundstråd.postDelayed(this, 15000);
+        App.forgrundstråd.postDelayed(this, 1000);
       } catch (Exception e) { Log.rapporterFejl(e); }
     }
   };
 
   @Override
-  public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+  public void onProgressChanged(SeekBar seekBarx, int progress, boolean fromUser) {
     if (fromUser) {
       DRData.instans.afspiller.seekTo(progress);
-      seekBarTekst.setText(DateUtils.formatElapsedTime(progress/1000));
-      int to = seekBar.getThumbOffset();
-      int x = (seekBar.getWidth()-to*2)*progress/seekBar.getMax();
-      seekBarTekst.setPadding(x, 0, 0, 0);
+      seekBarTekst_opdater(progress);
     }
+  }
+
+  private void seekBarTekst_opdater(int progress) {
+    seekBarTekst.setText(DateUtils.formatElapsedTime(progress / 1000));
+    int to = seekBar.getThumbOffset();
+    int x = (seekBar.getWidth()-to*2)*progress/seekBar.getMax();
+    seekBarTekst.setPadding(x, 0, 0, 0);
   }
 
   @Override
   public void onStartTrackingTouch(SeekBar seekBar) {
-    seekBarTekst.setVisibility(View.VISIBLE);
+    seekBarBetjenesAktivt = true;
+    //seekBarTekst.setVisibility(View.VISIBLE);
     App.forgrundstråd.removeCallbacks(opdaterSeekBar);
   }
 
   @Override
   public void onStopTrackingTouch(SeekBar seekBar) {
-    seekBarTekst.setVisibility(View.INVISIBLE);
-    App.forgrundstråd.postDelayed(this, 10000);
+    seekBarBetjenesAktivt = false;
+    //seekBarTekst.setVisibility(View.INVISIBLE);
+    App.forgrundstråd.postDelayed(opdaterSeekBar, 1000);
   }
 
   private BaseAdapter adapter = new Basisadapter() {
@@ -411,7 +432,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
           vh.titel.setText(udsendelse.titel.toUpperCase());
           aq.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
-          seekBarTekst = aq.id(R.id.seekBarTekst).invisible().getTextView();
+          seekBarTekst = aq.id(R.id.seekBarTekst).typeface(App.skrift_gibson).getTextView();
+          seekBarMaxTekst = aq.id(R.id.seekBarMaxTekst).typeface(App.skrift_gibson).getTextView();
           seekBar = aq.id(R.id.seekBar).getSeekBar();
           seekBar.setOnSeekBarChangeListener(Udsendelse_frag.this);
           aq.id(R.id.hent).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
@@ -444,11 +466,10 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         boolean denneUdsSpiller = udsendelse==afspiller.getLydkilde() && afspiller.getAfspillerstatus()==Status.SPILLER;
         boolean denneUdsForbinder = udsendelse==afspiller.getLydkilde() && afspiller.getAfspillerstatus()==Status.FORBINDER;
         seekBar.setVisibility(denneUdsSpiller?View.VISIBLE : View.GONE);
-        if (denneUdsSpiller) {
-          seekBar.setMax(afspiller.getDuration());
-          opdaterSeekBar.run();
-        }
-        aq.id(R.id.hør).enabled(aktuelUdsendelsePåKanalen || streamsKlar && !denneUdsForbinder).visibility(aktuelUdsendelsePåKanalen || udsendelse.kanHøres && !denneUdsSpiller? View.VISIBLE : View.GONE);
+        seekBarTekst.setVisibility(denneUdsSpiller?View.VISIBLE : View.GONE);
+        seekBarMaxTekst.setVisibility(denneUdsSpiller?View.VISIBLE : View.GONE);
+        opdaterSeekBar.run();
+        aq.id(R.id.hør).enabled(aktuelUdsendelsePåKanalen || streamsKlar && !denneUdsForbinder).visibility(aktuelUdsendelsePåKanalen || udsendelse.kanHøres && !denneUdsSpiller ? View.VISIBLE : View.GONE);
         if (udsendelse.hentetStream!=null) aq.text("HØR HENTET UDSENDELSE");
         if (aktuelUdsendelsePåKanalen) {
           boolean spillerDenneKanal = DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET && DRData.instans.afspiller.getLydkilde() == kanal;
@@ -592,6 +613,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
             if (afspiller.getLydkilde()==udsendelse && afspiller.getAfspillerstatus()==Status.SPILLER) {
               afspiller.seekTo(pl.offsetMs);
               seekBar.setProgress(pl.offsetMs);
+              seekBarTekst_opdater(pl.offsetMs);
               afspiller.observatører.remove(this);
             }
           }
