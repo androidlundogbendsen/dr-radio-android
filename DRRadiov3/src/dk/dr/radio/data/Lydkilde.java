@@ -15,6 +15,8 @@ import dk.dr.radio.diverse.Netvaerksstatus;
  * En lydkilde der kan spilles af afspilleren
  */
 public abstract class Lydkilde implements Serializable {
+  private static final long serialVersionUID = 1L;
+
   public String urn;   // Bemærk - kan være tom!
   public String slug;  // Bemærk - kan være tom!
   public transient ArrayList<Lydstream> streams;

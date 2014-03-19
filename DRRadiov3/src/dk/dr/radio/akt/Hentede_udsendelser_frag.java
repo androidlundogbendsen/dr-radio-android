@@ -13,14 +13,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.androidquery.AQuery;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
-import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
@@ -28,11 +25,11 @@ import dk.dr.radio.diverse.Hentning;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-public class Hentede_udsendelser_frag extends Basisfragment implements AdapterView.OnItemClickListener, Runnable {
+public class Hentede_udsendelser_frag extends Basisfragment implements AdapterView.OnItemClickListener, Runnable, View.OnClickListener {
   private ListView listView;
   private ArrayList<Udsendelse> liste = new ArrayList<Udsendelse>();
   protected View rod;
-  Hentning hentede = App.hentning;
+  Hentning hentning = App.hentning;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,7 +45,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
     aq.id(R.id.overskrift).typeface(App.skrift_gibson).text("Downloadede udsendelser").getTextView();
 
 
-    hentede.observatører.add(this);
+    hentning.observatører.add(this);
     run();
     udvikling_checkDrSkrifter(rod, this + " rod");
     return rod;
@@ -56,7 +53,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
 
   @Override
   public void onDestroyView() {
-    hentede.observatører.remove(this);
+    hentning.observatører.remove(this);
     super.onDestroyView();
   }
 
@@ -64,18 +61,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
   @Override
   public void run() {
     liste.clear();
-    try {
-      ArrayList<String> slugListe = new ArrayList<String>(hentede.getUdsendelseSlugSæt());
-      Collections.sort(slugListe);
-      Log.d(this + " psss = " + slugListe);
-      for (String slug : slugListe) {
-        Udsendelse u = DRData.instans.udsendelseFraSlug.get(slug);
-        liste.add(u);
-      }
-      Log.d(this + " liste = " + liste);
-    } catch (Exception e1) {
-      Log.rapporterFejl(e1);
-    }
+    liste.addAll(hentning.getUdsendelser());
     adapter.notifyDataSetChanged();
   }
 
@@ -90,18 +76,24 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
     public View getView(int position, View v, ViewGroup parent) {
 
       Udsendelse udsendelse = liste.get(position);
-      if (v == null) v = getLayoutInflater(null).inflate(R.layout.elem_tid_titel_kunstner, parent, false);
-      v.setBackgroundResource(0);
-      AQuery aq = new AQuery(v);
-      aq.id(R.id.startid).typeface(App.skrift_gibson);
-      aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson);
+      AQuery aq;
+      if (v == null) {
+        v = getLayoutInflater(null).inflate(R.layout.udsendelse_elem3_tid_titel_kunstner, parent, false);
+        v.setBackgroundResource(0);
+        aq = new AQuery(v);
+        aq.id(R.id.hør).image(android.R.drawable.ic_menu_delete).clicked(Hentede_udsendelser_frag.this);
+        aq.id(R.id.startid).typeface(App.skrift_gibson);
+        aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson);
+      } else {
+        aq = new AQuery(v);
+      }
       if (udsendelse==null) {
         udsendelse = new Udsendelse("Indlæser...");
         // TODO baggrundsindlæsning
         aq.id(R.id.startid).text("");
       } else {
         String txt = "";
-        Cursor c = hentede.getStatus(udsendelse);
+        Cursor c = hentning.getStatus(udsendelse);
         if (c==null) {
           aq.id(R.id.startid).text("Ikke tilgængelig");
         } else {
@@ -130,6 +122,8 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
 
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
 
+      aq.id(R.id.hør).tag(udsendelse);
+
       return v;
     }
   };
@@ -153,5 +147,12 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
 
   }
 
+  @Override
+  public void onClick(View v) {
+    try {
+      Udsendelse u = (Udsendelse) v.getTag();
+      hentning.annullér(u);
+    } catch (Exception e) { Log.rapporterFejl(e); }
+  }
 }
 

@@ -13,14 +13,10 @@ import dk.dr.radio.diverse.Serialisering;
  */
 public class SenestLyttede {
   private ArrayList<Lydkilde> liste;
+
   private String FILNAVN = App.instans.getFilesDir()+"/SenestLyttede.ser";
 
-  public ArrayList<Lydkilde> getListe() {
-    tjekListeOprettet();
-    return liste;
-  }
-
-  private void tjekListeOprettet() {
+  private void tjekDataOprettet() {
     if (liste!=null) return;
     if (new File(FILNAVN).exists()) try {
       liste = (ArrayList<Lydkilde>) Serialisering.hent(FILNAVN);
@@ -29,15 +25,6 @@ public class SenestLyttede {
       Log.rapporterFejl(e);
     }
     liste = new ArrayList<Lydkilde>();
-  }
-
-  public void registrérLytning(Lydkilde lydkilde) {
-    tjekListeOprettet();
-    liste.remove(lydkilde);
-    liste.add(lydkilde);
-    if (liste.size()>20) liste.remove(0); // Husk kun de seneste 20
-    App.forgrundstråd.removeCallbacks(gemListe);
-    App.forgrundstråd.postDelayed(gemListe, 30000); // Gem listen om 30 sekunder
   }
 
   private Runnable gemListe = new Runnable() {
@@ -53,4 +40,19 @@ public class SenestLyttede {
       }
     }
   };
+
+
+  public ArrayList<Lydkilde> getListe() {
+    tjekDataOprettet();
+    return liste;
+  }
+
+  public void registrérLytning(Lydkilde lydkilde) {
+    tjekDataOprettet();
+    liste.remove(lydkilde);
+    liste.add(lydkilde);
+    if (liste.size()>20) liste.remove(0); // Husk kun de seneste 20
+    App.forgrundstråd.removeCallbacks(gemListe);
+    App.forgrundstråd.postDelayed(gemListe, 30000); // Gem listen om 30 sekunder
+  }
 }

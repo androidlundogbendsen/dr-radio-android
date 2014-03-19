@@ -9,18 +9,20 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Environment;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import dk.dr.radio.data.DRData;
-import dk.dr.radio.data.Favoritter;
 import dk.dr.radio.data.Udsendelse;
 
 /**
@@ -31,9 +33,13 @@ import dk.dr.radio.data.Udsendelse;
 public class Hentning {
   private DownloadManager downloadService = null;
 
-  private static final String PREF_NØGLE = "slugFraDownloadId";
-  private HashMap<String, String> downloadIdFraSlug;
-  private HashMap<String, String> slugFraDownloadId;
+  public static class HentningData implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private Map<String, Long> downloadIdFraSlug = new LinkedHashMap<String, Long>();
+    private Map<Long, Udsendelse> udsendelseFraDownloadId = new LinkedHashMap<Long, Udsendelse>();
+  }
+  private HentningData data;
   public List<Runnable> observatører = new ArrayList<Runnable>();
 
   public boolean virker() {
@@ -46,26 +52,32 @@ public class Hentning {
     }
   }
 
-
+  private String FILNAVN = App.instans.getFilesDir()+"/Hentning.ser";
 
   private void tjekDataOprettet() {
-    if (slugFraDownloadId != null) return;
-    String str = App.prefs.getString(PREF_NØGLE, "");
-    Log.d("Hentning: læst " + str);
-    slugFraDownloadId = Favoritter.strengTilMap(str);
-    downloadIdFraSlug = new HashMap<String, String>();
-    for (Map.Entry<String,String> en : slugFraDownloadId.entrySet()) {
-      downloadIdFraSlug.put(en.getValue(), en.getKey());
+    if (data!=null) return;
+    if (new File(FILNAVN).exists()) try {
+      data = (HentningData) Serialisering.hent(FILNAVN);
+      return;
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
     }
+    data = new HentningData();
   }
 
-
-  private void gem() {
-    String str = Favoritter.mapTilStreng(slugFraDownloadId);
-    Log.d("Hentning: gemmer " + str);
-    App.prefs.edit().putString(PREF_NØGLE, str).commit();
-  }
-
+  private Runnable gemListe = new Runnable() {
+    @Override
+    public void run() {
+      App.forgrundstråd.removeCallbacks(gemListe);
+      try {
+        long tid = System.currentTimeMillis();
+        Serialisering.gem(data, FILNAVN);
+        Log.d("Hentning: Gemning tog "+(System.currentTimeMillis()-tid)+" ms - filstr:" + new File(FILNAVN).length());
+      } catch (IOException e) {
+        Log.rapporterFejl(e);
+      }
+    }
+  };
 
 
   public void hent(Udsendelse udsendelse) {
@@ -87,13 +99,21 @@ public class Hentning {
 
       if (Build.VERSION.SDK_INT >= 11) req.allowScanningByMediaScanner();
 
-      int downloadId = (int) App.hentning.downloadService.enqueue(req);
-      downloadIdFraSlug.put(udsendelse.slug, ""+downloadId);
-      slugFraDownloadId.put(""+downloadId, udsendelse.slug);
-      gem();
+      long downloadId = App.hentning.downloadService.enqueue(req);
+      data.downloadIdFraSlug.put(udsendelse.slug, downloadId);
+      data.udsendelseFraDownloadId.put(downloadId, udsendelse);
+      gemListe.run();
+      for (Runnable obs : App.hentning.observatører) obs.run();
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
+  }
+
+
+  public Collection<Udsendelse> getUdsendelser() {
+    if (!virker()) return new ArrayList<Udsendelse>();
+    tjekDataOprettet();
+    return data.udsendelseFraDownloadId.values();
   }
 
   /**
@@ -104,11 +124,11 @@ public class Hentning {
   public Cursor getStatus(Udsendelse udsendelse) {
     if (!virker()) return null;
     tjekDataOprettet();
-    Log.d("getStatus downloadIdFraSlug = "+downloadIdFraSlug+"  u="+udsendelse);
-    String downloadId = downloadIdFraSlug.get(udsendelse.slug);
+    Log.d("getStatus downloadIdFraSlug = "+data.downloadIdFraSlug+"  u="+udsendelse);
+    Long downloadId = data.downloadIdFraSlug.get(udsendelse.slug);
     if (downloadId==null) return null;
     DownloadManager.Query query = new DownloadManager.Query();
-    query.setFilterById(Integer.parseInt(downloadId));
+    query.setFilterById(downloadId);
     Cursor c = App.hentning.downloadService.query(query);
     if (c.moveToFirst()) {
       return c;
@@ -117,11 +137,17 @@ public class Hentning {
     return null;
   }
 
-
-  public Set<String> getUdsendelseSlugSæt() {
+  public void annullér(Udsendelse u) {
     tjekDataOprettet();
-    return downloadIdFraSlug.keySet();
+    Long id = data.downloadIdFraSlug.remove(u.slug);
+    data.udsendelseFraDownloadId.remove(id);
+    Log.d("Hentning: data.udsendelseFraDownloadId= "+data.udsendelseFraDownloadId);
+    Log.d("Hentning: data.downloadIdFraSlug="+data.downloadIdFraSlug);
+    downloadService.remove(id);
+    gemListe.run();
+    for (Runnable obs : App.hentning.observatører) obs.run();
   }
+
 
 
   public static class DownloadServiceReciever extends BroadcastReceiver {
@@ -131,9 +157,8 @@ public class Hentning {
       Log.d("DLS " + intent);
       if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) try {
         long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
-        String slug = App.hentning.slugFraDownloadId.get("" + downloadId);
-        Udsendelse u = DRData.instans.udsendelseFraSlug.get(slug);
-        if (slug==null) throw new IllegalStateException("Ingen udsendelse for hentning");
+        Udsendelse u = App.hentning.data.udsendelseFraDownloadId.get(downloadId);
+        if (u==null) throw new IllegalStateException("Ingen udsendelse for hentning for "+downloadId);
 
         DownloadManager.Query query = new DownloadManager.Query();
         query.setFilterById(downloadId);
@@ -147,6 +172,7 @@ public class Hentning {
           }
         }
         c.close();
+        App.hentning.gemListe.run();
         for (Runnable obs : App.hentning.observatører) obs.run();
       } catch (Exception e) { Log.rapporterFejl(e);
       } else if (DownloadManager.ACTION_NOTIFICATION_CLICKED.equals(action)) {
