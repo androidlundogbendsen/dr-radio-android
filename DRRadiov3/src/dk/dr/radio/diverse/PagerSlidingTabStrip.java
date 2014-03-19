@@ -260,7 +260,9 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         //  ((Kanaler_frag) delegatePageListener).klikPåFane(position);
         //}
         // Grimt hack, men desværre umuligt at gøre på en anden måde
-        Kanal_frag.senesteSynligeFragment.scrollTilAktuelUdsendelseBlødt();
+        if(Kanal_frag.senesteSynligeFragment != null){
+            Kanal_frag.senesteSynligeFragment.scrollTilAktuelUdsendelseBlødt();
+        }
         // XXX INDSAT TIL DR RADIO slut
       }
     });
