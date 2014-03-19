@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.androidquery.AQuery;
 
@@ -72,10 +71,13 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
       for (String programserieSlug : pss) {
         Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
         liste.add(programserie);
+/* De enkelte prgramudsendelser er fjernet fra favoritlisten
+
         int antalNye = favoritter.getAntalNyeUdsendelser(programserieSlug);
         for (int n = 0; n<antalNye && n<programserie.udsendelser.size(); n++) {
           liste.add(programserie.udsendelser.get(n));
         }
+*/
       }
       Log.d(this + " liste = " + liste);
     } catch (Exception e1) {
@@ -91,19 +93,6 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
       return liste.size();
     }
 
-    @Override
-    public int getViewTypeCount() {
-      return 2;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-      Object obj = liste.get(position);
-      if (obj instanceof Programserie) {
-        return 0;
-      }
-      return 1;
-    }
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
@@ -115,7 +104,9 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
       if (obj instanceof Programserie) {
         Programserie ps = (Programserie) obj;
         aq.id(R.id.startid).text(ps.titel).typeface(App.skrift_gibson_fed);
-        aq.id(R.id.titel_og_kunstner).text(favoritter.getAntalNyeUdsendelser(ps.slug) + " nye udsendelser").typeface(App.skrift_gibson_fed);
+          int n = favoritter.getAntalNyeUdsendelser(ps.slug);
+          String txt = (n == 1 ? n + " ny udsendelse" : n + " nye udsendelser");
+          aq.id(R.id.titel_og_kunstner).text(txt).typeface(App.skrift_gibson);
         aq.id(R.id.stiplet_linje).background(R.drawable.linje).visibility(position==0?View.INVISIBLE:View.VISIBLE);
       } else {
         Udsendelse udsendelse = (Udsendelse) obj;
