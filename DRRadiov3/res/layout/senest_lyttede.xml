@@ -6,14 +6,27 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="match_parent" >
-
+        <View
+            android:background="@color/sort"
+            android:layerType="software"
+            android:layout_width="match_parent"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_height="3dp"/>
         <TextView
-            android:textSize="18sp" 
             android:id="@+id/overskrift"
-            android:layout_width="fill_parent"
-            android:layout_height="44dp"
-            android:gravity="center"
-            android:text="Senest lyttede" />
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Senest lyttede"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            />
 
         <ListView
             android:id="@+id/listView"

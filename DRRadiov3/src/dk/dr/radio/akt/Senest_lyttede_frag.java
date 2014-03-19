@@ -1,6 +1,7 @@
 package dk.dr.radio.akt;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -40,10 +41,10 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
 
     AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
-    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).text("Ingen senest lyttede").getView());
+    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson_fed).text("Ingen senest lyttede").getView());
     opdaterListe();
     
-    TextView overskrift = aq.id(R.id.overskrift).typeface(App.skrift_gibson).text("Senest lyttede").getTextView();
+    TextView overskrift = aq.id(R.id.overskrift).typeface(App.skrift_gibson_fed).text("Senest lyttede").getTextView();
     overskrift.setVisibility(View.VISIBLE);
     
     udvikling_checkDrSkrifter(rod, this + " rod");
@@ -110,8 +111,9 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
         
         vh = new Viewholder();
         a = vh.aq = new AQuery(v);
-        vh.titel = a.id(R.id.startid).typeface(App.skrift_gibson_fed).getTextView();
-        vh.metainformation = a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
+        vh.metainformation = a.id(R.id.startid).typeface(App.skrift_gibson_fed).textColor(Color.BLACK).getTextView();
+        vh.titel = a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
+
         
         v.setTag(vh);
         
@@ -122,7 +124,8 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
       
       vh.lydkilde = lydkilde;
       // Skjul stiplet linje over øverste listeelement
-      vh.aq.id(R.id.stiplet_linje).visibility(position==0?View.INVISIBLE:View.VISIBLE);
+      vh.aq.id(R.id.stiplet_linje).background(position==0?R.drawable.linje:R.drawable.stiplet_linje);
+
       
 //      TextView titel = (TextView) v.findViewById(R.id.startid);
 //      TextView titel = (TextView) v.findViewById(R.id.titel_og_kunstner);

@@ -186,7 +186,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
           int br = bestemBilledebredde(listView, (View) aq.id(R.id.billede).getView().getParent(), 50);
           int hø = br * højde9 / bredde16;
           String burl = skalérSlugBilledeUrl(programserie.slug, br, hø);
-          aq.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
+          aq.width(br, false).height(hø, false).image(burl, true, true, br, AQuery.INVISIBLE, null, AQuery.FADE_IN, (float) højde9 / bredde16);
 
           if (kanal == null) aq.id(R.id.logo).gone();
           else aq.id(R.id.logo).image(kanal.kanallogo_resid);
