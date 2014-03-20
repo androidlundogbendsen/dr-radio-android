@@ -82,7 +82,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
         v = getLayoutInflater(null).inflate(R.layout.udsendelse_elem3_tid_titel_kunstner, parent, false);
         v.setBackgroundResource(0);
         aq = new AQuery(v);
-        aq.id(R.id.hør).image(android.R.drawable.ic_menu_delete).clicked(Hentede_udsendelser_frag.this);
+        aq.id(R.id.hør).image(R.drawable.trash).clicked(Hentede_udsendelser_frag.this);
         aq.id(R.id.startid).typeface(App.skrift_gibson_fed);
         aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson);
       } else {
