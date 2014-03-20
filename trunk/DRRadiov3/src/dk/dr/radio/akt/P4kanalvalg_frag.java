@@ -37,31 +37,18 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.ImageViewTilBlinde;
 import dk.dr.radio.v3.R;
 
-public class Kanalvalg_frag extends Basisfragment implements AdapterView.OnItemClickListener {
+public class P4kanalvalg_frag extends Basisfragment implements AdapterView.OnItemClickListener {
 
   private KanalAdapter kanaladapter;
   private View[] listeElementer;
-  private List<String> overordnedeKanalkoder;
-  private int p4indeks;
-  /**
-   * Om P4-underlisten er åbnet.
-   * static da det er en nem måde at få listen til at huske om den er åben 'næsten altid'
-   */
-  public static boolean p4erÅbnet;
-  private List<String> p4koder;
-  private List<String> alleKanalkoder;
+  private List<String> kanalkoder;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    overordnedeKanalkoder = DRData.instans.grunddata.kanalkoder;
-    p4koder = DRData.instans.grunddata.p4koder;
-    if (p4koder.get(0).equals(Kanal.P4kode)) p4koder.remove(0); // Selve P4 skal ikke vises som en del af underlisten
-    p4indeks = overordnedeKanalkoder.indexOf(Kanal.P4kode);
 
-    alleKanalkoder = new ArrayList<String>(overordnedeKanalkoder);
-    alleKanalkoder.addAll(p4indeks + 1, p4koder); // P4's underkanaler ligger lige under P4-indgangen
+    kanalkoder = new ArrayList<String>(DRData.instans.grunddata.p4koder);
 
-    for (String k : alleKanalkoder) {
+    for (String k : kanalkoder) {
       if (DRData.instans.grunddata.kanalFraKode.get(k) == null) {
         new IllegalStateException("Kanalkode mangler! Det her må ikke ske!").printStackTrace();
         DRData.instans.grunddata.kanalFraKode.put(k, new Kanal()); // reparér problemet :-(
@@ -71,7 +58,7 @@ public class Kanalvalg_frag extends Basisfragment implements AdapterView.OnItemC
 
     // Da der er tale om et fast lille antal kanaler er der ikke grund til det store bogholderi
     // Så vi husker bare viewsne i er array
-    listeElementer = new View[alleKanalkoder.size()];
+    listeElementer = new View[kanalkoder.size()];
     kanaladapter = new KanalAdapter();
 
     // Opbyg arrayet på forhånd for jævnere visning
@@ -102,7 +89,7 @@ public class Kanalvalg_frag extends Basisfragment implements AdapterView.OnItemC
     private View bygListeelement(int position) {
       LayoutInflater mInflater = getLayoutInflater(null);// (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-      String kanalkode = alleKanalkoder.get(position);
+      String kanalkode = kanalkoder.get(position);
       Kanal kanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
       View view = mInflater.inflate(R.layout.kanalvalg_elem, null);
       ImageViewTilBlinde billede = (ImageViewTilBlinde) view.findViewById(R.id.billede);
@@ -110,9 +97,7 @@ public class Kanalvalg_frag extends Basisfragment implements AdapterView.OnItemC
       TextView textView = (TextView) view.findViewById(R.id.tekst);
       //Log.d("billedebilledebilledebillede"+billede+ikon+textView);
       // Sæt åbne/luk-ikon for P4 og højttalerikon for kanal
-      if (position == p4indeks) {
-        sætP4åbnLukIkon(ikon);
-      } else if (DRData.instans.afspiller.getLydkilde().kanal().kode.equals(kanalkode)) {
+      if (DRData.instans.afspiller.getLydkilde().kanal().kode.equals(kanalkode)) {
         ikon.setImageResource(R.drawable.kanalvalg_spiller);
         ikon.blindetekst = "Spiller nu";
       } else ikon.setVisibility(View.INVISIBLE);
@@ -137,9 +122,6 @@ public class Kanalvalg_frag extends Basisfragment implements AdapterView.OnItemC
 
 
     public View getView(int position, View convertView, ViewGroup parent) {
-      // Hop over p4's positioner i tilfælde af at P4 ikke er åbnet
-      if (!p4erÅbnet && position > p4indeks) position += p4koder.size();
-
       View view = listeElementer[position];
       if (view != null) return view; // Elementet er allede konstrueret
 
@@ -149,7 +131,7 @@ public class Kanalvalg_frag extends Basisfragment implements AdapterView.OnItemC
     }
 
     public int getCount() {
-      return p4erÅbnet ? alleKanalkoder.size() : overordnedeKanalkoder.size();
+      return kanalkoder.size();
     }
 
     public Object getItem(int position) {
@@ -162,27 +144,9 @@ public class Kanalvalg_frag extends Basisfragment implements AdapterView.OnItemC
   }
 
 
-  private void sætP4åbnLukIkon(ImageViewTilBlinde ikon) {
-    ikon.setImageResource(p4erÅbnet ? R.drawable.kanalvalg_minus : R.drawable.kanalvalg_plus);
-    ikon.blindetekst = (p4erÅbnet ? "Luk" : "Åben");
-  }
-
-
   @Override
   public void onItemClick(AdapterView<?> l, View v, int position, long id) {
-    if (position == p4indeks) {
-      p4erÅbnet = !p4erÅbnet;
-      // Opdatér plus/minus på P4-kanal
-      ImageViewTilBlinde åbneLukIkon = (ImageViewTilBlinde) listeElementer[p4indeks].findViewById(R.id.ikon);
-      sætP4åbnLukIkon(åbneLukIkon);
-      // Fortæl at antal elementer i listen er ændret
-      kanaladapter.notifyDataSetChanged();
-      return;
-    }
-
-    // Hop over p4's positioner i tilfælde af at P4 ikke er åbnet
-    if (!p4erÅbnet && position > p4indeks) position += p4koder.size();
-    String kanalkode = alleKanalkoder.get(position);
+    String kanalkode = kanalkoder.get(position);
 
 
     Kanal kanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
