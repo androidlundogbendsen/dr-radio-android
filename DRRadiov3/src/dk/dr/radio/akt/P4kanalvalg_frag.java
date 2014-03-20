@@ -93,7 +93,6 @@ public class P4kanalvalg_frag extends Basisfragment implements AdapterView.OnIte
   private class KanalAdapter extends BaseAdapter {
 
     private View bygListeelement(int position) {
-      LayoutInflater mInflater = getLayoutInflater(null);// (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
       String kanalkode = kanalkoder.get(position);
       Kanal kanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
@@ -101,20 +100,21 @@ public class P4kanalvalg_frag extends Basisfragment implements AdapterView.OnIte
       View view = getLayoutInflater(null).inflate(R.layout.kanalvalg_elem, null, false);
       AQuery aq = new AQuery(view);
 
-      AQuery billede = aq.id(R.id.billede);
       AQuery ikon =  aq.id(R.id.ikon);
       AQuery textView = aq.id(R.id.tekst);
 
+      textView.text(kanal.navn).typeface(App.skrift_gibson_fed).textColor(Color.BLACK);
       //Log.d("billedebilledebilledebillede"+billede+ikon+textView);
       // Sæt åbne/luk-ikon for P4 og højttalerikon for kanal
       if (DRData.instans.afspiller.getLydkilde().kanal().kode.equals(kanalkode)) {
-        ikon.background(R.drawable.dri_lyd2_blaa);
+         ikon.image(R.drawable.dri_lyd2_blaa);
         //ikon.blindetekst = "Spiller nu";
-      } else ikon.visibility(View.GONE);
+      }
+
       if (kanal.kanallogo_resid != 0) {
         // Element med billede
-        billede.visibility(View.VISIBLE);
-        billede.background(kanal.kanallogo_resid);
+        //billede.visibility(View.VISIBLE);
+
        //billede.blindetekst = kanal.navn;
         //textView.visibility(View.GONE);
       } else {
@@ -123,7 +123,7 @@ public class P4kanalvalg_frag extends Basisfragment implements AdapterView.OnIte
         //billede.setVisibility(View.VISIBLE);
         //billede.setImageResource(R.drawable.kanalappendix_p4f);
         //textView.visibility(View.VISIBLE);
-        textView.text(kanal.navn).typeface(App.skrift_gibson_fed).textColor(Color.BLACK);;
+
       }
 
       return view;
