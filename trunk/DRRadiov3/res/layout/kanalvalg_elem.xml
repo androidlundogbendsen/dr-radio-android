@@ -17,31 +17,28 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="wrap_content"
+        android:paddingBottom="16dp">
+        <ImageView
+            android:id="@+id/billede"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/kanalappendix_p4f"/>
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="0px"
             android:layout_weight="1"
             android:layout_height="wrap_content">
 
-
-
-    <ImageView
-            android:id="@+id/billede"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/kanalappendix_p4f"/>
-
     <TextView
             android:id="@+id/tekst"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="etetet"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="10dp"
             android:textAppearance="?android:attr/textAppearance"
-    />
+        />
 
 
     </LinearLayout>
@@ -50,6 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ikon"
+
         />
     </LinearLayout>
 </LinearLayout>

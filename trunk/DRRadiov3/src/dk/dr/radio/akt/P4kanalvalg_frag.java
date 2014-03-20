@@ -102,8 +102,8 @@ public class P4kanalvalg_frag extends Basisfragment implements AdapterView.OnIte
 
       AQuery ikon =  aq.id(R.id.ikon);
       AQuery textView = aq.id(R.id.tekst);
-
-      textView.text(kanal.navn).typeface(App.skrift_gibson_fed).textColor(Color.BLACK);
+     
+      textView.text(kanal.navn.replace("P4", "")).typeface(App.skrift_gibson_fed).textColor(Color.BLACK);
       //Log.d("billedebilledebilledebillede"+billede+ikon+textView);
       // Sæt åbne/luk-ikon for P4 og højttalerikon for kanal
       if (DRData.instans.afspiller.getLydkilde().kanal().kode.equals(kanalkode)) {
