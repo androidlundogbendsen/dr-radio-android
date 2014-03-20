@@ -1,39 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:gravity="center_vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="50dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="16dp">
 
-    <dk.dr.radio.diverse.ImageViewTilBlinde
+    <View
+        android:id="@+id/stiplet_linje"
+        android:background="@drawable/stiplet_linje"
+        android:layerType="software"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="13dp"
+        android:layout_height="3dp"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+       <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0px"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+
+    <ImageView
             android:id="@+id/billede"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/kanalappendix_drm"
-            />
+            android:layout_height="wrap_content" />
 
     <TextView
             android:id="@+id/tekst"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="P4 Esbjerg"
-            android:gravity="left|center_vertical"
-            android:textSize="@dimen/kanalvalg_tekststr"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
             android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
             android:textColor="#FF000000"
+            android:capitalize="sentences"
             />
-
-
-    <dk.dr.radio.diverse.ImageViewTilBlinde
-            android:id="@+id/ikon"
-            android:src="@drawable/kanalvalg_plus"
-            android:layout_weight="1"
+        </LinearLayout>
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/kanalvalg_tekststr"
-            android:layout_gravity="right|center_vertical"
-            android:scaleType="fitEnd"
-            android:layout_marginRight="10dp"
+            android:id="@+id/ikon"
             />
+    </LinearLayout>
+
+
 
 </LinearLayout>
