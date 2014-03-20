@@ -441,7 +441,12 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           if (!App.hentning.virker()) aq.gone(); // Understøttes ikke på Android 2.2
           aq.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         } else if (type == INFO) {
-          aq.id(R.id.titel).text(udsendelse.beskrivelse).typeface(App.skrift_georgia);
+        	String forkortInfo = udsendelse.beskrivelse;
+        	if (udsendelse.beskrivelse.length() > 100){
+        		forkortInfo = forkortInfo.substring(0, 100);
+        		forkortInfo += "...(læs mere)";
+        	}
+          aq.id(R.id.titel).clicked(Udsendelse_frag.this).text(forkortInfo).typeface(App.skrift_georgia);
           Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS);
         } else if (type == SPILLER_NU || type == SPILLEDE) {
           vh.titel = aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
@@ -514,7 +519,11 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     } else if (v.getId() == R.id.info) {
       visInfo = true;
       bygListe();
-    } else if (v.getId() == R.id.playliste) {
+    } else if (v.getId() == R.id.titel){
+    	TextView titel = (TextView)v;
+    	titel.setText(udsendelse.beskrivelse);
+    	bygListe();
+    }else if (v.getId() == R.id.playliste) {
       visInfo = false;
       bygListe();
     } else if (v.getId() == R.id.vis_hele_playlisten) {
