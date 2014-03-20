@@ -441,12 +441,13 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           if (!App.hentning.virker()) aq.gone(); // Understøttes ikke på Android 2.2
           aq.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         } else if (type == INFO) {
-        	String forkortInfo = udsendelse.beskrivelse;
+        	String forkortInfoStr = udsendelse.beskrivelse;
         	if (udsendelse.beskrivelse.length() > 100){
-        		forkortInfo = forkortInfo.substring(0, 100);
-        		forkortInfo += "...(læs mere)";
+        		forkortInfoStr = forkortInfoStr.substring(0, 100);
+        		forkortInfoStr += "...(læs mere)";
+        		forkortInfo = true;
         	}
-          aq.id(R.id.titel).clicked(Udsendelse_frag.this).text(forkortInfo).typeface(App.skrift_georgia);
+          aq.id(R.id.titel).clicked(Udsendelse_frag.this).text(forkortInfoStr).typeface(App.skrift_georgia);
           Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS);
         } else if (type == SPILLER_NU || type == SPILLEDE) {
           vh.titel = aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
@@ -506,6 +507,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       return v;
     }
   };
+private boolean forkortInfo = false;
 
 
   @Override
@@ -521,7 +523,20 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       bygListe();
     } else if (v.getId() == R.id.titel){
     	TextView titel = (TextView)v;
-    	titel.setText(udsendelse.beskrivelse);
+    	if (forkortInfo){
+    		titel.setText(udsendelse.beskrivelse);
+    		forkortInfo = false;
+    	}
+    	else {
+    		String forkortInfoStr = udsendelse.beskrivelse;
+        	if (udsendelse.beskrivelse.length() > 100){
+        		forkortInfoStr = forkortInfoStr.substring(0, 100);
+        		forkortInfoStr += "...(læs mere)";
+        		forkortInfo = true;
+        	}
+        	titel.setText(forkortInfoStr);
+    		
+    	}
     	bygListe();
     }else if (v.getId() == R.id.playliste) {
       visInfo = false;
