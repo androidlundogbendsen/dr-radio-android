@@ -2,8 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     android:orientation="vertical"
-    android:paddingTop="16dp">
+    android:background="@drawable/knap_graa10_bg">
 
     <View
         android:id="@+id/stiplet_linje"
@@ -17,36 +19,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-       <LinearLayout
+        <LinearLayout
             android:orientation="vertical"
             android:layout_width="0px"
             android:layout_weight="1"
             android:layout_height="wrap_content">
 
+
+
     <ImageView
             android:id="@+id/billede"
             android:layout_width="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_height="wrap_content" />
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/kanalappendix_p4f"/>
 
     <TextView
             android:id="@+id/tekst"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="10dp"
-            android:textColor="#FF000000"
-            android:capitalize="sentences"
-            />
-        </LinearLayout>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ikon"
-            />
+            android:text="etetet"
+            android:layout_marginLeft="40dp"
+            android:textAppearance="?android:attr/textAppearance"
+    />
+
+
     </LinearLayout>
 
-
-
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ikon"
+        />
+    </LinearLayout>
 </LinearLayout>
