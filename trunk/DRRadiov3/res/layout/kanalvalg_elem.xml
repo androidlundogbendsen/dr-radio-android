@@ -22,7 +22,7 @@
         <ImageView
             android:id="@+id/billede"
             android:layout_width="wrap_content"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="8dp"
             android:layout_height="wrap_content"
             android:src="@drawable/kanalappendix_p4f"/>
         <LinearLayout
@@ -37,6 +37,7 @@
             android:layout_height="wrap_content"
             android:text="etetet"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="8dp"
             android:textAppearance="?android:attr/textAppearance"
         />
 
@@ -47,7 +48,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ikon"
-
         />
     </LinearLayout>
 </LinearLayout>
