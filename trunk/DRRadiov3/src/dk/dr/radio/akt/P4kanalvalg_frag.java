@@ -18,6 +18,7 @@
 
 package dk.dr.radio.akt;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -25,11 +26,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.androidquery.AQuery;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Kanal;
@@ -45,6 +49,8 @@ public class P4kanalvalg_frag extends Basisfragment implements AdapterView.OnIte
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
 
     kanalkoder = new ArrayList<String>(DRData.instans.grunddata.p4koder);
 
@@ -91,30 +97,33 @@ public class P4kanalvalg_frag extends Basisfragment implements AdapterView.OnIte
 
       String kanalkode = kanalkoder.get(position);
       Kanal kanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
-      View view = mInflater.inflate(R.layout.kanalvalg_elem, null);
-      ImageViewTilBlinde billede = (ImageViewTilBlinde) view.findViewById(R.id.billede);
-      ImageViewTilBlinde ikon = (ImageViewTilBlinde) view.findViewById(R.id.ikon);
-      TextView textView = (TextView) view.findViewById(R.id.tekst);
+      //View view = mInflater.inflate(R.layout.kanalvalg_elem, null);
+      View view = getLayoutInflater(null).inflate(R.layout.kanalvalg_elem, null, false);
+      AQuery aq = new AQuery(view);
+
+      AQuery billede = aq.id(R.id.billede);
+      AQuery ikon =  aq.id(R.id.ikon);
+      AQuery textView = aq.id(R.id.tekst);
+
       //Log.d("billedebilledebilledebillede"+billede+ikon+textView);
       // Sæt åbne/luk-ikon for P4 og højttalerikon for kanal
       if (DRData.instans.afspiller.getLydkilde().kanal().kode.equals(kanalkode)) {
-        ikon.setImageResource(R.drawable.kanalvalg_spiller);
-        ikon.blindetekst = "Spiller nu";
-      } else ikon.setVisibility(View.INVISIBLE);
+        ikon.background(R.drawable.dri_lyd2_blaa);
+        //ikon.blindetekst = "Spiller nu";
+      } else ikon.visibility(View.GONE);
       if (kanal.kanallogo_resid != 0) {
         // Element med billede
-        billede.setVisibility(View.VISIBLE);
-        billede.setImageResource(kanal.kanallogo_resid);
-        billede.blindetekst = kanal.navn;
-        textView.setVisibility(View.GONE);
+        billede.visibility(View.VISIBLE);
+        billede.background(kanal.kanallogo_resid);
+       //billede.blindetekst = kanal.navn;
+        //textView.visibility(View.GONE);
       } else {
         // Element uden billede - P4
-        billede.setVisibility(View.GONE);
+        //billede.setVisibility(View.GONE);
         //billede.setVisibility(View.VISIBLE);
         //billede.setImageResource(R.drawable.kanalappendix_p4f);
-        textView.setVisibility(View.VISIBLE);
-        textView.setText(kanal.navn);
-        textView.setTypeface(App.skrift_gibson_fed);
+        //textView.visibility(View.VISIBLE);
+        textView.text(kanal.navn).typeface(App.skrift_gibson_fed).textColor(Color.BLACK);;
       }
 
       return view;
