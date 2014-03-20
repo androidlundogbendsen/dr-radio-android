@@ -442,7 +442,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       */
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
-      tilføj(R.layout.venstremenu_elem_overskrift, Kanalvalg_frag.class);
+      tilføj(R.layout.venstremenu_elem_overskrift, P4kanalvalg_frag.class);
       aq.id(R.id.tekst).text("Live kanaler");
       if (gib) aq.typeface(App.skrift_gibson_fed);
 
