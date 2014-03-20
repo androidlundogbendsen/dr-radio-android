@@ -19,16 +19,23 @@ package dk.dr.radio.afspilning;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import dk.dr.radio.akt.Hovedaktivitet;
+import dk.dr.radio.data.DRData;
+import dk.dr.radio.data.Kanal;
+import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.diverse.AfspillerIkonOgNotifikation;
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
@@ -56,6 +63,8 @@ public class HoldAppIHukommelsenService extends Service {
   public int onStartCommand(Intent intent, int flags, int startId) {
     Log.d("AfspillerService onStartCommand(" + intent + " " + flags + " "
         + startId);
+    
+    
 
     String kanalNavn = intent == null ? null : intent
         .getStringExtra("kanalNavn");
@@ -64,35 +73,38 @@ public class HoldAppIHukommelsenService extends Service {
 
     NotificationCompat.Builder b = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.notifikation_ikon)
         .setContentTitle("DR Radio")
-        .setContentText(kanalNavn)
+        .setContentText(kanalNavn).setOngoing(true).setAutoCancel(false)
         .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this,
             Hovedaktivitet.class), 0));
+     
 
     // b.setContent(AfspillerWidget.lavRemoteViews(false, true));
 
     Notification notification; //= b.build();
 
     RemoteViews remoteViews = AfspillerIkonOgNotifikation.lavRemoteViews(false, true);
-
-
+       
     if ((Build.VERSION.SDK_INT < 16)) {
       b.setContent(remoteViews);
+      
       notification = b.build();
-    } else {
-      notification = b.build();
-      notification.bigContentView = remoteViews;
+      notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT | Notification.PRIORITY_HIGH | Notification.FLAG_FOREGROUND_SERVICE);
 
+     } else {
+      notification = b.build();    
+      notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT | Notification.PRIORITY_HIGH | Notification.FLAG_FOREGROUND_SERVICE);
+
+      notification.bigContentView = remoteViews;
     }
 
     // PendingIntent er til at pege på aktiviteten der skal startes hvis
     // brugeren vælger notifikationen
-    notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT);
+   // notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT | Notification.PRIORITY_HIGH | Notification.FLAG_FOREGROUND_SERVICE);
 
     // notification.setLatestEventInfo(this, "Radio", kanalNavn,
     // notification.contentIntent);
     startForeground(NOTIFIKATION_ID, notification);
-
-
+     
     return START_STICKY;
   }
 
