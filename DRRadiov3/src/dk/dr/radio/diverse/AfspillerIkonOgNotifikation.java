@@ -20,6 +20,7 @@ package dk.dr.radio.diverse;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
+import android.app.PendingIntent.CanceledException;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.appwidget.AppWidgetProviderInfo;
@@ -27,12 +28,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.TaskStackBuilder;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import java.util.Arrays;
 
 import dk.dr.radio.afspilning.AfspillerReciever;
+import dk.dr.radio.afspilning.HoldAppIHukommelsenService;
 import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.akt.Hovedaktivitet;
 import dk.dr.radio.data.DRData;
@@ -43,13 +46,16 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-@SuppressLint("NewApi")
+@SuppressLint({ "NewApi", "ResourceAsColor" })
 public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
 
 
-  @Override
+  private static int statusInt;
+
+@Override
   public void onReceive(Context context, Intent intent) {
     Log.d(this + " onReceive(" + intent);
+    App.kortToast("AfspillerWidget onReceive");
     super.onReceive(context, intent);
   }
 
@@ -62,12 +68,15 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
     Log.d(this + " onUpdate (levende ikon oprettet) - appWidgetIds = " + Arrays.toString(appWidgetIds));
     // for sørge for at vores knapper får tilknyttet intentsne
     opdaterUdseende(ctx, appWidgetManager, appWidgetIds[0]);
+    
+    
   }
 
 
   public static void opdaterUdseende(Context ctx, AppWidgetManager appWidgetManager, int appWidgetId) {
     Log.d("AfspillerWidget opdaterUdseende()");
-
+    App.langToast("AfspillerWidget opdaterUdseende()");
+    
     boolean låseskærm = false;
 
     if (Build.VERSION.SDK_INT >= 16) {
@@ -82,7 +91,8 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
     appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
   }
 
-  public static RemoteViews lavRemoteViews(boolean låseskærm, boolean notifikation) {
+  @SuppressLint("ResourceAsColor")
+public static RemoteViews lavRemoteViews(boolean låseskærm, boolean notifikation) {
 
 
     RemoteViews remoteViews;
@@ -105,15 +115,17 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
       remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_levendeikon);
     }
 
-    PendingIntent startStopPI = PendingIntent.getBroadcast(App.instans, 0, new Intent(App.instans, AfspillerReciever.class), PendingIntent.FLAG_UPDATE_CURRENT);
-    remoteViews.setOnClickPendingIntent(R.id.startStopKnap, startStopPI);
+    Intent afspillerReceiverI = new Intent(App.instans, AfspillerReciever.class); 
+    
 
-
-    PendingIntent åbnAktivitetPI = PendingIntent.getActivity(App.instans, 0, new Intent(App.instans, Hovedaktivitet.class), PendingIntent.FLAG_UPDATE_CURRENT);
+    Intent hovedAktI = new Intent(App.instans, Hovedaktivitet.class);
+    hovedAktI.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    PendingIntent åbnAktivitetPI = PendingIntent.getActivity(App.instans, 0, hovedAktI, PendingIntent.FLAG_UPDATE_CURRENT);
     remoteViews.setOnClickPendingIntent(R.id.yderstelayout, åbnAktivitetPI);
+       
 
-    PendingIntent lukNotifikation = PendingIntent.getActivity(App.instans, 0, new Intent(App.instans, AfspillerReciever.class), PendingIntent.FLAG_UPDATE_CURRENT);
-    remoteViews.setOnClickPendingIntent(R.id.luk, startStopPI);
+    //PendingIntent lukNotifikation = PendingIntent.getActivity(App.instans, 0, new Intent(App.instans, AfspillerReciever.class), PendingIntent.FLAG_UPDATE_CURRENT);
+    //remoteViews.setOnClickPendingIntent(R.id.luk, startStopPI);
 
     /*
     int id = DRData.instans.afspiller.getLydkilde().kanal().kanallogo_resid;
@@ -132,36 +144,62 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
     Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
     Kanal k = lydkilde.kanal();
     Status status = DRData.instans.afspiller.getAfspillerstatus();
+    String metainfo = "";
     //boolean live =  && status != Status.STOPPET;
     if (lydkilde.erStreaming()) {
       remoteViews.setTextViewText(R.id.titel, k.navn + " Live");
+      remoteViews.setTextViewText(R.id.metainformation, k.navn);
+      metainfo = k.navn;
+      App.kortToast(" Live "  + k.navn);
     } else {
       Udsendelse udsendelse = lydkilde.getUdsendelse();
       remoteViews.setTextViewText(R.id.titel, udsendelse == null ? k.navn : udsendelse.titel);
-    }
-
-
+      remoteViews.setTextViewText(R.id.metainformation, udsendelse == null ? k.navn : udsendelse.titel);
+      metainfo = k.navn ;
+      App.kortToast(" Udsendelse "  + udsendelse == null ? k.navn : udsendelse.titel);
+    }    
+        
+    
     switch (status) {
-      case STOPPET:
+      case STOPPET:    	
+    	  statusInt = 1;
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_spil);
         remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
         remoteViews.setTextViewText(R.id.metainformation, k.navn);
-        //metainformation.setTextColor(getResources().getColor(R.color.grå40));
+        remoteViews.setTextColor(R.id.metainformation, App.color.grå40);
         break;
       case FORBINDER:
-        remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_pause);
+    	remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_pause);
         remoteViews.setViewVisibility(R.id.progressBar, View.VISIBLE);
         int fpct = DRData.instans.afspiller.getForbinderProcent();
-        //metainformation.setTextColor(getResources().getColor(R.color.blå));
-        remoteViews.setTextViewText(R.id.metainformation, "Forbinder " + (fpct > 0 ? fpct : ""));
+         //remoteViews.setTextViewText(R.id.metainformation, "Forbinder " + (fpct > 0 ? fpct : ""));
+        remoteViews.setTextColor(R.id.metainformation, App.color.blå);
+        remoteViews.setTextViewText(R.id.metainformation, metainfo);        
         break;
       case SPILLER:
+    	  statusInt = 2;
+    	  App.kortToast("SPILLER " + k.navn);
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_pause);
         remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
         //metainformation.setTextColor(getResources().getColor(R.color.blå));
-        remoteViews.setTextViewText(R.id.metainformation, k.navn);
+        remoteViews.setViewVisibility(R.id.metainformation, View.VISIBLE);
+        remoteViews.setTextColor(R.id.metainformation, App.color.blå);
+        remoteViews.setTextViewText(R.id.metainformation, k.navn);          
         break;
     }
+    
+    afspillerReceiverI.putExtra("flag", statusInt);
+    PendingIntent startStopPI = PendingIntent.getBroadcast(App.instans, 0,afspillerReceiverI , PendingIntent.FLAG_UPDATE_CURRENT);
+    try {
+		startStopPI.send();
+	} catch (CanceledException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+    remoteViews.setOnClickPendingIntent(R.id.startStopKnap, startStopPI);
+    
+    
+    
     return remoteViews;
   }
 }
