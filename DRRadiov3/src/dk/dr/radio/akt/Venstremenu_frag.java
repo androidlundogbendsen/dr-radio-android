@@ -413,7 +413,11 @@ public class Venstremenu_frag extends Fragment implements Runnable {
         public View getView() {
           TextView tekst2 = (TextView) view.findViewById(R.id.tekst2);
           int antal = DRData.instans.favoritter.getAntalNyeUdsendelser();
-          tekst2.setText(antal == 0 ? "(ingen nye udsendelser)" : antal == 1 ? "(1 ny udsendelse)" : "(" + antal + " nye udsendelser)");
+          tekst2.setText(
+              antal<0 ?    "" : // i gang med at indlæse
+              antal==0 ?   "(ingen nye udsendelser)" :
+              antal == 1 ? "(1 ny udsendelse)" :
+                           "(" + antal + " nye udsendelser)");
           return view;
         }
       });

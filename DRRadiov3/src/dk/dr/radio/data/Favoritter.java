@@ -22,7 +22,7 @@ import dk.dr.radio.diverse.Log;
 public class Favoritter {
   private static final String PREF_NØGLE = "favorit til startnummer";
   private HashMap<String, String> favoritTilStartnummer;
-  private int antalNyeUdsendelser;
+  private int antalNyeUdsendelser = -1;
   public List<Runnable> observatører = new ArrayList<Runnable>();
 
 
@@ -75,38 +75,41 @@ public class Favoritter {
   }
 
 
-
-  public void startOpdaterAntalNyeUdsendelser() {
-    tjekDataOprettet();
-    for (Map.Entry<String, String> e : favoritTilStartnummer.entrySet()) {
-      final String programserieSlug = e.getKey();
-      Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
-      if (programserie!=null) continue; // Allerede hentet
-      int offset = 0;
-      String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
-      Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
-        @Override
-        public void fikSvar(String json, boolean fraCache) throws Exception {
-          Log.d("favoritter fikSvar(" + fraCache + " " + url);
-          if (json != null && !"null".equals(json)) try {
-            JSONObject data = new JSONObject(json);
-            Programserie programserie = DRJson.parsProgramserie(data);
-            programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
-            DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
-          } catch (Exception ex) {
-            Log.d("Parsefejl: " + ex + " for json=" + json);
-            ex.printStackTrace();
+  public Runnable startOpdaterAntalNyeUdsendelser = new Runnable() {
+    @Override
+    public void run() {
+      tjekDataOprettet();
+      Log.d("Favoritter: Opdaterer favoritTilStartnummer=" + favoritTilStartnummer);
+      for (Map.Entry<String, String> e : favoritTilStartnummer.entrySet()) {
+        final String programserieSlug = e.getKey();
+        Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
+        if (programserie!=null) continue; // Allerede hentet
+        int offset = 0;
+        String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
+        Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
+          @Override
+          public void fikSvar(String json, boolean fraCache) throws Exception {
+            Log.d("favoritter fikSvar(" + fraCache + " " + url);
+            if (json != null && !"null".equals(json)) try {
+              JSONObject data = new JSONObject(json);
+              Programserie programserie = DRJson.parsProgramserie(data);
+              programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+              DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
+              if (!fraCache) beregnAntalNyeUdsendelser();
+            } catch (Exception ex) {
+              Log.d("Favoritter: Parsefejl: " + ex + " for json=" + json);
+              ex.printStackTrace();
+            }
           }
-          beregnAntalNyeUdsendelser();
-        }
-      }) {
-        public Priority getPriority() {
-          return Priority.LOW;
-        }
-      };
-      App.volleyRequestQueue.add(req);
+        }) {
+          public Priority getPriority() {
+            return Priority.LOW;
+          }
+        };
+        App.volleyRequestQueue.add(req);
+      }
     }
-  }
+  };
 
   private void beregnAntalNyeUdsendelser() {
     int antalNyeIAlt = 0;
@@ -123,10 +126,15 @@ public class Favoritter {
           continue;
         }
         antalNyeIAlt += nye;
+        Log.d("Favoritter: "+programserie+" har "+nye+", antalNyeIAlt=" +antalNyeIAlt);
       } else return; // Mangler info - vent med at opdatere antalNyeUdsendelser
     }
-    antalNyeUdsendelser = antalNyeIAlt;
-    for (Runnable r : observatører) r.run();  // Informér observatører - i forgrundstråden
+    if (antalNyeUdsendelser != antalNyeIAlt) {
+      Log.d("Favoritter: Ny favoritTilStartnummer="+favoritTilStartnummer);
+      Log.d("Favoritter: Fortæller observatører at antalNyeUdsendelser er ændret fra "+antalNyeUdsendelser+" til "+ antalNyeIAlt);
+      antalNyeUdsendelser = antalNyeIAlt;
+      for (Runnable r : observatører) r.run();  // Informér observatører - i forgrundstråden
+    }
   }
 
   public Set<String> getProgramserieSlugSæt() {
