@@ -1,6 +1,7 @@
 package dk.dr.radio.akt;
 
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -19,6 +20,10 @@ public class Hovedaktivitet extends Basisaktivitet {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    // android:logo="@drawable/dr_logo" ignoreres på Android 2, sæt det derfor også her:
+    if (Build.VERSION.SDK_INT<Build.VERSION_CODES.HONEYCOMB) {
+      getSupportActionBar().setLogo(R.drawable.dr_logo);
+    }
 
     if (App.prefs.getBoolean("tving_lodret_visning", true)) {
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
