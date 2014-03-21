@@ -241,7 +241,6 @@ public class App extends Application implements Runnable {
     skrift_gibson_fed_span = new EgenTypefaceSpan("Gibson fed", App.skrift_gibson_fed);
     App.color = new DRFarver();
 
-    DRData.instans.favoritter.startOpdaterAntalNyeUdsendelser();
   }
 
   /**
@@ -273,6 +272,12 @@ public class App extends Application implements Runnable {
         };
         App.volleyRequestQueue.add(req);
       }
+    }
+
+    if (DRData.instans.favoritter.getAntalNyeUdsendelser()<0) {
+      færdig = false;
+      // Opdatering af nye antal udsendelser i favoritter i kø, til om 3 sekunder
+      forgrundstråd.postDelayed(DRData.instans.favoritter.startOpdaterAntalNyeUdsendelser,3000);
     }
 
     if (prefs.getString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, null) == null) {

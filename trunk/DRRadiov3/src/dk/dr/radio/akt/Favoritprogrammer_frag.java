@@ -32,6 +32,7 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
   private ArrayList<Object> liste = new ArrayList<Object>(); // Indeholder både udsendelser og -serier
   protected View rod;
   Favoritter favoritter = DRData.instans.favoritter;
+  private static long sidstOpdateretAntalNyeUdsendelser;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,6 +51,11 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
 
     favoritter.observatører.add(this);
     run();
+    if (favoritter.getAntalNyeUdsendelser()<0 || sidstOpdateretAntalNyeUdsendelser>System.currentTimeMillis()+1000*60*10) {
+      // Opdatering af nye antal udsendelser er ikke sket endnu - eller det er mere end end ti minutter siden.
+      DRData.instans.favoritter.startOpdaterAntalNyeUdsendelser.run();
+      sidstOpdateretAntalNyeUdsendelser = System.currentTimeMillis();
+    }
     udvikling_checkDrSkrifter(rod, this + " rod");
     return rod;
   }
@@ -64,6 +70,10 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
   @Override
   public void run() {
     liste.clear();
+    if (favoritter.getAntalNyeUdsendelser()<0) {
+      // Opdatering af nye antal udsendelser i favoritter i kø, til om 3 sekunder
+      DRData.instans.favoritter.startOpdaterAntalNyeUdsendelser.run();
+    }
     try {
       ArrayList<String> pss = new ArrayList<String>(favoritter.getProgramserieSlugSæt());
       Collections.sort(pss);
