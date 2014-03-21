@@ -50,7 +50,6 @@ import dk.dr.radio.v3.R;
 public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
 
 
-  private static int statusInt;
 
 @Override
   public void onReceive(Context context, Intent intent) {
@@ -115,31 +114,12 @@ public static RemoteViews lavRemoteViews(boolean låseskærm, boolean notifikati
       remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_levendeikon);
     }
 
-    Intent afspillerReceiverI = new Intent(App.instans, AfspillerReciever.class); 
-    
 
     Intent hovedAktI = new Intent(App.instans, Hovedaktivitet.class);
     hovedAktI.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     PendingIntent åbnAktivitetPI = PendingIntent.getActivity(App.instans, 0, hovedAktI, PendingIntent.FLAG_UPDATE_CURRENT);
     remoteViews.setOnClickPendingIntent(R.id.yderstelayout, åbnAktivitetPI);
        
-
-    //PendingIntent lukNotifikation = PendingIntent.getActivity(App.instans, 0, new Intent(App.instans, AfspillerReciever.class), PendingIntent.FLAG_UPDATE_CURRENT);
-    //remoteViews.setOnClickPendingIntent(R.id.luk, startStopPI);
-
-    /*
-    int id = DRData.instans.afspiller.getLydkilde().kanal().kanallogo_resid;
-
-    if (id != 0) {
-      // Element med billede
-      remoteViews.setViewVisibility(R.id.billede, View.VISIBLE);
-      remoteViews.setImageViewResource(R.id.billede, id);
-    } else {
-      // Element uden billede
-      remoteViews.setViewVisibility(R.id.kanalnavn, View.VISIBLE);
-      //remoteViews.setTextViewText(R.id.kanalnavn, DRData.instans.aktuelKanal.navn);
-    }
-    */
 
     Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
     Kanal k = lydkilde.kanal();
@@ -157,12 +137,10 @@ public static RemoteViews lavRemoteViews(boolean låseskærm, boolean notifikati
       remoteViews.setTextViewText(R.id.metainformation, udsendelse == null ? k.navn : udsendelse.titel);
       metainfo = k.navn ;
       //App.kortToast(" Udsendelse "  + udsendelse == null ? k.navn : udsendelse.titel);
-    }    
-        
-    
+    }
+
     switch (status) {
       case STOPPET:    	
-    	  statusInt = 1;
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_spil);
         remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
         remoteViews.setTextViewText(R.id.metainformation, k.navn);
@@ -177,7 +155,6 @@ public static RemoteViews lavRemoteViews(boolean låseskærm, boolean notifikati
         remoteViews.setTextViewText(R.id.metainformation, metainfo);        
         break;
       case SPILLER:
-    	  statusInt = 2;
     	//  App.kortToast("SPILLER " + k.navn);
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_pause);
         remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
@@ -187,19 +164,13 @@ public static RemoteViews lavRemoteViews(boolean låseskærm, boolean notifikati
         remoteViews.setTextViewText(R.id.metainformation, k.navn);          
         break;
     }
-    
-    afspillerReceiverI.putExtra("flag", statusInt);
+
+    Intent afspillerReceiverI = new Intent(App.instans, AfspillerReciever.class);
     PendingIntent startStopPI = PendingIntent.getBroadcast(App.instans, 0,afspillerReceiverI , PendingIntent.FLAG_UPDATE_CURRENT);
-    try {
-		startStopPI.send();
-	} catch (CanceledException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
     remoteViews.setOnClickPendingIntent(R.id.startStopKnap, startStopPI);
-    
-    
-    
+
+    remoteViews.setOnClickPendingIntent(R.id.luk, startStopPI);
+
     return remoteViews;
   }
 }
