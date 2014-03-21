@@ -9,7 +9,10 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.format.DateUtils;
+import android.text.style.ForegroundColorSpan;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -442,12 +445,16 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           aq.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         } else if (type == INFO) {
         	String forkortInfoStr = udsendelse.beskrivelse;
+        	Spannable spannable = new SpannableString(forkortInfoStr);//null;
         	if (udsendelse.beskrivelse.length() > 100){
         		forkortInfoStr = forkortInfoStr.substring(0, 100);
         		forkortInfoStr += "...(læs mere)";
+        		
+        		spannable = new SpannableString(forkortInfoStr);
+        	    spannable.setSpan(new ForegroundColorSpan(App.color.blå), forkortInfoStr.length() - "(læs mere)".length() , forkortInfoStr.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         		forkortInfo = true;
         	}
-          aq.id(R.id.titel).clicked(Udsendelse_frag.this).text(forkortInfoStr).typeface(App.skrift_georgia);
+          aq.id(R.id.titel).clicked(Udsendelse_frag.this).text(spannable/*forkortInfoStr*/).typeface(App.skrift_georgia);
           Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS);
         } else if (type == SPILLER_NU || type == SPILLEDE) {
           vh.titel = aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
