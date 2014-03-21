@@ -10,6 +10,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,8 +24,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import dk.dr.radio.akt.Hentede_udsendelser_frag;
+import dk.dr.radio.akt.Hovedaktivitet;
+import dk.dr.radio.akt.VisFragment_akt;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Udsendelse;
+import dk.dr.radio.v3.R;
 
 /**
  * Created by j on 01-03-14.
@@ -121,7 +127,7 @@ public class Hentning {
    * @param udsendelse
    * @return
    */
-  public Cursor getStatus(Udsendelse udsendelse) {
+  public Cursor getStatusCursor(Udsendelse udsendelse) {
     if (!virker()) return null;
     tjekDataOprettet();
     Log.d("getStatus downloadIdFraSlug = "+data.downloadIdFraSlug+"  u="+udsendelse);
@@ -135,6 +141,29 @@ public class Hentning {
     }
     c.close();
     return null;
+  }
+
+  public static int getStatus(Cursor c) {
+    return c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+  }
+
+  public static String getStatustekst(Cursor c) {
+    int status = getStatus(c);
+    long iAlt = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))/1000000;
+    long hentet = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))/1000000;
+    String txt = "";
+    if (status== DownloadManager.STATUS_SUCCESSFUL) {
+      txt = "Klar";
+    } else if (status==DownloadManager.STATUS_FAILED) {
+      txt = "Mislykkedes";
+    } else if (status==DownloadManager.STATUS_PENDING) {
+      txt = "Venter...";
+    } else if (status==DownloadManager.STATUS_PAUSED) {
+      txt = "Hentning pauset ... hentet "+hentet+" MB af "+iAlt+" MB";
+    } else { // RUNNING
+      txt = "Hentet "+hentet+" MB af "+iAlt+" MB";
+    }
+    return txt;
   }
 
   public void annullér(Udsendelse u) {
@@ -176,10 +205,32 @@ public class Hentning {
         for (Runnable obs : App.hentning.observatører) obs.run();
       } catch (Exception e) { Log.rapporterFejl(e);
       } else if (DownloadManager.ACTION_NOTIFICATION_CLICKED.equals(action)) {
-        // Åbn download manager
+        // Åbn app'en, under hentninger
+
+        if (App.aktivitetIForgrunden!=null) {
+          // Skift til Hentede_frag
+          try {
+            FragmentManager fm = App.aktivitetIForgrunden.getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.indhold_frag, new Hentede_udsendelser_frag());
+            ft.addToBackStack("Hentning");
+            ft.commit();
+          } catch (Exception e1) {
+            Log.rapporterFejl(e1);
+          }
+        } else {
+          // Åbn hovedaktivitet
+          Intent i = new Intent(context, Hovedaktivitet.class)
+              .putExtra(VisFragment_akt.KLASSE, Hentede_udsendelser_frag.class.getName());
+          i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+          context.startActivity(i);
+        }
+
+/*
         Intent dm = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
         dm.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(dm);
+        */
       }
     }
   }
