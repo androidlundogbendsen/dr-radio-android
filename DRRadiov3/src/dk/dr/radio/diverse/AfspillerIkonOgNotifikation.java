@@ -55,7 +55,7 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
 @Override
   public void onReceive(Context context, Intent intent) {
     Log.d(this + " onReceive(" + intent);
-    App.kortToast("AfspillerWidget onReceive");
+    //App.kortToast("AfspillerWidget onReceive");
     super.onReceive(context, intent);
   }
 
@@ -75,7 +75,7 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
 
   public static void opdaterUdseende(Context ctx, AppWidgetManager appWidgetManager, int appWidgetId) {
     Log.d("AfspillerWidget opdaterUdseende()");
-    App.langToast("AfspillerWidget opdaterUdseende()");
+    //App.langToast("AfspillerWidget opdaterUdseende()");
     
     boolean låseskærm = false;
 
@@ -150,13 +150,13 @@ public static RemoteViews lavRemoteViews(boolean låseskærm, boolean notifikati
       remoteViews.setTextViewText(R.id.titel, k.navn + " Live");
       remoteViews.setTextViewText(R.id.metainformation, k.navn);
       metainfo = k.navn;
-      App.kortToast(" Live "  + k.navn);
+    //  App.kortToast(" Live "  + k.navn);
     } else {
       Udsendelse udsendelse = lydkilde.getUdsendelse();
       remoteViews.setTextViewText(R.id.titel, udsendelse == null ? k.navn : udsendelse.titel);
       remoteViews.setTextViewText(R.id.metainformation, udsendelse == null ? k.navn : udsendelse.titel);
       metainfo = k.navn ;
-      App.kortToast(" Udsendelse "  + udsendelse == null ? k.navn : udsendelse.titel);
+      //App.kortToast(" Udsendelse "  + udsendelse == null ? k.navn : udsendelse.titel);
     }    
         
     
@@ -178,7 +178,7 @@ public static RemoteViews lavRemoteViews(boolean låseskærm, boolean notifikati
         break;
       case SPILLER:
     	  statusInt = 2;
-    	  App.kortToast("SPILLER " + k.navn);
+    	//  App.kortToast("SPILLER " + k.navn);
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_pause);
         remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
         //metainformation.setTextColor(getResources().getColor(R.color.blå));
