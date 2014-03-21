@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -53,6 +54,7 @@ import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.DrVolleyResonseListener;
 import dk.dr.radio.diverse.DrVolleyStringRequest;
+import dk.dr.radio.diverse.Hentning;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
@@ -195,7 +197,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   private static void tjekOmHentet(Udsendelse udsendelse) {
     if (udsendelse.hentetStream==null) {
       if (!App.hentning.virker()) return;
-      Cursor c = App.hentning.getStatus(udsendelse);
+      Cursor c = App.hentning.getStatusCursor(udsendelse);
       if (c==null) return;
       try {
         Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)));
@@ -491,7 +493,23 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
               !online ? "Internetforbindelse mangler" :
                   (spillerDenneKanal ? " SPILLER " : " HØR ") + kanal.navn.toUpperCase() + " LIVE");
         }
-        aq.id(R.id.hent).enabled(streamsKlar).visibility(udsendelse.hentetStream==null && udsendelse.kanHøres && App.hentning.virker() ? View.VISIBLE : View.GONE);
+        aq.id(R.id.hent).visibility(udsendelse.hentetStream == null && udsendelse.kanHøres && App.hentning.virker() ? View.VISIBLE : View.GONE);
+        aq.textColorId(streamsKlar ? R.color.blå : R.color.grå40).getButton();
+
+        Cursor c = App.hentning.getStatusCursor(udsendelse);
+        if (c!=null) {
+          int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+          String statustekst = Hentning.getStatustekst(c);
+          c.close();
+
+          if (status!=DownloadManager.STATUS_SUCCESSFUL && status!=DownloadManager.STATUS_FAILED) {
+            aq.id(R.id.hent).text(statustekst);
+            App.forgrundstråd.removeCallbacks(Udsendelse_frag.this);
+            App.forgrundstråd.postDelayed(Udsendelse_frag.this, 5000);
+          }
+          aq.textColorId(R.color.grå40);
+        }
+
         aq.id(R.id.kan_endnu_ikke_hentes).visibility(!udsendelse.kanHøres ? View.VISIBLE : View.GONE);
       } else if (type == SPILLER_NU || type == SPILLEDE) {
         Playlisteelement u = (Playlisteelement) liste.get(position);
@@ -580,6 +598,23 @@ private boolean forkortInfo = false;
   }
 
   private void hent() {
+    Cursor c = App.hentning.getStatusCursor(udsendelse);
+    if (c != null) {
+      c.close();
+      // Skift til Hentede_frag
+      try {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        // Fjern backstak - så vi starter forfra i 'roden'
+        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.indhold_frag, new Hentede_udsendelser_frag());
+        ft.commit();
+      } catch (Exception e1) {
+        Log.rapporterFejl(e1);
+      }
+
+      return;
+    }
     if (!streamsErKlar()) return;
     App.hentning.hent(udsendelse);
   }

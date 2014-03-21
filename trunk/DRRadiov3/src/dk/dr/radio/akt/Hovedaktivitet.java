@@ -2,9 +2,11 @@ package dk.dr.radio.akt;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 
 import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
 public class Hovedaktivitet extends Basisaktivitet {
@@ -31,12 +33,27 @@ public class Hovedaktivitet extends Basisaktivitet {
     // Set up the drawer.
     venstremenuFrag.setUp(R.id.venstremenu_frag, (DrawerLayout) findViewById(R.id.drawer_layout));
 
-    if (savedInstanceState == null) {
-      getSupportFragmentManager().beginTransaction()
-          .replace(R.id.indhold_frag, new Kanaler_frag())
-          .commit();
+    if (savedInstanceState == null) try {
       venstremenuFrag.sætListemarkering(Venstremenu_frag.FORSIDE_INDEX); // "Forside
-    }
+
+      String visFragment = getIntent().getStringExtra(VisFragment_akt.KLASSE);
+      if (visFragment==null) {
+        getSupportFragmentManager().beginTransaction()
+            .replace(R.id.indhold_frag, new Kanaler_frag())
+            .commit();
+        venstremenuFrag.sætListemarkering(Venstremenu_frag.FORSIDE_INDEX); // "Forside
+      } else {
+        Fragment f = (Fragment) Class.forName(visFragment).newInstance();
+        Bundle b = getIntent().getExtras();
+        f.setArguments(b);
+
+        // Vis fragmentet i FrameLayoutet
+        Log.d("Viser fragment " + f + " med arg " + b);
+        getSupportFragmentManager().beginTransaction()
+            .replace(R.id.indhold_frag, f).commit();
+      }
+
+    } catch (Exception e) { Log.rapporterFejl(e); }
   }
 
 

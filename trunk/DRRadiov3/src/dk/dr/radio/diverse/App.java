@@ -61,6 +61,7 @@ import java.io.FileOutputStream;
 
 import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.akt.Basisaktivitet;
+import dk.dr.radio.akt.Hovedaktivitet;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Diverse;
@@ -277,7 +278,7 @@ public class App extends Application implements Runnable {
     if (DRData.instans.favoritter.getAntalNyeUdsendelser()<0) {
       færdig = false;
       // Opdatering af nye antal udsendelser i favoritter i kø, til om 3 sekunder
-      forgrundstråd.postDelayed(DRData.instans.favoritter.startOpdaterAntalNyeUdsendelser,3000);
+      forgrundstråd.postDelayed(DRData.instans.favoritter.startOpdaterAntalNyeUdsendelser, 3000);
     }
 
     if (prefs.getString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, null) == null) {
@@ -314,8 +315,8 @@ public class App extends Application implements Runnable {
   }
 
 
-  public static Activity aktivitetIForgrunden = null;
-  public static Activity senesteAktivitetIForgrunden = null;
+  public static Basisaktivitet aktivitetIForgrunden = null;
+  public static Basisaktivitet senesteAktivitetIForgrunden = null;
   private static int erIGang = 0;
 
   /**
@@ -339,16 +340,16 @@ public class App extends Application implements Runnable {
 
   private static Runnable setProgressBarIndeterminateVisibility = new Runnable() {
     public void run() {
-      Activity a = aktivitetIForgrunden; // trådsikkerhed
+      Basisaktivitet a = aktivitetIForgrunden; // trådsikkerhed
       if (a != null) {
-        a.setProgressBarIndeterminateVisibility(erIGang > 0);
+        a.setSupportProgressBarIndeterminateVisibility(erIGang > 0);
       }
     }
   };
 
   public void onResume(Basisaktivitet akt) {
     //((NotificationManager) getSystemService("notification")).cancelAll();
-    akt.setProgressBarIndeterminateVisibility(erIGang > 0);
+    setProgressBarIndeterminateVisibility.run();
     senesteAktivitetIForgrunden = aktivitetIForgrunden = akt;
   }
 

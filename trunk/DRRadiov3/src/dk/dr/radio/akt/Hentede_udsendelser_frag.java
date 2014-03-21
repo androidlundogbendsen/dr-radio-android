@@ -17,6 +17,7 @@ import android.widget.ListView;
 import com.androidquery.AQuery;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
@@ -63,6 +64,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
   public void run() {
     liste.clear();
     liste.addAll(hentning.getUdsendelser());
+    Collections.reverse(liste);
     adapter.notifyDataSetChanged();
   }
 
@@ -93,27 +95,20 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
         // TODO baggrundsindlæsning
         aq.id(R.id.startid).text("");
       } else {
-        String txt = "";
-        Cursor c = hentning.getStatus(udsendelse);
+        Cursor c = hentning.getStatusCursor(udsendelse);
         if (c==null) {
           aq.id(R.id.titel_og_kunstner).text("Ikke tilgængelig");
         } else {
           int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-          if (status==DownloadManager.STATUS_SUCCESSFUL) {
-            txt = " - Klar";
-          } else if (status==DownloadManager.STATUS_FAILED) {
-            txt = " - Hentning mislykkedes";
-          } else {
-            txt = " - I gang...";
-          }
-          Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)));
-          Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_LAST_MODIFIED_TIMESTAMP)));
-          Log.d(c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
-          Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS)));
-          Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_REASON)));
+          String statustekst = Hentning.getStatustekst(c);
           c.close();
 
-          aq.id(R.id.titel_og_kunstner).text(DRJson.datoformat.format(udsendelse.startTid) + txt);
+          aq.id(R.id.titel_og_kunstner).text(DRJson.datoformat.format(udsendelse.startTid) +" - " +  statustekst);
+
+          if (status!=DownloadManager.STATUS_SUCCESSFUL && status!=DownloadManager.STATUS_FAILED) {
+            App.forgrundstråd.removeCallbacks(Hentede_udsendelser_frag.this);
+            App.forgrundstråd.postDelayed(Hentede_udsendelser_frag.this, 1000);
+          }
         }
       }
       aq.id(R.id.startid).text(udsendelse.titel)
