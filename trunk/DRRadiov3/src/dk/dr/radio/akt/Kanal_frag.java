@@ -132,7 +132,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       @Override
       public void fikSvar(String json, boolean fraCache) throws Exception {
         Log.d("fikSvar(" + fraCache + " " + url);
-        if (getActivity()==null) return;
+        if (getActivity() == null) return;
         Log.d("hentSendeplanForDag url " + url);
         if (json != null && !"null".equals(json)) try {
           if (idag) {
@@ -421,7 +421,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         @Override
         public void fikSvar(String json, boolean fraCache) throws Exception {
           Log.d(kanal.kode + " opdaterSenestSpillet url " + url);
-          if (getActivity()==null) return;
+          if (getActivity() == null) return;
           if (json != null && !"null".equals(json)) try {
             u2.playliste = DRJson.parsePlayliste(new JSONArray(json));
             Log.d(kanal.kode + " parsePlayliste gav " + u2.playliste.size() + " elemener");
@@ -469,7 +469,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       long passeret = DrVolleyStringRequest.serverCurrentTimeMillis() - u.startTid.getTime();
       long længde = u.slutTid.getTime() - u.startTid.getTime();
       int passeretPct = længde > 0 ? (int) (passeret * 100 / længde) : 0;
-      //Log.d(kanal.kode + " passeretPct=" + passeretPct + " af længde=" + længde);
+      //Log.d(getKanal.kode + " passeretPct=" + passeretPct + " af længde=" + længde);
       LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) vh.starttidbjælke.getLayoutParams();
       lp.weight = passeretPct;
       vh.starttidbjælke.setLayoutParams(lp);
@@ -550,15 +550,15 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
     } else {
       //startActivity(new Intent(getActivity(), VisFragment_akt.class)
-      //    .putExtra(P_kode, kanal.kode)
+      //    .putExtra(P_kode, getKanal.kode)
       //    .putExtra(VisFragment_akt.KLASSE, Udsendelse_frag.class.getName()).putExtra(DRJson.Slug.name(), u.slug)); // Udsenselses-ID
       String aktuelUdsendelseSlug = aktuelUdsendelseIndex > 0 ? liste.get(aktuelUdsendelseIndex).slug : "";
 
 
       Fragment f =
-          App.prefs.getBoolean("udsendelser_bladr_ikke", false)? new Udsendelse_frag():
-          App.prefs.getBoolean("udsendelser_vandret_skift", false)?new Udsendelser_vandret_skift_frag():
-              new Udsendelser_lodret_skift_frag();
+          App.prefs.getBoolean("udsendelser_bladr_ikke", false) ? new Udsendelse_frag() :
+              App.prefs.getBoolean("udsendelser_vandret_skift", false) ? new Udsendelser_vandret_skift_frag() :
+                  new Udsendelser_lodret_skift_frag();
       f.setArguments(new Intent()
           .putExtra(P_kode, kanal.kode)
           .putExtra(Udsendelse_frag.AKTUEL_UDSENDELSE_SLUG, aktuelUdsendelseSlug)

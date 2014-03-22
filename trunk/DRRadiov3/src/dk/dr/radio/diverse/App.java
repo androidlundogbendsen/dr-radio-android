@@ -61,7 +61,6 @@ import java.io.FileOutputStream;
 
 import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.akt.Basisaktivitet;
-import dk.dr.radio.akt.Hovedaktivitet;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Diverse;
@@ -88,7 +87,7 @@ public class App extends Application implements Runnable {
   public static Typeface skrift_georgia;
 
   public static Hentning hentning;  // Understøttes ikke på Android 2.2, så er variablen null
-  public static final Netvaerksstatus netværk = new Netvaerksstatus();
+  public static Netvaerksstatus netværk;
   public static RequestQueue volleyRequestQueue;
   public static EgenTypefaceSpan skrift_gibson_fed_span;
   public static DatabaseHelper db;
@@ -99,6 +98,7 @@ public class App extends Application implements Runnable {
   @Override
   public void onCreate() {
     instans = this;
+    netværk = new Netvaerksstatus();
     EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator");
     if (!EMULATOR) BugSenseHandler.initAndStartSession(this, getString(R.string.bugsense_nøgle));
     super.onCreate();
@@ -260,11 +260,15 @@ public class App extends Application implements Runnable {
         Request<?> req = new DrVolleyStringRequest(k.getStreamsUrl(), new DrVolleyResonseListener() {
           @Override
           public void fikSvar(String json, boolean fraCache) throws Exception {
+            //Log.d("Dsdsdsdsdsd");
             JSONObject o = new JSONObject(json);
             k.slug = o.getString(DRJson.Slug.name());
             DRData.instans.grunddata.kanalFraSlug.put(k.slug, k);
             k.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
             Log.d("hentSupplerendeDataBg " + k.kode + " fraCache=" + fraCache + " => " + k.slug + " k.lydUrl=" + k.streams);
+            if (fraCache == false) {
+              Log.d("DRData.instans.grunddata.kanalFraSlug=" + DRData.instans.grunddata.kanalFraSlug);
+            }
           }
         }) {
           public Priority getPriority() {
@@ -275,7 +279,7 @@ public class App extends Application implements Runnable {
       }
     }
 
-    if (DRData.instans.favoritter.getAntalNyeUdsendelser()<0) {
+    if (DRData.instans.favoritter.getAntalNyeUdsendelser() < 0) {
       færdig = false;
       // Opdatering af nye antal udsendelser i favoritter i kø, til om 3 sekunder
       forgrundstråd.postDelayed(DRData.instans.favoritter.startOpdaterAntalNyeUdsendelser, 3000);
@@ -291,7 +295,7 @@ public class App extends Application implements Runnable {
               String p4kanal = P4Stedplacering.findP4KanalnavnFraIP();
               if (App.fejlsøgning) App.langToast("p4kanal: " + p4kanal);
               if (p4kanal != null) prefs.edit().putString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, p4kanal).commit();
-              Log.rapporterFejl(new Exception("Ny enhed - fundet P4-kanal "+p4kanal));
+              Log.rapporterFejl(new Exception("Ny enhed - fundet P4-kanal " + p4kanal));
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -422,7 +426,7 @@ public class App extends Application implements Runnable {
 
 
   @Override
-  public void onLowMemory(){
+  public void onLowMemory() {
     // Ryd op når der mangler RAM
     BitmapAjaxCallback.clearCache();
     super.onLowMemory();
@@ -431,7 +435,7 @@ public class App extends Application implements Runnable {
   @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
   @Override
   public void onTrimMemory(int level) {
-    if (level>= TRIM_MEMORY_BACKGROUND) BitmapAjaxCallback.clearCache();
+    if (level >= TRIM_MEMORY_BACKGROUND) BitmapAjaxCallback.clearCache();
     super.onTrimMemory(level);
   }
 

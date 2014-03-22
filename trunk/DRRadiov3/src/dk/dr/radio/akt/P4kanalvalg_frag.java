@@ -28,16 +28,14 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.androidquery.AQuery;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.androidquery.AQuery;
-
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.diverse.App;
-import dk.dr.radio.diverse.ImageViewTilBlinde;
 import dk.dr.radio.v3.R;
 
 public class P4kanalvalg_frag extends Basisfragment implements AdapterView.OnItemClickListener {
@@ -48,7 +46,6 @@ public class P4kanalvalg_frag extends Basisfragment implements AdapterView.OnIte
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
 
 
     kanalkoder = new ArrayList<String>(DRData.instans.grunddata.p4koder);
@@ -99,17 +96,16 @@ public class P4kanalvalg_frag extends Basisfragment implements AdapterView.OnIte
       View view = getLayoutInflater(null).inflate(R.layout.kanalvalg_elem, null, false);
       AQuery aq = new AQuery(view);
 
-      AQuery ikon =  aq.id(R.id.ikon);
+      AQuery ikon = aq.id(R.id.ikon);
       AQuery textView = aq.id(R.id.tekst);
 
       textView.text(kanal.navn.replace("P4", "")).typeface(App.skrift_gibson_fed).textColor(Color.BLACK);
       //Log.d("billedebilledebilledebillede"+billede+ikon+textView);
-      // Sæt åbne/luk-ikon for P4 og højttalerikon for kanal
-      if (DRData.instans.afspiller.getLydkilde().kanal().kode.equals(kanalkode)) {
-         ikon.image(R.drawable.dri_lyd2_blaa);
+      // Sæt åbne/luk-ikon for P4 og højttalerikon for getKanal
+      if (DRData.instans.afspiller.getLydkilde().getKanal().kode.equals(kanalkode)) {
+        ikon.image(R.drawable.dri_lyd2_blaa);
         //ikon.blindetekst = "Spiller nu";
-      }
-      else {
+      } else {
 
       }
 
@@ -117,7 +113,7 @@ public class P4kanalvalg_frag extends Basisfragment implements AdapterView.OnIte
         // Element med billede
         //billede.visibility(View.VISIBLE);
 
-       //billede.blindetekst = kanal.navn;
+        //billede.blindetekst = getKanal.navn;
         //textView.visibility(View.GONE);
       } else {
         // Element uden billede - P4
@@ -171,12 +167,12 @@ public class P4kanalvalg_frag extends Basisfragment implements AdapterView.OnIte
     // Fjern backstak - så vi starter forfra i 'roden'
     fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     fm.beginTransaction().replace(R.id.indhold_frag, new Kanaler_frag()).commit();
-    //Toast.makeText(this, "Klik på "+position+" "+kanal.longName, Toast.LENGTH_LONG).show();
+    //Toast.makeText(this, "Klik på "+position+" "+getKanal.longName, Toast.LENGTH_LONG).show();
 
     //if (kanalkode.equals(DRData.instans.aktuelKanal.kode)) setResult(RESULT_CANCELED);
-    //else setResult(RESULT_OK);  // Signalér til kalderen at der er skiftet kanal!!
+    //else setResult(RESULT_OK);  // Signalér til kalderen at der er skiftet getKanal!!
 
-    // Ny kanal valgt - send valg til afspiller (ændrer også drData.aktuelKanalkode)
+    // Ny getKanal valgt - send valg til afspiller (ændrer også drData.aktuelKanalkode)
 //TODO    DRData.instans.skiftKanal(kanalkode);
 
     // Hop tilbage til kalderen (hovedskærmen)

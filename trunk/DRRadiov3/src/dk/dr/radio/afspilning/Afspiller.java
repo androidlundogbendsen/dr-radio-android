@@ -41,9 +41,9 @@ import android.telephony.TelephonyManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import dk.dr.radio.diverse.AfspillerIkonOgNotifikation;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Lydkilde;
+import dk.dr.radio.diverse.AfspillerIkonOgNotifikation;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.Opkaldshaandtering;
@@ -367,7 +367,7 @@ public class Afspiller {
           }
         }.start();
 
-        if (lydkilde.erStreaming()) {
+        if (lydkilde.erKanal()) {
           Log.d("Genstarter afspilning!");
           mediaPlayer = new MediaPlayer();
           sætMediaPlayerLytter(mediaPlayer, this); // registrér lyttere på den nye instans

@@ -33,7 +33,6 @@ public class Kanal extends Lydkilde {
   public String navn;
   public int kanallogo_resid;
   public boolean p4underkanal;
-  public String lognøgle = "";
   public transient ArrayList<Udsendelse> udsendelser = new ArrayList<Udsendelse>();
   public transient SortedMap<String, ArrayList<Udsendelse>> udsendelserPerDag = new TreeMap<String, ArrayList<Udsendelse>>();
 
@@ -65,12 +64,12 @@ public class Kanal extends Lydkilde {
   }
 
   @Override
-  public Kanal kanal() {
+  public Kanal getKanal() {
     return this;
   }
 
   @Override
-  public boolean erStreaming() {
+  public boolean erKanal() {
     return true;
   }
 

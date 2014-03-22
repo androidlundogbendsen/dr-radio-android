@@ -102,9 +102,9 @@ public abstract class Lydkilde implements Serializable {
     return kandidater;
   }
 
-  public abstract Kanal kanal();
+  public abstract Kanal getKanal();
 
-  public abstract boolean erStreaming();
+  public abstract boolean erKanal();
 
   public abstract Udsendelse getUdsendelse();
 }
