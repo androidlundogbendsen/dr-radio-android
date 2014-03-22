@@ -3,6 +3,8 @@ package dk.dr.radio.data;
 import java.util.ArrayList;
 import java.util.Date;
 
+import dk.dr.radio.diverse.Log;
+
 /**
  * Repræsenterer en udsendelse
  * Created by j on 28-01-14.
@@ -52,12 +54,17 @@ public class Udsendelse extends Lydkilde {
 
 
   @Override
-  public Kanal kanal() {
-    return DRData.instans.grunddata.kanalFraSlug.get(kanalSlug);
+  public Kanal getKanal() {
+    Kanal k = DRData.instans.grunddata.kanalFraSlug.get(kanalSlug);
+    if (k == null) {
+      Log.rapporterFejl(new Exception(kanalSlug + " manglede i grunddata.kanalFraSlug=" + DRData.instans.grunddata.kanalFraSlug));
+      k = DRData.instans.grunddata.ukendtKanal;
+    }
+    return k;
   }
 
   @Override
-  public boolean erStreaming() {
+  public boolean erKanal() {
     return false;
   }
 

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="dk.dr.radio.v3"
           android:versionCode="1"
-          android:versionName="0.1.4.1 - 19.marts">
+          android:versionName="0.1.4.2 - 22.marts">
 
     <uses-sdk
             android:minSdkVersion="7"
@@ -27,6 +27,10 @@
             >
 
         <!--
+            android:theme="@style/Theme.AppCompat.Light"
+            android:theme="@style/Theme.Dr"
+
+
             android:theme="@style/Theme.Drxx_ab"
             android:theme="@style/CustomActionBarTheme"
             android:theme="@style/AppTheme"

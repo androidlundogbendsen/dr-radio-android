@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import dk.dr.radio.diverse.FilCache;
@@ -44,9 +45,19 @@ public class Grunddata {
 
 
   public HashMap<String, Kanal> kanalFraKode = new HashMap<String, Kanal>();
-  public HashMap<String, Kanal> kanalFraUrn = new HashMap<String, Kanal>();
-  public HashMap<String, Kanal> kanalFraSlug = new HashMap<String, Kanal>();
-  private HashMap<String, Kanal> kanalFraLogonøgle = new HashMap<String, Kanal>();
+  public HashMap<String, Kanal> kanalFraSlug = new LinkedHashMap<String, Kanal>();
+  public final Kanal ukendtKanal = new Kanal();
+
+  public Grunddata() {
+    ukendtKanal.navn = "";
+    ukendtKanal.slug = "";
+    ukendtKanal.kode = "";
+    ukendtKanal.urn = "";
+    kanalFraKode.put(null, ukendtKanal);
+    kanalFraKode.put("", ukendtKanal);
+    kanalFraSlug.put(null, ukendtKanal);
+    kanalFraSlug.put("", ukendtKanal);
+  }
 
 
   private void fjernKanalMedFejl(Kanal k) {
@@ -54,7 +65,6 @@ public class Grunddata {
     kanalkoder.remove(k.kode);
     p4koder.remove(k.kode);
     kanalFraKode.remove(k.kode);
-    kanalFraUrn.remove(k.urn);
     kanalFraSlug.remove(k.slug);
   }
 
@@ -68,15 +78,12 @@ public class Grunddata {
       Kanal k = new Kanal();
       k.kode = j.getString("scheduleIdent");
       k.navn = j.getString("title");
-      k.lognøgle = j.getString("logo");
       k.urn = j.getString("urn");
       k.p4underkanal = p4;
       kanaler.add(k);
       if (p4) p4koder.add(k.kode);
       else kanalkoder.add(k.kode);
       kanalFraKode.put(k.kode, k);
-      kanalFraUrn.put(k.urn, k);
-      kanalFraLogonøgle.put(k.lognøgle, k);
       if (j.optBoolean("isDefault")) forvalgtKanal = k;
 
       JSONArray underkanaler = j.optJSONArray("channels");
@@ -116,5 +123,6 @@ public class Grunddata {
         Log.e(e);
       }
     ;
+    Log.d("DRData.instans.grunddata.kanalFraSlug=" + DRData.instans.grunddata.kanalFraSlug);
   }
 }

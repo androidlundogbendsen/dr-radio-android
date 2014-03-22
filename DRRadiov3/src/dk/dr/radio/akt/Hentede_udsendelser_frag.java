@@ -43,7 +43,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
         "Du har endnu ikke hentet nogen udsendelser."
     ).getView());
     listView.setCacheColorHint(Color.WHITE);
-    
+
     aq.id(R.id.overskrift).typeface(App.skrift_gibson_fed).text("DOWNLOADEDE UDSENDELSER").getTextView();
 
 
@@ -90,22 +90,22 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
       } else {
         aq = new AQuery(v);
       }
-      if (udsendelse==null) {
+      if (udsendelse == null) {
         udsendelse = new Udsendelse("Indlæser...");
         // TODO baggrundsindlæsning
         aq.id(R.id.startid).text("");
       } else {
         Cursor c = hentning.getStatusCursor(udsendelse);
-        if (c==null) {
+        if (c == null) {
           aq.id(R.id.titel_og_kunstner).text("Ikke tilgængelig");
         } else {
           int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
           String statustekst = Hentning.getStatustekst(c);
           c.close();
 
-          aq.id(R.id.titel_og_kunstner).text(DRJson.datoformat.format(udsendelse.startTid) +" - " +  statustekst);
+          aq.id(R.id.titel_og_kunstner).text(DRJson.datoformat.format(udsendelse.startTid) + " - " + statustekst);
 
-          if (status!=DownloadManager.STATUS_SUCCESSFUL && status!=DownloadManager.STATUS_FAILED) {
+          if (status != DownloadManager.STATUS_SUCCESSFUL && status != DownloadManager.STATUS_FAILED) {
             App.forgrundstråd.removeCallbacks(Hentede_udsendelser_frag.this);
             App.forgrundstråd.postDelayed(Hentede_udsendelser_frag.this, 1000);
           }
@@ -114,7 +114,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
       aq.id(R.id.startid).text(udsendelse.titel)
           .textColor(udsendelse.kanHøres ? Color.BLACK : App.color.grå60);
       // Skjul stiplet linje over øverste listeelement
-      aq.id(R.id.stiplet_linje).background(position==0?R.drawable.linje:R.drawable.stiplet_linje);
+      aq.id(R.id.stiplet_linje).background(position == 0 ? R.drawable.linje : R.drawable.stiplet_linje);
 
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
 
@@ -127,7 +127,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
   @Override
   public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
     Udsendelse udsendelse = liste.get(position);
-    if (udsendelse==null) return;
+    if (udsendelse == null) return;
     // Tjek om udsendelsen er i RAM, og put den ind hvis den ikke er
     if (!DRData.instans.udsendelseFraSlug.containsKey(udsendelse.slug)) {
       DRData.instans.udsendelseFraSlug.put(udsendelse.slug, udsendelse);
@@ -135,7 +135,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
     Fragment f = new Udsendelse_frag();
     f.setArguments(new Intent()
 //        .putExtra(Udsendelse_frag.BLOKER_VIDERE_NAVIGERING, true)
-//        .putExtra(P_kode, kanal.kode)
+//        .putExtra(P_kode, getKanal.kode)
         .putExtra(DRJson.Slug.name(), udsendelse.slug)
         .getExtras());
     getActivity().getSupportFragmentManager().beginTransaction()
@@ -152,7 +152,9 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
     try {
       Udsendelse u = (Udsendelse) v.getTag();
       hentning.annullér(u);
-    } catch (Exception e) { Log.rapporterFejl(e); }
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
+    }
   }
 }
 

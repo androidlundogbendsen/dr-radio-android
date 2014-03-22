@@ -29,10 +29,9 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
   private boolean visSlideMenu = false;
 
 
-
   @Override
   public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);   
+    super.onCreate(savedInstanceState);
 
     for (Kanal k : DRData.instans.grunddata.kanaler) {
       if (!k.p4underkanal) kanaler.add(k);
@@ -49,12 +48,11 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
 
     venstremenuFrag = (Venstremenu_frag) getFragmentManager().findFragmentById(R.id.venstremenu_frag);
 
-    
 
     PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) rod.findViewById(R.id.tabs);
     tabs.setViewPager(viewPager);
     if (savedInstanceState == null) {
-      int kanalindex = kanaler.indexOf(DRData.instans.afspiller.getLydkilde().kanal());
+      int kanalindex = kanaler.indexOf(DRData.instans.afspiller.getLydkilde().getKanal());
       if (kanalindex == -1) kanalindex = 3; // Hvis vi ikke rammer nogen af de overordnede kanaler, så er det P4
       viewPager.setCurrentItem(kanalindex);
     }
@@ -72,44 +70,44 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
 
   @Override
   public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    Log.d("onPageScrolled( "+position+" "+positionOffset); 
-     mNuværendePosition = position;
-   }
-  
+    Log.d("onPageScrolled( " + position + " " + positionOffset);
+    mNuværendePosition = position;
+  }
+
 
   @Override
   public void onPageSelected(int position) {
-    // Husk foretrukken kanal
+    // Husk foretrukken getKanal
     App.prefs.edit().putString(App.FORETRUKKEN_KANAL, kanaler.get(position).kode).commit();
 //    DRData.instans.aktuelKanal = kanaler.get(position);
-    Log.d("onPageSelected( "+position);
-    
+    Log.d("onPageSelected( " + position);
+
     mForgåendePosition = position;
   }
 
   @Override
   public void onPageScrollStateChanged(int state) {
-    Log.d("onPageScrollStateChanged( "+state);
-    
-    Log.d("mNuværendePosition "+mNuværendePosition+", mForgåendePosition "+mForgåendePosition ); 
-    
-    if (state ==1 && mForgåendePosition == 0 && mNuværendePosition == 0){
-    	//visSlideMenu = (mForgåendePosition == 0 && mNuværendePosition == 0) ;
-    	venstremenuFrag.visMenu();
-    	mForgåendePosition = -1;
-    	mNuværendePosition = -1;
+    Log.d("onPageScrollStateChanged( " + state);
+
+    Log.d("mNuværendePosition " + mNuværendePosition + ", mForgåendePosition " + mForgåendePosition);
+
+    if (state == 1 && mForgåendePosition == 0 && mNuværendePosition == 0) {
+      //visSlideMenu = (mForgåendePosition == 0 && mNuværendePosition == 0) ;
+      venstremenuFrag.visMenu();
+      mForgåendePosition = -1;
+      mNuværendePosition = -1;
     }
-    if (state == 0 && (mForgåendePosition == -1 && mNuværendePosition == 0 )) {
-    	//visSlideMenu = (mForgåendePosition == -1 && mNuværendePosition == 0 ) ; 
-    	venstremenuFrag.visMenu();
+    if (state == 0 && (mForgåendePosition == -1 && mNuværendePosition == 0)) {
+      //visSlideMenu = (mForgåendePosition == -1 && mNuværendePosition == 0 ) ;
+      venstremenuFrag.visMenu();
     }
     
     /*if (visSlideMenu){
-    	venstremenuFrag.visMenu();
+      venstremenuFrag.visMenu();
     	visSlideMenu = false;
     }*/
-    
-    
+
+
   }
 
 

@@ -5,8 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,10 +41,10 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson_fed).text("Ingen senest lyttede").getView());
     opdaterListe();
-    
+
     TextView overskrift = aq.id(R.id.overskrift).typeface(App.skrift_gibson_fed).text("Senest lyttede").getTextView();
     overskrift.setVisibility(View.VISIBLE);
-    
+
     udvikling_checkDrSkrifter(rod, this + " rod");
     DRData.instans.afspiller.observatører.add(this);
     App.netværk.observatører.add(this);
@@ -83,13 +81,13 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
     }
     adapter.notifyDataSetChanged();
   }
-  
+
   private static class Viewholder {
-	    public AQuery aq;
-	    public TextView metainformation;
-	    public TextView titel;
-	    public Lydkilde lydkilde;
-	  }
+    public AQuery aq;
+    public TextView metainformation;
+    public TextView titel;
+    public Lydkilde lydkilde;
+  }
 
 
   private BaseAdapter adapter = new Basisadapter() {
@@ -100,41 +98,41 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
-    	
-    	Viewholder vh;
-        AQuery a;
-        Lydkilde lydkilde = liste.get(position);
-        
+
+      Viewholder vh;
+      AQuery a;
+      Lydkilde lydkilde = liste.get(position);
+
       if (v == null) {
         v = getLayoutInflater(null).inflate(R.layout.elem_tid_titel_kunstner, parent, false);
         v.setBackgroundResource(0);
-        
+
         vh = new Viewholder();
         a = vh.aq = new AQuery(v);
         vh.metainformation = a.id(R.id.startid).typeface(App.skrift_gibson_fed).textColor(Color.BLACK).getTextView();
         vh.titel = a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
 
-        
+
         v.setTag(vh);
-        
-      }else {
-          vh = (Viewholder) v.getTag();
-          a = vh.aq;
-        }
-      
+
+      } else {
+        vh = (Viewholder) v.getTag();
+        a = vh.aq;
+      }
+
       vh.lydkilde = lydkilde;
       // Skjul stiplet linje over øverste listeelement
-      vh.aq.id(R.id.stiplet_linje).background(position==0?R.drawable.linje:R.drawable.stiplet_linje);
+      vh.aq.id(R.id.stiplet_linje).background(position == 0 ? R.drawable.linje : R.drawable.stiplet_linje);
 
-      
+
 //      TextView titel = (TextView) v.findViewById(R.id.startid);
 //      TextView titel = (TextView) v.findViewById(R.id.titel_og_kunstner);
 
       Lydkilde k = liste.get(position);
       //titel.setText(k.titel().navn);
-      //Spannable spannable = new SpannableString(k.kanal().navn);
-      //spannable.setSpan(App.skrift_gibson_fed_span, 0, k.kanal().navn.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-      vh.titel.setText(k.kanal().navn);
+      //Spannable spannable = new SpannableString(k.getKanal().navn);
+      //spannable.setSpan(App.skrift_gibson_fed_span, 0, k.getKanal().navn.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+      vh.titel.setText(k.getKanal().navn);
 
       String titelStr = "";// u.titel;
       if (k instanceof Kanal) {
@@ -143,16 +141,16 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
         titelStr = ((Udsendelse) k).titel;
         //titel.setText(u.titel + " (" + DRJson.datoformat.format(u.startTid) + ")");
       }
-      
+
       //spannable = new SpannableString(titelStr);
       //spannable.setSpan(App.skrift_gibson, 0, titelStr.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-	    
+
       vh.metainformation.setText(titelStr);
-      
+
       //vh.titel.setText(lydkilde.titel);
       //a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
       //a.id(R.id.hør).visibility(lydkilde.kanHøres ? View.VISIBLE : View.GONE);
-      
+
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
 
       return v;

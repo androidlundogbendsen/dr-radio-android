@@ -20,7 +20,7 @@ import dk.dr.radio.diverse.Log;
  * Created by j on 19-01-14.
  */
 public enum DRJson {
-  Slug,       // unik ID for en udsendelse eller kanal
+  Slug,       // unik ID for en udsendelse eller getKanal
   SeriesSlug, // unik ID for en programserie
   Urn,        // en anden slags unik ID
   Title, Description,
@@ -115,7 +115,7 @@ public enum DRJson {
   }
 
   /**
-   * Parser udsendelser for kanal. A la http://www.dr.dk/tjenester/mu-apps/schedule/P3/0
+   * Parser udsendelser for getKanal. A la http://www.dr.dk/tjenester/mu-apps/schedule/P3/0
    * Deduplikerer objekterne undervejs
    */
   public static ArrayList<Udsendelse> parseUdsendelserForKanal(JSONArray jsonArray, Kanal kanal, DRData drData) throws JSONException, ParseException {
@@ -146,7 +146,7 @@ public enum DRJson {
   }
 
   /**
-   * Parser udsendelser for kanal. A la http://www.dr.dk/tjenester/mu-apps/series/sprogminuttet?type=radio&includePrograms=true
+   * Parser udsendelser for getKanal. A la http://www.dr.dk/tjenester/mu-apps/series/sprogminuttet?type=radio&includePrograms=true
    * Deduplikerer objekterne undervejs
    */
   public static ArrayList<Udsendelse> parseUdsendelserForProgramserie(JSONArray jsonArray, DRData drData) throws JSONException, ParseException {
@@ -192,6 +192,7 @@ public enum DRJson {
    * F.eks. Streams-objekt fra
    * http://www.dr.dk/tjenester/mu-apps/channel?urn=urn:dr:mu:bundle:4f3b8926860d9a33ccfdafb9&includeStreams=true
    * http://www.dr.dk/tjenester/mu-apps/program?includeStreams=true&urn=urn:dr:mu:programcard:531520836187a20f086b5bf9
+   *
    * @param jsonArray
    * @return
    * @throws JSONException

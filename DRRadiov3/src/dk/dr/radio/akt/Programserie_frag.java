@@ -218,8 +218,8 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
         vh.titel.setText(lavFedSkriftTil(u.titel + " - " + DRJson.datoformat.format(u.startTid), u.titel.length()));
         //Log.d("DRJson.datoformat.format(u.startTid)=" + DRJson.datoformat.format(u.startTid));
 
-        //String txt = u.kanal().navn + ", " + ((u.slutTid.getTime() - u.startTid.getTime())/1000/60 + " MIN");
-        String txt = ""; //u.kanal().navn;
+        //String txt = u.getKanal().navn + ", " + ((u.slutTid.getTime() - u.startTid.getTime())/1000/60 + " MIN");
+        String txt = ""; //u.getKanal().navn;
         int varighed = (int) ((u.slutTid.getTime() - u.startTid.getTime()) / 1000 / 60);
         if (varighed > 0) {
           //txt += ", ";

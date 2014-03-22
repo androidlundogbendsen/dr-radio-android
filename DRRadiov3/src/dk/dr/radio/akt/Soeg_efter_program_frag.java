@@ -31,7 +31,6 @@ import java.util.Date;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
-import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.DrVolleyResonseListener;
@@ -64,39 +63,39 @@ public class Soeg_efter_program_frag extends Basisfragment implements
         .text("Søg efter program").getView());
 
     søgFelt = aq.id(R.id.soegFelt).getEditText();
-    
+
     søgFelt.setBackgroundResource(android.R.drawable.editbox_background_normal);
     søgKnap = aq.id(R.id.soegKnap).clicked(this).getImageView();
     søgKnap.setBackgroundResource(R.drawable.knap_graa10_bg);
     søgKnap.setVisibility(View.INVISIBLE);
     tomStr = aq.id(R.id.tom).getTextView();
-    
+
     søgFelt.addTextChangedListener(new TextWatcher() {
-		
-		@Override
-		public void onTextChanged(CharSequence s, int start, int before, int count) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-		@Override
-		public void beforeTextChanged(CharSequence s, int start, int count,
-				int after) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-		@Override
-		public void afterTextChanged(Editable s) {
-			// TODO Auto-generated method stub
-			if (søgFelt.getText().toString().length() > 0)
-				søgKnap.setVisibility(View.VISIBLE);
-			else
-				søgKnap.setVisibility(View.INVISIBLE);
-				
-			
-		}
-	});
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+        // TODO Auto-generated method stub
+
+      }
+
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count,
+                                    int after) {
+        // TODO Auto-generated method stub
+
+      }
+
+      @Override
+      public void afterTextChanged(Editable s) {
+        // TODO Auto-generated method stub
+        if (søgFelt.getText().toString().length() > 0)
+          søgKnap.setVisibility(View.VISIBLE);
+        else
+          søgKnap.setVisibility(View.INVISIBLE);
+
+
+      }
+    });
 
     udvikling_checkDrSkrifter(rod, this + " rod");
     /*
@@ -124,7 +123,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
     public AQuery aq;
     public TextView titel;
     public TextView startid;
-    public Lydkilde lydkilde;
+    public Udsendelse udsendelse;
   }
 
   private BaseAdapter adapter = new Basisadapter() {
@@ -137,7 +136,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
     public View getView(int position, View v, ViewGroup parent) {
       Viewholder vh;
       AQuery a;
-      Lydkilde lydkilde = liste.get(position);
+      Udsendelse udsendelse = liste.get(position);
       if (v == null) {
         v = getLayoutInflater(null).inflate(
             R.layout.elem_tid_titel_kunstner, parent,
@@ -159,23 +158,23 @@ public class Soeg_efter_program_frag extends Basisfragment implements
       }
 
       // Opdatér viewholderens data
-      vh.lydkilde = lydkilde;
+      vh.udsendelse = udsendelse;
 
 //      SimpleDateFormat ft = new SimpleDateFormat("HH:mm");
-      Date startTid = lydkilde.getUdsendelse().startTid;
+      Date startTid = udsendelse.getUdsendelse().startTid;
 
       vh.startid.setText(DRJson.datoformat.format(startTid)/*"" + ft.format(startTid)*/);
 
-      String titel = lydkilde.getUdsendelse().titel;
+      String titel = udsendelse.getUdsendelse().titel;
       Spannable spannable = new SpannableString(titel);
       spannable.setSpan(App.skrift_gibson_fed_span, 0, titel.length(),
           Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
       vh.titel.setText(spannable);
 
-      // vh.titel.setText(lydkilde.titel);
+      // vh.titel.setText(udsendelse.titel);
       // a.id(R.id.stiplet_linje).visibility(position ==
       // aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
-      // a.id(R.id.hør).visibility(lydkilde.kanHøres ? View.VISIBLE :
+      // a.id(R.id.hør).visibility(udsendelse.kanHøres ? View.VISIBLE :
       // View.GONE);
 
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
@@ -188,15 +187,15 @@ public class Soeg_efter_program_frag extends Basisfragment implements
   @Override
   public void onItemClick(AdapterView<?> listView, View v, int position,
                           long id) {
-    Lydkilde u = liste.get(position);
+    Udsendelse u = liste.get(position);
     // startActivity(new Intent(getActivity(), VisFragment_akt.class)
-    // .putExtra(P_kode, kanal.kode)
+    // .putExtra(P_kode, getKanal.kode)
     // .putExtra(VisFragment_akt.KLASSE,
     // Udsendelse_frag.class.getName()).putExtra(DRJson.Slug.name(),
     // u.slug)); // Udsenselses-ID
 
     Fragment f = new Udsendelse_frag();
-    f.setArguments(new Intent().putExtra(P_kode, u.kanal().kode)
+    f.setArguments(new Intent().putExtra(P_kode, u.getKanal().kode)
         .putExtra(DRJson.Slug.name(), u.slug).getExtras());
     getActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.indhold_frag, f).addToBackStack(null)
@@ -206,8 +205,8 @@ public class Soeg_efter_program_frag extends Basisfragment implements
 
   @Override
   public void onClick(View v) {
-	Log.d("Liste " + liste);
-	
+    Log.d("Liste " + liste);
+
 
     søgStr = søgFelt.getText().toString();
 

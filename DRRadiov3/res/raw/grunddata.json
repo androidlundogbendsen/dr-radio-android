@@ -5,7 +5,8 @@
         "kontakt_modtagere": ["nordfalk@lundogbendsen.dk" ],
         "kontakt_titel": "Angående DR Radio v3 beta",
         "kontakt_brugerspørgsmål": "\nDR Radio v3 betatest\nHvis du oplever fejl med afspilning o.l., så vil vi meget gerne kontaktes.\nSkriv herunder\n-------------\n\n\n\n\n\n\n\n----- teknisk info til udviklerne -----\n\n",
-        "drift_statusmeddelelse": "Velkommen til DR Radio v3 betatest.\nTak fordi du hjælper os med at afprøve app'en.\nEfter at have brugt den et stykke tid bedes du trykke på 'Send feedback' og fortælle os din mening.\n\nBrugsstatistik og eventuelle programnedbrud indrapporteres automatisk og anonymt.\n(hvis du sender feedback kan vi se, hvilke nedbrud, der kommer fra din telefon)"
+        "drift_statusmeddelelse": "Velkommen til DR Radio v3 betatest.\nTak fordi du hjælper os med at afprøve app'en.\nEfter at have brugt den et stykke tid bedes du trykke på 'Send feedback' og fortælle os din mening.\n\nBrugsstatistik og eventuelle programnedbrud indrapporteres automatisk og anonymt.\n(hvis du sender feedback kan vi se, hvilke nedbrud, der kommer fra din telefon)",
+        "kanalFraSlug" : "p1=P1D, p2=P2D, p3=P3, p4=P4F, p4bornholm=RØ4, p4esbjerg=ES4, p4fyn=OD4, p4kbh=KH4, p4vest=HO4, p4nord=ÅL4, p4sjaelland=NV4, p4syd=ÅB4, p4trekanten=TR4, p4aarhus=ÅR4, p5=P5D, p6beat=P6B, p7mix=P7M, p8jazz=P8J, mama=DRM, ramasjangradio=RAM"
     },
    "intervals" : {
       "settings" : 1800,

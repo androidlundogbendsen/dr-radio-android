@@ -89,8 +89,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
             afbrydManglerData();
             return rod;
         }
-        if (kanal == null) kanal = udsendelse.kanal();
-        aktuelUdsendelsePåKanalen = udsendelse.slug.equals(getArguments().getString(AKTUEL_UDSENDELSE_SLUG));
+      if (kanal == null) kanal = udsendelse.getKanal();
+      aktuelUdsendelsePåKanalen = udsendelse.slug.equals(getArguments().getString(AKTUEL_UDSENDELSE_SLUG));
         blokerVidereNavigering = getArguments().getBoolean(BLOKER_VIDERE_NAVIGERING);
 
         Log.d("onCreateView " + this);

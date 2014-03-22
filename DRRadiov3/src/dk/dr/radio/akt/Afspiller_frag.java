@@ -76,10 +76,10 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
   @Override
   public void run() {
     Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
-    Kanal k = lydkilde.kanal();
-    if (k==null) return;
+    Kanal k = lydkilde.getKanal();
+    if (k == null) return;
     Status status = DRData.instans.afspiller.getAfspillerstatus();
-    if (lydkilde.erStreaming()) {
+    if (lydkilde.erKanal()) {
       titel.setText(k.navn + " Direkte");
     } else {
       Udsendelse udsendelse = lydkilde.getUdsendelse();
@@ -120,16 +120,16 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
       // Ved klik på baggrunden skal kanalforside eller aktuel udsendelsesside vises
       Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
       FragmentManager fm = getFragmentManager();
-      if (lydkilde.erStreaming()) {
+      if (lydkilde.erKanal()) {
         // Fjern backstak - så vi starter forfra i 'roden'
         fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        // Vis kanaler (den aktuelle kanal vælges automatisk af Kanaler_frag)
+        // Vis kanaler (den aktuelle getKanal vælges automatisk af Kanaler_frag)
         fm.beginTransaction().replace(R.id.indhold_frag, new Kanaler_frag()).commit();
       } else {
         Udsendelse udsendelse = lydkilde.getUdsendelse();
         Fragment f = new Udsendelse_frag();
         f.setArguments(new Intent()
-            .putExtra(P_kode, lydkilde.kanal().kode)
+            .putExtra(P_kode, lydkilde.getKanal().kode)
             .putExtra(DRJson.Slug.name(), udsendelse.slug).getExtras());
         //Forkert: getFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
         //Forkert: getChildFragmentManager().beginTransaction().replace(R.id.indhold_frag, f).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
