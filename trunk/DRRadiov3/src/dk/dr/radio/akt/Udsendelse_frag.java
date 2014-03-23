@@ -300,12 +300,15 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
                     if (aktuelUdsendelsePåKanalen) udsendelse.playliste.get(0).spillerNu = true;
                     liste.addAll(udsendelse.playliste);
                 } else {
-                    for (int i = 0; i < 4 && i < udsendelse.playliste.size(); i++) {
-                        Playlisteelement e = udsendelse.playliste.get(i);
+                  for (int i = 0; i < udsendelse.playliste.size(); i++) {
+                    Playlisteelement e = udsendelse.playliste.get(i);
                         e.spillerNu = (i == 0 && aktuelUdsendelsePåKanalen);
                         liste.add(e);
+                    if (i >= 4) {
+                      liste.add(VIS_HELE_PLAYLISTEN);
+                      break;
                     }
-                    liste.add(VIS_HELE_PLAYLISTEN);
+                  }
                 }
             } else {
                 liste.add(INFO);

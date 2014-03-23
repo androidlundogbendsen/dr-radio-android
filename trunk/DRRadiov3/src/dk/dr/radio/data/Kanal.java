@@ -27,6 +27,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class Kanal extends Lydkilde {
+  private static final long serialVersionUID = 1L;
 
   public String kode; // P3
   public static final String P4kode = "P4F";
