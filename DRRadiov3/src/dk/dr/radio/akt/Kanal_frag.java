@@ -32,6 +32,7 @@ import com.flurry.android.FlurryAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -72,6 +73,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    Log.d(this + " onCreateView startet efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     String kanalkode = getArguments().getString(P_kode);
     p4 = Kanal.P4kode.equals(kanalkode);
     rod = null;
@@ -95,20 +97,28 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       }
     }
     kanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
-    Log.d("onCreateView " + this);
-
+    Log.d(this + " onCreateView 2 efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     if (rod == null) rod = inflater.inflate(R.layout.kanal_frag, container, false);
+    if (kanal == null) {
+      afbrydManglerData();
+      return rod;
+    }
 
     AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).getView());
 
+    Log.d(this + " onCreateView 3 efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     // Hent sendeplan for den pågældende dag. Døgnskifte sker kl 5, så det kan være dagen før
-    hentSendeplanForDag(aq, new Date(DrVolleyStringRequest.serverCurrentTimeMillis() - 5 * 60 * 60 * 1000), true);
+    hentSendeplanForDag(new Date(DrVolleyStringRequest.serverCurrentTimeMillis() - 5 * 60 * 60 * 1000), true);
+    Log.d(this + " onCreateView 4 efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
+    // Hent streams
+    App.forgrundstråd.postDelayed(this, 500);
     udvikling_checkDrSkrifter(rod, this + " rod");
     setHasOptionsMenu(true);
     DRData.instans.afspiller.observatører.add(this);
     App.netværk.observatører.add(this);
+    Log.d(this + " onCreateView færdig efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     return rod;
   }
 
@@ -122,19 +132,23 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   public static DateFormat apiDatoFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-  private void hentSendeplanForDag(final AQuery aq, Date dag, final boolean idag) {
+  private void hentSendeplanForDag(Date dag, final boolean idag) {
     final String dato = apiDatoFormat.format(dag);
 
     final String url = kanal.getUdsendelserUrl() + "/date/" + dato;
-    Log.d("hentSendeplanForDag url=" + url);
+    Log.d("hentSendeplanForDag url=" + url + " efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
 
     Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
+      public String cache;
+
       @Override
       public void fikSvar(String json, boolean fraCache) throws Exception {
         Log.d("fikSvar(" + fraCache + " " + url);
         if (getActivity() == null) return;
-        Log.d("hentSendeplanForDag url " + url);
+        Log.d("hentSendeplanForDag url " + url + " fraCache=" + fraCache + " efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
         if (json != null && !"null".equals(json)) try {
+          if (fraCache) cache = json;
+          else if (json.equals(cache)) return; // Cachet værdi var OK
           if (idag) {
             kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json), kanal, DRData.instans), dato);
             opdaterListe();
@@ -167,9 +181,14 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       protected void fikFejl(VolleyError error) {
         Log.e("error.networkResponse=" + error.networkResponse, error);
         //Log.d(error.networkResponse.headers);
-        App.kortToast("Netværksfejl, prøv igen senere");
+        //App.kortToast("Netværksfejl, prøv igen senere");
       }
-    }).setTag(this);
+    }) {
+      public Priority getPriority() {
+        return fragmentErSynligt ? Priority.NORMAL : Priority.LOW;
+      }
+    }.setTag(this);
+    Log.d("hentSendeplanForDag 2 " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     App.volleyRequestQueue.add(req);
   }
 
@@ -192,6 +211,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   @Override
   public void setUserVisibleHint(boolean isVisibleToUser) {
     Log.d(kanal + " QQQ setUserVisibleHint " + isVisibleToUser + "  " + this);
+    if (kanal == null) return;
     fragmentErSynligt = isVisibleToUser;
     if (fragmentErSynligt) {
       senesteSynligeFragment = this;
@@ -230,6 +250,31 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   public void run() {
     App.forgrundstråd.removeCallbacks(this);
     App.forgrundstråd.postDelayed(this, 15000);
+
+    if (kanal.streams == null && App.erOnline()) {
+      Request<?> req = new DrVolleyStringRequest(kanal.getStreamsUrl(), new DrVolleyResonseListener() {
+        public String cache;
+
+        @Override
+        public void fikSvar(String json, boolean fraCache) throws Exception {
+          if (fraCache) cache = json;
+          else if (json.equals(cache)) return; // ingen grund til at parse det igen
+          JSONObject o = new JSONObject(json);
+          kanal.slug = o.getString(DRJson.Slug.name());
+          DRData.instans.grunddata.kanalFraSlug.put(kanal.slug, kanal);
+          kanal.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
+          Log.d("hentSupplerendeDataBg " + kanal.kode + " fraCache=" + fraCache + " => " + kanal.slug + " k.lydUrl=" + kanal.streams);
+          opdaterAktuelUdsendelse(aktuelUdsendelseViewholder);
+        }
+      }) {
+        public Priority getPriority() {
+          return fragmentErSynligt ? Priority.HIGH : Priority.NORMAL;
+        }
+      };
+      App.volleyRequestQueue.add(req);
+    }
+
+
     if (aktuelUdsendelseViewholder == null) return;
     Viewholder vh = aktuelUdsendelseViewholder;
     if (!vh.starttidbjælke.isShown() || !fragmentErSynligt) {
@@ -256,6 +301,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       liste.addAll(nyuliste);
       liste.add(senere);
       aktuelUdsendelseIndex = kanal.getAktuelUdsendelseIndex() + 1;
+      aktuelUdsendelseViewholder = null;
     } catch (Exception e1) {
       Log.rapporterFejl(e1);
     }
@@ -381,7 +427,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
             vh.titel.setText(udsendelse.titel.toUpperCase());
           }
 
-          opdaterAktuelUdsendelse(vh);
+          opdaterAktuelUdsendelse(aktuelUdsendelseViewholder);
           opdaterSenestSpillet(a, udsendelse);
           break;
         case NORMAL:
@@ -396,7 +442,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           if (antalHentedeSendeplaner++ < 7) {
             a.id(R.id.progressBar).visible();   // De første 7 henter vi bare for brugeren
             vh.titel.setVisibility(View.VISIBLE);
-            hentSendeplanForDag(new AQuery(rod), udsendelse.startTid, false);
+            hentSendeplanForDag(udsendelse.startTid, false);
           } else {
             a.id(R.id.progressBar).invisible(); // Derefter må brugeren gøre det manuelt
             vh.titel.setVisibility(View.VISIBLE);
@@ -439,7 +485,11 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           Log.e("error.networkResponse=" + error.networkResponse, error);
           aq2.id(R.id.senest_spillet_container).gone();
         }
-      }).setTag(this);
+      }) {
+        public Priority getPriority() {
+          return fragmentErSynligt ? Priority.NORMAL : Priority.LOW;
+        }
+      }.setTag(this);
       App.volleyRequestQueue.add(req);
       return;
     }
@@ -464,6 +514,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   }
 
   private void opdaterAktuelUdsendelse(Viewholder vh) {
+    if (vh == null) return;
     try {
       Udsendelse u = vh.udsendelse;
       long passeret = DrVolleyStringRequest.serverCurrentTimeMillis() - u.startTid.getTime();
@@ -487,8 +538,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
       boolean spillerDenneKanal = DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET && DRData.instans.afspiller.getLydkilde() == kanal;
       boolean online = App.netværk.erOnline();
-      vh.aq.id(R.id.hør_live).enabled(!spillerDenneKanal && online).text(
-          !online ? "Internetforbindelse mangler" :
+      vh.aq.id(R.id.hør_live).enabled(!spillerDenneKanal && online && kanal.streams != null)
+          .text(!online ? "Internetforbindelse mangler" :
               (spillerDenneKanal ? " SPILLER " : " HØR ") + kanal.navn.toUpperCase() + " LIVE");
 
     } catch (Exception e) {
@@ -545,7 +596,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
     Udsendelse u = liste.get(position);
     if (position == 0 || position == liste.size() - 1) {
-      hentSendeplanForDag(new AQuery(rod), u.startTid, false);
+      hentSendeplanForDag(u.startTid, false);
       v.findViewById(R.id.titel).setVisibility(View.GONE);
       v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
     } else {

@@ -93,10 +93,12 @@ public class App extends Application implements Runnable {
   public static DatabaseHelper db;
   public static DRFarver color;
   public static Resources res;
+  public static long opstartstidspunkt;
 
 
   @Override
   public void onCreate() {
+    opstartstidspunkt = System.currentTimeMillis();
     instans = this;
     netværk = new Netvaerksstatus();
     EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator");
@@ -195,7 +197,7 @@ public class App extends Application implements Runnable {
       //langToast("xxxx "+App.fejlsøgning);
 
       if (erOnline()) {
-        run(); // Initialisér onlinedata
+        App.forgrundstråd.postDelayed(this, 5000); // Initialisér onlinedata
       } else {
         netværk.observatører.add(this); // Vent på vi kommer online og lav så et tjek
       }
@@ -242,14 +244,17 @@ public class App extends Application implements Runnable {
     skrift_gibson_fed_span = new EgenTypefaceSpan("Gibson fed", App.skrift_gibson_fed);
     App.color = new DRFarver();
 
+    Log.d("onCreate tog " + (System.currentTimeMillis() - opstartstidspunkt) + " ms");
   }
 
   /**
    * ONLINEINITIALISERING
    */
   public void run() {
+    if (!erOnline()) return;
     boolean færdig = true;
     // Tidligere hentSupplerendeDataBg
+
     if (DRData.instans.grunddata.kanalFraSlug.size() < DRData.instans.grunddata.kanaler.size()) {
       færdig = false;
       Log.d("ONLINEINITIALISERING"
@@ -257,22 +262,21 @@ public class App extends Application implements Runnable {
           + " kanaler.size()=" + DRData.instans.grunddata.kanaler.size());
 
       for (final Kanal k : DRData.instans.grunddata.kanaler) {
+        if (k.streams != null) continue;
         Request<?> req = new DrVolleyStringRequest(k.getStreamsUrl(), new DrVolleyResonseListener() {
+          public String cachet;
+
           @Override
           public void fikSvar(String json, boolean fraCache) throws Exception {
-            //Log.d("Dsdsdsdsdsd");
+            if (fraCache) cachet = json;
+            else if (json.equals(cachet)) return;
             JSONObject o = new JSONObject(json);
-            k.slug = o.getString(DRJson.Slug.name());
-            DRData.instans.grunddata.kanalFraSlug.put(k.slug, k);
             k.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
             Log.d("hentSupplerendeDataBg " + k.kode + " fraCache=" + fraCache + " => " + k.slug + " k.lydUrl=" + k.streams);
-            if (fraCache == false) {
-              Log.d("DRData.instans.grunddata.kanalFraSlug=" + DRData.instans.grunddata.kanalFraSlug);
-            }
           }
         }) {
           public Priority getPriority() {
-            return Priority.HIGH;
+            return Priority.LOW;
           }
         };
         App.volleyRequestQueue.add(req);
@@ -281,8 +285,11 @@ public class App extends Application implements Runnable {
 
     if (DRData.instans.favoritter.getAntalNyeUdsendelser() < 0) {
       færdig = false;
-      // Opdatering af nye antal udsendelser i favoritter i kø, til om 3 sekunder
-      forgrundstråd.postDelayed(DRData.instans.favoritter.startOpdaterAntalNyeUdsendelser, 3000);
+      DRData.instans.favoritter.startOpdaterAntalNyeUdsendelser.run();
+    }
+
+    if (!færdig) {
+      App.forgrundstråd.postDelayed(this, 15000); // prøv igen om 15 sekunder og se om alle data er klar der
     }
 
     if (prefs.getString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, null) == null) {

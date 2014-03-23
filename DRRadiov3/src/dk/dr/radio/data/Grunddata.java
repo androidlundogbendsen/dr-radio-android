@@ -76,14 +76,16 @@ public class Grunddata {
     for (int i = 0; i < antal; i++) {
       JSONObject j = jsonArray.getJSONObject(i);
       Kanal k = new Kanal();
-      k.kode = j.getString("scheduleIdent");
+      k.kode = j.optString("scheduleIdent", "P4F");
       k.navn = j.getString("title");
       k.urn = j.getString("urn");
+      k.slug = j.optString("slug", "p4");
       k.p4underkanal = p4;
       kanaler.add(k);
       if (p4) p4koder.add(k.kode);
       else kanalkoder.add(k.kode);
       kanalFraKode.put(k.kode, k);
+      kanalFraSlug.put(k.slug, k);
       if (j.optBoolean("isDefault")) forvalgtKanal = k;
 
       JSONArray underkanaler = j.optJSONArray("channels");

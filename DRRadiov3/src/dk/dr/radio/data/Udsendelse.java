@@ -10,7 +10,7 @@ import dk.dr.radio.diverse.Log;
  * Created by j on 28-01-14.
  */
 public class Udsendelse extends Lydkilde {
-
+  private static final long serialVersionUID = -4522417772156322526L;
   public String titel;
   public String beskrivelse;
   public String kanalSlug;  // Bemærk - kan være tom!
