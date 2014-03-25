@@ -19,6 +19,7 @@
 package dk.dr.radio.diverse;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -27,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -84,10 +86,10 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
 
   }
 
-  public static final int TYPE_hjemmeskærm = 0;
-  public static final int TYPE_notifikation_lille = 1;
-  public static final int TYPE_notifikation_stor = 2;
-  public static final int TYPE_låseskærm = 3;
+  private static final int TYPE_hjemmeskærm = 0;
+  private static final int TYPE_notifikation_lille = 1;
+  private static final int TYPE_notifikation_stor = 2;
+  private static final int TYPE_låseskærm = 3;
 
   /**
    * Laver et sæt RemoteViews der passer til forskellige situationer
@@ -96,7 +98,7 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
    * låseskærm    hvis det er til låseskærmen - kun for Build.VERSION.SDK_INT >= 16
    * notifikation hvis det er til en notifikation
    */
-  public static RemoteViews lavRemoteViews(int type) {
+  private static RemoteViews lavRemoteViews(int type) {
 
     RemoteViews remoteViews;
     if (type == TYPE_notifikation_lille) {
@@ -158,4 +160,41 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
 
     return remoteViews;
   }
+
+
+
+  @SuppressLint("NewApi")
+  public static Notification lavNotification(Context ctx) {
+    String kanalNavn = "";
+    try {
+      kanalNavn = DRData.instans.afspiller.getLydkilde().getKanal().navn;
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
+    } // TODO fjern try-catch efter nogle måneder i drift
+
+    NotificationCompat.Builder b = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.notifikation_ikon)
+        .setContentTitle("DR Radio")
+        .setContentText(kanalNavn)
+        .setOngoing(true)
+        .setAutoCancel(false)
+        .setContentIntent(PendingIntent.getActivity(ctx, 0, new Intent(ctx, Hovedaktivitet.class), 0));
+    // PendingIntent er til at pege på aktiviteten der skal startes hvis
+    // brugeren vælger notifikationen
+
+
+    b.setContent(AfspillerIkonOgNotifikation.lavRemoteViews(AfspillerIkonOgNotifikation.TYPE_notifikation_lille));
+    Notification notification = b.build();
+
+    if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)) {
+      // A notification's big view appears only when the notification is expanded,
+      // which happens when the notification is at the top of the notification drawer,
+      // or when the user expands the notification with a gesture.
+      // Expanded notifications are available starting with Android 4.1.
+      notification.bigContentView = AfspillerIkonOgNotifikation.lavRemoteViews(AfspillerIkonOgNotifikation.TYPE_notifikation_stor);
+    }
+
+    notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT | Notification.PRIORITY_HIGH | Notification.FLAG_FOREGROUND_SERVICE);
+    return notification;
+  }
+
 }
