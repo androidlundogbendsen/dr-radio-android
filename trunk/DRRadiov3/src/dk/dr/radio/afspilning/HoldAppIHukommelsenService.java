@@ -25,7 +25,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.widget.RemoteViews;
 
 import dk.dr.radio.akt.Hovedaktivitet;
 import dk.dr.radio.diverse.AfspillerIkonOgNotifikation;
@@ -71,29 +70,21 @@ public class HoldAppIHukommelsenService extends Service {
         .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, Hovedaktivitet.class), 0));
 
 
-    // b.setContent(AfspillerWidget.lavRemoteViews(false, true));
+    b.setContent(AfspillerIkonOgNotifikation.lavRemoteViews(AfspillerIkonOgNotifikation.TYPE_notifikation_lille));
+    Notification notification = b.build();
+    notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT | Notification.PRIORITY_HIGH | Notification.FLAG_FOREGROUND_SERVICE);
 
-    Notification notification; //= b.build();
-
-    RemoteViews remoteViews = AfspillerIkonOgNotifikation.lavRemoteViews(false, true);
-
-    if ((Build.VERSION.SDK_INT < 16)) {
-      b.setContent(remoteViews);
-
-      notification = b.build();
-      notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT | Notification.PRIORITY_HIGH | Notification.FLAG_FOREGROUND_SERVICE);
-
-    } else {
-      notification = b.build();
-      notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT | Notification.PRIORITY_HIGH | Notification.FLAG_FOREGROUND_SERVICE);
-
-      notification.bigContentView = remoteViews;
+    if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)) {
+      // A notification's big view appears only when the notification is expanded,
+      // which happens when the notification is at the top of the notification drawer,
+      // or when the user expands the notification with a gesture.
+      // Expanded notifications are available starting with Android 4.1.
+      notification.bigContentView = AfspillerIkonOgNotifikation.lavRemoteViews(AfspillerIkonOgNotifikation.TYPE_notifikation_stor);
     }
 
     // PendingIntent er til at pege på aktiviteten der skal startes hvis
     // brugeren vælger notifikationen
     // notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT | Notification.PRIORITY_HIGH | Notification.FLAG_FOREGROUND_SERVICE);
-
     // notification.setLatestEventInfo(this, "Radio", kanalNavn,
     // notification.contentIntent);
     startForeground(NOTIFIKATION_ID, notification);
