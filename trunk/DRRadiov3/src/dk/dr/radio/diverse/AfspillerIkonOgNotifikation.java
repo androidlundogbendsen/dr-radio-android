@@ -136,7 +136,7 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
       case STOPPET:
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_spil);
         remoteViews.setViewVisibility(R.id.progressBar, View.GONE);
-        remoteViews.setTextColor(R.id.metainformation, App.color.grå40);
+        remoteViews.setTextColor(R.id.metainformation, App.color.grå60);
         break;
       case FORBINDER:
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_pause);
