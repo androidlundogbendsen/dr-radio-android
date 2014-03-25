@@ -70,42 +70,40 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
     Log.d("AfspillerWidget opdaterUdseende()");
     //App.langToast("AfspillerWidget opdaterUdseende()");
 
-    boolean låseskærm = false;
-
     if (Build.VERSION.SDK_INT >= 16) {
       Bundle o = appWidgetManager.getAppWidgetOptions(appWidgetId);
       //App.langToast("opdaterUdseende opts=" + o);
-      låseskærm = o.getInt(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY, -1) == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD;
-      //App.langToast("opdaterUdseende låseskærm=" + låseskærm);
+      if (o.getInt(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY, -1) == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD) {
+        RemoteViews remoteViews = lavRemoteViews(TYPE_låseskærm);
+        appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+        return;
+      }
     }
-
-    RemoteViews remoteViews = lavRemoteViews(låseskærm, false);
-
+    RemoteViews remoteViews = lavRemoteViews(TYPE_hjemmeskærm);
     appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+
   }
+
+  public static final int TYPE_hjemmeskærm = 0;
+  public static final int TYPE_notifikation_lille = 1;
+  public static final int TYPE_notifikation_stor = 2;
+  public static final int TYPE_låseskærm = 3;
 
   /**
    * Laver et sæt RemoteViews der passer til forskellige situationer
    *
-   * @param låseskærm    hvis det er til låseskærmen - kun for Build.VERSION.SDK_INT >= 16
-   * @param notifikation hvis det er til en notifikation
-   * @return
+   * @param type
+   * låseskærm    hvis det er til låseskærmen - kun for Build.VERSION.SDK_INT >= 16
+   * notifikation hvis det er til en notifikation
    */
-  public static RemoteViews lavRemoteViews(boolean låseskærm, boolean notifikation) {
+  public static RemoteViews lavRemoteViews(int type) {
 
     RemoteViews remoteViews;
-    if (notifikation) {
-      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-        // Kun lille layout på en linje understøttes
-        remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_lille);
-      } else {
-        // A notification's big view appears only when the notification is expanded,
-        // which happens when the notification is at the top of the notification drawer,
-        // or when the user expands the notification with a gesture.
-        // Expanded notifications are available starting with Android 4.1.
-        remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_stor1);
-      }
-    } else if (låseskærm) {
+    if (type == TYPE_notifikation_lille) {
+      remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_lille);
+    } else if (type == TYPE_notifikation_stor) {
+      remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_stor1);
+    } else if (type == TYPE_låseskærm) {
       remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_laase_skaerm);
     } else {
       remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_levendeikon);
@@ -142,13 +140,13 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
         remoteViews.setViewVisibility(R.id.progressBar, View.VISIBLE);
         int fpct = DRData.instans.afspiller.getForbinderProcent();
         //remoteViews.setTextViewText(R.id.metainformation, "Forbinder " + (fpct > 0 ? fpct : ""));
-        remoteViews.setTextColor(R.id.metainformation, App.color.blå);
+        remoteViews.setTextColor(R.id.metainformation, type == TYPE_hjemmeskærm ? App.color.grå60 : App.color.blå);
         break;
       case SPILLER:
         //  App.kortToast("SPILLER " + k.navn);
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_pause);
         remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
-        remoteViews.setTextColor(R.id.metainformation, App.color.blå);
+        remoteViews.setTextColor(R.id.metainformation, type == TYPE_hjemmeskærm ? App.color.grå60 : App.color.blå);
         break;
     }
 

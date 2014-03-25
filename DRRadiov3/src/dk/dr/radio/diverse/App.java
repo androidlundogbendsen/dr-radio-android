@@ -113,6 +113,7 @@ public class App extends Application implements Runnable {
     fejlsøgning = prefs.getBoolean("fejlsøgning", false);
     udviklerEkstra = prefs.getBoolean("udviklerEkstra", false);
     res = App.instans.getResources();
+    App.color = new DRFarver();
 
     // HTTP-forbindelser havde en fejl præ froyo, men jeg har også set problemet på Xperia Play, der er 2.3.4 (!)
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
@@ -242,7 +243,6 @@ public class App extends Application implements Runnable {
       skrift_georgia = Typeface.DEFAULT;
     }
     skrift_gibson_fed_span = new EgenTypefaceSpan("Gibson fed", App.skrift_gibson_fed);
-    App.color = new DRFarver();
 
     Log.d("onCreate tog " + (System.currentTimeMillis() - opstartstidspunkt) + " ms");
   }
@@ -446,6 +446,9 @@ public class App extends Application implements Runnable {
     super.onTrimMemory(level);
   }
 
+  /**
+   * Lille klasse der holder nogle farver vi ikke gider slå op i resurser efter hele tiden
+   */
   public static class DRFarver {
     public int grå40 = res.getColor(R.color.grå40);
     public int blå = res.getColor(R.color.blå);
