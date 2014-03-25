@@ -29,6 +29,7 @@ import android.support.v4.app.NotificationCompat;
 import dk.dr.radio.akt.Hovedaktivitet;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.AfspillerIkonOgNotifikation;
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
@@ -51,13 +52,18 @@ public class HoldAppIHukommelsenService extends Service implements Runnable {
    */
   private static final int NOTIFIKATION_ID = 117;
 
-  @SuppressLint("NewApi")
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
     Log.d("AfspillerService onStartCommand(" + intent + " " + flags + " "
         + startId);
 
+    Notification notification = bygNotification();
+    startForeground(NOTIFIKATION_ID, notification);
+    return START_STICKY;
+  }
 
+  @SuppressLint("NewApi")
+  private Notification bygNotification() {
     String kanalNavn = "";
     try {
       kanalNavn = DRData.instans.afspiller.getLydkilde().getKanal().navn;
@@ -87,9 +93,7 @@ public class HoldAppIHukommelsenService extends Service implements Runnable {
     }
 
     notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT | Notification.PRIORITY_HIGH | Notification.FLAG_FOREGROUND_SERVICE);
-    startForeground(NOTIFIKATION_ID, notification);
-
-    return START_STICKY;
+    return notification;
   }
 
   @Override
@@ -106,6 +110,7 @@ public class HoldAppIHukommelsenService extends Service implements Runnable {
 
   @Override
   public void run() {
-    // TODO byg notifikation
+    Notification notification = bygNotification();
+    App.notificationManager.notify(NOTIFIKATION_ID, notification);
   }
 }
