@@ -21,6 +21,7 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
@@ -57,13 +58,13 @@ public class HoldAppIHukommelsenService extends Service implements Runnable {
     Log.d("AfspillerService onStartCommand(" + intent + " " + flags + " "
         + startId);
 
-    Notification notification = bygNotification();
+    Notification notification = bygNotification(this);
     startForeground(NOTIFIKATION_ID, notification);
     return START_STICKY;
   }
 
   @SuppressLint("NewApi")
-  private Notification bygNotification() {
+  private static Notification bygNotification(Context ctx) {
     String kanalNavn = "";
     try {
       kanalNavn = DRData.instans.afspiller.getLydkilde().getKanal().navn;
@@ -71,12 +72,12 @@ public class HoldAppIHukommelsenService extends Service implements Runnable {
       Log.rapporterFejl(e);
     } // TODO fjern try-catch efter nogle måneder i drift
 
-    NotificationCompat.Builder b = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.notifikation_ikon)
+    NotificationCompat.Builder b = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.notifikation_ikon)
         .setContentTitle("DR Radio")
         .setContentText(kanalNavn)
         .setOngoing(true)
         .setAutoCancel(false)
-        .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, Hovedaktivitet.class), 0));
+        .setContentIntent(PendingIntent.getActivity(ctx, 0, new Intent(ctx, Hovedaktivitet.class), 0));
     // PendingIntent er til at pege på aktiviteten der skal startes hvis
     // brugeren vælger notifikationen
 
@@ -110,7 +111,7 @@ public class HoldAppIHukommelsenService extends Service implements Runnable {
 
   @Override
   public void run() {
-    Notification notification = bygNotification();
+    Notification notification = bygNotification(this);
     App.notificationManager.notify(NOTIFIKATION_ID, notification);
   }
 }
