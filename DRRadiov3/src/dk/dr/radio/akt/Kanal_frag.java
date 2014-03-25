@@ -115,7 +115,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     // Hent streams
     App.forgrundstråd.postDelayed(this, 500);
     udvikling_checkDrSkrifter(rod, this + " rod");
-    setHasOptionsMenu(true);
     DRData.instans.afspiller.observatører.add(this);
     App.netværk.observatører.add(this);
     Log.d(this + " onCreateView færdig efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
@@ -243,7 +242,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     super.onPause();
     App.forgrundstråd.removeCallbacks(this);
     if (senesteSynligeFragment == this) senesteSynligeFragment = null;
-    Log.d(kanal + " QQQ onPause() " + this);
+    Log.d(this + " onPause() " + this);
   }
 
   @Override
