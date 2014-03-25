@@ -208,8 +208,7 @@ public class Afspiller {
     }.start();
   }
 
-  synchronized public void stopAfspilning() {
-    Log.d("Afspiller stopAfspilning");
+  synchronized public void pauseAfspilning() {
     handler.removeCallbacks(startAfspilningIntern);
     // Da mediaPlayer.reset() erfaringsmæssigt kan hænge i dette tilfælde afregistrerer vi
     // alle lyttere og bruger en ny
@@ -235,11 +234,16 @@ public class Afspiller {
     afspillerstatus = Status.STOPPET;
     opdaterObservatører();
 
-    //if (notification != null) notificationManager.cancelAll();
-    // Stop afspillerservicen
-    App.instans.stopService(new Intent(App.instans, HoldAppIHukommelsenService.class));
     if (wifilock != null) wifilock.release();
     // Informer evt aktivitet der lytter
+  }
+
+
+  synchronized public void stopAfspilning() {
+    Log.d("Afspiller stopAfspilning");
+    pauseAfspilning();
+    // Stop afspillerservicen
+    App.instans.stopService(new Intent(App.instans, HoldAppIHukommelsenService.class));
   }
 
 

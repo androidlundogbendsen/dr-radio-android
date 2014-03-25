@@ -34,7 +34,7 @@ import android.widget.RemoteViews;
 
 import java.util.Arrays;
 
-import dk.dr.radio.afspilning.AfspillerReciever;
+import dk.dr.radio.afspilning.AfspillerStartStopReciever;
 import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.akt.Hovedaktivitet;
 import dk.dr.radio.data.DRData;
@@ -152,11 +152,18 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
         break;
     }
 
-    Intent afspillerReceiverI = new Intent(App.instans, AfspillerReciever.class);
-    PendingIntent startStopPI = PendingIntent.getBroadcast(App.instans, 0, afspillerReceiverI, PendingIntent.FLAG_UPDATE_CURRENT);
-    remoteViews.setOnClickPendingIntent(R.id.startStopKnap, startStopPI);
+    Intent startStopI = new Intent(App.instans, AfspillerStartStopReciever.class);
+    PendingIntent startStopPI = PendingIntent.getBroadcast(App.instans, 0, startStopI, PendingIntent.FLAG_UPDATE_CURRENT);
 
-    remoteViews.setOnClickPendingIntent(R.id.luk, startStopPI);
+    Intent pauseI = new Intent(App.instans, AfspillerStartStopReciever.class).putExtra(AfspillerStartStopReciever.PAUSE, true);
+    PendingIntent pausePI = PendingIntent.getBroadcast(App.instans, 0, pauseI, PendingIntent.FLAG_UPDATE_CURRENT);
+
+    if (type==TYPE_notifikation_lille || type==TYPE_notifikation_stor) {
+      remoteViews.setOnClickPendingIntent(R.id.startStopKnap, pausePI);
+      remoteViews.setOnClickPendingIntent(R.id.luk, startStopPI);
+    } else {
+      remoteViews.setOnClickPendingIntent(R.id.startStopKnap, startStopPI);
+    }
 
     return remoteViews;
   }
