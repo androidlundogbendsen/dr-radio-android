@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/yderstelayout"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+        <TextView
+                android:id="@+id/titel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="P3 Live"
+                android:layout_marginLeft="12dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="bold"
+                android:maxLines="2"
+                tools:ignore="HardcodedText"
+                android:textColor="@color/hvid"/>
+
+        <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+        <ImageView
+                android:id="@+id/luk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:src="@drawable/dri_luk_hvid"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|right"
+            android:orientation="horizontal">
+
+
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitStart"
+                android:src="@drawable/dr_logo"/>
+
+
+        <TextView
+                android:id="@+id/metainformation"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="P3"
+                android:singleLine="true"
+                tools:ignore="HardcodedText"/>
+
+
+        <ImageView
+                android:id="@+id/startStopKnap"
+                android:layout_width="60dp"
+                android:layout_height="44dp"
+                android:layout_gravity="right"
+                android:scaleType="center"
+                android:src="@drawable/afspiller_spil"/>
+
+    </LinearLayout>
+
+</LinearLayout>

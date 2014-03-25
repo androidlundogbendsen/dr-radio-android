@@ -1,95 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/yderstelayout"
-    android:layout_width="match_parent"
-    android:layout_height="64dp"
-    android:orientation="vertical" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/yderstelayout"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center_vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:visibility="visible" >
-
-        <TextView
-            android:id="@+id/titel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Ramasjang: Formiddag"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/hvid"
-            android:textStyle="bold" />
-        
-        <ImageView
-                android:id="@+id/luk"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:scaleType="center"
-                android:src="@drawable/dri_luk_hvid"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" >
-
-       
-
-        <ImageView
-            android:layout_alignParentRight="true"
-            android:id="@+id/startStopKnap"
-            android:layout_width="60dp"
-            android:layout_height="44dp"
-            android:layout_gravity="right"
-           
-            android:scaleType="center"
-            android:src="@drawable/afspiller_spil" />
-        
-         <LinearLayout
-            android:id="@+id/progressBarRammer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-             android:layout_toLeftOf="@id/startStopKnap"
-            android:visibility="visible" >
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="44dp" />
-        </LinearLayout>
-
-        <ImageView
+    <ImageView
             android:id="@+id/logo"
             android:layout_width="wrap_content"
-            android:layout_height="44dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:scaleType="center"
             android:src="@drawable/dr_logo"
-            android:visibility="visible" />
+            android:visibility="visible"/>
+
+    <LinearLayout
+            android:layout_width="0px"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/metainformation"
+                android:id="@+id/titel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ramasjang: Formiddag"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/hvid"
+                android:textStyle="bold"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/logo"/>
+
+        <TextView
+                android:id="@+id/metainformation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="P3"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/hvid"
+                android:visibility="visible"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@+id/logo"/>
+    </LinearLayout>
+
+    <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_toLeftOf="@id/startStopKnap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    <ImageView
+            android:id="@+id/startStopKnap"
+            android:layout_width="60dp"
+            android:layout_height="44dp"
+            android:src="@drawable/afspiller_spil"/>
+
+    <ImageView
+            android:id="@+id/luk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="0dip"
-            android:layout_toRightOf="@id/logo"
-            android:text="P 3"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/hvid"
-            android:visibility="visible" >
-        </TextView>
+            android:layout_gravity="top"
+            android:src="@drawable/dri_luk_hvid"/>
 
-        <ImageView
-            android:id="@+id/billede"
-            android:layout_width="wrap_content"
-            android:layout_height="44dp"
-            android:layout_toRightOf="@id/metainformation"
-            android:scaleType="center"
-            android:src="@drawable/kanalappendix_kh4"
-            android:visibility="gone" />
-    </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>
