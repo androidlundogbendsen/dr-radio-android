@@ -34,10 +34,10 @@
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:id="@+id/startStopKnap"
-            android:src="@drawable/afspiller_spil"
+            android:src="@android:drawable/ic_media_play"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="15dp"
-            android:background="#00000000"
+
+            android:background="@android:color/darker_gray"
             />
 
 
@@ -78,7 +78,7 @@
             >
             <ProgressBar
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="44dp"
                 />
         </LinearLayout>
     </LinearLayout>
