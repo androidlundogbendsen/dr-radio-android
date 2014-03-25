@@ -104,7 +104,7 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
     } else if (type == TYPE_notifikation_stor) {
       remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_stor);
     } else if (type == TYPE_låseskærm) {
-      remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_laase_skaerm);
+      remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_laaseskaerm);
     } else {
       remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_levendeikon);
     }
@@ -132,7 +132,7 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
     switch (status) {
       case STOPPET:
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_spil);
-        remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
+        remoteViews.setViewVisibility(R.id.progressBar, View.GONE);
         remoteViews.setTextColor(R.id.metainformation, App.color.grå40);
         break;
       case FORBINDER:
@@ -145,7 +145,7 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
       case SPILLER:
         //  App.kortToast("SPILLER " + k.navn);
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_pause);
-        remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
+        remoteViews.setViewVisibility(R.id.progressBar, View.GONE);
         remoteViews.setTextColor(R.id.metainformation, type == TYPE_hjemmeskærm ? App.color.grå60 : App.color.blå);
         break;
     }

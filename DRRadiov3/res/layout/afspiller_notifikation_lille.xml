@@ -25,9 +25,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Ramasjang: Formiddag"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/hvid"
                 android:textStyle="bold"
+                android:maxLines="2"
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/logo"/>
 
@@ -36,7 +36,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="P3"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/hvid"
                 android:visibility="visible"
                 android:layout_alignParentBottom="true"

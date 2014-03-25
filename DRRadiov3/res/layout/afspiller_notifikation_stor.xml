@@ -21,17 +21,10 @@
                 android:layout_weight="1"
                 android:text="P3 Live"
                 android:layout_marginLeft="12dp"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textStyle="bold"
                 android:maxLines="2"
                 tools:ignore="HardcodedText"
                 android:textColor="@color/hvid"/>
-
-        <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
 
         <ImageView
                 android:id="@+id/luk"
@@ -60,11 +53,16 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="P3"
                 android:singleLine="true"
                 tools:ignore="HardcodedText"/>
 
+
+        <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
 
         <ImageView
                 android:id="@+id/startStopKnap"

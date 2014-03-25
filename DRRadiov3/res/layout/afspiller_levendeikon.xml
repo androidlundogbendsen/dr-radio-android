@@ -48,14 +48,18 @@
     </LinearLayout>
 
 
-    <ImageView
-                android:layout_width="wrap_content"
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+        <TextView
+                android:layout_width="0px"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical"
-                android:scaleType="fitEnd"
-                android:src="@drawable/dr_logo"
-            />
+                android:text=""
+                android:layout_height="wrap_content"/>
 
         <!-- fix for http://code.google.com/p/android/issues/detail?id=11040 :
           ProgressBar's synlighed kan ikke ændres direkte, man er nødt til at indlejre den
@@ -64,7 +68,7 @@
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical"
+                android:gravity="right"
                 android:visibility="visible"
                 >
 
@@ -73,5 +77,14 @@
                     android:layout_height="wrap_content"
                     />
         </LinearLayout>
+
+
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/dr_logo"
+                />
+
+    </LinearLayout>
 
 </LinearLayout>
