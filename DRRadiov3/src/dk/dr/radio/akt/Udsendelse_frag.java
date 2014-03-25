@@ -432,7 +432,17 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
           aq.id(R.id.lige_nu).gone();
           aq.id(R.id.info).typeface(App.skrift_gibson);
-          aq.id(R.id.logo).image(kanal.kanallogo_resid);
+          Log.d("kanal JPER " + kanal.slug.substring(0,2));
+          if(kanal.slug.substring(0,2).equals("p4")){
+              Log.d("kanal JPER1 " + kanal.slug.substring(0,2));
+              aq.id(R.id.logo).image(R.drawable.kanalappendix_p4f);
+              aq.id(R.id.p4navn).text(kanal.navn.replace("P4", "")).typeface(App.skrift_gibson);
+          }
+          else{
+              aq.id(R.id.logo).image(kanal.kanallogo_resid);
+              aq.id(R.id.p4navn).text("");
+          }
+
           aq.id(R.id.titel_og_tid).typeface(App.skrift_gibson).text(lavFedSkriftTil(udsendelse.titel + " - " + DRJson.datoformat.format(udsendelse.startTid), udsendelse.titel.length()));
 
           //aq.id(R.id.beskrivelse).text(udsendelse.beskrivelse).typeface(App.skrift_georgia);
