@@ -27,6 +27,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
 import dk.dr.radio.akt.Hovedaktivitet;
+import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.AfspillerIkonOgNotifikation;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
@@ -36,7 +37,7 @@ import dk.dr.radio.v3.R;
  *
  * @author j
  */
-public class HoldAppIHukommelsenService extends Service {
+public class HoldAppIHukommelsenService extends Service implements Runnable {
   /**
    * Service-mekanik. Ligegyldig, da vi kører i samme proces.
    */
@@ -57,10 +58,12 @@ public class HoldAppIHukommelsenService extends Service {
         + startId);
 
 
-    String kanalNavn = intent == null ? null : intent
-        .getStringExtra("kanalNavn");
-    if (kanalNavn == null)
-      kanalNavn = "";
+    String kanalNavn = "";
+    try {
+      kanalNavn = DRData.instans.afspiller.getLydkilde().getKanal().navn;
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
+    } // TODO fjern try-catch efter nogle måneder i drift
 
     NotificationCompat.Builder b = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.notifikation_ikon)
         .setContentTitle("DR Radio")
@@ -68,11 +71,12 @@ public class HoldAppIHukommelsenService extends Service {
         .setOngoing(true)
         .setAutoCancel(false)
         .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, Hovedaktivitet.class), 0));
+    // PendingIntent er til at pege på aktiviteten der skal startes hvis
+    // brugeren vælger notifikationen
 
 
     b.setContent(AfspillerIkonOgNotifikation.lavRemoteViews(AfspillerIkonOgNotifikation.TYPE_notifikation_lille));
     Notification notification = b.build();
-    notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT | Notification.PRIORITY_HIGH | Notification.FLAG_FOREGROUND_SERVICE);
 
     if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)) {
       // A notification's big view appears only when the notification is expanded,
@@ -82,19 +86,26 @@ public class HoldAppIHukommelsenService extends Service {
       notification.bigContentView = AfspillerIkonOgNotifikation.lavRemoteViews(AfspillerIkonOgNotifikation.TYPE_notifikation_stor);
     }
 
-    // PendingIntent er til at pege på aktiviteten der skal startes hvis
-    // brugeren vælger notifikationen
-    // notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT | Notification.PRIORITY_HIGH | Notification.FLAG_FOREGROUND_SERVICE);
-    // notification.setLatestEventInfo(this, "Radio", kanalNavn,
-    // notification.contentIntent);
+    notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT | Notification.PRIORITY_HIGH | Notification.FLAG_FOREGROUND_SERVICE);
     startForeground(NOTIFIKATION_ID, notification);
 
     return START_STICKY;
   }
 
   @Override
+  public void onCreate() {
+    super.onCreate();
+    DRData.instans.afspiller.observatører.add(this);
+  }
+
+  @Override
   public void onDestroy() {
-    Log.d("AfspillerService onDestroy!");
+    DRData.instans.afspiller.observatører.remove(this);
     stopForeground(true);
+  }
+
+  @Override
+  public void run() {
+    // TODO byg notifikation
   }
 }
