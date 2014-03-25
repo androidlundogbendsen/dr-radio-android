@@ -432,11 +432,11 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
           aq.id(R.id.lige_nu).gone();
           aq.id(R.id.info).typeface(App.skrift_gibson);
-          Log.d("kanal JPER " + kanal.slug.substring(0,2));
-          if(kanal.slug.substring(0,2).equals("p4")){
+          Log.d("kanal JPER " +kanal.p4underkanal);
+          if(kanal.p4underkanal){
               Log.d("kanal JPER1 " + kanal.slug.substring(0,2));
               aq.id(R.id.logo).image(R.drawable.kanalappendix_p4f);
-              aq.id(R.id.p4navn).text(kanal.navn.replace("P4", "")).typeface(App.skrift_gibson);
+              aq.id(R.id.p4navn).text(kanal.navn.replace("P4", "")).typeface(App.skrift_gibson_fed);
           }
           else{
               aq.id(R.id.logo).image(kanal.kanallogo_resid);
