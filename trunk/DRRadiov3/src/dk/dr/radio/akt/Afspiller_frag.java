@@ -80,7 +80,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     if (k == null) return;
     Status status = DRData.instans.afspiller.getAfspillerstatus();
     if (lydkilde.erKanal()) {
-      titel.setText(k.navn + " Direkte");
+      titel.setText(k.navn + " Live");
     } else {
       Udsendelse udsendelse = lydkilde.getUdsendelse();
       titel.setText(udsendelse == null ? k.navn : udsendelse.titel);
