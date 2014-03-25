@@ -99,6 +99,7 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
    * notifikation hvis det er til en notifikation
    */
   private static RemoteViews lavRemoteViews(int type) {
+    Log.d("lavRemoteViews type="+type+" fspillerstatus "+ DRData.instans.afspiller.getAfspillerstatus());
 
     RemoteViews remoteViews;
     if (type == TYPE_notifikation_lille) {
@@ -119,7 +120,7 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
 
     Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
     Kanal kanal = lydkilde.getKanal();
-    Status status = DRData.instans.afspiller.getAfspillerstatus();
+
     //boolean live =  && status != Status.STOPPET;
     if (lydkilde.erKanal()) {
       remoteViews.setTextViewText(R.id.titel, kanal.navn + " Live");
@@ -131,7 +132,7 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
     }
     remoteViews.setTextViewText(R.id.metainformation, kanal.navn);
 
-    switch (status) {
+    switch (DRData.instans.afspiller.getAfspillerstatus()) {
       case STOPPET:
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_spil);
         remoteViews.setViewVisibility(R.id.progressBar, View.GONE);
@@ -152,16 +153,19 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
         break;
     }
 
-    Intent startStopI = new Intent(App.instans, AfspillerStartStopReciever.class);
-    PendingIntent startStopPI = PendingIntent.getBroadcast(App.instans, 0, startStopI, PendingIntent.FLAG_UPDATE_CURRENT);
 
-    Intent pauseI = new Intent(App.instans, AfspillerStartStopReciever.class).putExtra(AfspillerStartStopReciever.PAUSE, true);
-    PendingIntent pausePI = PendingIntent.getBroadcast(App.instans, 0, pauseI, PendingIntent.FLAG_UPDATE_CURRENT);
 
     if (type==TYPE_notifikation_lille || type==TYPE_notifikation_stor) {
-      remoteViews.setOnClickPendingIntent(R.id.startStopKnap, pausePI);
-      remoteViews.setOnClickPendingIntent(R.id.luk, startStopPI);
+      Intent startPauseI = new Intent(App.instans, AfspillerStartStopReciever.class).setAction(AfspillerStartStopReciever.PAUSE);
+      PendingIntent startPausePI = PendingIntent.getBroadcast(App.instans, 0, startPauseI, PendingIntent.FLAG_UPDATE_CURRENT);
+      remoteViews.setOnClickPendingIntent(R.id.startStopKnap, startPausePI);
+
+      Intent lukI = new Intent(App.instans, AfspillerStartStopReciever.class).setAction(AfspillerStartStopReciever.LUK);
+      PendingIntent lukPI = PendingIntent.getBroadcast(App.instans, 0, lukI, PendingIntent.FLAG_UPDATE_CURRENT);
+      remoteViews.setOnClickPendingIntent(R.id.luk, lukPI);
     } else {
+      Intent startStopI = new Intent(App.instans, AfspillerStartStopReciever.class);
+      PendingIntent startStopPI = PendingIntent.getBroadcast(App.instans, 0, startStopI, PendingIntent.FLAG_UPDATE_CURRENT);
       remoteViews.setOnClickPendingIntent(R.id.startStopKnap, startStopPI);
     }
 
@@ -184,6 +188,7 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
         .setContentText(kanalNavn)
         .setOngoing(true)
         .setAutoCancel(false)
+        .setPriority(1000) // holder den øverst
         .setContentIntent(PendingIntent.getActivity(ctx, 0, new Intent(ctx, Hovedaktivitet.class), 0));
     // PendingIntent er til at pege på aktiviteten der skal startes hvis
     // brugeren vælger notifikationen

@@ -35,18 +35,25 @@ import dk.dr.radio.diverse.Log;
  */
 public class AfspillerStartStopReciever extends BroadcastReceiver {
   public static final String PAUSE = "pause";
+  public static final String LUK = "luk";
 
   @Override
   public void onReceive(Context context, Intent intent) {
+    Log.d("AfspillerReciever onReceive(" + intent + ") afspillerstatus =" + DRData.instans.afspiller.afspillerstatus);
     try {
-      boolean pause = intent.getBooleanExtra(PAUSE, false);
-      Log.d("AfspillerReciever onReceive(" + intent + ") afspillerstatus =" + DRData.instans.afspiller.afspillerstatus);
+      if (LUK.equals(intent.getAction())) {
+        DRData.instans.afspiller.stopAfspilning(); // Stopper servicen og lukker notifikationen
+        return;
+      }
 
       if (DRData.instans.afspiller.afspillerstatus == Status.STOPPET) {
         DRData.instans.afspiller.startAfspilning();
       } else {
-        if (pause) DRData.instans.afspiller.pauseAfspilning();
-        else DRData.instans.afspiller.stopAfspilning();
+        if (PAUSE.equals(intent.getAction())) {
+          DRData.instans.afspiller.pauseAfspilning();
+        } else {
+          DRData.instans.afspiller.stopAfspilning();
+        }
       }
 
     } catch (Exception ex) {

@@ -55,8 +55,7 @@ public class HoldAppIHukommelsenService extends Service implements Runnable {
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
-    Log.d("AfspillerService onStartCommand(" + intent + " " + flags + " "
-        + startId);
+    Log.d("AfspillerService onStartCommand(" + intent + " " + flags + " " + startId);
 
     Notification notification = AfspillerIkonOgNotifikation.lavNotification(this);
     startForeground(NOTIFIKATION_ID, notification);
@@ -65,18 +64,21 @@ public class HoldAppIHukommelsenService extends Service implements Runnable {
 
   @Override
   public void onCreate() {
+    Log.d("AfspillerService onCreate()");
     super.onCreate();
     DRData.instans.afspiller.observatører.add(this);
   }
 
   @Override
   public void onDestroy() {
+    Log.d("AfspillerService onDestroy()");
     DRData.instans.afspiller.observatører.remove(this);
     stopForeground(true);
   }
 
   @Override
   public void run() {
+    Log.d("AfspillerService run()");
     Notification notification = AfspillerIkonOgNotifikation.lavNotification(this);
     App.notificationManager.notify(NOTIFIKATION_ID, notification);
   }
