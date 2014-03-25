@@ -80,7 +80,7 @@
      * I tilfælde af at processen har været smidt ud af hukommelsen er dette
      * her faktisk den første kode der køres, derfor er et fuldt
         -->
-        <receiver android:name="dk.dr.radio.afspilning.AfspillerReciever"/>
+        <receiver android:name="dk.dr.radio.afspilning.AfspillerStartStopReciever"/>
 
 
         <!-- Til håndtering af knapper på fjernbetjening (f.eks. på Bluetooth headset.)
