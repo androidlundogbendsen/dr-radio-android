@@ -1,11 +1,17 @@
 package dk.dr.radio.akt;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 
+import dk.dr.radio.afspilning.Status;
+import dk.dr.radio.data.DRData;
+import dk.dr.radio.data.DRJson;
+import dk.dr.radio.data.Lydkilde;
+import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
@@ -39,15 +45,9 @@ public class Hovedaktivitet extends Basisaktivitet {
     venstremenuFrag.setUp(R.id.venstremenu_frag, (DrawerLayout) findViewById(R.id.drawer_layout));
 
     if (savedInstanceState == null) try {
-      venstremenuFrag.sætListemarkering(Venstremenu_frag.FORSIDE_INDEX); // "Forside
 
       String visFragment = getIntent().getStringExtra(VisFragment_akt.KLASSE);
-      if (visFragment==null) {
-        getSupportFragmentManager().beginTransaction()
-            .replace(R.id.indhold_frag, new Kanaler_frag())
-            .commit();
-        venstremenuFrag.sætListemarkering(Venstremenu_frag.FORSIDE_INDEX); // "Forside
-      } else {
+      if (visFragment != null) {
         Fragment f = (Fragment) Class.forName(visFragment).newInstance();
         Bundle b = getIntent().getExtras();
         f.setArguments(b);
@@ -55,7 +55,31 @@ public class Hovedaktivitet extends Basisaktivitet {
         // Vis fragmentet i FrameLayoutet
         Log.d("Viser fragment " + f + " med arg " + b);
         getSupportFragmentManager().beginTransaction()
-            .replace(R.id.indhold_frag, f).commit();
+            .replace(R.id.indhold_frag, f)
+            .commit();
+        return;
+      } else {
+        // Startet op fra hjemmeskærm eller notifikation
+        getSupportFragmentManager().beginTransaction()
+            .replace(R.id.indhold_frag, new Kanaler_frag())
+            .commit();
+        // Hvis det ikke er en direkte udsendelse, så hop ind i den pågældende udsendelsesside
+        if (DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET) {
+          Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
+          if (lydkilde instanceof Udsendelse) {
+            Udsendelse udsendelse = lydkilde.getUdsendelse();
+            Fragment f = new Udsendelse_frag();
+            f.setArguments(new Intent()
+                .putExtra(Basisfragment.P_kode, lydkilde.getKanal().kode)
+                .putExtra(DRJson.Slug.name(), udsendelse.slug).getExtras());
+            getSupportFragmentManager().beginTransaction()
+                .replace(R.id.indhold_frag, f)
+                .addToBackStack("Udsendelse")
+                .commit();
+            return;
+          }
+        }
+        venstremenuFrag.sætListemarkering(Venstremenu_frag.FORSIDE_INDEX); // "Forside
       }
 
     } catch (Exception e) { Log.rapporterFejl(e); }

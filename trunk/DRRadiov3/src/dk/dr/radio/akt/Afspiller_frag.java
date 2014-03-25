@@ -124,7 +124,9 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         // Fjern backstak - så vi starter forfra i 'roden'
         fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         // Vis kanaler (den aktuelle getKanal vælges automatisk af Kanaler_frag)
-        fm.beginTransaction().replace(R.id.indhold_frag, new Kanaler_frag()).commit();
+        fm.beginTransaction()
+            .replace(R.id.indhold_frag, new Kanaler_frag())
+            .commit();
       } else {
         Udsendelse udsendelse = lydkilde.getUdsendelse();
         Fragment f = new Udsendelse_frag();

@@ -84,30 +84,32 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
     appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
   }
 
-  @SuppressLint("ResourceAsColor")
+  /**
+   * Laver et sæt RemoteViews der passer til forskellige situationer
+   *
+   * @param låseskærm    hvis det er til låseskærmen - kun for Build.VERSION.SDK_INT >= 16
+   * @param notifikation hvis det er til en notifikation
+   * @return
+   */
   public static RemoteViews lavRemoteViews(boolean låseskærm, boolean notifikation) {
 
-
     RemoteViews remoteViews;
-    if (notifikation || låseskærm) {
+    if (notifikation) {
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
         // Kun lille layout på en linje understøttes
         remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_lille);
       } else {
-        if (låseskærm) {
-          remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_laase_skaerm);
-        } else {
-          // A notification's big view appears only when the notification is expanded,
-          // which happens when the notification is at the top of the notification drawer,
-          // or when the user expands the notification with a gesture.
-          // Expanded notifications are available starting with Android 4.1.
-          remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_stor1);
-        }
+        // A notification's big view appears only when the notification is expanded,
+        // which happens when the notification is at the top of the notification drawer,
+        // or when the user expands the notification with a gesture.
+        // Expanded notifications are available starting with Android 4.1.
+        remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_stor1);
       }
+    } else if (låseskærm) {
+      remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_laase_skaerm);
     } else {
       remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_levendeikon);
     }
-
 
     Intent hovedAktI = new Intent(App.instans, Hovedaktivitet.class);
     hovedAktI.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -116,28 +118,23 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
 
 
     Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
-    Kanal k = lydkilde.getKanal();
+    Kanal kanal = lydkilde.getKanal();
     Status status = DRData.instans.afspiller.getAfspillerstatus();
-    String metainfo = "";
     //boolean live =  && status != Status.STOPPET;
     if (lydkilde.erKanal()) {
-      remoteViews.setTextViewText(R.id.titel, k.navn + " Live");
-      remoteViews.setTextViewText(R.id.metainformation, k.navn);
-      metainfo = k.navn;
+      remoteViews.setTextViewText(R.id.titel, kanal.navn + " Live");
       //  App.kortToast(" Live "  + k.navn);
     } else {
       Udsendelse udsendelse = lydkilde.getUdsendelse();
-      remoteViews.setTextViewText(R.id.titel, udsendelse == null ? k.navn : udsendelse.titel);
-      remoteViews.setTextViewText(R.id.metainformation, udsendelse == null ? k.navn : udsendelse.titel);
-      metainfo = k.navn;
+      remoteViews.setTextViewText(R.id.titel, udsendelse == null ? kanal.navn : udsendelse.titel);
       //App.kortToast(" Udsendelse "  + udsendelse == null ? k.navn : udsendelse.titel);
     }
+    remoteViews.setTextViewText(R.id.metainformation, kanal.navn);
 
     switch (status) {
       case STOPPET:
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_spil);
         remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
-        remoteViews.setTextViewText(R.id.metainformation, k.navn);
         remoteViews.setTextColor(R.id.metainformation, App.color.grå40);
         break;
       case FORBINDER:
@@ -146,16 +143,12 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
         int fpct = DRData.instans.afspiller.getForbinderProcent();
         //remoteViews.setTextViewText(R.id.metainformation, "Forbinder " + (fpct > 0 ? fpct : ""));
         remoteViews.setTextColor(R.id.metainformation, App.color.blå);
-        remoteViews.setTextViewText(R.id.metainformation, metainfo);
         break;
       case SPILLER:
         //  App.kortToast("SPILLER " + k.navn);
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_pause);
         remoteViews.setViewVisibility(R.id.progressBar, View.INVISIBLE);
-        //metainformation.setTextColor(getResources().getColor(R.color.blå));
-        remoteViews.setViewVisibility(R.id.metainformation, View.VISIBLE);
         remoteViews.setTextColor(R.id.metainformation, App.color.blå);
-        remoteViews.setTextViewText(R.id.metainformation, k.navn);
         break;
     }
 
