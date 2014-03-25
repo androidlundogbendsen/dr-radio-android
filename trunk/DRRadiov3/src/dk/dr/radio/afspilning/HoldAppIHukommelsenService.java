@@ -58,43 +58,9 @@ public class HoldAppIHukommelsenService extends Service implements Runnable {
     Log.d("AfspillerService onStartCommand(" + intent + " " + flags + " "
         + startId);
 
-    Notification notification = bygNotification(this);
+    Notification notification = AfspillerIkonOgNotifikation.lavNotification(this);
     startForeground(NOTIFIKATION_ID, notification);
     return START_STICKY;
-  }
-
-  @SuppressLint("NewApi")
-  private static Notification bygNotification(Context ctx) {
-    String kanalNavn = "";
-    try {
-      kanalNavn = DRData.instans.afspiller.getLydkilde().getKanal().navn;
-    } catch (Exception e) {
-      Log.rapporterFejl(e);
-    } // TODO fjern try-catch efter nogle måneder i drift
-
-    NotificationCompat.Builder b = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.notifikation_ikon)
-        .setContentTitle("DR Radio")
-        .setContentText(kanalNavn)
-        .setOngoing(true)
-        .setAutoCancel(false)
-        .setContentIntent(PendingIntent.getActivity(ctx, 0, new Intent(ctx, Hovedaktivitet.class), 0));
-    // PendingIntent er til at pege på aktiviteten der skal startes hvis
-    // brugeren vælger notifikationen
-
-
-    b.setContent(AfspillerIkonOgNotifikation.lavRemoteViews(AfspillerIkonOgNotifikation.TYPE_notifikation_lille));
-    Notification notification = b.build();
-
-    if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)) {
-      // A notification's big view appears only when the notification is expanded,
-      // which happens when the notification is at the top of the notification drawer,
-      // or when the user expands the notification with a gesture.
-      // Expanded notifications are available starting with Android 4.1.
-      notification.bigContentView = AfspillerIkonOgNotifikation.lavRemoteViews(AfspillerIkonOgNotifikation.TYPE_notifikation_stor);
-    }
-
-    notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT | Notification.PRIORITY_HIGH | Notification.FLAG_FOREGROUND_SERVICE);
-    return notification;
   }
 
   @Override
@@ -111,7 +77,7 @@ public class HoldAppIHukommelsenService extends Service implements Runnable {
 
   @Override
   public void run() {
-    Notification notification = bygNotification(this);
+    Notification notification = AfspillerIkonOgNotifikation.lavNotification(this);
     App.notificationManager.notify(NOTIFIKATION_ID, notification);
   }
 }
