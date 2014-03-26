@@ -65,6 +65,7 @@ import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Diverse;
 import dk.dr.radio.data.Grunddata;
+import dk.dr.radio.data.HentedeUdsendelser;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.v3.R;
 
@@ -86,11 +87,9 @@ public class App extends Application implements Runnable {
   public static Typeface skrift_gibson_fed;
   public static Typeface skrift_georgia;
 
-  public static Hentning hentning;  // Understøttes ikke på Android 2.2, så er variablen null
   public static Netvaerksstatus netværk;
   public static RequestQueue volleyRequestQueue;
   public static EgenTypefaceSpan skrift_gibson_fed_span;
-  public static DatabaseHelper db;
   public static DRFarver color;
   public static Resources res;
   public static long opstartstidspunkt;
@@ -108,7 +107,6 @@ public class App extends Application implements Runnable {
     forgrundstråd = new Handler();
     connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    hentning = new Hentning(this);
     prefs = PreferenceManager.getDefaultSharedPreferences(this);
     fejlsøgning = prefs.getBoolean("fejlsøgning", false);
     udviklerEkstra = prefs.getBoolean("udviklerEkstra", false);
@@ -171,8 +169,6 @@ public class App extends Application implements Runnable {
     //volleyRequestQueue = Volley.newRequestQueue(this);
     volleyRequestQueue = Volley.newRequestQueue(this, stack);
 
-    db = new DatabaseHelper();
-
     try {
       DRData.instans = new DRData();
       DRData.instans.grunddata = new Grunddata();
@@ -188,7 +184,6 @@ public class App extends Application implements Runnable {
       String pn = App.instans.getPackageName();
       for (final Kanal k : DRData.instans.grunddata.kanaler) {
         k.kanallogo_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase().replace('ø', 'o').replace('å', 'a'), "drawable", pn);
-        //i.grunddata.hentSupplerendeDataBg_KUN_TIL_UDVIKLING();
       }
 
 

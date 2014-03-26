@@ -115,14 +115,14 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     listView.setAdapter(venstremenuAdapter);
     listView.setItemChecked(mCurrentSelectedPosition, true);
     DRData.instans.favoritter.observatører.add(this);
-    App.hentning.observatører.add(this);
+    DRData.instans.hentedeUdsendelser.observatører.add(this);
     return listView;
   }
 
   @Override
   public void onDestroyView() {
     DRData.instans.favoritter.observatører.remove(this);
-    App.hentning.observatører.remove(this);
+    DRData.instans.hentedeUdsendelser.observatører.remove(this);
     super.onDestroyView();
   }
 
@@ -424,13 +424,13 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       });
       if (gib) aq.id(R.id.tekst).typeface(App.skrift_gibson_fed).id(R.id.tekst2).typeface(App.skrift_gibson);
 
-      if (App.hentning.virker()) {
+      if (DRData.instans.hentedeUdsendelser.virker()) {
         tilføj(R.layout.venstremenu_elem_adskiller_tynd);
         tilføj(new MenuElement(layoutInflater.inflate(R.layout.venstremenu_elem_hentede_udsendendelser, null), null, Hentede_udsendelser_frag.class) {
           @Override
           public View getView() {
             TextView tekst2 = (TextView) view.findViewById(R.id.tekst2);
-            int antal = App.hentning.getUdsendelser().size();
+            int antal = DRData.instans.hentedeUdsendelser.getUdsendelser().size();
             tekst2.setText("(" + antal + ")");
             return view;
           }

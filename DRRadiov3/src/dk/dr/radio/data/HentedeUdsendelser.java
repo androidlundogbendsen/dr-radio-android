@@ -1,4 +1,4 @@
-package dk.dr.radio.diverse;
+package dk.dr.radio.data;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -18,17 +18,16 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import dk.dr.radio.akt.Hentede_udsendelser_frag;
 import dk.dr.radio.akt.Hovedaktivitet;
 import dk.dr.radio.akt.VisFragment_akt;
-import dk.dr.radio.data.DRData;
-import dk.dr.radio.data.Udsendelse;
+import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.Serialisering;
 import dk.dr.radio.v3.R;
 
 /**
@@ -36,39 +35,43 @@ import dk.dr.radio.v3.R;
  */
 @SuppressLint("NewApi")
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-public class Hentning {
+public class HentedeUdsendelser {
   private DownloadManager downloadService = null;
 
-  public static class HentningData implements Serializable {
+  public static class Data implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Map<String, Long> downloadIdFraSlug = new LinkedHashMap<String, Long>();
     private Map<Long, Udsendelse> udsendelseFraDownloadId = new LinkedHashMap<Long, Udsendelse>();
   }
-  private HentningData data;
+  private Data data;
   public List<Runnable> observatører = new ArrayList<Runnable>();
 
+  /** Understøttes ikke på Android 2.2 og tidligere */
   public boolean virker() {
     return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
   }
 
-  public Hentning(App app) {
-    if (virker()) {
+  private final String FILNAVN;
+  public HentedeUdsendelser() {
+    if (virker() && App.instans!=null) { // App.instans==null standard JVM (udenfor Android)
       downloadService = (DownloadManager) App.instans.getSystemService(Context.DOWNLOAD_SERVICE);
+      FILNAVN = App.instans.getFilesDir()+"/HentedeUdsendelser.ser";
+    } else {
+      FILNAVN = "/tmp/HentedeUdsendelser.ser";
     }
   }
 
-  private String FILNAVN = App.instans.getFilesDir()+"/Hentning.ser";
 
   private void tjekDataOprettet() {
     if (data!=null) return;
     if (new File(FILNAVN).exists()) try {
-      data = (HentningData) Serialisering.hent(FILNAVN);
+      data = (Data) Serialisering.hent(FILNAVN);
       return;
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
-    data = new HentningData();
+    data = new Data();
   }
 
   private Runnable gemListe = new Runnable() {
@@ -105,11 +108,11 @@ public class Hentning {
 
       if (Build.VERSION.SDK_INT >= 11) req.allowScanningByMediaScanner();
 
-      long downloadId = App.hentning.downloadService.enqueue(req);
+      long downloadId = downloadService.enqueue(req);
       data.downloadIdFraSlug.put(udsendelse.slug, downloadId);
       data.udsendelseFraDownloadId.put(downloadId, udsendelse);
       gemListe.run();
-      for (Runnable obs : App.hentning.observatører) obs.run();
+      for (Runnable obs : observatører) obs.run();
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
@@ -135,7 +138,7 @@ public class Hentning {
     if (downloadId==null) return null;
     DownloadManager.Query query = new DownloadManager.Query();
     query.setFilterById(downloadId);
-    Cursor c = App.hentning.downloadService.query(query);
+    Cursor c = downloadService.query(query);
     if (c.moveToFirst()) {
       return c;
     }
@@ -174,7 +177,7 @@ public class Hentning {
     Log.d("Hentning: data.downloadIdFraSlug="+data.downloadIdFraSlug);
     downloadService.remove(id);
     gemListe.run();
-    for (Runnable obs : App.hentning.observatører) obs.run();
+    for (Runnable obs : observatører) obs.run();
   }
 
 
@@ -186,12 +189,12 @@ public class Hentning {
       Log.d("DLS " + intent);
       if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) try {
         long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
-        Udsendelse u = App.hentning.data.udsendelseFraDownloadId.get(downloadId);
+        Udsendelse u = DRData.instans.hentedeUdsendelser.data.udsendelseFraDownloadId.get(downloadId);
         if (u==null) throw new IllegalStateException("Ingen udsendelse for hentning for "+downloadId);
 
         DownloadManager.Query query = new DownloadManager.Query();
         query.setFilterById(downloadId);
-        Cursor c = App.hentning.downloadService.query(query);
+        Cursor c = DRData.instans.hentedeUdsendelser.downloadService.query(query);
         if (c.moveToFirst()) {
           Log.d("DLS " + c + "  "+c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS)));
           if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
@@ -201,8 +204,8 @@ public class Hentning {
           }
         }
         c.close();
-        App.hentning.gemListe.run();
-        for (Runnable obs : App.hentning.observatører) obs.run();
+        DRData.instans.hentedeUdsendelser.gemListe.run();
+        for (Runnable obs : DRData.instans.hentedeUdsendelser.observatører) obs.run();
       } catch (Exception e) { Log.rapporterFejl(e);
       } else if (DownloadManager.ACTION_NOTIFICATION_CLICKED.equals(action)) {
         // Åbn app'en, under hentninger

@@ -23,7 +23,6 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.DrVolleyStringRequest;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.P4Stedplacering;
-import dk.dr.radio.v3.R;
 
 public class Basisaktivitet extends ActionBarActivity {
   protected final AQuery aq = new AQuery(this);
@@ -94,7 +93,7 @@ public class Basisaktivitet extends ActionBarActivity {
             .setDataAndType(Uri.parse(DRData.instans.afspiller.getLydkilde().findBedsteStream(false).url), "audio/*"));
         return true;
       case 2645:
-        App.hentning.status();
+        DRData.instans.hentedeUdsendelser.status();
         return true;
       case 13643:
         App.langToast("Server:\n" + new Date(DrVolleyStringRequest.serverCurrentTimeMillis()) + "\n/Lokalt:\n" + new Date());

@@ -52,7 +52,7 @@ import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.DrVolleyResonseListener;
 import dk.dr.radio.diverse.DrVolleyStringRequest;
-import dk.dr.radio.diverse.Hentning;
+import dk.dr.radio.data.HentedeUdsendelser;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
@@ -138,7 +138,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     bygListe();
 
     afspiller.observatører.add(this);
-    App.hentning.observatører.add(this);
+    DRData.instans.hentedeUdsendelser.observatører.add(this);
     udvikling_checkDrSkrifter(rod, this + " rod");
     return rod;
   }
@@ -193,8 +193,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
   private static void tjekOmHentet(Udsendelse udsendelse) {
     if (udsendelse.hentetStream == null) {
-      if (!App.hentning.virker()) return;
-      Cursor c = App.hentning.getStatusCursor(udsendelse);
+      if (!DRData.instans.hentedeUdsendelser.virker()) return;
+      Cursor c = DRData.instans.hentedeUdsendelser.getStatusCursor(udsendelse);
       if (c == null) return;
       try {
         Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)));
@@ -226,7 +226,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   public void onDestroyView() {
     App.volleyRequestQueue.cancelAll(this);
     afspiller.observatører.remove(this);
-    App.hentning.observatører.add(this);
+    DRData.instans.hentedeUdsendelser.observatører.add(this);
     super.onDestroyView();
   }
 
@@ -239,7 +239,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.udsendelse, menu);
     //menu.findItem(R.id.hør).setVisible(udsendelse.kanHøres).setEnabled(streamsErKlar());
-    //menu.findItem(R.id.hent).setVisible(App.hentning.virker() && udsendelse.kanHøres && udsendelse.hentetStream==null);
+    //menu.findItem(R.id.hent).setVisible(DRData.instans.hentedeUdsendelser.virker() && udsendelse.kanHøres && udsendelse.hentetStream==null);
   }
 
   @Override
@@ -456,7 +456,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           seekBar.setOnSeekBarChangeListener(Udsendelse_frag.this);
           aq.id(R.id.hent).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
           aq.id(R.id.kan_endnu_ikke_hentes).typeface(App.skrift_gibson);
-          if (!App.hentning.virker()) aq.gone(); // Understøttes ikke på Android 2.2
+          if (!DRData.instans.hentedeUdsendelser.virker()) aq.gone(); // Understøttes ikke på Android 2.2
           aq.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         } else if (type == INFO) {
           String forkortInfoStr = udsendelse.beskrivelse;
@@ -506,13 +506,13 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
               !online ? "Internetforbindelse mangler" :
                   (spillerDenneKanal ? " SPILLER " : " HØR ") + kanal.navn.toUpperCase() + " LIVE");
         }
-        aq.id(R.id.hent).visibility(udsendelse.hentetStream == null && udsendelse.kanHøres && App.hentning.virker() ? View.VISIBLE : View.GONE);
+        aq.id(R.id.hent).visibility(udsendelse.hentetStream == null && udsendelse.kanHøres && DRData.instans.hentedeUdsendelser.virker() ? View.VISIBLE : View.GONE);
         aq.textColorId(streamsKlar ? R.color.blå : R.color.grå40).getButton();
 
-        Cursor c = App.hentning.getStatusCursor(udsendelse);
+        Cursor c = DRData.instans.hentedeUdsendelser.getStatusCursor(udsendelse);
         if (c != null) {
           int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-          String statustekst = Hentning.getStatustekst(c);
+          String statustekst = HentedeUdsendelser.getStatustekst(c);
           c.close();
 
           if (status != DownloadManager.STATUS_SUCCESSFUL && status != DownloadManager.STATUS_FAILED) {
@@ -621,7 +621,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   }
 
   private void hent() {
-    Cursor c = App.hentning.getStatusCursor(udsendelse);
+    Cursor c = DRData.instans.hentedeUdsendelser.getStatusCursor(udsendelse);
     if (c != null) {
       c.close();
       // Skift til Hentede_frag
@@ -639,7 +639,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       return;
     }
     if (!streamsErKlar()) return;
-    App.hentning.hent(udsendelse);
+    DRData.instans.hentedeUdsendelser.hent(udsendelse);
   }
 
   private void hør() {
