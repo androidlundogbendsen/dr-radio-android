@@ -5,6 +5,9 @@ import android.media.MediaPlayer;
 
 import java.io.IOException;
 
+import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
+
 /**
  * Created by j on 25-03-14.
  */
@@ -13,6 +16,10 @@ public class MediaPlayerWrapper {
 
   public MediaPlayerWrapper(boolean opretMediaPlayer) {
     if (opretMediaPlayer) mediaPlayer = new MediaPlayer();
+  }
+
+  public MediaPlayerWrapper() {
+    this(true);
   }
 
   public void setWakeMode(Context ctx, int screenDimWakeLock) {
@@ -66,5 +73,28 @@ public class MediaPlayerWrapper {
     mediaPlayer.setOnPreparedListener(lytter);
     mediaPlayer.setOnBufferingUpdateListener(lytter);
     mediaPlayer.setOnSeekCompleteListener(lytter);
+  }
+
+
+
+  private static Class<? extends MediaPlayerWrapper> mediaPlayerWrapperKlasse = null;
+
+  public static MediaPlayerWrapper opret() {
+    if (mediaPlayerWrapperKlasse==null) {
+      try {
+        mediaPlayerWrapperKlasse = (Class<? extends MediaPlayerWrapper>) Class.forName("dk.dr.radio.afspilning.AkamaiMediaPlayerWrapper");
+      } catch (ClassNotFoundException e) {
+        mediaPlayerWrapperKlasse = MediaPlayerWrapper.class;
+      }
+    }
+
+    try {
+      Log.d("MediaPlayerWrapper opret() "+mediaPlayerWrapperKlasse);
+      MediaPlayerWrapper ret = mediaPlayerWrapperKlasse.newInstance();
+      return ret;
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
+    }
+    return new MediaPlayerWrapper();
   }
 }
