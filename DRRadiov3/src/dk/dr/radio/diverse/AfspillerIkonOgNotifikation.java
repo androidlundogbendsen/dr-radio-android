@@ -183,7 +183,7 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
       Log.rapporterFejl(e);
     } // TODO fjern try-catch efter nogle måneder i drift
 
-    NotificationCompat.Builder b = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.notifikation_ikon)
+    NotificationCompat.Builder b = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.dr_lyd_not)
         .setContentTitle("DR Radio")
         .setContentText(kanalNavn)
         .setOngoing(true)
