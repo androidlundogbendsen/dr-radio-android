@@ -15,7 +15,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
-import com.flurry.android.FlurryAgent;
 
 import java.util.Date;
 
@@ -133,10 +132,6 @@ public class Basisaktivitet extends ActionBarActivity {
   protected void onResume() {
     super.onResume();
     if (App.fejlsøgning) Log.d(this + " onResume()");
-    if (!App.EMULATOR) {
-      FlurryAgent.setCaptureUncaughtExceptions(false); // Vi bruger p.t. BugSense
-      FlurryAgent.onStartSession(this, getString(R.string.flurry_nøgle));
-    }
     App.instans.onResume(this);
   }
 
@@ -144,7 +139,6 @@ public class Basisaktivitet extends ActionBarActivity {
   protected void onPause() {
     super.onPause();
     if (App.fejlsøgning) Log.d(this + " onPause()");
-    if (!App.EMULATOR) FlurryAgent.onEndSession(this);
     App.instans.onPause();
   }
 }

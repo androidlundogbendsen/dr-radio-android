@@ -28,7 +28,6 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.androidquery.AQuery;
-import com.flurry.android.FlurryAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -569,7 +568,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     if (!App.EMULATOR) {
       HashMap<String, String> param = new HashMap<String, String>();
       param.put("kanal", kanal.kode);
-      FlurryAgent.logEvent("hør direkte udsendelse", param);
     }
 
     if (App.fejlsøgning) App.kortToast("kanal.streams=" + kanal.streams);
