@@ -7,8 +7,8 @@
               android:orientation="vertical">
 
 
-    <LinearLayout
-            android:layout_width="match_parent"
+    <RelativeLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="top"
             android:orientation="horizontal">
@@ -23,11 +23,12 @@
 
         <ImageView
                 android:id="@+id/luk"
-                android:layout_width="fill_parent"
+                android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="right"
+                android:layout_alignParentRight="true"
                 android:src="@drawable/dri_luk_hvid"/>
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
             android:layout_width="match_parent"
