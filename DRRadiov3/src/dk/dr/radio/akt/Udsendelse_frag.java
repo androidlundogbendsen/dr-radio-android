@@ -31,7 +31,6 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.androidquery.AQuery;
-import com.flurry.android.FlurryAgent;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -169,7 +168,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     public void run() {
       App.forgrundstråd.removeCallbacks(opdaterSpillelisteRunnable);
       startOpdaterSpilleliste();
-      if (aktuelUdsendelsePåKanalen) {
+      if (aktuelUdsendelsePåKanalen && isResumed()) {
         App.forgrundstråd.postDelayed(opdaterSpillelisteRunnable, 15000);
       }
     }
@@ -656,7 +655,6 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         HashMap<String, String> param = new HashMap<String, String>();
         param.put("kanal", kanal.kode);
         param.put("udsendelse", udsendelse.slug);
-        FlurryAgent.logEvent("hør udsendelse", param);
       }
       if (App.prefs.getBoolean("manuelStreamvalg", false)) {
         udsendelse.nulstilForetrukkenStream();

@@ -27,7 +27,6 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
-import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.net.wifi.WifiManager;
@@ -56,8 +55,8 @@ public class Afspiller {
 
   public Status afspillerstatus = Status.STOPPET;
 
-  private MediaPlayer mediaPlayer;
-  private MediaPlayerLytter lytter = new MediaPlayerLytter();
+  private MediaPlayerWrapper mediaPlayer;
+  private MediaPlayerLytter lytter = new MediaPlayerLytterImpl();
 
   public List<Runnable> observatører = new ArrayList<Runnable>();
   public List<Runnable> forbindelseobservatører = new ArrayList<Runnable>();
@@ -68,13 +67,8 @@ public class Afspiller {
   private int duration;
   private int currentPosition;
 
-  private static void sætMediaPlayerLytter(MediaPlayer mediaPlayer, MediaPlayerLytter lytter) {
-    mediaPlayer.setOnCompletionListener(lytter);
-    mediaPlayer.setOnErrorListener(lytter);
-    mediaPlayer.setOnInfoListener(lytter);
-    mediaPlayer.setOnPreparedListener(lytter);
-    mediaPlayer.setOnBufferingUpdateListener(lytter);
-    mediaPlayer.setOnSeekCompleteListener(lytter);
+  private static void sætMediaPlayerLytter(MediaPlayerWrapper mediaPlayer, MediaPlayerLytter lytter) {
+    mediaPlayer.setMediaPlayerLytter(lytter);
     if (lytter != null && App.prefs.getBoolean(NØGLEholdSkærmTændt, false)) {
       mediaPlayer.setWakeMode(App.instans, PowerManager.SCREEN_DIM_WAKE_LOCK);
     }
@@ -87,7 +81,7 @@ public class Afspiller {
    * Forudsætter DRData er initialiseret
    */
   public Afspiller() {
-    mediaPlayer = new MediaPlayer();
+    mediaPlayer = new MediaPlayerWrapper(true);
 
     sætMediaPlayerLytter(mediaPlayer, this.lytter);
     // Indlæs gamle værdier så vi har nogle...
@@ -191,7 +185,6 @@ public class Afspiller {
           Log.d("mediaPlayer.setDataSource() slut");
           mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
           Log.d("mediaPlayer.setDataSource() slut  " + mpTils());
-          mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
           mediaPlayer.prepare();
           Log.d("mediaPlayer.prepare() slut  " + mpTils());
         } catch (Exception ex) {
@@ -200,7 +193,7 @@ public class Afspiller {
           //Log.kritiskFejlStille(ex);
           handler.post(new Runnable() {
             public void run() { // Stop afspilleren fra forgrundstråden. Jacob 14/11
-              lytter.onError(mediaPlayer, 42, 42); // kalder stopAfspilning(); og forsøger igen senere og melder fejl til bruger efter 10 forsøg
+              lytter.onError(null, 42, 42); // kalder stopAfspilning(); og forsøger igen senere og melder fejl til bruger efter 10 forsøg
             }
           });
         }
@@ -212,13 +205,15 @@ public class Afspiller {
     handler.removeCallbacks(startAfspilningIntern);
     // Da mediaPlayer.reset() erfaringsmæssigt kan hænge i dette tilfælde afregistrerer vi
     // alle lyttere og bruger en ny
-    final MediaPlayer gammelMediaPlayer = mediaPlayer;
+    final MediaPlayerWrapper gammelMediaPlayer = mediaPlayer;
     sætMediaPlayerLytter(gammelMediaPlayer, null); // afregistrér alle lyttere
     new Thread() {
       @Override
       public void run() {
         try {
-          gammelMediaPlayer.stop();
+          try { // Ignorér IllegalStateException, det er fordi den allerede er stoppet
+            gammelMediaPlayer.stop();
+          } catch (IllegalStateException e) {}
           Log.d("gammelMediaPlayer.release() start");
           gammelMediaPlayer.release();
           Log.d("gammelMediaPlayer.release() færdig");
@@ -228,7 +223,7 @@ public class Afspiller {
       }
     }.start();
 
-    mediaPlayer = new MediaPlayer();
+    mediaPlayer = new MediaPlayerWrapper(true);
     sætMediaPlayerLytter(mediaPlayer, this.lytter); // registrér lyttere på den nye instans
 
     afspillerstatus = Status.STOPPET;
@@ -294,10 +289,6 @@ public class Afspiller {
     return forbinderProcent;
   }
 
-  public MediaPlayer getMediaPlayer() {
-    return mediaPlayer;
-  }
-
   public Lydkilde getLydkilde() {
     return lydkilde;
   }
@@ -336,7 +327,7 @@ public class Afspiller {
   //
   //    TILBAGEKALD FRA MEDIAPLAYER
   //
-  class MediaPlayerLytter implements OnPreparedListener, OnSeekCompleteListener, OnCompletionListener, OnInfoListener, OnErrorListener, OnBufferingUpdateListener {
+  class MediaPlayerLytterImpl implements MediaPlayerLytter {
     public void onPrepared(MediaPlayer mp) {
       Log.d("onPrepared " + mpTils());
       afspillerstatus = Status.SPILLER; //No longer buffering
@@ -361,7 +352,7 @@ public class Afspiller {
         // mediaPlayer.reset();
         // Da mediaPlayer.reset() erfaringsmæssigt kan hænge i dette tilfælde afregistrerer vi
         // alle lyttere og bruger en ny
-        final MediaPlayer gammelMediaPlayer = mediaPlayer;
+        final MediaPlayerWrapper gammelMediaPlayer = mediaPlayer;
         sætMediaPlayerLytter(gammelMediaPlayer, null); // afregistrér alle lyttere
         new Thread() {
           public void run() {
@@ -373,7 +364,7 @@ public class Afspiller {
 
         if (lydkilde.erKanal()) {
           Log.d("Genstarter afspilning!");
-          mediaPlayer = new MediaPlayer();
+          mediaPlayer = new MediaPlayerWrapper(true);
           sætMediaPlayerLytter(mediaPlayer, this); // registrér lyttere på den nye instans
           startAfspilningIntern();
         } else {
@@ -382,13 +373,7 @@ public class Afspiller {
       }
     }
 
-    public boolean onInfo(MediaPlayer mp, int hvad, int extra) {
-      //Log.d("onInfo(" + MedieafspillerInfo.infokodeTilStreng(hvad) + "(" + hvad + ") " + extra);
-      Log.d("onInfo(" + hvad + ") " + extra + " " + mpTils());
-      return true;
-    }
-
-    public boolean onError(MediaPlayer mp, int hvad, int extra) {
+    public boolean onError(MediaPlayer mp_UBRUGT, int hvad, int extra) {
       //Log.d("onError(" + MedieafspillerInfo.fejlkodeTilStreng(hvad) + "(" + hvad + ") " + extra+ " onErrorTæller="+onErrorTæller);
       Log.d("onError(" + hvad + ") " + extra + " onErrorTæller=" + onErrorTæller);
 
