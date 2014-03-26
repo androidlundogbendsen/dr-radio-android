@@ -23,7 +23,7 @@ import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
-import dk.dr.radio.diverse.Hentning;
+import dk.dr.radio.data.HentedeUdsendelser;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
@@ -31,7 +31,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
   private ListView listView;
   private ArrayList<Udsendelse> liste = new ArrayList<Udsendelse>();
   protected View rod;
-  Hentning hentning = App.hentning;
+  HentedeUdsendelser hentedeUdsendelser = DRData.instans.hentedeUdsendelser;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
     aq.id(R.id.overskrift).typeface(App.skrift_gibson_fed).text("DOWNLOADEDE UDSENDELSER").getTextView();
 
 
-    hentning.observatører.add(this);
+    hentedeUdsendelser.observatører.add(this);
     run();
     udvikling_checkDrSkrifter(rod, this + " rod");
     return rod;
@@ -55,7 +55,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
 
   @Override
   public void onDestroyView() {
-    hentning.observatører.remove(this);
+    hentedeUdsendelser.observatører.remove(this);
     super.onDestroyView();
   }
 
@@ -63,7 +63,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
   @Override
   public void run() {
     liste.clear();
-    liste.addAll(hentning.getUdsendelser());
+    liste.addAll(hentedeUdsendelser.getUdsendelser());
     Collections.reverse(liste);
     adapter.notifyDataSetChanged();
   }
@@ -95,12 +95,12 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
         // TODO baggrundsindlæsning
         aq.id(R.id.startid).text("");
       } else {
-        Cursor c = hentning.getStatusCursor(udsendelse);
+        Cursor c = hentedeUdsendelser.getStatusCursor(udsendelse);
         if (c == null) {
           aq.id(R.id.titel_og_kunstner).text("Ikke tilgængelig");
         } else {
           int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-          String statustekst = Hentning.getStatustekst(c);
+          String statustekst = HentedeUdsendelser.getStatustekst(c);
           c.close();
 
           aq.id(R.id.titel_og_kunstner).text(DRJson.datoformat.format(udsendelse.startTid) + " - " + statustekst);
@@ -151,7 +151,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
   public void onClick(View v) {
     try {
       Udsendelse u = (Udsendelse) v.getTag();
-      hentning.annullér(u);
+      hentedeUdsendelser.annullér(u);
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }

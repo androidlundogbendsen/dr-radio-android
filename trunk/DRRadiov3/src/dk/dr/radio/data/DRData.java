@@ -42,7 +42,6 @@ public class DRData {
 
   public Grunddata grunddata;
   public Afspiller afspiller;
-//  public Kanal aktuelKanal;
 
   public HashMap<String, Udsendelse> udsendelseFraSlug = new HashMap<String, Udsendelse>();
   public HashMap<String, Programserie> programserieFraSlug = new HashMap<String, Programserie>();
@@ -50,6 +49,8 @@ public class DRData {
   public Rapportering rapportering = new Rapportering();
   public SenestLyttede senestLyttede = new SenestLyttede();
   public Favoritter favoritter = new Favoritter();
+  public HentedeUdsendelser hentedeUdsendelser= new HentedeUdsendelser();  // Understøttes ikke på Android 2.2
+
 
   /**
    * Til afprøvning
@@ -76,8 +77,8 @@ public class DRData {
         //Log.d(obj.toString(2));
         u.streams = DRJson.parsStreams(obj.getJSONArray(DRJson.Streams.name()));
         if (u.streams.size() == 0) Log.d("Ingen lydstreams");
-        if (u.streams.size() == 0 && u.kanHøres) throw new IllegalStateException();
-        if (u.streams.size() > 0 && !u.kanHøres) throw new IllegalStateException();
+        if (u.streams.size() == 0 && u.kanHøres) throw new IllegalStateException("u.streams.size() == 0 && u.kanHøres");
+        if (u.streams.size() > 0 && !u.kanHøres) throw new IllegalStateException("u.streams.size() > 0 && !u.kanHøres");
 
         try {
           u.playliste = DRJson.parsePlayliste(new JSONArray(main_hent(kanal.getPlaylisteUrl(u))));
