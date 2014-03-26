@@ -35,7 +35,6 @@ import android.widget.RemoteViews;
 import java.util.Arrays;
 
 import dk.dr.radio.afspilning.AfspillerStartStopReciever;
-import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.akt.Hovedaktivitet;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Kanal;
@@ -122,7 +121,7 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
     Kanal kanal = lydkilde.getKanal();
 
     //boolean live =  && status != Status.STOPPET;
-    if (lydkilde.erKanal()) {
+    if (lydkilde.erDirekte()) {
       remoteViews.setTextViewText(R.id.titel, kanal.navn + " Live");
       //  App.kortToast(" Live "  + k.navn);
     } else {

@@ -357,7 +357,7 @@ public class Afspiller {
           }
         }.start();
 
-        if (lydkilde.erKanal()) {
+        if (lydkilde.erDirekte()) {
           Log.d("Genstarter afspilning!");
           mediaPlayer = MediaPlayerWrapper.opret();
           sætMediaPlayerLytter(mediaPlayer, this); // registrér lyttere på den nye instans
@@ -413,6 +413,7 @@ public class Afspiller {
 
     public void onBufferingUpdate(MediaPlayer mp, int procent) {
       if (App.fejlsøgning) Log.d("Afspiller onBufferingUpdate : " + procent + " " + mpTils());
+      Log.d("Afspiller onBufferingUpdate : " + procent);
       if (procent < -100) procent = -1; // Ignorér vilde tal
 
       sendOnAfspilningForbinder(procent);

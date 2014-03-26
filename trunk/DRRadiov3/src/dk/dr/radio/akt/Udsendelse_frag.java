@@ -108,6 +108,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           if (json != null && !"null".equals(json)) try {
             JSONObject o = new JSONObject(json);
             udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
+            udsendelse.produktionsnummer = o.optString(DRJson.ProductionNumber.name());
             udsendelse.kanHøres = streamsErKlar();
             if (fragmentErSynligt && udsendelse.kanHøres && afspiller.getAfspillerstatus() == Status.STOPPET) {
               afspiller.setLydkilde(udsendelse);

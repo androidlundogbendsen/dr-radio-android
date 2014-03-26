@@ -65,7 +65,6 @@ import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Diverse;
 import dk.dr.radio.data.Grunddata;
-import dk.dr.radio.data.HentedeUdsendelser;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.v3.R;
 
@@ -78,7 +77,7 @@ public class App extends Application implements Runnable {
   public static App instans;
   public static SharedPreferences prefs;
   public static ConnectivityManager connectivityManager;
-  public static String versionName = "(ukendt)";
+  public static String versionsnavn = "(ukendt)";
   public static NotificationManager notificationManager;
   public static boolean fejlsøgning = false; // TODO - omdøb til fejlsøgning
   public static boolean udviklerEkstra = false; // Vis ekstra muligheder til udviklere og fejlfinding
@@ -120,9 +119,9 @@ public class App extends Application implements Runnable {
     String packageName = getPackageName();
     try {
       //noinspection ConstantConditions
-      App.versionName = getPackageManager().getPackageInfo(packageName, 0).versionName;
-      if (EMULATOR) App.versionName += " UDV";
-      App.versionName += "/" + Build.MODEL + " " + Build.PRODUCT;
+      App.versionsnavn = packageName+"/"+getPackageManager().getPackageInfo(packageName, 0).versionName;
+      if (EMULATOR) App.versionsnavn += " UDV";
+      Log.d("App.versionsnavn="+App.versionsnavn);
       Class.forName("android.os.AsyncTask"); // Fix for http://code.google.com/p/android/issues/detail?id=20915
     } catch (Exception e) {
       Log.rapporterFejl(e);
@@ -132,7 +131,6 @@ public class App extends Application implements Runnable {
 
 
     // Initialisering af Volley
-    String userAgent = packageName + "/" + App.versionName;
 
     HttpStack stack;
     if (Build.VERSION.SDK_INT >= 9) {
@@ -140,7 +138,7 @@ public class App extends Application implements Runnable {
     } else if (Build.VERSION.SDK_INT >= 8) {
       // Prior to Gingerbread, HttpUrlConnection was unreliable.
       // See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
-      stack = new HttpClientStack(AndroidHttpClient.newInstance(userAgent));
+      stack = new HttpClientStack(AndroidHttpClient.newInstance(App.versionsnavn));
     } else {
       stack = new HttpClientStack(new DefaultHttpClient()); // Android 2.1
     }

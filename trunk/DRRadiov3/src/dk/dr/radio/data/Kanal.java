@@ -70,7 +70,7 @@ public class Kanal extends Lydkilde {
   }
 
   @Override
-  public boolean erKanal() {
+  public boolean erDirekte() {
     return true;
   }
 
