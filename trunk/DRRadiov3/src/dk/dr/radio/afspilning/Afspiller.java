@@ -24,11 +24,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnBufferingUpdateListener;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnErrorListener;
-import android.media.MediaPlayer.OnPreparedListener;
-import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
 import android.os.Build;
@@ -81,7 +76,7 @@ public class Afspiller {
    * Forudsætter DRData er initialiseret
    */
   public Afspiller() {
-    mediaPlayer = new MediaPlayerWrapper(true);
+    mediaPlayer = MediaPlayerWrapper.opret();
 
     sætMediaPlayerLytter(mediaPlayer, this.lytter);
     // Indlæs gamle værdier så vi har nogle...
@@ -223,7 +218,7 @@ public class Afspiller {
       }
     }.start();
 
-    mediaPlayer = new MediaPlayerWrapper(true);
+    mediaPlayer = MediaPlayerWrapper.opret();
     sætMediaPlayerLytter(mediaPlayer, this.lytter); // registrér lyttere på den nye instans
 
     afspillerstatus = Status.STOPPET;
@@ -364,7 +359,7 @@ public class Afspiller {
 
         if (lydkilde.erKanal()) {
           Log.d("Genstarter afspilning!");
-          mediaPlayer = new MediaPlayerWrapper(true);
+          mediaPlayer = MediaPlayerWrapper.opret();
           sætMediaPlayerLytter(mediaPlayer, this); // registrér lyttere på den nye instans
           startAfspilningIntern();
         } else {
