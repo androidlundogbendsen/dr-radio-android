@@ -63,7 +63,7 @@ public class Kontakt_info_om_frag extends Basisfragment implements OnClickListen
 
     TextView version = (TextView) rod.findViewById(R.id.version);
     version.setTypeface(App.skrift_gibson);
-    version.setText(App.versionName);
+    version.setText(App.versionsnavn);
 
     rod.findViewById(R.id.kontakt).setOnClickListener(this);
     return rod;

@@ -79,7 +79,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     Kanal k = lydkilde.getKanal();
     if (k == null) return;
     Status status = DRData.instans.afspiller.getAfspillerstatus();
-    if (lydkilde.erKanal()) {
+    if (lydkilde.erDirekte()) {
       titel.setText(k.navn + " Live");
     } else {
       Udsendelse udsendelse = lydkilde.getUdsendelse();
@@ -120,7 +120,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
       // Ved klik på baggrunden skal kanalforside eller aktuel udsendelsesside vises
       Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
       FragmentManager fm = getFragmentManager();
-      if (lydkilde.erKanal()) {
+      if (lydkilde.erDirekte()) {
         // Fjern backstak - så vi starter forfra i 'roden'
         fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         // Vis kanaler (den aktuelle getKanal vælges automatisk af Kanaler_frag)

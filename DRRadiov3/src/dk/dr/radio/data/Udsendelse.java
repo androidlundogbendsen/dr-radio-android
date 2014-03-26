@@ -23,6 +23,7 @@ public class Udsendelse extends Lydkilde {
 
   public transient ArrayList<Playlisteelement> playliste;
   public boolean kanHøres; // om der er nogle streams eller ej
+  public String produktionsnummer;
 
   public Udsendelse(String s) {
     titel = s;
@@ -64,7 +65,7 @@ public class Udsendelse extends Lydkilde {
   }
 
   @Override
-  public boolean erKanal() {
+  public boolean erDirekte() {
     return false;
   }
 

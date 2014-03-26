@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -483,10 +484,12 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       tilføj(R.layout.venstremenu_elem_overskrift, new Runnable() {
         @Override
         public void run() {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://javabog.dk/privat/DRRadiov3.apk")));
+          startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://javabog.dk/privat/DRRadiov3.apk")));
         }
       });
-      aq.id(R.id.tekst).text("Hent nyeste udvikler-version.\nNuværende version:\n"+App.versionName);
+      aq.id(R.id.tekst).text("Hent nyeste udvikler-version.\nNuværende version:\n" + App.versionsnavn
+          + "\n" + App.res.getString(R.string.akamaistatistik_device) + "/" + Build.MODEL + " " + Build.PRODUCT);
+
       if (gib) aq.typeface(App.skrift_gibson).textSize(12);
 
     }
