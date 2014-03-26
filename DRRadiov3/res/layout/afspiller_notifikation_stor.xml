@@ -41,6 +41,7 @@
             android:layout_height="44dp"
             android:layout_gravity="right"
             android:scaleType="center"
+            android:layout_marginLeft="3dp"
             android:src="@drawable/afspiller_spil"/>
         <LinearLayout
 
