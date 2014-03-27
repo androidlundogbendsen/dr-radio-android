@@ -80,7 +80,8 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
       Log.d(this + " psss = " + pss);
       for (String programserieSlug : pss) {
         Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
-        liste.add(programserie);
+        if (programserie!=null) liste.add(programserie);
+        else Log.d("programserieSlug gav ingen værdi: "+programserieSlug);
 /* De enkelte prgramudsendelser er fjernet fra favoritlisten
 
         int antalNye = favoritter.getAntalNyeUdsendelser(programserieSlug);
@@ -106,28 +107,29 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
+      try {
+        if (v == null) v = getLayoutInflater(null).inflate(R.layout.elem_tid_titel_kunstner, parent, false);
+        AQuery aq = new AQuery(v);
 
-      if (v == null) v = getLayoutInflater(null).inflate(R.layout.elem_tid_titel_kunstner, parent, false);
-      AQuery aq = new AQuery(v);
-
-      Object obj = liste.get(position);
-      if (obj instanceof Programserie) {
-        Programserie ps = (Programserie) obj;
-        aq.id(R.id.startid).text(ps.titel).typeface(App.skrift_gibson_fed).textColor(Color.BLACK);
-          int n = favoritter.getAntalNyeUdsendelser(ps.slug);
-          String txt = (n == 1 ? n + " ny udsendelse" : n + " nye udsendelser");
-          aq.id(R.id.titel_og_kunstner).text(txt).typeface(App.skrift_gibson);
-        aq.id(R.id.stiplet_linje).background(position==0?R.drawable.linje:R.drawable.stiplet_linje);
-      } else {
-        Udsendelse udsendelse = (Udsendelse) obj;
-        aq.id(R.id.startid).text(DRJson.datoformat.format(udsendelse.startTid)).typeface(App.skrift_gibson);
-        aq.id(R.id.titel_og_kunstner).text(udsendelse.titel).typeface(App.skrift_gibson);
-        aq.id(R.id.stiplet_linje).background(R.drawable.stiplet_linje);
-      }
-      v.setBackgroundResource(0);
+        Object obj = liste.get(position);
+        if (obj instanceof Programserie) {
+          Programserie ps = (Programserie) obj;
+          aq.id(R.id.startid).text(ps.titel).typeface(App.skrift_gibson_fed).textColor(Color.BLACK);
+            int n = favoritter.getAntalNyeUdsendelser(ps.slug);
+            String txt = (n == 1 ? n + " ny udsendelse" : n + " nye udsendelser");
+            aq.id(R.id.titel_og_kunstner).text(txt).typeface(App.skrift_gibson);
+          aq.id(R.id.stiplet_linje).background(position==0?R.drawable.linje:R.drawable.stiplet_linje);
+        } else {
+          Udsendelse udsendelse = (Udsendelse) obj;
+          aq.id(R.id.startid).text(DRJson.datoformat.format(udsendelse.startTid)).typeface(App.skrift_gibson);
+          aq.id(R.id.titel_og_kunstner).text(udsendelse.titel).typeface(App.skrift_gibson);
+          aq.id(R.id.stiplet_linje).background(R.drawable.stiplet_linje);
+        }
+        v.setBackgroundResource(0);
 
 
-      udvikling_checkDrSkrifter(v, this.getClass() + " ");
+        udvikling_checkDrSkrifter(v, this.getClass() + " ");
+      } catch (Exception e) { Log.rapporterFejl(e); }
 
       return v;
     }

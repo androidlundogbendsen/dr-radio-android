@@ -86,7 +86,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
       @Override
       public void fikSvar(String json, boolean fraCache) throws Exception {
         Log.d("fikSvar(" + fraCache + " " + url);
-        if (json != null && !"null".equals(json)) try {
+        if (json != null && !"null".equals(json)) {
           JSONObject data = new JSONObject(json);
           if (offset == 0) {
             programserie = DRJson.parsProgramserie(data);
@@ -100,8 +100,6 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
           }
           adapter.notifyDataSetChanged();
           return;
-        } catch (Exception e) {
-          Log.e(e);
         }
         new AQuery(rod).id(R.id.tom).text("Siden kunne ikke vises");
       }
