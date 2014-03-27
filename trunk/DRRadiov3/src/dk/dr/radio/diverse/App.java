@@ -44,8 +44,11 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
@@ -94,6 +97,7 @@ public class App extends Application implements Runnable {
   public static long opstartstidspunkt;
 
 
+  @SuppressLint("NewApi")
   @Override
   public void onCreate() {
     opstartstidspunkt = System.currentTimeMillis();
@@ -131,41 +135,21 @@ public class App extends Application implements Runnable {
 
 
     // Initialisering af Volley
+    volleyRequestQueue = Volley.newRequestQueue(this);
 
-    HttpStack stack;
-    if (Build.VERSION.SDK_INT >= 9) {
-      stack = new HurlStack();
-    } else if (Build.VERSION.SDK_INT >= 8) {
-      // Prior to Gingerbread, HttpUrlConnection was unreliable.
-      // See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
-      stack = new HttpClientStack(AndroidHttpClient.newInstance(App.versionsnavn));
-    } else {
-      stack = new HttpClientStack(new DefaultHttpClient()); // Android 2.1
-    }
-    /*
-    File cacheDir = new File(getCacheDir(), "volley");
+    // Prior to Gingerbread, HttpUrlConnection was unreliable.
+    // See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
+    HttpStack stack =
+          Build.VERSION.SDK_INT >= 9 ? new HurlStack()
+        : Build.VERSION.SDK_INT >= 8 ? new HttpClientStack(AndroidHttpClient.newInstance(App.versionsnavn))
+        : new HttpClientStack(new DefaultHttpClient()); // Android 2.1
 
-    Network network = new BasicNetwork(stack) {
-      @Override
-      public NetworkResponse performRequest(Request<?> request) throws VolleyError {
-        try {
-          return super.performRequest(request);
-        } catch (NoConnectionError e) {
-          Cache.Entry cacheEntry = request.getCacheEntry();
-          if(cacheEntry != null && cacheEntry.data != null){
-            Log.d("VVVVVVVVVVVVVV cacher "+request.getUrl());
-            return new NetworkResponse(HttpStatus.SC_NOT_MODIFIED, request.getCacheEntry().data, new HashMap<String, String>(), true);
-          }
-          else throw e;
-        }
-      }
-    };
-    RequestQueue queue = new RequestQueue(new DiskBasedCache(cacheDir), network);
-    queue.start();
-    volleyRequestQueue = queue;
-    */
-    //volleyRequestQueue = Volley.newRequestQueue(this);
-    volleyRequestQueue = Volley.newRequestQueue(this, stack);
+    // Vi bruger vores egen DrVolleyDiskBasedCache, da den indbyggede i Volley
+    // har en opstartstid på flere sekunder
+    File cacheDir = new File(getCacheDir(), "volley4");
+    Network network = new BasicNetwork(stack);
+    volleyRequestQueue = new RequestQueue(new DrVolleyDiskBasedCache(cacheDir), network);
+    volleyRequestQueue.start();
 
     try {
       DRData.instans = new DRData();
@@ -191,7 +175,7 @@ public class App extends Application implements Runnable {
       //langToast("xxxx "+App.fejlsøgning);
 
       if (erOnline()) {
-        App.forgrundstråd.postDelayed(this, 5000); // Initialisér onlinedata
+        App.forgrundstråd.postDelayed(this, 100); // Initialisér onlinedata
       } else {
         netværk.observatører.add(this); // Vent på vi kommer online og lav så et tjek
       }
@@ -248,14 +232,10 @@ public class App extends Application implements Runnable {
     boolean færdig = true;
     // Tidligere hentSupplerendeDataBg
 
-    if (DRData.instans.grunddata.kanalFraSlug.size() < DRData.instans.grunddata.kanaler.size()) {
-      færdig = false;
-      Log.d("ONLINEINITIALISERING"
-          + " kanalFraSlug.size()=" + DRData.instans.grunddata.kanalFraSlug.size()
-          + " kanaler.size()=" + DRData.instans.grunddata.kanaler.size());
-
+    { // Tjek at alle kanaler har deres streamsurler
       for (final Kanal k : DRData.instans.grunddata.kanaler) {
         if (k.streams != null) continue;
+//        Log.d("run()1 " + (System.currentTimeMillis() - opstartstidspunkt) + " ms");
         Request<?> req = new DrVolleyStringRequest(k.getStreamsUrl(), new DrVolleyResonseListener() {
           public String cachet;
 
@@ -272,7 +252,9 @@ public class App extends Application implements Runnable {
             return Priority.LOW;
           }
         };
+//        Log.d("run()2 " + (System.currentTimeMillis() - opstartstidspunkt) + " ms");
         App.volleyRequestQueue.add(req);
+//        Log.d("run()3 " + (System.currentTimeMillis() - opstartstidspunkt) + " ms");
       }
     }
 
