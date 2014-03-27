@@ -170,20 +170,24 @@ public class Afspiller {
                     switch (focusChange) {
                         case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) :
                             // Lower the volume while ducking.
+                            Log.d("JPER duck");
                             am.setStreamVolume(AudioManager.STREAM_MUSIC, 1, AudioManager.FLAG_SHOW_UI);
                             break;
 
                         case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) :
+                            Log.d("JPER pause");
                             pauseAfspilning();
                             break;
 
                         case (AudioManager.AUDIOFOCUS_LOSS) :
+                            Log.d("JPER stop");
                             stopAfspilning();
                             break;
 
                         case (AudioManager.AUDIOFOCUS_GAIN) :
+                            Log.d("JPER Gain");
                             // Return the volume to normal and resume if paused.
-                            am.setStreamVolume(AudioManager.STREAM_MUSIC, 1 * max / 5, AudioManager.FLAG_SHOW_UI);
+                            am.setStreamVolume(AudioManager.STREAM_MUSIC, 5, AudioManager.FLAG_SHOW_UI);
                             startAfspilningIntern();
                             break;
 
