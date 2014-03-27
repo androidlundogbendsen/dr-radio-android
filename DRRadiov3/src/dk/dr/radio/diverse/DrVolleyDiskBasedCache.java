@@ -20,6 +20,7 @@ import android.os.SystemClock;
 
 import com.android.volley.Cache;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.DiskBasedCache;
 
 import java.io.EOFException;
 import java.io.File;
@@ -34,17 +35,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
- * Cache implementation that caches files directly onto the hard disk in the specified
- * directory. The default disk usage size is 5MB, but is configurable.
+ * Cache-implementering, der cacher filerne direkte på harddisken.
+ * I modsætning til Volleys standardimplementation har denne her en meget lav opstartstid
  */
 public class DrVolleyDiskBasedCache implements Cache {
+
+    /** Tidsstempel der kan bruges til at afgøre hvilke filer der faktisk er brugt efter denne opstart */
+    private final long TIDSSTEMPEL_VED_OPSTART;
 
     /** Map of the Key, CacheHeader pairs */
     private final Map<String, CacheHeader> mEntries =
             new LinkedHashMap<String, CacheHeader>(16, .75f, true);
-
     /** Total amount of space currently used by the cache in bytes. */
     private long mTotalSize = 0;
 
@@ -54,8 +58,8 @@ public class DrVolleyDiskBasedCache implements Cache {
     /** The maximum size of the cache in bytes. */
     private final int mMaxCacheSizeInBytes;
 
-    /** Default maximum disk usage in bytes. */
-    private static final int DEFAULT_DISK_USAGE_BYTES = 5 * 1024 * 1024;
+    /** Default maximum disk usage in bytes. 1MB cache burde være rigeligt */
+    private static final int DEFAULT_DISK_USAGE_BYTES = 1 * 1024 * 1024;
 
     /** High water mark percentage for the cache */
     private static final float HYSTERESIS_FACTOR = 0.9f;
@@ -71,6 +75,8 @@ public class DrVolleyDiskBasedCache implements Cache {
     public DrVolleyDiskBasedCache(File rootDirectory, int maxCacheSizeInBytes) {
         mRootDirectory = rootDirectory;
         mMaxCacheSizeInBytes = maxCacheSizeInBytes;
+        //mRootDirectory.mkdirs();
+        TIDSSTEMPEL_VED_OPSTART = System.currentTimeMillis();
     }
 
     /**
@@ -104,17 +110,28 @@ public class DrVolleyDiskBasedCache implements Cache {
     @Override
     public synchronized Entry get(String key) {
         CacheHeader entry = mEntries.get(key);
-        // if the entry does not exist, return.
-        if (entry == null) {
-            return null;
-        }
-
         File file = getFileForKey(key);
+        if (entry == null && !file.exists()) {
+            // if the entry does not exist, return.
+          Log.d("DrVolleyDiskBasedCache miss for "+key);
+            return null;
+              }
+
+        boolean  ny = entry==null;
         CountingInputStream cis = null;
         try {
             cis = new CountingInputStream(new FileInputStream(file));
-            CacheHeader.readHeader(cis); // eat header
+            CacheHeader nyEntry = CacheHeader.readHeader(cis); // eat header
             byte[] data = streamToBytes(cis, (int) (file.length() - cis.bytesRead));
+            if (ny) {
+              Log.d("DrVolleyDiskBasedCache fil0-hit for "+key);
+              entry = nyEntry;
+              entry.size = file.length();
+              putEntry(entry.key, entry);
+              file.setLastModified(System.currentTimeMillis()); // Opdatér tidsstempel så vi kan se den er blevet brugt
+            } else {
+              Log.d("DrVolleyDiskBasedCache fil1-hit for "+key);
+            }
             return entry.toCacheEntry(data);
         } catch (IOException e) {
             VolleyLog.d("%s: %s", file.getAbsolutePath(), e.toString());
@@ -143,7 +160,7 @@ public class DrVolleyDiskBasedCache implements Cache {
             }
             return;
         }
-
+/*
         File[] files = mRootDirectory.listFiles();
         if (files == null) {
             return;
@@ -158,15 +175,16 @@ public class DrVolleyDiskBasedCache implements Cache {
             } catch (IOException e) {
                 if (file != null) {
                    file.delete();
-                }
+        }
             } finally {
                 try {
                     if (fis != null) {
                         fis.close();
-                    }
+    }
                 } catch (IOException ignored) { }
             }
         }
+        */
     }
 
     /**
@@ -202,7 +220,7 @@ public class DrVolleyDiskBasedCache implements Cache {
             fos.close();
             putEntry(key, e);
             return;
-        } catch (IOException e) {
+        } catch (IOException e) { Log.e(e);
         }
         boolean deleted = file.delete();
         if (!deleted) {
@@ -223,16 +241,25 @@ public class DrVolleyDiskBasedCache implements Cache {
         }
     }
 
+    private static final String NORMALT_PRÆFIX = "http://www.dr.dk/tjenester/mu-apps/";
+    private static final Pattern ULOVLIGE_TEGN_I_FILNAVN = Pattern.compile("[^a-zA-Z0-9_.-]");
     /**
      * Creates a pseudo-unique filename for the specified cache key.
      * @param key The key to generate a file name for.
      * @return A pseudo-unique filename.
      */
     private String getFilenameForKey(String key) {
+      if (key.startsWith(NORMALT_PRÆFIX)) key = key.substring(NORMALT_PRÆFIX.length());
+      //key = key.replace('?', '_').replace('/', '_').replace('&', '_'); // f.eks.
+      // sikrere (og hurtigere?) er
+      key = ULOVLIGE_TEGN_I_FILNAVN.matcher(key).replaceAll("_");
+      return key;
+      /*
         int firstHalfLength = key.length() / 2;
         String localFilename = String.valueOf(key.substring(0, firstHalfLength).hashCode());
         localFilename += String.valueOf(key.substring(firstHalfLength).hashCode());
         return localFilename;
+        */
     }
 
     /**
