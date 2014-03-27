@@ -9,6 +9,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 
+import java.util.Date;
+
 /**
  * Created by j on 13-03-14.
  */
@@ -76,7 +78,7 @@ public class DrVolleyStringRequest extends StringRequest {
     if (servertid > 0) {
       long serverkorrektionTilKlienttidMs2 = servertid - System.currentTimeMillis();
       if (Math.abs(serverkorrektionTilKlienttidMs - serverkorrektionTilKlienttidMs2) > 30000) {
-        Log.d("SERVERTID korrigerer tid - serverkorrektionTilKlienttidMs=" + serverkorrektionTilKlienttidMs2);
+        Log.d("SERVERTID korrigerer tid - serverkorrektionTilKlienttidMs=" + serverkorrektionTilKlienttidMs2+" klokken på serveren er "+new Date(servertid));
         serverkorrektionTilKlienttidMs = serverkorrektionTilKlienttidMs2;
         new Exception().printStackTrace();
       }

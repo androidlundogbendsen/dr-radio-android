@@ -91,16 +91,13 @@ public class Favoritter {
           @Override
           public void fikSvar(String json, boolean fraCache) throws Exception {
             Log.d("favoritter fikSvar(" + fraCache + " " + url);
-            if (json != null && !"null".equals(json)) try {
+            if (json != null && !"null".equals(json)) {
               JSONObject data = new JSONObject(json);
               Programserie programserie = DRJson.parsProgramserie(data);
               programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
               DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
-              if (!fraCache) beregnAntalNyeUdsendelser();
-            } catch (Exception ex) {
-              Log.d("Favoritter: Parsefejl: " + ex + " for json=" + json);
-              ex.printStackTrace();
             }
+            if (!fraCache) beregnAntalNyeUdsendelser();
           }
         }) {
           public Priority getPriority() {
@@ -128,7 +125,7 @@ public class Favoritter {
         }
         antalNyeIAlt += nye;
         Log.d("Favoritter: "+programserie+" har "+nye+", antalNyeIAlt=" +antalNyeIAlt);
-      } else return; // Mangler info - vent med at opdatere antalNyeUdsendelser
+      }
     }
     if (antalNyeUdsendelser != antalNyeIAlt) {
       Log.d("Favoritter: Ny favoritTilStartnummer="+favoritTilStartnummer);
