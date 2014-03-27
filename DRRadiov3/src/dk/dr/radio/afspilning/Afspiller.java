@@ -134,6 +134,7 @@ public class Afspiller {
       }
 
       AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
+      if (Build.VERSION.SDK_INT>=8) {
         // Request audio focus for playback
      int result = audioManager.requestAudioFocus(focusChangeListener,
         // Use the music stream.
@@ -144,6 +145,9 @@ public class Afspiller {
      if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
         startAfspilningIntern();
      }
+      } else {
+        startAfspilningIntern();
+      }
 
 
       // Skru op til 1/5 styrke hvis volumen er lavere end det
