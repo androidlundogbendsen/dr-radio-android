@@ -43,6 +43,8 @@ import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.Opkaldshaandtering;
 
 
+import android.media.AudioManager.OnAudioFocusChangeListener;
+import android.media.RemoteControlClient;
 /**
  * @author j
  */
@@ -130,8 +132,20 @@ public class Afspiller {
       if (App.prefs.getBoolean("wifilås", true) && wifilock != null) {
         wifilock.acquire();
       }
-      startAfspilningIntern();
+
       AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
+        // Request audio focus for playback
+        int result = audioManager.requestAudioFocus(focusChangeListener,
+                // Use the music stream.
+                AudioManager.STREAM_MUSIC,
+                // Request permanent focus.
+                AudioManager.AUDIOFOCUS_GAIN);
+
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            startAfspilningIntern();
+        }
+
+
       // Skru op til 1/5 styrke hvis volumen er lavere end det
       int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
       int nu = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -141,6 +155,42 @@ public class Afspiller {
 
     } else Log.d(" forkert status=" + afspillerstatus);
   }
+
+
+    /**
+     *  Responding to the loss of audio focus
+     */
+    private OnAudioFocusChangeListener focusChangeListener =
+            new OnAudioFocusChangeListener() {
+
+                public void onAudioFocusChange(int focusChange) {
+                    AudioManager am = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
+                    int max = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+
+                    switch (focusChange) {
+                        case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) :
+                            // Lower the volume while ducking.
+                            am.setStreamVolume(AudioManager.STREAM_MUSIC, 1, AudioManager.FLAG_SHOW_UI);
+                            break;
+
+                        case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) :
+                            pauseAfspilning();
+                            break;
+
+                        case (AudioManager.AUDIOFOCUS_LOSS) :
+                            stopAfspilning();
+                            break;
+
+                        case (AudioManager.AUDIOFOCUS_GAIN) :
+                            // Return the volume to normal and resume if paused.
+                            am.setStreamVolume(AudioManager.STREAM_MUSIC, 1 * max / 5, AudioManager.FLAG_SHOW_UI);
+                            startAfspilningIntern();
+                            break;
+
+                        default: break;
+                    }
+                }
+            };
 
   long setDataSourceTid = 0;
   boolean setDataSourceLyd = false;
