@@ -18,6 +18,7 @@
 
 package dk.dr.radio.afspilning;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -165,8 +166,9 @@ public class Afspiller {
     /**
      *  Responding to the loss of audio focus
      */
+    @SuppressLint("NewApi")
     private OnAudioFocusChangeListener opretFocusChangeListener() {
-       return     new OnAudioFocusChangeListener() {
+      OnAudioFocusChangeListener l = new OnAudioFocusChangeListener() {
 
                 @TargetApi(Build.VERSION_CODES.FROYO)
                 public void onAudioFocusChange(int focusChange) {
@@ -209,6 +211,7 @@ public class Afspiller {
                     }
                 }
             };
+      return l;
     }
 
   long setDataSourceTid = 0;
