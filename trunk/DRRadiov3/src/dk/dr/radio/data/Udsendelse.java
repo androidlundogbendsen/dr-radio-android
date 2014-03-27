@@ -24,6 +24,7 @@ public class Udsendelse extends Lydkilde {
   public transient ArrayList<Playlisteelement> playliste;
   public boolean kanHøres; // om der er nogle streams eller ej
   public String produktionsnummer;
+  public int startposition;// hvis der allerede er lyttet til denne lydkilde så notér det her så afspilning kan fortsætte herfra
 
   public Udsendelse(String s) {
     titel = s;

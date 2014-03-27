@@ -45,14 +45,14 @@ public class Opkaldshaandtering extends PhoneStateListener {
         Log.d("Offhook state detected");
         if (afspilningsstatus != Status.STOPPET) {
           venterPåKaldetAfsluttes = true;
-          afspiller.stopAfspilning();
+          afspiller.pauseAfspilning();
         }
         break;
       case TelephonyManager.CALL_STATE_RINGING:
         Log.d("Ringing detected");
         if (afspilningsstatus != Status.STOPPET) {
           venterPåKaldetAfsluttes = true;
-          afspiller.stopAfspilning();
+          afspiller.pauseAfspilning();
         }
         break;
       case TelephonyManager.CALL_STATE_IDLE:
