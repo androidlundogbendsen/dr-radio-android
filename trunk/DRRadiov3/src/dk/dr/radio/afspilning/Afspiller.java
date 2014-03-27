@@ -163,12 +163,15 @@ public class Afspiller {
   }
 
 
+    // Da OnAudioFocusChangeListener ikke findes i API<8 kan vi ikke bruge klassen her
+    Object onAudioFocusChangeListener;
     /**
      *  Responding to the loss of audio focus
      */
     @SuppressLint("NewApi")
     private OnAudioFocusChangeListener opretFocusChangeListener() {
-      OnAudioFocusChangeListener l = new OnAudioFocusChangeListener() {
+      if (onAudioFocusChangeListener==null)
+        onAudioFocusChangeListener = new OnAudioFocusChangeListener() {
 
                 @TargetApi(Build.VERSION_CODES.FROYO)
                 public void onAudioFocusChange(int focusChange) {
@@ -211,7 +214,7 @@ public class Afspiller {
                     }
                 }
             };
-      return l;
+      return (OnAudioFocusChangeListener) onAudioFocusChangeListener;
     }
 
   long setDataSourceTid = 0;
