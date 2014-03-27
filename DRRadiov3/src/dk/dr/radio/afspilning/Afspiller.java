@@ -324,16 +324,19 @@ public class Afspiller {
       return;
     }
     if (App.fejlsøgning) App.kortToast("setLydkilde:\n" + lydkilde);
-    this.lydkilde = lydkilde;
+
 
 
     if ((afspillerstatus == Status.SPILLER) || (afspillerstatus == Status.FORBINDER)) {
-      stopAfspilning();
+      stopAfspilning(); // gemmer lydkildens position
+      this.lydkilde = lydkilde;
       try {
-        startAfspilning();
+        startAfspilning(); // sætter afspilleren til den nye lydkildes position
       } catch (Exception e) {
-        e.printStackTrace();
+        Log.rapporterFejl(e); // TODO fjern efter et par måneder i drift
       }
+    } else {
+      this.lydkilde = lydkilde;
     }
     opdaterObservatører();
   }
