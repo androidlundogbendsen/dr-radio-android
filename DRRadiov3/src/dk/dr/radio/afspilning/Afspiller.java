@@ -18,6 +18,7 @@
 
 package dk.dr.radio.afspilning;
 
+import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -136,7 +137,7 @@ public class Afspiller {
       AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
       if (Build.VERSION.SDK_INT>=8) {
         // Request audio focus for playback
-     int result = audioManager.requestAudioFocus(focusChangeListener,
+     int result = audioManager.requestAudioFocus(opretFocusChangeListener(),
         // Use the music stream.
         AudioManager.STREAM_MUSIC,
         // Request permanent focus.
@@ -164,9 +165,10 @@ public class Afspiller {
     /**
      *  Responding to the loss of audio focus
      */
-    private OnAudioFocusChangeListener focusChangeListener =
-            new OnAudioFocusChangeListener() {
+    private OnAudioFocusChangeListener opretFocusChangeListener() {
+       return     new OnAudioFocusChangeListener() {
 
+                @TargetApi(Build.VERSION_CODES.FROYO)
                 public void onAudioFocusChange(int focusChange) {
                     AudioManager am = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
 
@@ -186,7 +188,7 @@ public class Afspiller {
                         case (AudioManager.AUDIOFOCUS_LOSS) :
                             Log.d("JPER stop");
                             stopAfspilning();
-                            am.abandonAudioFocus(focusChangeListener);
+                            am.abandonAudioFocus(this);
                             break;
 
                         case (AudioManager.AUDIOFOCUS_GAIN) :
@@ -207,6 +209,7 @@ public class Afspiller {
                     }
                 }
             };
+    }
 
   long setDataSourceTid = 0;
   boolean setDataSourceLyd = false;
