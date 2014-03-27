@@ -31,6 +31,7 @@ public class Favoritter {
     String str = App.prefs.getString(PREF_NØGLE, "");
     Log.d("Favoritter: læst " + str);
     favoritTilStartnummer = strengTilMap(str);
+    if (favoritTilStartnummer.isEmpty()) antalNyeUdsendelser=0;
   }
 
 

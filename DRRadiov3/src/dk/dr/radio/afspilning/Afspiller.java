@@ -59,8 +59,6 @@ public class Afspiller {
   private String lydUrl;
   private int forbinderProcent;
   private Lydkilde lydkilde;
-  private int duration;
-  private int currentPosition;
 
   private static void sætMediaPlayerLytter(MediaPlayerWrapper mediaPlayer, MediaPlayerLytter lytter) {
     mediaPlayer.setMediaPlayerLytter(lytter);
@@ -196,7 +194,7 @@ public class Afspiller {
     }.start();
   }
 
-  synchronized public void pauseAfspilning() {
+  synchronized private void pauseAfspilningIntern() {
     handler.removeCallbacks(startAfspilningIntern);
     // Da mediaPlayer.reset() erfaringsmæssigt kan hænge i dette tilfælde afregistrerer vi
     // alle lyttere og bruger en ny
@@ -223,7 +221,15 @@ public class Afspiller {
 
     afspillerstatus = Status.STOPPET;
     opdaterObservatører();
+  }
 
+  synchronized public void pauseAfspilning() {
+    if (!lydkilde.erDirekte()) try { // Gem position - og spol herhen næste gang udsendelsen spiller
+      lydkilde.getUdsendelse().startposition = mediaPlayer.getCurrentPosition();
+    } catch (Exception e) {
+      Log.rapporterFejl(e); // TODO fjern hvis der aldrig kommer fejl her
+    }
+    pauseAfspilningIntern();
     if (wifilock != null) wifilock.release();
     // Informer evt aktivitet der lytter
   }
@@ -293,7 +299,20 @@ public class Afspiller {
   Runnable startAfspilningIntern = new Runnable() {
     public void run() {
       try {
-        startAfspilningIntern();
+        if (App.netværk.observatører.contains(startAfspilningIntern)) {
+          if (!App.erOnline()) Log.e(new IllegalStateException("Burde være online her??!"));
+          long dt = System.currentTimeMillis() - onErrorTællerNultid;
+          Log.d("Vi kom online igen efter "+dt+" ms");
+          if (dt<5*60*1000) {
+            Log.d("Genstart afspilning");
+            startAfspilningIntern(); // Genstart
+          } else {
+            Log.d("Brugeren har nok glemt os, afslut");
+            stopAfspilning();
+          }
+          return;
+        }
+          startAfspilningIntern();
       } catch (Exception e) {
         Log.rapporterFejl(e);
       }
@@ -332,6 +351,11 @@ public class Afspiller {
       new Thread() {
         public void run() {
           Log.d("mediaPlayer.start() " + mpTils());
+          int startposition = lydkilde.getUdsendelse().startposition;
+          if (startposition>0) {
+            Log.d("mediaPlayer genoptager afspilning ved " + startposition);
+            mediaPlayer.seekTo(startposition);
+          }
           mediaPlayer.start();
           Log.d("mediaPlayer.start() slut " + mpTils());
         }
@@ -363,6 +387,7 @@ public class Afspiller {
           sætMediaPlayerLytter(mediaPlayer, this); // registrér lyttere på den nye instans
           startAfspilningIntern();
         } else {
+          lydkilde.getUdsendelse().startposition = 0;
           stopAfspilning();
         }
       }
@@ -391,17 +416,24 @@ public class Afspiller {
         long dt = System.currentTimeMillis() - onErrorTællerNultid;
 
         if (onErrorTæller++ < (App.fejlsøgning ? 2 : 10) || (dt / onErrorTæller > 20000)) {
-          mediaPlayer.stop();
-          mediaPlayer.reset();
+          pauseAfspilningIntern();
+          //mediaPlayer.stop();
+          //mediaPlayer.reset();
 
-          // Vi venter længere og længere tid her
-          int n = onErrorTæller;
-          if (n > 11) n = 11;
-          int ventetid = 10 + 5 * (1 << n); // fra n=0:10 msek til n=10:5 sek   til max n=11:10 sek
-          Log.d("Ventetid før vi prøver igen: " + ventetid + "  n=" + n + " " + onErrorTæller);
-          handler.postDelayed(startAfspilningIntern, ventetid);
+          if (App.erOnline()) {
+            // Vi venter længere og længere tid her
+            int n = onErrorTæller;
+            if (n > 11) n = 11;
+            int ventetid = 10 + 5 * (1 << n); // fra n=0:10 msek til n=10:5 sek   til max n=11:10 sek
+            Log.d("Ventetid før vi prøver igen: " + ventetid + "  n=" + n + " " + onErrorTæller);
+            handler.postDelayed(startAfspilningIntern, ventetid);
+          } else {
+            Log.d("Vent på at vi kommer online igen");
+            onErrorTællerNultid = System.currentTimeMillis();
+            App.netværk.observatører.add(startAfspilningIntern);
+          }
         } else {
-          stopAfspilning(); // Vi giver op efter 10. forsøg
+          pauseAfspilning(); // Vi giver op efter 10. forsøg
           App.langToast("Beklager, kan ikke spille radio");
           App.langToast("Prøv at vælge et andet format i indstillingerne");
         }

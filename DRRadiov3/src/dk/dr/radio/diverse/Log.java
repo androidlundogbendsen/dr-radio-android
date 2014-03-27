@@ -86,6 +86,7 @@ public class Log {
     }
     android.util.Log.e(TAG, tekst, e);
     //e.printStackTrace();
+    logappend(tekst);
     logappend(android.util.Log.getStackTraceString(e));
   }
 
