@@ -135,15 +135,15 @@ public class Afspiller {
 
       AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
         // Request audio focus for playback
-        int result = audioManager.requestAudioFocus(focusChangeListener,
-                // Use the music stream.
-                AudioManager.STREAM_MUSIC,
-                // Request permanent focus.
-                AudioManager.AUDIOFOCUS_GAIN);
+     int result = audioManager.requestAudioFocus(focusChangeListener,
+        // Use the music stream.
+        AudioManager.STREAM_MUSIC,
+        // Request permanent focus.
+        AudioManager.AUDIOFOCUS_GAIN);
 
-        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            startAfspilningIntern();
-        }
+     if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+        startAfspilningIntern();
+     }
 
 
       // Skru op til 1/5 styrke hvis volumen er lavere end det
@@ -165,7 +165,7 @@ public class Afspiller {
 
                 public void onAudioFocusChange(int focusChange) {
                     AudioManager am = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
-                    int max = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+
 
                     switch (focusChange) {
                         case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) :
@@ -182,13 +182,21 @@ public class Afspiller {
                         case (AudioManager.AUDIOFOCUS_LOSS) :
                             Log.d("JPER stop");
                             stopAfspilning();
+                            am.abandonAudioFocus(focusChangeListener);
                             break;
 
                         case (AudioManager.AUDIOFOCUS_GAIN) :
                             Log.d("JPER Gain");
-                            // Return the volume to normal and resume if paused.
-                            am.setStreamVolume(AudioManager.STREAM_MUSIC, 5, AudioManager.FLAG_SHOW_UI);
-                            startAfspilningIntern();
+                            if (DRData.instans.afspiller.afspillerstatus == Status.STOPPET) {
+                               //gør intet da playeren ikke spiller.
+                            }
+                            else {
+                                // Return the volume to normal and resume if paused.
+                                am.setStreamVolume(AudioManager.STREAM_MUSIC, 5, AudioManager.FLAG_SHOW_UI);
+                                startAfspilningIntern();
+
+                            }
+
                             break;
 
                         default: break;
