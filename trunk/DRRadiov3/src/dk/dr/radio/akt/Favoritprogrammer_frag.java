@@ -70,10 +70,6 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
   @Override
   public void run() {
     liste.clear();
-    if (favoritter.getAntalNyeUdsendelser()<0) {
-      // Opdatering af nye antal udsendelser i favoritter i kø, til om 3 sekunder
-      DRData.instans.favoritter.startOpdaterAntalNyeUdsendelser.run();
-    }
     try {
       ArrayList<String> pss = new ArrayList<String>(favoritter.getProgramserieSlugSæt());
       Collections.sort(pss);

@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -91,14 +92,15 @@ public class Favoritter {
           @Override
           public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
             Log.d("favoritter fikSvar(" + fraCache + " " + url);
-            if (uændret) return;
-            if (json != null && !"null".equals(json)) {
-              JSONObject data = new JSONObject(json);
-              Programserie programserie = DRJson.parsProgramserie(data);
-              programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
-              DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
+            if (!uændret) {
+              if (json != null && !"null".equals(json)) {
+                JSONObject data = new JSONObject(json);
+                Programserie programserie = DRJson.parsProgramserie(data);
+                programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+                DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
+              }
             }
-            if (!fraCache) beregnAntalNyeUdsendelser();
+            App.forgrundstråd.postDelayed(beregnAntalNyeUdsendelser, 500); // Vent 1/2 sekund på eventuelt andre svar
           }
         }) {
           public Priority getPriority() {
@@ -110,31 +112,35 @@ public class Favoritter {
     }
   };
 
-  private void beregnAntalNyeUdsendelser() {
-    int antalNyeIAlt = 0;
-    for (Map.Entry<String, String> e : favoritTilStartnummer.entrySet()) {
-      final String programserieSlug = e.getKey();
-      final String startFraNummer = e.getValue();
-      Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
-      if (programserie != null) {
-        int nye = programserie.antalUdsendelser - Integer.parseInt(startFraNummer);
-        if (nye < 0) {
-          Log.rapporterFejl(new IllegalStateException("Antal nye favoritter=" + nye + " for " + programserieSlug));
-          e.setValue(""+programserie.antalUdsendelser);
-          gem();
-          continue;
+  private Runnable beregnAntalNyeUdsendelser = new Runnable() {
+    @Override
+    public void run() {
+      App.forgrundstråd.removeCallbacks(this);
+      int antalNyeIAlt = 0;
+      for (Map.Entry<String, String> e : favoritTilStartnummer.entrySet()) {
+        final String programserieSlug = e.getKey();
+        final String startFraNummer = e.getValue();
+        Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
+        if (programserie != null) {
+          int nye = programserie.antalUdsendelser - Integer.parseInt(startFraNummer);
+          if (nye < 0) {
+            Log.rapporterFejl(new IllegalStateException("Antal nye favoritter=" + nye + " for " + programserieSlug));
+            e.setValue(""+programserie.antalUdsendelser);
+            gem();
+            continue;
+          }
+          antalNyeIAlt += nye;
+          Log.d("Favoritter: "+programserie+" har "+nye+", antalNyeIAlt=" +antalNyeIAlt);
         }
-        antalNyeIAlt += nye;
-        Log.d("Favoritter: "+programserie+" har "+nye+", antalNyeIAlt=" +antalNyeIAlt);
+      }
+      if (antalNyeUdsendelser != antalNyeIAlt) {
+        Log.d("Favoritter: Ny favoritTilStartnummer="+favoritTilStartnummer);
+        Log.d("Favoritter: Fortæller observatører at antalNyeUdsendelser er ændret fra "+antalNyeUdsendelser+" til "+ antalNyeIAlt);
+        antalNyeUdsendelser = antalNyeIAlt;
+        for (Runnable r : observatører) r.run();  // Informér observatører - i forgrundstråden
       }
     }
-    if (antalNyeUdsendelser != antalNyeIAlt) {
-      Log.d("Favoritter: Ny favoritTilStartnummer="+favoritTilStartnummer);
-      Log.d("Favoritter: Fortæller observatører at antalNyeUdsendelser er ændret fra "+antalNyeUdsendelser+" til "+ antalNyeIAlt);
-      antalNyeUdsendelser = antalNyeIAlt;
-      for (Runnable r : observatører) r.run();  // Informér observatører - i forgrundstråden
-    }
-  }
+  };
 
   public Set<String> getProgramserieSlugSæt() {
     tjekDataOprettet();
