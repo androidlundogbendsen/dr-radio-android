@@ -46,166 +46,163 @@ import dk.dr.radio.v3.R;
 public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
 
 
-  @Override
-  public void onReceive(Context context, Intent intent) {
-    Log.d(this + " onReceive(" + intent);
-    //App.kortToast("AfspillerWidget onReceive");
-    super.onReceive(context, intent);
-  }
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Log.d(this + " onReceive(" + intent);
+        //App.kortToast("AfspillerWidget onReceive");
+        super.onReceive(context, intent);
+    }
 
 
-  /**
-   * Kaldes når ikonet oprettes
-   */
-  @Override
-  public void onUpdate(Context ctx, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-    Log.d(this + " onUpdate (levende ikon oprettet) - appWidgetIds = " + Arrays.toString(appWidgetIds));
-    // for sørge for at vores knapper får tilknyttet intentsne
-    opdaterUdseende(ctx, appWidgetManager, appWidgetIds[0]);
+    /**
+     * Kaldes når ikonet oprettes
+     */
+    @Override
+    public void onUpdate(Context ctx, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        Log.d(this + " onUpdate (levende ikon oprettet) - appWidgetIds = " + Arrays.toString(appWidgetIds));
+        // for sørge for at vores knapper får tilknyttet intentsne
+        opdaterUdseende(ctx, appWidgetManager, appWidgetIds[0]);
 
 
-  }
+    }
 
 
-  public static void opdaterUdseende(Context ctx, AppWidgetManager appWidgetManager, int appWidgetId) {
-    Log.d("AfspillerWidget opdaterUdseende()");
-    //App.langToast("AfspillerWidget opdaterUdseende()");
+    public static void opdaterUdseende(Context ctx, AppWidgetManager appWidgetManager, int appWidgetId) {
+        Log.d("AfspillerWidget opdaterUdseende()");
+        //App.langToast("AfspillerWidget opdaterUdseende()");
 
-    if (Build.VERSION.SDK_INT >= 16) {
-      Bundle o = appWidgetManager.getAppWidgetOptions(appWidgetId);
-      //App.langToast("opdaterUdseende opts=" + o);
-      if (o.getInt(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY, -1) == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD) {
-        RemoteViews remoteViews = lavRemoteViews(TYPE_låseskærm);
+        if (Build.VERSION.SDK_INT >= 16) {
+            Bundle o = appWidgetManager.getAppWidgetOptions(appWidgetId);
+            //App.langToast("opdaterUdseende opts=" + o);
+            if (o.getInt(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY, -1) == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD) {
+                RemoteViews remoteViews = lavRemoteViews(TYPE_låseskærm);
+                appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+                return;
+            }
+        }
+        RemoteViews remoteViews = lavRemoteViews(TYPE_hjemmeskærm);
         appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
-        return;
-      }
-    }
-    RemoteViews remoteViews = lavRemoteViews(TYPE_hjemmeskærm);
-    appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
 
-  }
-
-  private static final int TYPE_hjemmeskærm = 0;
-  private static final int TYPE_notifikation_lille = 1;
-  private static final int TYPE_notifikation_stor = 2;
-  private static final int TYPE_låseskærm = 3;
-
-  /**
-   * Laver et sæt RemoteViews der passer til forskellige situationer
-   *
-   * @param type
-   * låseskærm    hvis det er til låseskærmen - kun for Build.VERSION.SDK_INT >= 16
-   * notifikation hvis det er til en notifikation
-   */
-  private static RemoteViews lavRemoteViews(int type) {
-    Log.d("lavRemoteViews type="+type+" fspillerstatus "+ DRData.instans.afspiller.getAfspillerstatus());
-
-    RemoteViews remoteViews;
-    if (type == TYPE_notifikation_lille) {
-      remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_lille);
-    } else if (type == TYPE_notifikation_stor) {
-      remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_stor);
-    } else if (type == TYPE_låseskærm) {
-      remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_laaseskaerm);
-    } else {
-      remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_levendeikon);
     }
 
-    Intent hovedAktI = new Intent(App.instans, Hovedaktivitet.class);
-    hovedAktI.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    PendingIntent åbnAktivitetPI = PendingIntent.getActivity(App.instans, 0, hovedAktI, PendingIntent.FLAG_UPDATE_CURRENT);
-    remoteViews.setOnClickPendingIntent(R.id.yderstelayout, åbnAktivitetPI);
+    private static final int TYPE_hjemmeskærm = 0;
+    private static final int TYPE_notifikation_lille = 1;
+    private static final int TYPE_notifikation_stor = 2;
+    private static final int TYPE_låseskærm = 3;
+
+    /**
+     * Laver et sæt RemoteViews der passer til forskellige situationer
+     *
+     * @param type låseskærm    hvis det er til låseskærmen - kun for Build.VERSION.SDK_INT >= 16
+     *             notifikation hvis det er til en notifikation
+     */
+    private static RemoteViews lavRemoteViews(int type) {
+        Log.d("lavRemoteViews type=" + type + " fspillerstatus " + DRData.instans.afspiller.getAfspillerstatus());
+
+        RemoteViews remoteViews;
+        if (type == TYPE_notifikation_lille) {
+            remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_lille);
+        } else if (type == TYPE_notifikation_stor) {
+            remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_stor);
+        } else if (type == TYPE_låseskærm) {
+            remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_laaseskaerm);
+        } else {
+            remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_levendeikon);
+        }
+
+        Intent hovedAktI = new Intent(App.instans, Hovedaktivitet.class);
+        hovedAktI.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent åbnAktivitetPI = PendingIntent.getActivity(App.instans, 0, hovedAktI, PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteViews.setOnClickPendingIntent(R.id.yderstelayout, åbnAktivitetPI);
 
 
-    Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
-    Kanal kanal = lydkilde.getKanal();
+        Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
+        Kanal kanal = lydkilde.getKanal();
 
-    //boolean live =  && status != Status.STOPPET;
-    if (lydkilde.erDirekte()) {
-      remoteViews.setTextViewText(R.id.titel, kanal.navn + " Live");
-      //  App.kortToast(" Live "  + k.navn);
-    } else {
-      Udsendelse udsendelse = lydkilde.getUdsendelse();
-      remoteViews.setTextViewText(R.id.titel, udsendelse == null ? kanal.navn : udsendelse.titel);
-      //App.kortToast(" Udsendelse "  + udsendelse == null ? k.navn : udsendelse.titel);
-    }
-    remoteViews.setTextViewText(R.id.metainformation, kanal.navn);
+        //boolean live =  && status != Status.STOPPET;
+        if (lydkilde.erDirekte()) {
+            remoteViews.setTextViewText(R.id.titel, kanal.navn + " Live");
+            //  App.kortToast(" Live "  + k.navn);
+        } else {
+            Udsendelse udsendelse = lydkilde.getUdsendelse();
+            remoteViews.setTextViewText(R.id.titel, udsendelse == null ? kanal.navn : udsendelse.titel);
+            //App.kortToast(" Udsendelse "  + udsendelse == null ? k.navn : udsendelse.titel);
+        }
+        remoteViews.setTextViewText(R.id.metainformation, kanal.navn);
 
-    switch (DRData.instans.afspiller.getAfspillerstatus()) {
-      case STOPPET:
-        remoteViews.setImageViewResource(R.id.startStopKnap, android.R.drawable.ic_media_play);
-        remoteViews.setViewVisibility(R.id.progressBar, View.GONE);
-        remoteViews.setTextColor(R.id.metainformation, App.color.grå60);
-        break;
-      case FORBINDER:
-        remoteViews.setImageViewResource(R.id.startStopKnap, android.R.drawable.ic_media_pause);
-        remoteViews.setViewVisibility(R.id.progressBar, View.VISIBLE);
-        int fpct = DRData.instans.afspiller.getForbinderProcent();
-        //remoteViews.setTextViewText(R.id.metainformation, "Forbinder " + (fpct > 0 ? fpct : ""));
-        remoteViews.setTextColor(R.id.metainformation, type == TYPE_hjemmeskærm ? App.color.grå60 : App.color.blå);
-        break;
-      case SPILLER:
-        //  App.kortToast("SPILLER " + k.navn);
-        remoteViews.setImageViewResource(R.id.startStopKnap, android.R.drawable.ic_media_pause);
-        remoteViews.setViewVisibility(R.id.progressBar, View.GONE);
-        remoteViews.setTextColor(R.id.metainformation, type == TYPE_hjemmeskærm ? App.color.grå60 : App.color.grå60);
-        break;
-    }
-
-
-
-    if (type==TYPE_notifikation_lille || type==TYPE_notifikation_stor) {
-      Intent startPauseI = new Intent(App.instans, AfspillerStartStopReciever.class).setAction(AfspillerStartStopReciever.PAUSE);
-      PendingIntent startPausePI = PendingIntent.getBroadcast(App.instans, 0, startPauseI, PendingIntent.FLAG_UPDATE_CURRENT);
-      remoteViews.setOnClickPendingIntent(R.id.startStopKnap, startPausePI);
-
-      Intent lukI = new Intent(App.instans, AfspillerStartStopReciever.class).setAction(AfspillerStartStopReciever.LUK);
-      PendingIntent lukPI = PendingIntent.getBroadcast(App.instans, 0, lukI, PendingIntent.FLAG_UPDATE_CURRENT);
-      remoteViews.setOnClickPendingIntent(R.id.luk, lukPI);
-    } else {
-      Intent startStopI = new Intent(App.instans, AfspillerStartStopReciever.class);
-      PendingIntent startStopPI = PendingIntent.getBroadcast(App.instans, 0, startStopI, PendingIntent.FLAG_UPDATE_CURRENT);
-      remoteViews.setOnClickPendingIntent(R.id.startStopKnap, startStopPI);
-    }
-
-    return remoteViews;
-  }
+        switch (DRData.instans.afspiller.getAfspillerstatus()) {
+            case STOPPET:
+                remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.ic_action_play);
+                remoteViews.setViewVisibility(R.id.progressBar, View.GONE);
+                remoteViews.setTextColor(R.id.metainformation, App.color.grå60);
+                break;
+            case FORBINDER:
+                remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.ic_action_pause);
+                remoteViews.setViewVisibility(R.id.progressBar, View.VISIBLE);
+                int fpct = DRData.instans.afspiller.getForbinderProcent();
+                //remoteViews.setTextViewText(R.id.metainformation, "Forbinder " + (fpct > 0 ? fpct : ""));
+                remoteViews.setTextColor(R.id.metainformation, type == TYPE_hjemmeskærm ? App.color.grå60 : App.color.blå);
+                break;
+            case SPILLER:
+                //  App.kortToast("SPILLER " + k.navn);
+                remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.ic_action_pause);
+                remoteViews.setViewVisibility(R.id.progressBar, View.GONE);
+                remoteViews.setTextColor(R.id.metainformation, type == TYPE_hjemmeskærm ? App.color.grå60 : App.color.grå60);
+                break;
+        }
 
 
+        if (type == TYPE_notifikation_lille || type == TYPE_notifikation_stor) {
+            Intent startPauseI = new Intent(App.instans, AfspillerStartStopReciever.class).setAction(AfspillerStartStopReciever.PAUSE);
+            PendingIntent startPausePI = PendingIntent.getBroadcast(App.instans, 0, startPauseI, PendingIntent.FLAG_UPDATE_CURRENT);
+            remoteViews.setOnClickPendingIntent(R.id.startStopKnap, startPausePI);
 
-  @SuppressLint("NewApi")
-  public static Notification lavNotification(Context ctx) {
-    String kanalNavn = "";
-    try {
-      kanalNavn = DRData.instans.afspiller.getLydkilde().getKanal().navn;
-    } catch (Exception e) {
-      Log.rapporterFejl(e);
-    } // TODO fjern try-catch efter nogle måneder i drift
+            Intent lukI = new Intent(App.instans, AfspillerStartStopReciever.class).setAction(AfspillerStartStopReciever.LUK);
+            PendingIntent lukPI = PendingIntent.getBroadcast(App.instans, 0, lukI, PendingIntent.FLAG_UPDATE_CURRENT);
+            remoteViews.setOnClickPendingIntent(R.id.luk, lukPI);
+        } else {
+            Intent startStopI = new Intent(App.instans, AfspillerStartStopReciever.class);
+            PendingIntent startStopPI = PendingIntent.getBroadcast(App.instans, 0, startStopI, PendingIntent.FLAG_UPDATE_CURRENT);
+            remoteViews.setOnClickPendingIntent(R.id.startStopKnap, startStopPI);
+        }
 
-    NotificationCompat.Builder b = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.dr_lyd_not)
-        .setContentTitle("DR Radio")
-        .setContentText(kanalNavn)
-        .setOngoing(true)
-        .setAutoCancel(false)
-        .setPriority(1000) // holder den øverst
-        .setContentIntent(PendingIntent.getActivity(ctx, 0, new Intent(ctx, Hovedaktivitet.class), 0));
-    // PendingIntent er til at pege på aktiviteten der skal startes hvis
-    // brugeren vælger notifikationen
-
-
-    b.setContent(AfspillerIkonOgNotifikation.lavRemoteViews(AfspillerIkonOgNotifikation.TYPE_notifikation_lille));
-    Notification notification = b.build();
-
-    if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)) {
-      // A notification's big view appears only when the notification is expanded,
-      // which happens when the notification is at the top of the notification drawer,
-      // or when the user expands the notification with a gesture.
-      // Expanded notifications are available starting with Android 4.1.
-      notification.bigContentView = AfspillerIkonOgNotifikation.lavRemoteViews(AfspillerIkonOgNotifikation.TYPE_notifikation_stor);
+        return remoteViews;
     }
 
-    notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT | Notification.PRIORITY_HIGH | Notification.FLAG_FOREGROUND_SERVICE);
-    return notification;
-  }
+
+    @SuppressLint("NewApi")
+    public static Notification lavNotification(Context ctx) {
+        String kanalNavn = "";
+        try {
+            kanalNavn = DRData.instans.afspiller.getLydkilde().getKanal().navn;
+        } catch (Exception e) {
+            Log.rapporterFejl(e);
+        } // TODO fjern try-catch efter nogle måneder i drift
+
+        NotificationCompat.Builder b = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.dr_lyd_not)
+                .setContentTitle("DR Radio")
+                .setContentText(kanalNavn)
+                .setOngoing(true)
+                .setAutoCancel(false)
+                .setPriority(1000) // holder den øverst
+                .setContentIntent(PendingIntent.getActivity(ctx, 0, new Intent(ctx, Hovedaktivitet.class), 0));
+        // PendingIntent er til at pege på aktiviteten der skal startes hvis
+        // brugeren vælger notifikationen
+
+
+        b.setContent(AfspillerIkonOgNotifikation.lavRemoteViews(AfspillerIkonOgNotifikation.TYPE_notifikation_lille));
+        Notification notification = b.build();
+
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)) {
+            // A notification's big view appears only when the notification is expanded,
+            // which happens when the notification is at the top of the notification drawer,
+            // or when the user expands the notification with a gesture.
+            // Expanded notifications are available starting with Android 4.1.
+            notification.bigContentView = AfspillerIkonOgNotifikation.lavRemoteViews(AfspillerIkonOgNotifikation.TYPE_notifikation_stor);
+        }
+
+        notification.flags |= (Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT | Notification.PRIORITY_HIGH | Notification.FLAG_FOREGROUND_SERVICE);
+        return notification;
+    }
 
 }
