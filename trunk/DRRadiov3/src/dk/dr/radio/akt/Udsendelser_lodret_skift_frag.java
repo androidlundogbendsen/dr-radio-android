@@ -148,7 +148,7 @@ public class Udsendelser_lodret_skift_frag extends Basisfragment {
           if (uændret) return;
           JSONObject data = new JSONObject(json);
           if (offset == 0) {
-            programserie = DRJson.parsProgramserie(data);
+            programserie = DRJson.parsProgramserie(data, programserie);
             programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
             DRData.instans.programserieFraSlug.put(udsendelse.programserieSlug, programserie);
           } else if (fraCache) {

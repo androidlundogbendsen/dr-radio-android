@@ -128,7 +128,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment {
         if (json != null && !"null".equals(json)) {
           JSONObject data = new JSONObject(json);
           if (offset == 0) {
-            programserie = DRJson.parsProgramserie(data);
+            programserie = DRJson.parsProgramserie(data, programserie);
             programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
             DRData.instans.programserieFraSlug.put(udsendelse.programserieSlug, programserie);
           } else if (fraCache) {

@@ -95,7 +95,7 @@ public class Favoritter {
             if (!uændret) {
               if (json != null && !"null".equals(json)) {
                 JSONObject data = new JSONObject(json);
-                Programserie programserie = DRJson.parsProgramserie(data);
+                Programserie programserie = DRJson.parsProgramserie(data, null);
                 programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
                 DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
               }

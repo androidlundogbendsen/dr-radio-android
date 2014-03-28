@@ -27,7 +27,7 @@ public enum DRJson {
   StartTime, EndTime,
   Streams,
   Uri, Played, Artist, Image,
-  Type, Kind, Quality, Kbps, ChannelSlug, TotalPrograms, Programs, FirstBroadcast, Watchable, DurationInSeconds, Format, OffsetMs, ProductionNumber;
+  Type, Kind, Quality, Kbps, ChannelSlug, TotalPrograms, Programs, FirstBroadcast, Watchable, DurationInSeconds, Format, OffsetMs, ProductionNumber, LatestProgramBroadcasted;
 
   /*
     public enum StreamType {
@@ -129,9 +129,9 @@ public enum DRJson {
       Udsendelse u = getUdsendelse(drData, o);
       u.kanalSlug = o.optString(DRJson.ChannelSlug.name(), kanal.slug);  // Bemærk - kan være tom..
       u.kanHøres = o.getBoolean(DRJson.Watchable.name());
-      u.startTid = DRJson.servertidsformat.parse(o.getString(DRJson.StartTime.name()));
+      u.startTid = servertidsformat.parse(o.getString(DRJson.StartTime.name()));
       u.startTidKl = klokkenformat.format(u.startTid);
-      u.slutTid = DRJson.servertidsformat.parse(o.getString(DRJson.EndTime.name()));
+      u.slutTid = servertidsformat.parse(o.getString(DRJson.EndTime.name()));
       u.slutTidKl = klokkenformat.format(u.slutTid);
       String datoStr = datoformat.format(u.startTid);
 
@@ -155,7 +155,7 @@ public enum DRJson {
       JSONObject o = jsonArray.getJSONObject(n);
       Udsendelse u = getUdsendelse(drData, o);
       u.kanalSlug = o.getString(DRJson.ChannelSlug.name());
-      u.startTid = DRJson.servertidsformat.parse(o.getString(DRJson.FirstBroadcast.name()));
+      u.startTid = servertidsformat.parse(o.getString(DRJson.FirstBroadcast.name()));
       u.slutTid = new Date(u.startTid.getTime() + o.getInt(DRJson.DurationInSeconds.name()) * 1000);
       uliste.add(u);
     }
@@ -238,13 +238,26 @@ public enum DRJson {
   Subtitle: "",
   Description: "Nu kan du dagligt fra 14-16 komme en tur til Monte Carlo, hvor Peter Falktoft og Esben Bjerre vil guide dig rundt. Du kan læne dig tilbage og nyde turen og være på en lytter, når Peter og Esben vender ugens store og små kulturelle begivenheder, kigger på ugens bedste tv og spørger hvad du har #HørtOverHækken. "
   }*/
-  public static Programserie parsProgramserie(JSONObject o) throws JSONException {
-    Programserie ps = new Programserie();
+
+  /**
+   * Parser et Programserie-objekt
+   * @param o JSON
+   * @param ps et eksisterende objekt, der skal opdateres, eller null
+   * @return objektet
+   * @throws JSONException
+   */
+  public static Programserie parsProgramserie(JSONObject o, Programserie ps) throws JSONException {
+    if (ps==null) ps = new Programserie();
     ps.titel = o.getString(DRJson.Title.name());
     ps.beskrivelse = o.optString(DRJson.Description.name());
     ps.slug = o.getString(DRJson.Slug.name());
     ps.urn = o.optString(DRJson.Urn.name());
     ps.antalUdsendelser = o.getInt(DRJson.TotalPrograms.name());
+    try {
+      ps.senesteUdsendelseTid = servertidsformat.parse(o.getString(DRJson.LatestProgramBroadcasted.name()));
+    } catch (ParseException e) {
+      Log.rapporterFejl(e);
+    }
     return ps;
   }
 
