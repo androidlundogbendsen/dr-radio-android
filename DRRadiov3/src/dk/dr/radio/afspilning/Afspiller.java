@@ -39,6 +39,7 @@ import java.util.List;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Lydkilde;
+import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.AfspillerIkonOgNotifikation;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
@@ -429,7 +430,8 @@ public class Afspiller {
       new Thread() {
         public void run() {
           Log.d("mediaPlayer.start() " + mpTils());
-          int startposition = lydkilde.getUdsendelse().startposition;
+          Udsendelse u = lydkilde.getUdsendelse();
+          int startposition = u==null?0:u.startposition;
           if (startposition>0) {
             Log.d("mediaPlayer genoptager afspilning ved " + startposition);
             mediaPlayer.seekTo(startposition);
