@@ -48,7 +48,6 @@ import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
@@ -69,6 +68,10 @@ import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Diverse;
 import dk.dr.radio.data.Grunddata;
 import dk.dr.radio.data.Kanal;
+import dk.dr.radio.diverse.volley.DrBasicNetwork;
+import dk.dr.radio.diverse.volley.DrDiskBasedCache;
+import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
+import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 import dk.dr.radio.v3.R;
 
 public class App extends Application implements Runnable {
@@ -144,11 +147,13 @@ public class App extends Application implements Runnable {
         : Build.VERSION.SDK_INT >= 8 ? new HttpClientStack(AndroidHttpClient.newInstance(App.versionsnavn))
         : new HttpClientStack(new DefaultHttpClient()); // Android 2.1
 
-    // Vi bruger vores egen DrVolleyDiskBasedCache, da den indbyggede i Volley
+    // Vi bruger vores eget Netværkslag, da DRs Varnish-servere ofte svarer med HTTP-kode 500,
+    // som skal håndteres som et timeout og at der skal prøves igen
+    Network network = new DrBasicNetwork(stack);
+    // Vi bruger vores egen DrDiskBasedCache, da den indbyggede i Volley
     // har en opstartstid på flere sekunder
     File cacheDir = new File(getCacheDir(), "volley4");
-    Network network = new BasicNetwork(stack);
-    volleyRequestQueue = new RequestQueue(new DrVolleyDiskBasedCache(cacheDir), network);
+    volleyRequestQueue = new RequestQueue(new DrDiskBasedCache(cacheDir), network);
     volleyRequestQueue.start();
 
     try {

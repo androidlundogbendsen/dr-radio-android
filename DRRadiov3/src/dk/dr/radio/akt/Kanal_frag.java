@@ -30,7 +30,6 @@ import com.android.volley.VolleyError;
 import com.androidquery.AQuery;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
@@ -48,8 +47,8 @@ import dk.dr.radio.data.Lydstream;
 import dk.dr.radio.data.Playlisteelement;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
-import dk.dr.radio.diverse.DrVolleyResonseListener;
-import dk.dr.radio.diverse.DrVolleyStringRequest;
+import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
+import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 

@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import dk.dr.radio.diverse.App;
-import dk.dr.radio.diverse.DrVolleyStringRequest;
+import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 import dk.dr.radio.diverse.Log;
 
 /**
