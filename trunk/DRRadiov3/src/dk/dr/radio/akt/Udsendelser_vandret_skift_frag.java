@@ -8,7 +8,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -23,10 +22,9 @@ import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Programserie;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
-import dk.dr.radio.diverse.DrVolleyResonseListener;
-import dk.dr.radio.diverse.DrVolleyStringRequest;
+import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
+import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 import dk.dr.radio.diverse.Log;
-import dk.dr.radio.diverse.VerticalViewPager;
 import dk.dr.radio.v3.R;
 
 public class Udsendelser_vandret_skift_frag extends Basisfragment {

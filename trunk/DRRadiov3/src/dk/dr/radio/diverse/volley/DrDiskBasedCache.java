@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dk.dr.radio.diverse;
+package dk.dr.radio.diverse.volley;
 
 import android.os.SystemClock;
 
@@ -37,11 +37,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import dk.dr.radio.diverse.Log;
+
 /**
  * Cache-implementering, der cacher filerne direkte på harddisken.
  * I modsætning til Volleys standardimplementation har denne her en meget lav opstartstid
+ * Vi kunne have arvet fra DiskBasedCache hvis mEntries havde været protected
  */
-public class DrVolleyDiskBasedCache implements Cache {
+public class DrDiskBasedCache implements Cache {
 
     /** Tidsstempel der kan bruges til at afgøre hvilke filer der faktisk er brugt efter denne opstart */
     private final long TIDSSTEMPEL_VED_OPSTART;
@@ -59,7 +62,7 @@ public class DrVolleyDiskBasedCache implements Cache {
     private final int mMaxCacheSizeInBytes;
 
     /** Default maximum disk usage in bytes. 1MB cache burde være rigeligt */
-    private static final int DEFAULT_DISK_USAGE_BYTES = 1 * 1024 * 1024;
+    private static final int DEFAULT_DISK_USAGE_BYTES = 1 * 1024 * 1024; // DR ÆNDRING
 
     /** High water mark percentage for the cache */
     private static final float HYSTERESIS_FACTOR = 0.9f;
@@ -72,7 +75,7 @@ public class DrVolleyDiskBasedCache implements Cache {
      * @param rootDirectory The root directory of the cache.
      * @param maxCacheSizeInBytes The maximum size of the cache in bytes.
      */
-    public DrVolleyDiskBasedCache(File rootDirectory, int maxCacheSizeInBytes) {
+    public DrDiskBasedCache(File rootDirectory, int maxCacheSizeInBytes) {
         mRootDirectory = rootDirectory;
         mMaxCacheSizeInBytes = maxCacheSizeInBytes;
         //mRootDirectory.mkdirs();
@@ -84,7 +87,7 @@ public class DrVolleyDiskBasedCache implements Cache {
      * the default maximum cache size of 5MB.
      * @param rootDirectory The root directory of the cache.
      */
-    public DrVolleyDiskBasedCache(File rootDirectory) {
+    public DrDiskBasedCache(File rootDirectory) {
         this(rootDirectory, DEFAULT_DISK_USAGE_BYTES);
     }
 
@@ -111,19 +114,19 @@ public class DrVolleyDiskBasedCache implements Cache {
     public synchronized Entry get(String key) {
         CacheHeader entry = mEntries.get(key);
         File file = getFileForKey(key);
-        if (entry == null && !file.exists()) {
+        if (entry == null && !file.exists()) { // DR ÆNDRING
             // if the entry does not exist, return.
-          Log.d("DrVolleyDiskBasedCache miss for "+key);
+          Log.d("DrVolleyDiskBasedCache miss for " + key);
             return null;
               }
 
-        boolean  ny = entry==null;
+        boolean  ny = entry==null; // DR ÆNDRING
         CountingInputStream cis = null;
         try {
             cis = new CountingInputStream(new FileInputStream(file));
             CacheHeader nyEntry = CacheHeader.readHeader(cis); // eat header
             byte[] data = streamToBytes(cis, (int) (file.length() - cis.bytesRead));
-            if (ny) {
+            if (ny) { // DR ÆNDRING
               Log.d("DrVolleyDiskBasedCache fil0-hit for "+key);
               entry = nyEntry;
               entry.size = file.length();
@@ -160,7 +163,7 @@ public class DrVolleyDiskBasedCache implements Cache {
             }
             return;
         }
-/*
+/* DR ÆNDRING - løb ikke igennem cache-mappen, det tager henved 1 sekund per 100 elementer
         File[] files = mRootDirectory.listFiles();
         if (files == null) {
             return;
@@ -249,10 +252,10 @@ public class DrVolleyDiskBasedCache implements Cache {
      * @return A pseudo-unique filename.
      */
     private String getFilenameForKey(String key) {
-      if (key.startsWith(NORMALT_PRÆFIX)) key = key.substring(NORMALT_PRÆFIX.length());
-      //key = key.replace('?', '_').replace('/', '_').replace('&', '_'); // f.eks.
+      if (key.startsWith(NORMALT_PRÆFIX)) key = key.substring(NORMALT_PRÆFIX.length()); // DR ÆNDRING
+      //key = key.replace('?', '_').replace('/', '_').replace('&', '_');
       // sikrere (og hurtigere?) er
-      key = ULOVLIGE_TEGN_I_FILNAVN.matcher(key).replaceAll("_");
+      key = ULOVLIGE_TEGN_I_FILNAVN.matcher(key).replaceAll("_"); // DR ÆNDRING
       return key;
       /*
         int firstHalfLength = key.length() / 2;

@@ -1,7 +1,10 @@
-package dk.dr.radio.diverse;
+package dk.dr.radio.diverse.volley;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+
+import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
 
 /**
  * DR Radios ResponseListener-klient til Volley.

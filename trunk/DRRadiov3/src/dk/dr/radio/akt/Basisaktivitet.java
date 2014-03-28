@@ -20,7 +20,7 @@ import java.util.Date;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
-import dk.dr.radio.diverse.DrVolleyStringRequest;
+import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.P4Stedplacering;
 

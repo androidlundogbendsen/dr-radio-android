@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Set;
 
 import dk.dr.radio.diverse.App;
-import dk.dr.radio.diverse.DrVolleyResonseListener;
-import dk.dr.radio.diverse.DrVolleyStringRequest;
+import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
+import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 import dk.dr.radio.diverse.Log;
 
 /**
