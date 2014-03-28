@@ -19,6 +19,7 @@ public abstract class DrVolleyResonseListener implements Response.Listener<Strin
    */
   protected String url;
   String cachetVærdi;
+  Exception startetHerfra = new Exception();
 
   public DrVolleyResonseListener() {
     App.sætErIGang(true);
@@ -60,6 +61,7 @@ public abstract class DrVolleyResonseListener implements Response.Listener<Strin
    */
   protected void fikFejl(VolleyError error) {
     Log.e("fikFejl for " + url + " " + error.networkResponse, error);
+    Log.e("fikFejl startet herfra:", startetHerfra);
   }
 
   /**

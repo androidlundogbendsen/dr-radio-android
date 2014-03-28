@@ -449,7 +449,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
       tilføj(R.layout.venstremenu_elem_overskrift, P4kanalvalg_frag.class);
-      aq.id(R.id.tekst).text("Vælg P4 region");
+      aq.id(R.id.tekst).text("Vælg P4-region");
       if (gib) aq.typeface(App.skrift_gibson_fed);
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
