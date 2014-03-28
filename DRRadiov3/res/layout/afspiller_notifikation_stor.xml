@@ -7,54 +7,42 @@
               android:orientation="vertical">
 
 
-    <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="top"
-            android:orientation="horizontal">
-
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="fitStart"
-            android:src="@drawable/dr_logo"/>
-
-
-        <ImageView
-                android:id="@+id/luk"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="right"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/dri_luk_hvid"/>
-    </RelativeLayout>
-
     <LinearLayout
             android:layout_width="match_parent"
             android:gravity="left"
             android:orientation="horizontal"
-            android:layout_height="44dp">
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_dr_icon" />
+
         <ImageView
             android:id="@+id/startStopKnap"
-            android:layout_width="60dp"
-            android:layout_height="44dp"
-            android:layout_gravity="right"
-            android:scaleType="center"
-            android:layout_marginLeft="3dp"
-            android:src="@drawable/afspiller_spil"/>
-        <LinearLayout
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/ic_action_play" />
 
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:layout_height="fill_parent"
             android:gravity="left"
             android:orientation="vertical"
+            android:layout_marginTop="10dp"
             android:layout_width="wrap_content">
-        <TextView
+
+            <TextView
             android:id="@+id/titel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="P3 Live"
+
+                android:text="P3 Live"
             android:layout_marginLeft="12dp"
             android:textStyle="bold"
             android:maxLines="2"
@@ -65,22 +53,32 @@
                 android:id="@+id/metainformation"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginLeft="12dp"
+
+            android:layout_marginLeft="12dp"
                 android:text="P3"
                 android:singleLine="true"
                 tools:ignore="HardcodedText"/>
         </LinearLayout>
         <LinearLayout
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="right"
             android:orientation="horizontal"
             android:layout_width="fill_parent">
-        <ProgressBar
+
+            <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             />
+
+            <ImageView
+                android:id="@+id/luk"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center_vertical"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_action_cancel" />
 
 
         </LinearLayout>
