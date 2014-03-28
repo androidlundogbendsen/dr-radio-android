@@ -9,6 +9,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 import dk.dr.radio.diverse.App;
@@ -20,12 +21,6 @@ import dk.dr.radio.diverse.Log;
 public class DrVolleyStringRequest extends StringRequest {
   private final DrVolleyResonseListener lytter;
 
-  /**
-   * DRs serverinfrastruktur caches med Varnish, men det kan tage op til 5 sekunder for den bagvedliggende
-   * serverinfrastruktur at svare
-   */
-  private static final RetryPolicy RETRY_POLICY = new DefaultRetryPolicy(5000, 3, 1.5f);
-
   /*
       public DrVolleyStringRequest(String url, Response.Listener<String> listener, Response.ErrorListener errorListener) {
         super(url, listener, errorListener);
@@ -35,8 +30,21 @@ public class DrVolleyStringRequest extends StringRequest {
     super(url, listener, listener);
     listener.url = url;
     lytter = listener;
+    /*
+     * DRs serverinfrastruktur caches med Varnish, men det kan tage lang tid for den bagvedliggende
+     * serverinfrastruktur at svare.
+     */
+    setRetryPolicy(new DefaultRetryPolicy(4000, 3, 1.5f)); // Ny instans hver gang, da der ændres i den
+
     final Cache.Entry response = App.volleyRequestQueue.getCache().get(url);
     if (response == null) return; // Vi har ikke en cachet udgave
+    try {
+      lytter.cachetVærdi = new String(response.data, HttpHeaderParser.parseCharset(response.responseHeaders));
+    } catch (Exception e) {
+      e.printStackTrace();
+      return;
+    }
+    //Log.d("XXXXXXXXXXXXXX Cache.Entry  e=" + response);
     // Kald først fikSvar når forgrundstråden er færdig med hvad den er i gang med
     // - i tilfælde af at en forespørgsel er startet midt under en listeopdatering giver det problemer
     // at opdatere listen omgående, da elementer så kan skifte position (og måske type) midt i det hele
@@ -44,17 +52,12 @@ public class DrVolleyStringRequest extends StringRequest {
       @Override
       public void run() {
         try {
-          String json = new String(response.data, HttpHeaderParser.parseCharset(response.responseHeaders));
-          //Log.d("XXXXXXXXXXXXXX Cache.Entry  e=" + response);
-          listener.cachetVærdi = json;
-          listener.fikSvar(json, true, false);
+          listener.fikSvar(listener.cachetVærdi, true, false);
         } catch (Exception e) {
-          Log.rapporterFejl(e);
           listener.onErrorResponse(new VolleyError(e));
         }
       }
     });
-    setRetryPolicy(RETRY_POLICY);
   }
 
   /**

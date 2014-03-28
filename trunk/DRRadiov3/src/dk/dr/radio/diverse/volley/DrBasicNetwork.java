@@ -34,13 +34,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import dk.dr.radio.diverse.Log;
+
 /**
  * Created by j on 28-03-14.
  */
 /**
  * A network performing Volley requests over an {@link HttpStack}.
- * TODO DRs Varnish-servere svarer ofte med HTTP-kode 500,
- * som skal håndteres som et timeout så der skal prøves igen
+ * DRs (Varnish-?)servere svarer ofte med HTTP-kode 500 eller 533,
+ * der bliver håndteret som et timeout så der prøves igen
  */
 public class DrBasicNetwork implements Network {
   protected static final boolean DEBUG = VolleyLog.DEBUG;
@@ -124,6 +126,14 @@ public class DrBasicNetwork implements Network {
           statusCode = httpResponse.getStatusLine().getStatusCode();
         } else {
           throw new NoConnectionError(e);
+        }
+        if (statusCode>=500) {
+          Log.d("XXXXXXXXXXXX caching-problem på serversiden? kode "+statusCode+" for "+request.getUrl());
+        }
+
+        if (statusCode==500 || statusCode==533) {
+          attemptRetryOnException("caching-problem på serversiden", request, new TimeoutError());
+          continue;
         }
         VolleyLog.e("Unexpected response code %d for %s", statusCode, request.getUrl());
         if (responseContents != null) {
