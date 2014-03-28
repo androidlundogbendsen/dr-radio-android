@@ -4,14 +4,17 @@ import android.app.DownloadManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.androidquery.AQuery;
@@ -69,6 +72,19 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
   }
 
 
+  private static View.OnTouchListener farvKnapNårDenErTrykketNed = new View.OnTouchListener() {
+    public boolean onTouch(View view, MotionEvent me) {
+      ImageView ib = (ImageView) view;
+      if (me.getAction() == MotionEvent.ACTION_DOWN) {
+        ib.setColorFilter(App.color.blå, PorterDuff.Mode.MULTIPLY);
+      } else if (me.getAction() == MotionEvent.ACTION_MOVE) {
+      } else {
+        ib.setColorFilter(null);
+      }
+      return false;
+    }
+  };
+
   private BaseAdapter adapter = new Basisadapter() {
     @Override
     public int getCount() {
@@ -84,7 +100,8 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
         v = getLayoutInflater(null).inflate(R.layout.udsendelse_elem3_tid_titel_kunstner, parent, false);
         v.setBackgroundResource(0);
         aq = new AQuery(v);
-        aq.id(R.id.hør).image(R.drawable.trash).clicked(Hentede_udsendelser_frag.this);
+        aq.id(R.id.hør).image(R.drawable.trash).clicked(Hentede_udsendelser_frag.this)
+            .getView().setOnTouchListener(farvKnapNårDenErTrykketNed);
         aq.id(R.id.startid).typeface(App.skrift_gibson_fed);
         aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson);
       } else {
