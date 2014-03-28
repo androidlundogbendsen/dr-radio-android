@@ -203,7 +203,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           udsendelse.hentetStream.score = 500; // Rigtig god!
           udsendelse.kanHøres = true;
         } else {
-          Log.e(new IllegalStateException("Fil fandtes ikke alligevel??!"));
+          Log.rapporterFejl(new IllegalStateException("Fil "+file+"  fandtes ikke alligevel??! for "+udsendelse));
         }
       } finally {
         c.close();
