@@ -116,12 +116,9 @@ public class Kanal_nyheder_frag extends Basisfragment implements View.OnClickLis
 
     if (kanal.streams == null && App.erOnline()) {
       Request<?> req = new DrVolleyStringRequest(kanal.getStreamsUrl(), new DrVolleyResonseListener() {
-        public String cache;
-
         @Override
-        public void fikSvar(String json, boolean fraCache) throws Exception {
-          if (fraCache) cache = json;
-          else if (json.equals(cache)) return; // ingen grund til at parse det igen
+        public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+          if (uændret) return; // ingen grund til at parse det igen
           JSONObject o = new JSONObject(json);
           kanal.slug = o.getString(DRJson.Slug.name());
           DRData.instans.grunddata.kanalFraSlug.put(kanal.slug, kanal);

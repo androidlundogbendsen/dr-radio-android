@@ -42,6 +42,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
   private View rod;
   private int antalHentedeSendeplaner;
   private CheckBox favorit;
+  private AQuery aq;
 
   @Override
   public String toString() {
@@ -60,7 +61,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     }
 
     rod = inflater.inflate(R.layout.kanal_frag, container, false);
-    final AQuery aq = new AQuery(rod);
+    aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).getView());
     listView.setOnItemClickListener(this);
@@ -84,8 +85,8 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
 
     Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
       @Override
-      public void fikSvar(String json, boolean fraCache) throws Exception {
-        Log.d("fikSvar(" + fraCache + " " + url);
+      public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+        if (uændret) return;
         if (json != null && !"null".equals(json)) {
           JSONObject data = new JSONObject(json);
           if (offset == 0) {
@@ -106,9 +107,8 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
 
       @Override
       protected void fikFejl(VolleyError error) {
-        Log.e("fikFejl for " + url + " " + error.networkResponse, error);
-        //Log.d(error.networkResponse.headers);
-        App.kortToast("Netværksfejl, prøv igen senere");
+        super.fikFejl(error);
+        aq.id(R.id.tom).text("Siden kunne ikke vises");
       }
     }).setTag(this);
     App.volleyRequestQueue.add(req);

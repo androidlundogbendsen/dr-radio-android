@@ -237,12 +237,9 @@ public class App extends Application implements Runnable {
         if (k.streams != null) continue;
 //        Log.d("run()1 " + (System.currentTimeMillis() - opstartstidspunkt) + " ms");
         Request<?> req = new DrVolleyStringRequest(k.getStreamsUrl(), new DrVolleyResonseListener() {
-          public String cachet;
-
           @Override
-          public void fikSvar(String json, boolean fraCache) throws Exception {
-            if (fraCache) cachet = json;
-            else if (json.equals(cachet)) return;
+          public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+            if (uændret) return;
             JSONObject o = new JSONObject(json);
             k.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
             Log.d("hentSupplerendeDataBg " + k.kode + " fraCache=" + fraCache + " => " + k.slug + " k.lydUrl=" + k.streams);

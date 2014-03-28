@@ -103,9 +103,9 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     if (udsendelse.hentetStream == null) {
       Request<?> req = new DrVolleyStringRequest(udsendelse.getStreamsUrl(), new DrVolleyResonseListener() {
         @Override
-        public void fikSvar(String json, boolean fraCache) throws Exception {
-          Log.d("fikSvar(" + fraCache + " " + url);
-          if (json != null && !"null".equals(json)) try {
+        public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+          if (uændret) return;
+          if (json != null && !"null".equals(json)) {
             JSONObject o = new JSONObject(json);
             udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
             udsendelse.produktionsnummer = o.optString(DRJson.ProductionNumber.name());
@@ -114,16 +114,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
               afspiller.setLydkilde(udsendelse);
             }
             adapter.notifyDataSetChanged(); // Opdatér views
-          } catch (Exception e) {
-            Log.d("Parsefejl: " + e + " for json=" + json);
-            e.printStackTrace();
           }
-        }
-
-        @Override
-        protected void fikFejl(VolleyError error) {
-          Log.e("error.networkResponse=" + error.networkResponse, error);
-          App.kortToast("Netværksfejl, prøv igen senere");
         }
       }).setTag(this);
       App.volleyRequestQueue.add(req);
@@ -148,16 +139,14 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     //new Exception("startOpdaterSpilleliste() for "+this).printStackTrace();
     Request<?> req = new DrVolleyStringRequest(kanal.getPlaylisteUrl(udsendelse), new DrVolleyResonseListener() {
       @Override
-      public void fikSvar(String json, boolean fraCache) throws Exception {
+      public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
         Log.d("fikSvar playliste(" + fraCache + " " + url + "   " + this);
+        if (uændret) return;
         if (fraCache && udsendelse.playliste != null)
           return; // Vi har allerede en liste, det må være den fra cachen
-        if (json != null && !"null".equals(json)) try {
+        if (json != null && !"null".equals(json)) {
           udsendelse.playliste = DRJson.parsePlayliste(new JSONArray(json));
           bygListe();
-        } catch (Exception e) {
-          Log.d("Parsefejl: " + e + " for json=" + json);
-          e.printStackTrace();
         }
       }
     }).setTag(this);

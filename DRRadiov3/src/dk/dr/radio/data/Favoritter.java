@@ -89,8 +89,9 @@ public class Favoritter {
         String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
         Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
           @Override
-          public void fikSvar(String json, boolean fraCache) throws Exception {
+          public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
             Log.d("favoritter fikSvar(" + fraCache + " " + url);
+            if (uændret) return;
             if (json != null && !"null".equals(json)) {
               JSONObject data = new JSONObject(json);
               Programserie programserie = DRJson.parsProgramserie(data);

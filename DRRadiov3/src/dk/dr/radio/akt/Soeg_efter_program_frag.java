@@ -214,9 +214,8 @@ public class Soeg_efter_program_frag extends Basisfragment implements
 
     Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
       @Override
-      public void fikSvar(String json, boolean fraCache) throws Exception {
-        if (json != null && !"null".equals(json))
-          try {
+      public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+        if (json != null && !"null".equals(json) && !uændret) {
             JSONArray data = new JSONArray(json);
             Log.d("data = " + data.toString(2));
             liste = DRJson.parseUdsendelserForProgramserie(data, DRData.instans);
@@ -224,12 +223,9 @@ public class Soeg_efter_program_frag extends Basisfragment implements
             adapter.notifyDataSetChanged();
 
             if (liste.size() == 0) {
-              tomStr.setText("Søgning giver ingen resultat!");
+              tomStr.setText("Søgningen gav intet resultat");
             }
             return;
-          } catch (Exception e) {
-            Log.d("Parsefejl: " + e + " for json=" + json);
-            e.printStackTrace();
           }
         Log.d("Slut søgning!");
       }
