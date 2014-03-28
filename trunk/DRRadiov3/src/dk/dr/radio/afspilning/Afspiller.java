@@ -115,7 +115,7 @@ public class Afspiller {
   private long onErrorTællerNultid;
 
   public void startAfspilning() {
-    if (lydkilde.hentetStream==null && (!App.erOnline() || lydkilde.streams == null)) {
+    if (lydkilde.hentetStream==null && (!App.erOnline() || lydkilde.streams==null || lydkilde.streams.size()==0)) {
       App.kortToast("Kunne ikke oprette forbindelse");
       return;
     }

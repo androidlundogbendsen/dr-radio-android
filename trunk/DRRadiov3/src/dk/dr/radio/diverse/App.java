@@ -163,7 +163,10 @@ public class App extends Application implements Runnable {
 
       String kanalkode = prefs.getString(FORETRUKKEN_KANAL, null);
       Kanal aktuelKanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
-      if (aktuelKanal == null) aktuelKanal = DRData.instans.grunddata.forvalgtKanal;
+      if (aktuelKanal == null || aktuelKanal==Grunddata.ukendtKanal) {
+        aktuelKanal = DRData.instans.grunddata.forvalgtKanal;
+        Log.d("forvalgtKanal="+aktuelKanal);
+      }
 
       DRData.instans.afspiller = new Afspiller();
       DRData.instans.afspiller.setLydkilde(aktuelKanal);

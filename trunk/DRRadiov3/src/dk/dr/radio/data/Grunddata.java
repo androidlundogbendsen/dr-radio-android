@@ -46,7 +46,7 @@ public class Grunddata {
 
   public HashMap<String, Kanal> kanalFraKode = new HashMap<String, Kanal>();
   public HashMap<String, Kanal> kanalFraSlug = new LinkedHashMap<String, Kanal>();
-  public final Kanal ukendtKanal = new Kanal();
+  public static final Kanal ukendtKanal = new Kanal();
 
   public Grunddata() {
     ukendtKanal.navn = "";
