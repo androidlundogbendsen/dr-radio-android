@@ -15,6 +15,7 @@ public abstract class DrVolleyResonseListener implements Response.Listener<Strin
    * URL på anmodningen - rar at have til logning
    */
   protected String url;
+  String cachetVærdi;
 
   public DrVolleyResonseListener() {
     App.sætErIGang(true);
@@ -24,7 +25,8 @@ public abstract class DrVolleyResonseListener implements Response.Listener<Strin
   public final void onResponse(String response) {
     App.sætErIGang(false);
     try {
-      fikSvar(response, false);
+      boolean uændret = response != null && response.equals(cachetVærdi);
+      fikSvar(response, false, uændret);
     } catch (Exception e) {
       Log.e(e);
       onErrorResponse(new VolleyError(e));
@@ -41,10 +43,12 @@ public abstract class DrVolleyResonseListener implements Response.Listener<Strin
    * Kaldes med svaret fra cachen (hvis der er et) og igen når svaret fra serveren ankommer
    *
    * @param response Svaret
-   * @param fraCache Normalt true første gang hvis svaret kommer fra cachen og eventuelt forældet - Normalt false anden gang hvor svaret kommer fra serveren.
+   * @param fraCache Normalt true første gang hvis svaret kommer fra cachen (og eventuelt er forældet).
+   *                 Normalt false anden gang hvor svaret kommer fra serveren.
+   * @param uændret Serveren svarede med de samme data som der var i cachen
    * @throws Exception Hvis noget går galt i behandlingen - f.eks. ulovligt JSON kaldes fikFejl
    */
-  protected abstract void fikSvar(String response, boolean fraCache) throws Exception;
+  protected abstract void fikSvar(String response, boolean fraCache, boolean uændret) throws Exception;
 
   /**
    * Kaldes af Volley hvis der skete en netværksfejl. Kaldes også hvis behandlingen i #fikSvar gik galt.
@@ -58,7 +62,7 @@ public abstract class DrVolleyResonseListener implements Response.Listener<Strin
   /**
    * Kaldes (fra DrVolleyStringRequest) hvis forespørgslen blev annulleret
    */
-  protected void annulleret() {
+  void annulleret() {
     App.sætErIGang(false);
   }
 }

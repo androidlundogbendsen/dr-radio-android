@@ -137,16 +137,13 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     Log.d("hentSendeplanForDag url=" + url + " efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
 
     Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
-      public String cache;
 
       @Override
-      public void fikSvar(String json, boolean fraCache) throws Exception {
+      public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
         Log.d("fikSvar(" + fraCache + " " + url);
-        if (getActivity() == null) return;
+        if (getActivity() == null || uændret) return;
         Log.d("hentSendeplanForDag url " + url + " fraCache=" + fraCache + " efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
-        if (json != null && !"null".equals(json)) try {
-          if (fraCache) cache = json;
-          else if (json.equals(cache)) return; // Cachet værdi var OK
+        if (json != null && !"null".equals(json)) {
           if (idag) {
             kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json), kanal, DRData.instans), dato);
             opdaterListe();
@@ -164,13 +161,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
             int næstøversteSynligNytIndex = liste.indexOf(næstøversteSynlig);
             listView.setSelectionFromTop(næstøversteSynligNytIndex, næstøversteSynligOffset);
           }
-
           return;
-        } catch (JSONException e) {
-          Log.d("PXXXarsefejl: " + e + " for json=" + json);
-          e.printStackTrace();
-        } catch (Exception e) {
-          Log.rapporterFejl(e);
         }
         new AQuery(rod).id(R.id.tom).text("netværksfejl");
       }
@@ -251,12 +242,9 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
     if (kanal.streams == null && App.erOnline()) {
       Request<?> req = new DrVolleyStringRequest(kanal.getStreamsUrl(), new DrVolleyResonseListener() {
-        public String cache;
-
         @Override
-        public void fikSvar(String json, boolean fraCache) throws Exception {
-          if (fraCache) cache = json;
-          else if (json.equals(cache)) return; // ingen grund til at parse det igen
+        public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+          if (uændret) return; // ingen grund til at parse det igen
           JSONObject o = new JSONObject(json);
           kanal.slug = o.getString(DRJson.Slug.name());
           DRData.instans.grunddata.kanalFraSlug.put(kanal.slug, kanal);
@@ -463,17 +451,14 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       Log.d("Henter playliste " + url);
       Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
         @Override
-        public void fikSvar(String json, boolean fraCache) throws Exception {
+        public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
           Log.d(kanal.kode + " opdaterSenestSpillet url " + url);
-          if (getActivity() == null) return;
-          if (json != null && !"null".equals(json)) try {
+          if (getActivity() == null  || uændret) return;
+          if (json != null && !"null".equals(json)) {
             u2.playliste = DRJson.parsePlayliste(new JSONArray(json));
             Log.d(kanal.kode + " parsePlayliste gav " + u2.playliste.size() + " elemener");
             opdaterSenestSpillet(aq2, u2);
             return;
-          } catch (Exception e) {
-            Log.d("Parsefejl: " + e + " for json=" + json);
-            e.printStackTrace();
           }
           aq2.id(R.id.senest_spillet_container).gone();
         }

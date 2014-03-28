@@ -142,9 +142,10 @@ public class Udsendelser_lodret_skift_frag extends Basisfragment {
 
     Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
       @Override
-      public void fikSvar(String json, boolean fraCache) throws Exception {
+      public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
         Log.d("fikSvar(" + fraCache + " " + url);
-        if (json != null && !"null".equals(json)) try {
+        if (json != null && !"null".equals(json)) {
+          if (uændret) return;
           JSONObject data = new JSONObject(json);
           if (offset == 0) {
             programserie = DRJson.parsProgramserie(data);
@@ -158,9 +159,6 @@ public class Udsendelser_lodret_skift_frag extends Basisfragment {
             programserie.udsendelser.addAll(flereUdsendelser);
           }
           opdaterListe();
-          return;
-        } catch (Exception e) {
-          Log.e(e);
         }
       }
 
