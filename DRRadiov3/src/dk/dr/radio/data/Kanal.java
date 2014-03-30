@@ -26,6 +26,8 @@ import java.util.Date;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import dk.dr.radio.diverse.App;
+
 public class Kanal extends Lydkilde {
   private static final long serialVersionUID = 1L;
 
@@ -82,7 +84,7 @@ public class Kanal extends Lydkilde {
   }
 
   public int getAktuelUdsendelseIndex() {
-    Date nu = new Date(); // TODO kompenser for forskelle mellem telefonens ur og serverens ur
+    Date nu = new Date(App.serverCurrentTimeMillis()); // Kompenseret for forskelle mellem telefonens ur og serverens ur
     // Nicolai: "jeg løber listen igennem fra bunden og op,
     // og så finder jeg den første der har starttid >= nuværende tid + sluttid <= nuværende tid."
     for (int n = udsendelser.size() - 1; n > 1; n--) {

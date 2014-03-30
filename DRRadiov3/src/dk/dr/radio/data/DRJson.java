@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import dk.dr.radio.diverse.App;
-import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 import dk.dr.radio.diverse.Log;
 
 /**
@@ -123,9 +122,10 @@ public enum DRJson {
    * Deduplikerer objekterne undervejs
    */
   public static ArrayList<Udsendelse> parseUdsendelserForKanal(JSONArray jsonArray, Kanal kanal, DRData drData) throws JSONException, ParseException {
-    String iDagDatoStr = datoformat.format(new Date());
-    String iMorgenDatoStr = datoformat.format(new Date(DrVolleyStringRequest.serverCurrentTimeMillis() + 24 * 60 * 60 * 1000));
-    String iGårDatoStr = datoformat.format(new Date(DrVolleyStringRequest.serverCurrentTimeMillis() - 24 * 60 * 60 * 1000));
+    long nu = App.serverCurrentTimeMillis();
+    String iDagDatoStr = datoformat.format(new Date(nu));
+    String iMorgenDatoStr = datoformat.format(new Date(nu + 24 * 60 * 60 * 1000));
+    String iGårDatoStr = datoformat.format(new Date(nu - 24 * 60 * 60 * 1000));
 
     ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
     for (int n = 0; n < jsonArray.length(); n++) {

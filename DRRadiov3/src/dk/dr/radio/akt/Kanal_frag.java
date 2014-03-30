@@ -32,8 +32,6 @@ import com.androidquery.AQuery;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -108,7 +106,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
     Log.d(this + " onCreateView 3 efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     // Hent sendeplan for den pågældende dag. Døgnskifte sker kl 5, så det kan være dagen før
-    hentSendeplanForDag(new Date(DrVolleyStringRequest.serverCurrentTimeMillis() - 5 * 60 * 60 * 1000), true);
+    hentSendeplanForDag(new Date(App.serverCurrentTimeMillis() - 5 * 60 * 60 * 1000), true);
     Log.d(this + " onCreateView 4 efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     // Hent streams
     App.forgrundstråd.postDelayed(this, 500);
@@ -491,7 +489,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     if (vh == null) return;
     try {
       Udsendelse u = vh.udsendelse;
-      long passeret = DrVolleyStringRequest.serverCurrentTimeMillis() - u.startTid.getTime();
+      long passeret = App.serverCurrentTimeMillis() - u.startTid.getTime();
       long længde = u.slutTid.getTime() - u.startTid.getTime();
       int passeretPct = længde > 0 ? (int) (passeret * 100 / længde) : 0;
       //Log.d(getKanal.kode + " passeretPct=" + passeretPct + " af længde=" + længde);

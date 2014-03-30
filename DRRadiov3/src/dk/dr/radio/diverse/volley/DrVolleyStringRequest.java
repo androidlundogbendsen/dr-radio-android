@@ -4,12 +4,10 @@ import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 import dk.dr.radio.diverse.App;
@@ -60,16 +58,6 @@ public class DrVolleyStringRequest extends StringRequest {
     });
   }
 
-  /**
-   * I fald telefonens ur går forkert kan det ses her - alle HTTP-svar bliver jo stemplet med servertiden
-   */
-  private static long serverkorrektionTilKlienttidMs = 0;
-
-
-  public static long serverCurrentTimeMillis() {
-    return System.currentTimeMillis() + serverkorrektionTilKlienttidMs;
-  }
-
 
   /**
    * Omdefineret så vi kan aflæse servertiden og korrigere hvis klientens ur ikke passer med serverens
@@ -83,12 +71,7 @@ public class DrVolleyStringRequest extends StringRequest {
 */
     long servertid = HttpHeaderParser.parseDateAsEpoch(response.headers.get("Date"));
     if (servertid > 0) {
-      long serverkorrektionTilKlienttidMs2 = servertid - System.currentTimeMillis();
-      if (Math.abs(serverkorrektionTilKlienttidMs - serverkorrektionTilKlienttidMs2) > 30000) {
-        Log.d("SERVERTID korrigerer tid - serverkorrektionTilKlienttidMs=" + serverkorrektionTilKlienttidMs2+" klokken på serveren er "+new Date(servertid));
-        serverkorrektionTilKlienttidMs = serverkorrektionTilKlienttidMs2;
-        new Exception("SERVERTID korrigeret til "+new Date(servertid)).printStackTrace();
-      }
+      App.sætServerCurrentTimeMillis(servertid);
     }
 
     return super.parseNetworkResponse(response);
