@@ -60,6 +60,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Date;
 
 import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.akt.Basisaktivitet;
@@ -424,6 +425,28 @@ public class App extends Application implements Runnable {
   public void onTrimMemory(int level) {
     if (level >= TRIM_MEMORY_BACKGROUND) BitmapAjaxCallback.clearCache();
     super.onTrimMemory(level);
+  }
+
+  /**
+   * I fald telefonens ur går forkert kan det ses her - alle HTTP-svar bliver jo stemplet med servertiden
+   */
+  private static long serverkorrektionTilKlienttidMs = 0;
+
+  /**
+   * Giver et aktuelt tidsstempel på hvad serverens ur viser
+   * @return tiden, i  millisekunder siden 1. Januar 1970 00:00:00.0 UTC.
+   */
+  public static long serverCurrentTimeMillis() {
+    return System.currentTimeMillis() + serverkorrektionTilKlienttidMs;
+  }
+
+  public static void sætServerCurrentTimeMillis(long servertid) {
+    long serverkorrektionTilKlienttidMs2 = servertid - System.currentTimeMillis();
+    if (Math.abs(App.serverkorrektionTilKlienttidMs - serverkorrektionTilKlienttidMs2) > 30000) {
+      Log.d("SERVERTID korrigerer tid - serverkorrektionTilKlienttidMs=" + serverkorrektionTilKlienttidMs2+" klokken på serveren er "+new Date(servertid));
+      App.serverkorrektionTilKlienttidMs = serverkorrektionTilKlienttidMs2;
+      new Exception("SERVERTID korrigeret til "+new Date(servertid)).printStackTrace();
+    }
   }
 
   /**

@@ -20,7 +20,6 @@ import java.util.Date;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
-import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.P4Stedplacering;
 
@@ -96,7 +95,7 @@ public class Basisaktivitet extends ActionBarActivity {
         DRData.instans.hentedeUdsendelser.status();
         return true;
       case 13643:
-        App.langToast("Server:\n" + new Date(DrVolleyStringRequest.serverCurrentTimeMillis()) + "\n/Lokalt:\n" + new Date());
+        App.langToast("Server:\n" + new Date(App.serverCurrentTimeMillis()) + "\n/Lokalt:\n" + new Date());
         return true;
       case 643:
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);

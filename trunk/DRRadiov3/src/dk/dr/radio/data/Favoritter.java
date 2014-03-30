@@ -47,7 +47,7 @@ public class Favoritter {
   public void sætFavorit(String programserieSlug, int startFraNummer, boolean checked) {
     tjekDataOprettet();
     if (checked) {
-      long iMorgen = 24 * 60 * 60 * 1000 + DrVolleyStringRequest.serverCurrentTimeMillis();
+      long iMorgen = 24 * 60 * 60 * 1000 + App.serverCurrentTimeMillis();
       favoritTilStartdato.put(programserieSlug, DRJson.apiDatoFormat.format(new Date(iMorgen)));
       favoritTilAntalDagsdato.put(programserieSlug, 0);
     } else {
@@ -81,7 +81,7 @@ public class Favoritter {
     @Override
     public void run() {
       tjekDataOprettet();
-      String dd = DRJson.apiDatoFormat.format(new Date(DrVolleyStringRequest.serverCurrentTimeMillis()));
+      String dd = DRJson.apiDatoFormat.format(new Date(App.serverCurrentTimeMillis()));
       //if (dd.equals(dato) && favoritTilAntalDagsdato.keySet().equals(favoritTilStartdato.keySet())) return;
       Log.d("Favoritter: Opdaterer favoritTilStartdato=" + favoritTilStartdato+"  favoritTilAntalDagsdato="+favoritTilAntalDagsdato);
       dato=dd;
