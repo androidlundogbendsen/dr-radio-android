@@ -87,7 +87,7 @@ public class DrVolleyStringRequest extends StringRequest {
       if (Math.abs(serverkorrektionTilKlienttidMs - serverkorrektionTilKlienttidMs2) > 30000) {
         Log.d("SERVERTID korrigerer tid - serverkorrektionTilKlienttidMs=" + serverkorrektionTilKlienttidMs2+" klokken på serveren er "+new Date(servertid));
         serverkorrektionTilKlienttidMs = serverkorrektionTilKlienttidMs2;
-        new Exception().printStackTrace();
+        new Exception("SERVERTID korrigeret til "+new Date(servertid)).printStackTrace();
       }
     }
 

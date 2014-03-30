@@ -86,6 +86,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment {
 
 
   private void opdaterListe() {
+    if (viewPager==null) return;
     Udsendelse udsFør = liste.get(viewPager.getCurrentItem());
 
     liste.clear();

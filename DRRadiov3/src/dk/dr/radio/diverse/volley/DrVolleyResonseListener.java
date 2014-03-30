@@ -19,9 +19,10 @@ public abstract class DrVolleyResonseListener implements Response.Listener<Strin
    */
   protected String url;
   String cachetVærdi;
-  Exception startetHerfra = new Exception();
+  Exception startetHerfra;
 
   public DrVolleyResonseListener() {
+    startetHerfra = new Exception();
     App.sætErIGang(true);
   }
 

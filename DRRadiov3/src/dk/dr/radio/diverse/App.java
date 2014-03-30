@@ -240,7 +240,7 @@ public class App extends Application implements Runnable {
     boolean færdig = true;
     // Tidligere hentSupplerendeDataBg
 
-    { // Tjek at alle kanaler har deres streamsurler
+    if (App.netværk.status== Netvaerksstatus.Status.WIFI)  { // Tjek at alle kanaler har deres streamsurler
       for (final Kanal k : DRData.instans.grunddata.kanaler) {
         if (k.streams != null) continue;
 //        Log.d("run()1 " + (System.currentTimeMillis() - opstartstidspunkt) + " ms");

@@ -127,10 +127,9 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   }
 
-  public static DateFormat apiDatoFormat = new SimpleDateFormat("yyyy-MM-dd");
 
   private void hentSendeplanForDag(Date dag, final boolean idag) {
-    final String dato = apiDatoFormat.format(dag);
+    final String dato = DRJson.apiDatoFormat.format(dag);
 
     final String url = kanal.getUdsendelserUrl() + "/date/" + dato;
     Log.d("hentSendeplanForDag url=" + url + " efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
@@ -162,21 +161,14 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           }
           return;
         }
-        new AQuery(rod).id(R.id.tom).text("netværksfejl");
-      }
-
-      @Override
-      protected void fikFejl(VolleyError error) {
-        Log.e("error.networkResponse=" + error.networkResponse, error);
-        //Log.d(error.networkResponse.headers);
-        //App.kortToast("Netværksfejl, prøv igen senere");
+        new AQuery(rod).id(R.id.tom).text("Netværksfejl, prøv igen senere");
       }
     }) {
       public Priority getPriority() {
         return fragmentErSynligt ? Priority.NORMAL : Priority.LOW;
       }
     }.setTag(this);
-    Log.d("hentSendeplanForDag 2 " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
+    //Log.d("hentSendeplanForDag 2 " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     App.volleyRequestQueue.add(req);
   }
 

@@ -26,6 +26,7 @@ import org.apache.http.StatusLine;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.cookie.DateUtils;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -113,6 +114,8 @@ public class DrBasicNetwork implements Network {
           throw new IOException();
         }
         return new NetworkResponse(statusCode, responseContents, responseHeaders, false);
+      } catch (EOFException e) {
+        attemptRetryOnException("DR: server lukkede forbindelsen", request, new TimeoutError());
       } catch (SocketTimeoutException e) {
         attemptRetryOnException("socket", request, new TimeoutError());
       } catch (ConnectTimeoutException e) {
@@ -132,7 +135,7 @@ public class DrBasicNetwork implements Network {
         }
 
         if (statusCode==500 || statusCode==533) {
-          attemptRetryOnException("caching-problem på serversiden", request, new TimeoutError());
+          attemptRetryOnException("DR: caching-problem på serversiden", request, new TimeoutError());
           continue;
         }
         VolleyLog.e("Unexpected response code %d for %s", statusCode, request.getUrl());
