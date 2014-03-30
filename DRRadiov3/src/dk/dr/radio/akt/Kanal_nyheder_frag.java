@@ -62,9 +62,6 @@ public class Kanal_nyheder_frag extends Basisfragment implements View.OnClickLis
     });
 
 
-
-    // Hent streams
-    App.forgrundstråd.postDelayed(this, 500);
     udvikling_checkDrSkrifter(rod, this + " rod");
     DRData.instans.afspiller.observatører.add(this);
     App.netværk.observatører.add(this);
@@ -83,14 +80,12 @@ public class Kanal_nyheder_frag extends Basisfragment implements View.OnClickLis
   @Override
   public void setUserVisibleHint(boolean isVisibleToUser) {
     Log.d(kanal + " QQQ setUserVisibleHint " + isVisibleToUser + "  " + this);
-    if (kanal == null) return;
     fragmentErSynligt = isVisibleToUser;
     if (fragmentErSynligt) {
-      run();
+      App.forgrundstråd.post(this); // Opdatér lidt senere, efter onCreateView helt sikkert har kørt
       App.forgrundstråd.post(new Runnable() {
         @Override
         public void run() {
-          //scrollTilAktuelUdsendelse();
           if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET && DRData.instans.afspiller.getLydkilde() != kanal) {
             DRData.instans.afspiller.setLydkilde(kanal);
           }
@@ -103,16 +98,9 @@ public class Kanal_nyheder_frag extends Basisfragment implements View.OnClickLis
   }
 
   @Override
-  public void onPause() {
-    super.onPause();
-    App.forgrundstråd.removeCallbacks(this);
-    Log.d(this + " onPause() " + this);
-  }
-
-  @Override
   public void run() {
+    Log.d(this+" run()");
     App.forgrundstråd.removeCallbacks(this);
-    App.forgrundstråd.postDelayed(this, 15000);
 
     if (kanal.streams == null && App.erOnline()) {
       Request<?> req = new DrVolleyStringRequest(kanal.getStreamsUrl(), new DrVolleyResonseListener() {
@@ -120,10 +108,9 @@ public class Kanal_nyheder_frag extends Basisfragment implements View.OnClickLis
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
           if (uændret) return; // ingen grund til at parse det igen
           JSONObject o = new JSONObject(json);
-          kanal.slug = o.getString(DRJson.Slug.name());
-          DRData.instans.grunddata.kanalFraSlug.put(kanal.slug, kanal);
           kanal.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
           Log.d("hentSupplerendeDataBg " + kanal.kode + " fraCache=" + fraCache + " => " + kanal.slug + " k.lydUrl=" + kanal.streams);
+          run(); // Opdatér igen
         }
       }) {
         public Priority getPriority() {

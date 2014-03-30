@@ -162,13 +162,6 @@ public class Udsendelser_lodret_skift_frag extends Basisfragment {
           opdaterListe();
         }
       }
-
-      @Override
-      protected void fikFejl(VolleyError error) {
-        Log.e("fikFejl for " + url + " " + error.networkResponse, error);
-        //Log.d(error.networkResponse.headers);
-        App.kortToast("Netværksfejl, prøv igen senere");
-      }
     }).setTag(this);
     App.volleyRequestQueue.add(req);
   }

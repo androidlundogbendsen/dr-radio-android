@@ -53,7 +53,8 @@ public class Kanal extends Lydkilde {
 
 
   public String getStreamsUrl() {
-    return "http://www.dr.dk/tjenester/mu-apps/channel?includeStreams=true&urn=" + urn;
+    //return "http://www.dr.dk/tjenester/mu-apps/channel?includeStreams=true&urn=" + urn;
+    return "http://www.dr.dk/tjenester/mu-apps/channel/"+slug+"?includeStreams=true";
   }
 
 
