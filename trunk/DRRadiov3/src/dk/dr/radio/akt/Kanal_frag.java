@@ -535,15 +535,11 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     } else {
       // hør_udvidet_klikområde eller hør
       hør(kanal, getActivity());
+      Log.registrérTestet("Afspilning af direkte udsendelse", kanal.kode);
     }
   }
 
   public static void hør(final Kanal kanal, Activity akt) {
-    if (!App.EMULATOR) {
-      HashMap<String, String> param = new HashMap<String, String>();
-      param.put("kanal", kanal.kode);
-    }
-
     if (App.fejlsøgning) App.kortToast("kanal.streams=" + kanal.streams);
     if (App.prefs.getBoolean("manuelStreamvalg", false)) {
       kanal.nulstilForetrukkenStream();
