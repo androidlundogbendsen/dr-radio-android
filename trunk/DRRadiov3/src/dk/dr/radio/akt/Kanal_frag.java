@@ -108,8 +108,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     // Hent sendeplan for den pågældende dag. Døgnskifte sker kl 5, så det kan være dagen før
     hentSendeplanForDag(new Date(App.serverCurrentTimeMillis() - 5 * 60 * 60 * 1000), true);
     Log.d(this + " onCreateView 4 efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
-    // Hent streams
-    App.forgrundstråd.postDelayed(this, 500);
     udvikling_checkDrSkrifter(rod, this + " rod");
     DRData.instans.afspiller.observatører.add(this);
     App.netværk.observatører.add(this);
@@ -122,7 +120,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     super.onDestroyView();
     DRData.instans.afspiller.observatører.remove(this);
     App.netværk.observatører.remove(this);
-
   }
 
 
@@ -189,11 +186,10 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   @Override
   public void setUserVisibleHint(boolean isVisibleToUser) {
     Log.d(kanal + " QQQ setUserVisibleHint " + isVisibleToUser + "  " + this);
-    if (kanal == null) return;
     fragmentErSynligt = isVisibleToUser;
     if (fragmentErSynligt) {
       senesteSynligeFragment = this;
-      run();
+      App.forgrundstråd.post(this); // Opdatér lidt senere, efter onCreateView helt sikkert har kørt
       App.forgrundstråd.post(new Runnable() {
         @Override
         public void run() {
@@ -226,6 +222,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   @Override
   public void run() {
+    Log.d(this+" run() synlig="+fragmentErSynligt);
     App.forgrundstråd.removeCallbacks(this);
     App.forgrundstråd.postDelayed(this, 15000);
 
@@ -235,11 +232,9 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
           if (uændret) return; // ingen grund til at parse det igen
           JSONObject o = new JSONObject(json);
-          kanal.slug = o.getString(DRJson.Slug.name());
-          DRData.instans.grunddata.kanalFraSlug.put(kanal.slug, kanal);
           kanal.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
           Log.d("hentSupplerendeDataBg " + kanal.kode + " fraCache=" + fraCache + " => " + kanal.slug + " k.lydUrl=" + kanal.streams);
-          opdaterAktuelUdsendelse(aktuelUdsendelseViewholder);
+          run(); // Opdatér igen
         }
       }) {
         public Priority getPriority() {
@@ -368,7 +363,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           });
           v.setBackgroundResource(R.drawable.knap_hvid_bg);
           a.id(R.id.senest_spillet_container).invisible(); // Start uden 'senest spillet, indtil vi har info
-
         } else {
           vh.titel = a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson_fed).getTextView();
         }
@@ -403,7 +397,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           }
 
           opdaterAktuelUdsendelse(aktuelUdsendelseViewholder);
-          opdaterSenestSpillet(a, udsendelse);
+          opdaterSenestSpillet2(a, udsendelse);
           break;
         case NORMAL:
           vh.startid.setText(udsendelse.startTidKl);
@@ -429,45 +423,10 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     }
   };
 
-  private void opdaterSenestSpillet(AQuery aq, Udsendelse u) {
-    Log.d(kanal.kode + " opdaterSenestSpillet " + u);
 
-    if (u.playliste == null) {
-      // optimering - brug kun final i enkelte tilfælde. Final forårsager at variabler lægges i heap i stedet for stakken) at garbage collectoren skal køre fordi final
-      final Udsendelse u2 = u;
-      final AQuery aq2 = aq;
-      final String url = kanal.getPlaylisteUrl(u); // http://www.dr.dk/tjenester/mu-apps/playlist/monte-carlo-352/p3
-      Log.d("Henter playliste " + url);
-      Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
-        @Override
-        public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
-          Log.d(kanal.kode + " opdaterSenestSpillet url " + url);
-          if (getActivity() == null  || uændret) return;
-          if (json != null && !"null".equals(json)) {
-            u2.playliste = DRJson.parsePlayliste(new JSONArray(json));
-            Log.d(kanal.kode + " parsePlayliste gav " + u2.playliste.size() + " elemener");
-            opdaterSenestSpillet(aq2, u2);
-            return;
-          }
-          aq2.id(R.id.senest_spillet_container).gone();
-        }
-
-        @Override
-        protected void fikFejl(VolleyError error) {
-          Log.e("error.networkResponse=" + error.networkResponse, error);
-          aq2.id(R.id.senest_spillet_container).gone();
-        }
-      }) {
-        public Priority getPriority() {
-          return fragmentErSynligt ? Priority.NORMAL : Priority.LOW;
-        }
-      }.setTag(this);
-      App.volleyRequestQueue.add(req);
-      return;
-    }
-
-
-    if (u.playliste.size() > 0) {
+  private void opdaterSenestSpillet2(AQuery aq, Udsendelse u) {
+    Log.d("DDDDD opdaterSenestSpillet2 "+u.playliste);
+    if (u.playliste != null && u.playliste.size() > 0) {
       aq.id(R.id.senest_spillet_container).visible();
       Playlisteelement elem = u.playliste.get(0);
 //      aq.id(R.id.titel_og_kunstner).text(Html.fromHtml("<b>" + elem.titel + "</b> &nbsp; | &nbsp;" + elem.kunstner));
@@ -486,7 +445,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   }
 
   private void opdaterAktuelUdsendelse(Viewholder vh) {
-    if (vh == null) return;
     try {
       Udsendelse u = vh.udsendelse;
       long passeret = App.serverCurrentTimeMillis() - u.startTid.getTime();
@@ -502,10 +460,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       vh.slutttidbjælke.setLayoutParams(lp);
       if (passeretPct >= 100) { // Hop til næste udsendelse
         opdaterListe();
-        scrollTilAktuelUdsendelseBlødt();
-      }
-      if (u.playliste != null && u.playliste.size() > 0) {
-        opdaterSenestSpillet(vh.aq, u);
+        if (vh.starttidbjælke.isShown()) scrollTilAktuelUdsendelseBlødt();
       }
 
       boolean spillerDenneKanal = DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET && DRData.instans.afspiller.getLydkilde() == kanal;
@@ -513,6 +468,31 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       vh.aq.id(R.id.hør_live).enabled(!spillerDenneKanal && online && kanal.streams != null)
           .text(!online ? "Internetforbindelse mangler" :
               (spillerDenneKanal ? " SPILLER " : " HØR ") + kanal.navn.toUpperCase() + " LIVE");
+
+      if (u.playliste == null) {
+        // optimering - brug kun final i enkelte tilfælde. Final forårsager at variabler lægges i heap i stedet for stakken) at garbage collectoren skal køre fordi final
+        final Udsendelse u2 = u;
+        final AQuery aq2 = vh.aq;
+        final String url = kanal.getPlaylisteUrl(u); // http://www.dr.dk/tjenester/mu-apps/playlist/monte-carlo-352/p3
+        Log.d("Henter playliste " + url);
+        Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
+          @Override
+          public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+            Log.d(kanal.kode + " opdaterSenestSpillet url " + url);
+            if (getActivity() == null  || uændret) return;
+            if (json != null && !"null".equals(json)) {
+              u2.playliste = DRJson.parsePlayliste(new JSONArray(json));
+              Log.d(kanal.kode + " parsePlayliste gav " + u2.playliste.size() + " elemener");
+            }
+            opdaterSenestSpillet2(aq2, u2);
+          }
+        }) {
+          public Priority getPriority() {
+            return fragmentErSynligt ? Priority.NORMAL : Priority.LOW;
+          }
+        }.setTag(this);
+        App.volleyRequestQueue.add(req);
+      }
 
     } catch (Exception e) {
       Log.rapporterFejl(e);
