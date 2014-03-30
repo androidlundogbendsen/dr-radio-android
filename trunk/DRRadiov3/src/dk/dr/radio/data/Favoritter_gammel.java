@@ -5,62 +5,53 @@ import com.android.volley.Request;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
 import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
-import dk.dr.radio.diverse.Log;
 
 /**
  * Håndtering af favoritter.
  * Created by j on 08-03-14.
  */
-public class Favoritter {
-  private static final String PREF_NØGLE = "favorit til startdato";
-  private HashMap<String, String> favoritTilStartdato;
-  private HashMap<String, Integer> favoritTilAntalDagsdato = new HashMap<String, Integer>();
-  private String dato;
+public class Favoritter_gammel {
+  private static final String PREF_NØGLE = "favorit til startnummer";
+  private HashMap<String, String> favoritTilStartnummer;
   private int antalNyeUdsendelser = -1;
   public List<Runnable> observatører = new ArrayList<Runnable>();
 
 
   private void tjekDataOprettet() {
-    if (favoritTilStartdato != null) return;
+    if (favoritTilStartnummer != null) return;
     String str = App.prefs.getString(PREF_NØGLE, "");
     Log.d("Favoritter: læst " + str);
-    favoritTilStartdato = strengTilMap(str);
-    if (favoritTilStartdato.isEmpty()) antalNyeUdsendelser=0;
+    favoritTilStartnummer = strengTilMap(str);
+    if (favoritTilStartnummer.isEmpty()) antalNyeUdsendelser=0;
   }
 
 
   private void gem() {
-    String str = mapTilStreng(favoritTilStartdato);
+    String str = mapTilStreng(favoritTilStartnummer);
     Log.d("Favoritter: gemmer " + str);
     App.prefs.edit().putString(PREF_NØGLE, str).commit();
   }
 
   public void sætFavorit(String programserieSlug, int startFraNummer, boolean checked) {
     tjekDataOprettet();
-    if (checked) {
-      long iMorgen = 24 * 60 * 60 * 1000 + DrVolleyStringRequest.serverCurrentTimeMillis();
-      favoritTilStartdato.put(programserieSlug, DRJson.apiDatoFormat.format(new Date(iMorgen)));
-      favoritTilAntalDagsdato.put(programserieSlug, 0);
-    } else {
-      favoritTilStartdato.remove(programserieSlug);
-    }
+    if (checked) favoritTilStartnummer.put(programserieSlug, ""+startFraNummer);
+    else favoritTilStartnummer.remove(programserieSlug);
     gem();
-    beregnAntalNyeUdsendelser.run();
     for (Runnable r : observatører) r.run(); // Informér observatører
   }
 
   public boolean erFavorit(String programserieSlug) {
     tjekDataOprettet();
-    return favoritTilStartdato.containsKey(programserieSlug);
+    return favoritTilStartnummer.containsKey(programserieSlug);
   }
 
   /**
@@ -71,8 +62,16 @@ public class Favoritter {
    */
   public int getAntalNyeUdsendelser(String programserieSlug) {
     tjekDataOprettet();
-    Integer antalNye = favoritTilAntalDagsdato.get(programserieSlug);
-    if (antalNye==null) return -1;
+    String startFraNummer = favoritTilStartnummer.get(programserieSlug);
+    Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
+    if (startFraNummer == null) return -1;
+    if (programserie == null) return -2;
+    int antalNye = programserie.antalUdsendelser - Integer.parseInt(startFraNummer);
+    if (antalNye<0) {
+      Log.rapporterFejl(new IllegalStateException("antalNye=" + antalNye + " for " + programserieSlug));
+      favoritTilStartnummer.put(programserieSlug, "" + programserie.antalUdsendelser);
+      gem();
+    }
     return antalNye;
   }
 
@@ -81,20 +80,25 @@ public class Favoritter {
     @Override
     public void run() {
       tjekDataOprettet();
-      String dd = DRJson.apiDatoFormat.format(new Date(DrVolleyStringRequest.serverCurrentTimeMillis()));
-      //if (dd.equals(dato) && favoritTilAntalDagsdato.keySet().equals(favoritTilStartdato.keySet())) return;
-      Log.d("Favoritter: Opdaterer favoritTilStartdato=" + favoritTilStartdato+"  favoritTilAntalDagsdato="+favoritTilAntalDagsdato);
-      dato=dd;
-      for (final String programserieSlug : favoritTilStartdato.keySet()) {
-        String url = "http://www.dr.dk/tjenester/mu-apps/new-programs-since/" + programserieSlug + "/"+dato;
+      Log.d("Favoritter: Opdaterer favoritTilStartnummer=" + favoritTilStartnummer);
+      for (Map.Entry<String, String> e : favoritTilStartnummer.entrySet()) {
+        final String programserieSlug = e.getKey();
+        Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
+        if (programserie!=null) continue; // Allerede hentet
+        int offset = 0;
+        String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
         Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
           @Override
           public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
-            if (!uændret && json != null && !"null".equals(json)) {
-              JSONObject data = new JSONObject(json);
-              favoritTilAntalDagsdato.put(programserieSlug, data.getInt("TotalPrograms"));
+            Log.d("favoritter fikSvar(" + fraCache + " " + url);
+            if (!uændret) {
+              if (json != null && !"null".equals(json)) {
+                JSONObject data = new JSONObject(json);
+                Programserie programserie = DRJson.parsProgramserie(data, null);
+                programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+                DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
+              }
             }
-            Log.d("favoritter fikSvar(" + fraCache + " " + url+" "+json+" så nu er favoritTilAntalDagsdato="+favoritTilAntalDagsdato);
             App.forgrundstråd.postDelayed(beregnAntalNyeUdsendelser, 500); // Vent 1/2 sekund på eventuelt andre svar
           }
         }) {
@@ -112,14 +116,24 @@ public class Favoritter {
     public void run() {
       App.forgrundstråd.removeCallbacks(this);
       int antalNyeIAlt = 0;
-      for (Map.Entry<String, Integer> e : favoritTilAntalDagsdato.entrySet()) {
-        String programserieSlug = e.getKey();
-        Integer antalNye = e.getValue();
-        antalNyeIAlt += antalNye;
-        Log.d("Favoritter: "+programserieSlug+" har "+antalNye+", antalNyeIAlt=" +antalNyeIAlt);
+      for (Map.Entry<String, String> e : favoritTilStartnummer.entrySet()) {
+        final String programserieSlug = e.getKey();
+        final String startFraNummer = e.getValue();
+        Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
+        if (programserie != null) {
+          int nye = programserie.antalUdsendelser - Integer.parseInt(startFraNummer);
+          if (nye < 0) {
+            Log.rapporterFejl(new IllegalStateException("Antal nye favoritter=" + nye + " for " + programserieSlug));
+            e.setValue(""+programserie.antalUdsendelser);
+            gem();
+            continue;
+          }
+          antalNyeIAlt += nye;
+          Log.d("Favoritter: "+programserie+" har "+nye+", antalNyeIAlt=" +antalNyeIAlt);
+        }
       }
       if (antalNyeUdsendelser != antalNyeIAlt) {
-        Log.d("Favoritter: Ny favoritTilStartdato="+ favoritTilStartdato);
+        Log.d("Favoritter: Ny favoritTilStartnummer="+favoritTilStartnummer);
         Log.d("Favoritter: Fortæller observatører at antalNyeUdsendelser er ændret fra "+antalNyeUdsendelser+" til "+ antalNyeIAlt);
         antalNyeUdsendelser = antalNyeIAlt;
         for (Runnable r : observatører) r.run();  // Informér observatører - i forgrundstråden
@@ -129,7 +143,7 @@ public class Favoritter {
 
   public Set<String> getProgramserieSlugSæt() {
     tjekDataOprettet();
-    return favoritTilStartdato.keySet();
+    return favoritTilStartnummer.keySet();
   }
 
   public int getAntalNyeUdsendelser() {

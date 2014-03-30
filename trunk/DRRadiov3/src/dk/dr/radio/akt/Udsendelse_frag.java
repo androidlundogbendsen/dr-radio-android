@@ -87,6 +87,9 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       return rod;
     }
     if (kanal == null) kanal = udsendelse.getKanal();
+    if ("".equals(kanal.slug)) {
+      Log.e(new Exception("Kender ikke kanalen"));
+    }
     aktuelUdsendelsePåKanalen = udsendelse.slug.equals(getArguments().getString(AKTUEL_UDSENDELSE_SLUG));
     blokerVidereNavigering = getArguments().getBoolean(BLOKER_VIDERE_NAVIGERING);
 
@@ -135,6 +138,10 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   }
 
   private void startOpdaterSpilleliste() {
+    if ("".equals(kanal.slug)) {
+      Log.e(new Exception("Kender ikke kanalen"));
+      return;
+    }
     //new Exception("startOpdaterSpilleliste() for "+this).printStackTrace();
     Request<?> req = new DrVolleyStringRequest(kanal.getPlaylisteUrl(udsendelse), new DrVolleyResonseListener() {
       @Override

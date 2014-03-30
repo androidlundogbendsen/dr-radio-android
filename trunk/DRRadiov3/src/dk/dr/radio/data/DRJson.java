@@ -87,6 +87,10 @@ public enum DRJson {
    */
   public static DateFormat servertidsformat_playlise = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
+  /**
+   * Datoformat som serveren forventer det forskellige steder
+   */
+  public static DateFormat apiDatoFormat = new SimpleDateFormat("yyyy-MM-dd");
 /*
   public static void main(String[] a) throws ParseException {
     System.out.println(servertidsformat.format(new Date()));

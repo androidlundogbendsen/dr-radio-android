@@ -12,7 +12,10 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.android.volley.Request;
 import com.androidquery.AQuery;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +27,8 @@ import dk.dr.radio.data.Programserie;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
+import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 import dk.dr.radio.v3.R;
 
 public class Favoritprogrammer_frag extends Basisfragment implements AdapterView.OnItemClickListener, Runnable {
@@ -69,22 +74,34 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
 
   @Override
   public void run() {
+    App.forgrundstråd.removeCallbacks(this); // Ingen gentagne kald
     liste.clear();
     try {
       ArrayList<String> pss = new ArrayList<String>(favoritter.getProgramserieSlugSæt());
       Collections.sort(pss);
       Log.d(this + " psss = " + pss);
-      for (String programserieSlug : pss) {
+      for (final String programserieSlug : pss) {
         Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
         if (programserie!=null) liste.add(programserie);
-        else Log.d("programserieSlug gav ingen værdi: "+programserieSlug);
-/* De enkelte prgramudsendelser er fjernet fra favoritlisten
-
-        int antalNye = favoritter.getAntalNyeUdsendelser(programserieSlug);
-        for (int n = 0; n<antalNye && n<programserie.udsendelser.size(); n++) {
-          liste.add(programserie.udsendelser.get(n));
+        else {
+          Log.d("programserieSlug gav ingen værdi: "+programserieSlug);
+          int offset = 0;
+          String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
+          Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
+            @Override
+            public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+              Log.d("favoritter fikSvar(" + fraCache + " " + url);
+              if (!uændret && json != null && !"null".equals(json)) {
+                JSONObject data = new JSONObject(json);
+                Programserie programserie = DRJson.parsProgramserie(data, null);
+                programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+                DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
+              }
+              App.forgrundstråd.postDelayed(Favoritprogrammer_frag.this, 250); // Vent 1/4 sekund på eventuelt andre svar
+            }
+          });
+          App.volleyRequestQueue.add(req);
         }
-*/
       }
       Log.d(this + " liste = " + liste);
     } catch (Exception e1) {
