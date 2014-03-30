@@ -22,8 +22,12 @@ import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Build;
 
 import com.bugsense.trace.BugSenseHandler;
+
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 
 /**
  * Loggerklasse
@@ -112,11 +116,43 @@ public class Log {
       public void onClick(DialogInterface arg0, int arg1) {
         String brødtekst = "Skriv, hvad der skete:\n\n\n---\n";
         brødtekst += "\nFejlspor;\n" + android.util.Log.getStackTraceString(e);
-        brødtekst += "\n\n" + new MedieafspillerInfo().lavTelefoninfo(akt);
+        brødtekst += "\n\n" + lavKontaktinfo();
         App.kontakt(akt, "Fejl DR Radio", brødtekst, Log.log.toString());
       }
 
     });
     ab.create().show();
+  }
+
+  private static LinkedHashMap<String,String> afprøvedeTing = new LinkedHashMap<String,String>();
+  public static void registrérTestet(String hvad, String res) {
+    afprøvedeTing.put(hvad, res);
+  }
+
+  public static String lavKontaktinfo() {
+    String ret = "";
+    /*
+    PackageManager pm = instans.getPackageManager();
+    String version;
+    try {
+      PackageInfo pi = pm.getPackageInfo(instans.getPackageName(), 0);
+      version = pi.versionName;
+    } catch (Exception e) {
+      version = e.toString();
+      e.printStackTrace();
+    }
+
+    ret += instans.getPackageName() + " (v " + version + ")" + "\nTelefonmodel: " + Build.MODEL + " " + Build.PRODUCT + "\nAndroid v" + Build.VERSION.RELEASE + " (sdk: " + Build.VERSION.SDK + ")";
+    */
+    ret += App.versionsnavn +
+        "\nTelefonmodel: " + Build.MODEL + " " + Build.PRODUCT +
+        "\nAndroid v" + Build.VERSION.RELEASE + " (sdk: " + Build.VERSION.SDK + ")";
+
+    for (String afprøvet: afprøvedeTing.keySet()) {
+      ret += "\n"+afprøvet + ": "+afprøvedeTing.get(afprøvet);
+    }
+    ret += "\nJeg har gået ovenstående igennem og kan bekræfte, at disse ting er afprøvet: NEJ";
+
+    return ret;
   }
 }

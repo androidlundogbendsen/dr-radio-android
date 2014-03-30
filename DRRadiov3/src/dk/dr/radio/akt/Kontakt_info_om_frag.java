@@ -32,7 +32,6 @@ import android.widget.TextView;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
-import dk.dr.radio.diverse.MedieafspillerInfo;
 import dk.dr.radio.v3.R;
 
 public class Kontakt_info_om_frag extends Basisfragment implements OnClickListener {
@@ -73,7 +72,7 @@ public class Kontakt_info_om_frag extends Basisfragment implements OnClickListen
     String brødtekst = "";
     brødtekst += DRData.instans.grunddata.android_json.optString("kontakt_brugerspørgsmål");
     //brødtekst += "\nkanal: " + DRData.instans.afspiller.kanalNavn + " (" + DRData.instans.afspiller.kanalUrl + ")";
-    brødtekst += "\n" + new MedieafspillerInfo().lavTelefoninfo(getActivity());
+    brødtekst += "\n" + Log.lavKontaktinfo();
 
     App.kontakt(getActivity(), DRData.instans.grunddata.android_json.optString("kontakt_titel", "Feedback på DR Radio Android App"), brødtekst, Log.getLog());
   }

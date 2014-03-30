@@ -209,6 +209,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           udsendelse.hentetStream.url = uri;
           udsendelse.hentetStream.score = 500; // Rigtig god!
           udsendelse.kanHøres = true;
+          Log.registrérTestet("Afspille hentet udsendelse", udsendelse.slug);
         } else {
           Log.rapporterFejl(new IllegalStateException("Fil "+file+"  fandtes ikke alligevel??! for "+udsendelse));
         }
@@ -353,6 +354,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     if (fromUser) {
       DRData.instans.afspiller.seekTo(progress);
       seekBarTekst_opdater(progress);
+      Log.registrérTestet("Søgning i udsendelse", "ja");
     }
   }
 
@@ -643,15 +645,12 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       if (aktuelUdsendelsePåKanalen) {
         // Så skal man lytte til livestreamet
         Kanal_frag.hør(kanal, getActivity());
+        Log.registrérTestet("Åbne aktuel udsendelse og høre den", kanal.kode);
         return;
       }
       if (!streamsErKlar()) return;
       if (App.fejlsøgning) App.kortToast("kanal.streams=" + kanal.streams);
-      if (!App.EMULATOR) {
-        HashMap<String, String> param = new HashMap<String, String>();
-        param.put("kanal", kanal.kode);
-        param.put("udsendelse", udsendelse.slug);
-      }
+      Log.registrérTestet("Afspilning af gammel udsendelse", udsendelse.slug);
       if (App.prefs.getBoolean("manuelStreamvalg", false)) {
         udsendelse.nulstilForetrukkenStream();
         final List<Lydstream> lydstreamList = udsendelse.findBedsteStreams(false);
@@ -704,6 +703,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         });
       }
       seekBar.setProgress(pl.offsetMs);
+      Log.registrérTestet("Valg af playlisteelement", "ja");
     } else if (type == ALLE_UDS) {
 
       Fragment f = new Programserie_frag();

@@ -66,6 +66,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).getView());
     listView.setOnItemClickListener(this);
 
+    Log.registrérTestet("Visning af programserie", "ja");
     udvikling_checkDrSkrifter(rod, this + " rod");
     return rod;
   }
@@ -117,6 +118,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
   @Override
   public void onClick(View v) {
     DRData.instans.favoritter.sætFavorit(programserieSlug, programserie.antalUdsendelser, favorit.isChecked());
+    Log.registrérTestet("Valg af favoritprogram", programserieSlug);
   }
 
 

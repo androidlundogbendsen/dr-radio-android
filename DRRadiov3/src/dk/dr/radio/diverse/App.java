@@ -32,6 +32,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -408,6 +410,7 @@ public class App extends Application implements Runnable {
     try {
       akt.startActivity(i);
     } catch (Exception e) {
+      App.langToast(e.toString());
       Log.rapporterFejl(e);
     }
   }

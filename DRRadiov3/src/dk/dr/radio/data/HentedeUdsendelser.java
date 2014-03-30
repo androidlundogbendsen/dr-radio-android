@@ -199,6 +199,7 @@ public class HentedeUdsendelser {
           Log.d("DLS " + c + "  "+c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS)));
           if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
             App.langToast("Udsendelsen "+u.titel+" blev hentet");
+            Log.registrérTestet("Hente udsendelse", u.slug);
           } else {
             App.langToast("Det lykkedes ikke at hente udsendelsen "+u.titel+"\nTjek at du har tilstrækkeligt ledigt plads");
           }

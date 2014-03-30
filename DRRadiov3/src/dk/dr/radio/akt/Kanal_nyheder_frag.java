@@ -149,6 +149,7 @@ public class Kanal_nyheder_frag extends Basisfragment implements View.OnClickLis
     } else {
       // hør_udvidet_klikområde eller hør
       Kanal_frag.hør(kanal, getActivity());
+      Log.registrérTestet("Afspilning af seneste radioavis", "ja");
     }
   }
 }
