@@ -92,13 +92,11 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
           JSONObject data = new JSONObject(json);
           if (offset == 0) {
             programserie = DRJson.parsProgramserie(data, programserie);
-            programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+            programserie.tilføjUdsendelser(DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans));
             DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
-          } else if (fraCache) {
-            return; // TODO brug cache til de følgende udsendelser (lidt kompliceret)
           } else {
             ArrayList<Udsendelse> flereUdsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
-            programserie.udsendelser.addAll(flereUdsendelser);
+            programserie.tilføjUdsendelser(flereUdsendelser);
           }
           adapter.notifyDataSetChanged();
           return;
@@ -147,8 +145,8 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     @Override
     public int getCount() {
       if (programserie == null) return 0;
-      if (programserie.antalUdsendelser == programserie.udsendelser.size()) return programserie.udsendelser.size() + 1;
-      return programserie.udsendelser.size() + 2; // Vis 'tidligere'-listeelement
+      if (programserie.antalUdsendelser == programserie.getUdsendelser().size()) return programserie.getUdsendelser().size() + 1;
+      return programserie.getUdsendelser().size() + 2; // Vis 'tidligere'-listeelement
     }
 
     @Override
@@ -159,7 +157,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     @Override
     public int getItemViewType(int position) {
       if (position == 0 || programserie == null) return TOP;
-      if (position == programserie.udsendelser.size() + 1) return TIDLIGERE;
+      if (position == programserie.getUdsendelser().size() + 1) return TIDLIGERE;
       return UDSENDELSE;
     }
 
@@ -209,7 +207,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
 
       // Opdatér viewholderens data
       if (type == UDSENDELSE) {
-        Udsendelse u = programserie.udsendelser.get(position - 1);
+        Udsendelse u = programserie.getUdsendelser().get(position - 1);
         vh.udsendelse = u;
         //vh.stiplet_linje.setVisibility(position > 1 ? View.VISIBLE : View.INVISIBLE); // Første stiplede linje væk
         vh.stiplet_linje.setBackgroundResource(position > 1 ? R.drawable.stiplet_linje : R.drawable.linje); // Første stiplede linje er fuld
@@ -238,7 +236,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
         if (antalHentedeSendeplaner++ < 7) {
           vh.aq.id(R.id.progressBar).visible();   // De første 7 henter vi bare for brugeren
           vh.titel.setVisibility(View.VISIBLE);
-          hentUdsendelser(programserie.udsendelser.size());
+          hentUdsendelser(programserie.getUdsendelser().size());
         } else {
           vh.aq.id(R.id.progressBar).invisible(); // Derefter må brugeren gøre det manuelt
           vh.titel.setVisibility(View.VISIBLE);
@@ -254,9 +252,10 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
   @Override
   public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
     if (position == 0) return;
-    if (position <= programserie.udsendelser.size()) {
-      Udsendelse udsendelse = programserie.udsendelser.get(position - 1);
-      Fragment f = new Udsendelse_frag();
+    if (position <= programserie.getUdsendelser().size()) {
+      Udsendelse udsendelse = programserie.getUdsendelser().get(position - 1);
+//      Fragment f = new Udsendelse_frag();
+      Fragment f = new Udsendelser_vandret_skift_frag();
       f.setArguments(new Intent()
           .putExtra(Udsendelse_frag.BLOKER_VIDERE_NAVIGERING, true)
           .putExtra(P_kode, kanal == null ? null : kanal.kode)
@@ -270,7 +269,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
       return;
     }
 
-    hentUdsendelser(programserie.udsendelser.size());
+    hentUdsendelser(programserie.getUdsendelser().size());
     v.findViewById(R.id.titel).setVisibility(View.GONE);
     v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
   }

@@ -26,7 +26,7 @@ public enum DRJson {
   StartTime, EndTime,
   Streams,
   Uri, Played, Artist, Image,
-  Type, Kind, Quality, Kbps, ChannelSlug, TotalPrograms, Programs, FirstBroadcast, Watchable, DurationInSeconds, Format, OffsetMs, ProductionNumber, LatestProgramBroadcasted;
+  Type, Kind, Quality, Kbps, ChannelSlug, TotalPrograms, Programs, FirstBroadcast, Watchable, DurationInSeconds, Format, OffsetMs, ProductionNumber, LatestProgramBroadcasted, Episode;
 
   /*
     public enum StreamType {
@@ -101,6 +101,21 @@ public enum DRJson {
   public static final DateFormat klokkenformat = new SimpleDateFormat("HH:mm", dansk);
   public static final DateFormat datoformat = new SimpleDateFormat("d. MMM yyyy", dansk);
 
+  public static String iDagDatoStr;
+  public static String iMorgenDatoStr;
+  public static String iGårDatoStr;
+
+  public static void opdateriDagIMorgenIGårDatoStr(long nu) {
+    iDagDatoStr = datoformat.format(new Date(nu));
+    iMorgenDatoStr = datoformat.format(new Date(nu + 24 * 60 * 60 * 1000));
+    iGårDatoStr = datoformat.format(new Date(nu - 24 * 60 * 60 * 1000));
+  }
+
+  static {
+    opdateriDagIMorgenIGårDatoStr(System.currentTimeMillis());
+  }
+
+
 
   private static Udsendelse opretUdsendelse(DRData drData, JSONObject o) throws JSONException {
     String slug = o.optString(DRJson.Slug.name());  // Bemærk - kan være tom!
@@ -113,6 +128,7 @@ public enum DRJson {
     u.titel = o.getString(DRJson.Title.name());
     u.beskrivelse = o.getString(DRJson.Description.name());
     u.programserieSlug = o.optString(DRJson.SeriesSlug.name());  // Bemærk - kan være tom!
+    u.episodeIProgramserie = o.optInt(DRJson.Episode.name());
     u.urn = o.optString(DRJson.Urn.name());  // Bemærk - kan være tom!
     return u;
   }
@@ -121,10 +137,6 @@ public enum DRJson {
    * Parser udsendelser for getKanal. A la http://www.dr.dk/tjenester/mu-apps/schedule/P3/0
    */
   public static ArrayList<Udsendelse> parseUdsendelserForKanal(JSONArray jsonArray, Kanal kanal, DRData drData) throws JSONException, ParseException {
-    long nu = App.serverCurrentTimeMillis();
-    String iDagDatoStr = datoformat.format(new Date(nu));
-    String iMorgenDatoStr = datoformat.format(new Date(nu + 24 * 60 * 60 * 1000));
-    String iGårDatoStr = datoformat.format(new Date(nu - 24 * 60 * 60 * 1000));
 
     ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
     for (int n = 0; n < jsonArray.length(); n++) {

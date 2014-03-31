@@ -9,7 +9,7 @@ import dk.dr.radio.diverse.Log;
  * Repræsenterer en udsendelse
  * Created by j on 28-01-14.
  */
-public class Udsendelse extends Lydkilde {
+public class Udsendelse extends Lydkilde implements Comparable {
   private static final long serialVersionUID = -4522417772156322526L;
   public String titel;
   public String beskrivelse;
@@ -25,6 +25,7 @@ public class Udsendelse extends Lydkilde {
   public boolean kanHøres; // om der er nogle streams eller ej
   public String produktionsnummer;
   public transient int startposition;// hvis der allerede er lyttet til denne lydkilde så notér det her så afspilning kan fortsætte herfra
+  public int episodeIProgramserie;
 
   public Udsendelse(String s) {
     titel = s;
@@ -73,5 +74,22 @@ public class Udsendelse extends Lydkilde {
   @Override
   public Udsendelse getUdsendelse() {
     return this;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o==null || !(o instanceof Udsendelse)) return false;
+    Udsendelse u2 = (Udsendelse) o;
+    if (slug==null && u2.slug!=null) return false;
+    return slug.equals(u2.slug);
+  }
+
+  @Override
+  public int compareTo(Object o) {
+    if (o==null || !(o instanceof Udsendelse)) return -1;
+    Udsendelse u2 = (Udsendelse) o;
+    int e1 = episodeIProgramserie;
+    int e2 = u2.episodeIProgramserie;
+    return e2 < e1 ? 1 : (e2 == e1 ? 0 : -1);
   }
 }

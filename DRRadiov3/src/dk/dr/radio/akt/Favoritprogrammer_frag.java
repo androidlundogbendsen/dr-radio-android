@@ -94,7 +94,7 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
               if (!uændret && json != null && !"null".equals(json)) {
                 JSONObject data = new JSONObject(json);
                 Programserie programserie = DRJson.parsProgramserie(data, null);
-                programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+                programserie.tilføjUdsendelser(DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans));
                 DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
               }
               App.forgrundstråd.postDelayed(Favoritprogrammer_frag.this, 250); // Vent 1/4 sekund på eventuelt andre svar
