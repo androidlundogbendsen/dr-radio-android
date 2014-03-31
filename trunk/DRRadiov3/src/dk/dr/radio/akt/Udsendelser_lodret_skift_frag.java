@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.android.volley.Request;
-import com.android.volley.VolleyError;
 
 import org.json.JSONObject;
 
@@ -79,11 +78,11 @@ public class Udsendelser_lodret_skift_frag extends Basisfragment {
     // fragmentmanageren - ikke på aktivitens (getFragmentManager)
     adapter = new UdsendelserAdapter(getChildFragmentManager());
 
-    int n = programserie==null?-1:findUdsendelseIndexFraSlug(udsendelse.slug, programserie.udsendelser);
+    int n = programserie==null?-1:findUdsendelseIndexFraSlug(udsendelse.slug, programserie.getUdsendelser());
 
     Log.d("programserie.udsendelser.indexOf(udsendelse) = "+n);
     if (n>=0) {
-      liste.addAll(programserie.udsendelser);
+      liste.addAll(programserie.getUdsendelser());
       viewPager.setAdapter(adapter);
       viewPager.setCurrentItem(n);
     } else {
@@ -110,8 +109,8 @@ public class Udsendelser_lodret_skift_frag extends Basisfragment {
     Udsendelse udsFør = liste.get(viewPager.getCurrentItem());
 
     liste.clear();
-    liste.addAll(programserie.udsendelser);
-    Log.d("programserie.udsendelser. = " + programserie.udsendelser);
+    liste.addAll(programserie.getUdsendelser());
+    Log.d("programserie.udsendelser. = " + programserie.getUdsendelser());
     int nEft = findUdsendelseIndexFraSlug(udsFør.slug, liste);
     Log.d("programserie nEft== "+nEft);
     if (nEft>=0) {
@@ -121,8 +120,8 @@ public class Udsendelser_lodret_skift_frag extends Basisfragment {
       liste.add(udsFør);
       adapter.notifyDataSetChanged();
       viewPager.setCurrentItem(liste.size() - 1, false);
-      if (programserie.udsendelser.size() < programserie.antalUdsendelser) {
-        hentUdsendelser(programserie.udsendelser.size());
+      if (programserie.getUdsendelser().size() < programserie.antalUdsendelser) {
+        hentUdsendelser(programserie.getUdsendelser().size());
       }
     }
   }
@@ -150,14 +149,12 @@ public class Udsendelser_lodret_skift_frag extends Basisfragment {
           JSONObject data = new JSONObject(json);
           if (offset == 0) {
             programserie = DRJson.parsProgramserie(data, programserie);
-            programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+            programserie.tilføjUdsendelser(DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans));
             DRData.instans.programserieFraSlug.put(udsendelse.programserieSlug, programserie);
-          } else if (fraCache) {
-            return; // TODO brug cache til de følgende udsendelser (lidt kompliceret)
           } else {
             ArrayList<Udsendelse> flereUdsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
             if (flereUdsendelser.size()==0) return; // Ingen opdatering
-            programserie.udsendelser.addAll(flereUdsendelser);
+            programserie.getUdsendelser().addAll(flereUdsendelser);
           }
           opdaterListe();
         }

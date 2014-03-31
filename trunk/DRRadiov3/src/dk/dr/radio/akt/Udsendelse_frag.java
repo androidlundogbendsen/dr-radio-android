@@ -102,7 +102,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     listView.setOnItemClickListener(this);
 
     tjekOmHentet(udsendelse);
-    if (udsendelse.hentetStream == null) {
+    if (udsendelse.hentetStream == null && udsendelse.streams==null) {
       Request<?> req = new DrVolleyStringRequest(udsendelse.getStreamsUrl(), new DrVolleyResonseListener() {
         @Override
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
@@ -126,7 +126,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 //      DRData.instans.afspiller.setLydkilde(udsendelse);
 //    }
 
-    opdaterSpillelisteRunnable.run();
+    if (aktuelUdsendelsePåKanalen || udsendelse.playliste==null) opdaterSpillelisteRunnable.run();
 
     setHasOptionsMenu(true);
     bygListe();

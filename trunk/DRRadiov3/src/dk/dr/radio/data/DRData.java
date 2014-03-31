@@ -94,7 +94,7 @@ public class DRData {
           if ("null".equals(str)) continue;
           JSONObject data = new JSONObject(str);
           ps = DRJson.parsProgramserie(data, null);
-          ps.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
+          ps.tilføjUdsendelser(DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans));
           i.programserieFraSlug.put(u.programserieSlug, ps);
 
         }

@@ -10,11 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.volley.Request;
-import com.android.volley.VolleyError;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
@@ -27,7 +27,7 @@ import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-public class Udsendelser_vandret_skift_frag extends Basisfragment {
+public class Udsendelser_vandret_skift_frag extends Basisfragment implements ViewPager.OnPageChangeListener {
 
   private ViewPager viewPager;
 
@@ -36,6 +36,8 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment {
   private ArrayList<Udsendelse> liste = new ArrayList<Udsendelse>();
   private Kanal kanal;
   private UdsendelserAdapter adapter;
+  private int antalHentedeSendeplaner;
+  private View pager_title_strip;
 
   @Override
   public String toString() {
@@ -55,15 +57,17 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment {
 
     viewPager = (ViewPager) rod.findViewById(R.id.pager);
     viewPager.setId(123);
+    pager_title_strip = rod.findViewById(R.id.pager_title_strip);
     // Da ViewPager er indlejret i et fragment skal adapteren virke på den indlejrede (child)
     // fragmentmanageren - ikke på aktivitens (getFragmentManager)
     adapter = new UdsendelserAdapter(getChildFragmentManager());
+    DRJson.opdateriDagIMorgenIGårDatoStr(App.serverCurrentTimeMillis());
 
-    int n = programserie==null?-1:findUdsendelseIndexFraSlug(udsendelse.slug, programserie.udsendelser);
+    int n = programserie==null?-1:programserie.findUdsendelseIndexFraSlug(udsendelse.slug);
 
     Log.d("programserie.udsendelser.indexOf(udsendelse) = "+n);
     if (n>=0) {
-      liste.addAll(programserie.udsendelser);
+      liste.addAll(programserie.getUdsendelser());
       viewPager.setAdapter(adapter);
       viewPager.setCurrentItem(n);
     } else {
@@ -71,39 +75,28 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment {
       viewPager.setAdapter(adapter);
       if (programserie==null) hentUdsendelser(0);
     }
+    pager_title_strip.setVisibility(liste.size()>1?View.VISIBLE:View.INVISIBLE);
+    viewPager.setOnPageChangeListener(this);
     return rod;
-  }
-
-  private int findUdsendelseIndexFraSlug(String slug, ArrayList<Udsendelse> udsendelser) {
-    int n = -1;
-    if (udsendelser!=null) {
-      for (int i=0; i<udsendelser.size(); i++) {
-        if (slug.equals(udsendelser.get(i).slug)) n = i;
-      }
-    }
-    return n;
   }
 
 
   private void opdaterListe() {
     if (viewPager==null) return;
     Udsendelse udsFør = liste.get(viewPager.getCurrentItem());
-
     liste.clear();
-    liste.addAll(programserie.udsendelser);
-    Log.d("programserie.udsendelser. = " + programserie.udsendelser);
-    int nEft = findUdsendelseIndexFraSlug(udsFør.slug, liste);
-    Log.d("programserie nEft== "+nEft);
-    if (nEft>=0) {
-      adapter.notifyDataSetChanged();
-      viewPager.setCurrentItem(nEft, false);
-    } else {
-      liste.add(udsFør);
-      adapter.notifyDataSetChanged();
-      viewPager.setCurrentItem(liste.size() - 1, false);
-      if (programserie.udsendelser.size() < programserie.antalUdsendelser) {
-        hentUdsendelser(programserie.udsendelser.size());
-      }
+    liste.addAll(programserie.getUdsendelser());
+    int nEft = programserie.findUdsendelseIndexFraSlug(udsFør.slug);
+    adapter.notifyDataSetChanged();
+    viewPager.setCurrentItem(nEft, false);
+    pager_title_strip.setVisibility(liste.size()>1?View.VISIBLE:View.INVISIBLE);
+/*
+    if (programserie.getUdsendelser().size() < programserie.antalUdsendelser) {
+      hentUdsendelser(programserie.getUdsendelser().size());
+    }
+    */
+    if (nEft == liste.size()-1 && antalHentedeSendeplaner++ < 7) { // Hent flere udsendelser
+      hentUdsendelser(programserie.getUdsendelser().size());
     }
   }
 
@@ -130,20 +123,30 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment {
           JSONObject data = new JSONObject(json);
           if (offset == 0) {
             programserie = DRJson.parsProgramserie(data, programserie);
-            programserie.udsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
             DRData.instans.programserieFraSlug.put(udsendelse.programserieSlug, programserie);
-          } else if (fraCache) {
-            return; // TODO brug cache til de følgende udsendelser (lidt kompliceret)
-          } else {
-            ArrayList<Udsendelse> flereUdsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
-            if (flereUdsendelser.size()==0) return; // Ingen opdatering
-            programserie.udsendelser.addAll(flereUdsendelser);
           }
+          programserie.tilføjUdsendelser(DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans));
+          programserie.tilføjUdsendelser(Arrays.asList(udsendelse));
           opdaterListe();
         }
       }
     }).setTag(this);
     App.volleyRequestQueue.add(req);
+  }
+
+  @Override
+  public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+  }
+
+  @Override
+  public void onPageSelected(int position) {
+    if (position == 0 && antalHentedeSendeplaner++ < 7) { // Hent flere udsendelser
+      hentUdsendelser(programserie.getUdsendelser().size());
+    }
+  }
+
+  @Override
+  public void onPageScrollStateChanged(int state) {
   }
 
   public class UdsendelserAdapter extends FragmentPagerAdapter {
@@ -172,7 +175,13 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment {
     @Override
     public CharSequence getPageTitle(int position) {
       Udsendelse u = liste.get(position);
-      return DRJson.datoformat.format(u.startTid);
+      String dato = DRJson.datoformat.format(u.startTid);
+      if (dato.equals(DRJson.iDagDatoStr)) dato = "i dag";
+      else if (dato.equals(DRJson.iMorgenDatoStr)) dato = "i morgen";
+      else if (dato.equals(DRJson.iGårDatoStr)) dato = "i går";
+      return dato;
+      //return DRJson.datoformat.format(u.startTid);
+      //return ""+u.episodeIProgramserie+" "+u.slug;
     }
   }
 }
