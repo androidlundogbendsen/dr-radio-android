@@ -216,17 +216,17 @@ public class Soeg_efter_program_frag extends Basisfragment implements
       @Override
       public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
         if (json != null && !"null".equals(json) && !uændret) {
-            JSONArray data = new JSONArray(json);
-            Log.d("data = " + data.toString(2));
-            liste = DRJson.parseUdsendelserForProgramserie(data, DRData.instans);
-            Log.d("liste = " + liste);
-            adapter.notifyDataSetChanged();
+          JSONArray data = new JSONArray(json);
+          Log.d("data = " + data.toString(2));
+          liste = DRJson.parseUdsendelserForProgramserie(data, DRData.instans);
+          Log.d("liste = " + liste);
+          adapter.notifyDataSetChanged();
 
-            if (liste.size() == 0) {
-              tomStr.setText("Søgningen gav intet resultat");
-            }
-            return;
+          if (liste.size() == 0) {
+            tomStr.setText("Søgningen gav intet resultat");
           }
+          return;
+        }
         Log.d("Slut søgning!");
       }
     }).setTag(this);

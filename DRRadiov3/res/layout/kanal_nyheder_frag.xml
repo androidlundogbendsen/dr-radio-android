@@ -8,29 +8,28 @@
         >
 
 
-        <ImageView
-                android:layout_width="196dp"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:id="@+id/billede"
-                android:src="@drawable/dri_lyd2_black"/>
+    <ImageView
+            android:layout_width="196dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:id="@+id/billede"
+            android:src="@drawable/dri_lyd2_black"/>
 
 
-
-        <TextView
-                android:id="@+id/titel"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Her kan du altid høre den seneste radioavis og sportsnyt"
-                android:textSize="20sp"
-                android:gravity="center"
-                android:paddingTop="0dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:paddingBottom="0dp"
-                android:layout_marginBottom="8dp"/>
+    <TextView
+            android:id="@+id/titel"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Her kan du altid høre den seneste radioavis og sportsnyt"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:paddingTop="0dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingBottom="0dp"
+            android:layout_marginBottom="8dp"/>
 
 
     <Button

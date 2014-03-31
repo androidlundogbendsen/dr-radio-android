@@ -223,7 +223,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   @Override
   public void run() {
-    Log.d(this+" run() synlig="+fragmentErSynligt);
+    Log.d(this + " run() synlig=" + fragmentErSynligt);
     App.forgrundstråd.removeCallbacks(this);
     App.forgrundstråd.postDelayed(this, 15000);
 
@@ -426,7 +426,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
 
   private void opdaterSenestSpillet2(AQuery aq, Udsendelse u) {
-    Log.d("DDDDD opdaterSenestSpillet2 "+u.playliste);
+    Log.d("DDDDD opdaterSenestSpillet2 " + u.playliste);
     if (u.playliste != null && u.playliste.size() > 0) {
       aq.id(R.id.senest_spillet_container).visible();
       Playlisteelement elem = u.playliste.get(0);
@@ -480,7 +480,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           @Override
           public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
             Log.d(kanal.kode + " opdaterSenestSpillet url " + url);
-            if (getActivity() == null  || uændret) return;
+            if (getActivity() == null || uændret) return;
             if (json != null && !"null".equals(json)) {
               u2.playliste = DRJson.parsePlayliste(new JSONArray(json));
               Log.d(kanal.kode + " parsePlayliste gav " + u2.playliste.size() + " elemener");

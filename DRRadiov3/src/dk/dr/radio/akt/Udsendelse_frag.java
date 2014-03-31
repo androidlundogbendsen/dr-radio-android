@@ -101,7 +101,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     listView.setOnItemClickListener(this);
 
     tjekOmHentet(udsendelse);
-    if (udsendelse.hentetStream == null && udsendelse.streams==null) {
+    if (udsendelse.hentetStream == null && udsendelse.streams == null) {
       Request<?> req = new DrVolleyStringRequest(udsendelse.getStreamsUrl(), new DrVolleyResonseListener() {
         @Override
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
@@ -125,7 +125,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 //      DRData.instans.afspiller.setLydkilde(udsendelse);
 //    }
 
-    if (aktuelUdsendelsePåKanalen || udsendelse.playliste==null) opdaterSpillelisteRunnable.run();
+    if (aktuelUdsendelsePåKanalen || udsendelse.playliste == null) opdaterSpillelisteRunnable.run();
 
     setHasOptionsMenu(true);
     bygListe();
@@ -210,7 +210,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           udsendelse.kanHøres = true;
           Log.registrérTestet("Afspille hentet udsendelse", udsendelse.slug);
         } else {
-          Log.rapporterFejl(new IllegalStateException("Fil "+file+"  fandtes ikke alligevel??! for "+udsendelse));
+          Log.rapporterFejl(new IllegalStateException("Fil " + file + "  fandtes ikke alligevel??! for " + udsendelse));
         }
       } finally {
         c.close();
@@ -428,15 +428,14 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
           aq.id(R.id.lige_nu).gone();
           aq.id(R.id.info).typeface(App.skrift_gibson);
-          Log.d("kanal JPER " +kanal.p4underkanal);
-          if(kanal.p4underkanal){
-              Log.d("kanal JPER1 " + kanal.slug.substring(0,2));
-              aq.id(R.id.logo).image(R.drawable.kanalappendix_p4f);
-              aq.id(R.id.p4navn).text(kanal.navn.replace("P4", "")).typeface(App.skrift_gibson_fed);
-          }
-          else{
-              aq.id(R.id.logo).image(kanal.kanallogo_resid);
-              aq.id(R.id.p4navn).text("");
+          Log.d("kanal JPER " + kanal.p4underkanal);
+          if (kanal.p4underkanal) {
+            Log.d("kanal JPER1 " + kanal.slug.substring(0, 2));
+            aq.id(R.id.logo).image(R.drawable.kanalappendix_p4f);
+            aq.id(R.id.p4navn).text(kanal.navn.replace("P4", "")).typeface(App.skrift_gibson_fed);
+          } else {
+            aq.id(R.id.logo).image(kanal.kanallogo_resid);
+            aq.id(R.id.p4navn).text("");
           }
 
           aq.id(R.id.titel_og_tid).typeface(App.skrift_gibson).text(lavFedSkriftTil(udsendelse.titel + " - " + DRJson.datoformat.format(udsendelse.startTid), udsendelse.titel.length()));
@@ -570,12 +569,11 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 //        	}
 
         String forkortInfoStr = udsendelse.beskrivelse;
-        Spannable spannable = new SpannableString(forkortInfoStr);//null;
         if (udsendelse.beskrivelse.length() > 100) {
           forkortInfoStr = forkortInfoStr.substring(0, 100);
           forkortInfoStr += "...(læs mere)";
 
-          spannable = new SpannableString(forkortInfoStr);
+          SpannableString spannable = new SpannableString(forkortInfoStr);
           spannable.setSpan(new ForegroundColorSpan(App.color.blå), forkortInfoStr.length() - "(læs mere)".length(), forkortInfoStr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
           forkortInfo = true;
         }

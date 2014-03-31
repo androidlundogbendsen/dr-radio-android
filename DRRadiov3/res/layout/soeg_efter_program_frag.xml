@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:orientation="horizontal" >
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/soegFelt"
-                android:layout_alignParentLeft="true"
-                android:layout_marginRight="60dp"
-                android:hint="Søg efter program"
-                android:singleLine="true"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                    android:id="@+id/soegFelt"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginRight="60dp"
+                    android:hint="Søg efter program"
+                    android:singleLine="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
 
             <ImageView
                     android:id="@+id/soegKnap"
                     android:layout_width="60dp"
-                android:layout_height="44dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:scaleType="center"
-                android:background="@drawable/knap_hvid_bg"
-                android:src="@drawable/dri_soeg_blaa" />
+                    android:layout_height="44dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:scaleType="center"
+                    android:background="@drawable/knap_hvid_bg"
+                    android:src="@drawable/dri_soeg_blaa"/>
         </RelativeLayout>
 
         <ListView
-            android:id="@+id/listView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:cacheColorHint="@color/grå20"
-            android:divider="@null"
-            android:dividerHeight="0px"
-            android:fadingEdgeLength="4dp"
-            android:requiresFadingEdge="vertical" />
+                android:id="@+id/listView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:cacheColorHint="@color/grå20"
+                android:divider="@null"
+                android:dividerHeight="0px"
+                android:fadingEdgeLength="4dp"
+                android:requiresFadingEdge="vertical"/>
 
-        
+
     </LinearLayout>
 
     <TextView
@@ -52,5 +52,5 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Indlæser, vent venligst"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
 </FrameLayout>

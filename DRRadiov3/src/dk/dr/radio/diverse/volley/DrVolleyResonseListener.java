@@ -50,7 +50,7 @@ public abstract class DrVolleyResonseListener implements Response.Listener<Strin
    * @param response Svaret
    * @param fraCache Normalt true første gang hvis svaret kommer fra cachen (og eventuelt er forældet).
    *                 Normalt false anden gang hvor svaret kommer fra serveren.
-   * @param uændret Serveren svarede med de samme data som der var i cachen
+   * @param uændret  Serveren svarede med de samme data som der var i cachen
    * @throws Exception Hvis noget går galt i behandlingen - f.eks. ulovligt JSON kaldes fikFejl
    */
   protected abstract void fikSvar(String response, boolean fraCache, boolean uændret) throws Exception;

@@ -75,11 +75,10 @@ public class MediaPlayerWrapper {
   }
 
 
-
   private static Class<? extends MediaPlayerWrapper> mediaPlayerWrapperKlasse = null;
 
   public static MediaPlayerWrapper opret() {
-    if (mediaPlayerWrapperKlasse==null) {
+    if (mediaPlayerWrapperKlasse == null) {
       try {
         mediaPlayerWrapperKlasse = (Class<? extends MediaPlayerWrapper>) Class.forName("dk.dr.radio.afspilning.AkamaiMediaPlayerWrapper");
       } catch (ClassNotFoundException e) {
@@ -88,9 +87,8 @@ public class MediaPlayerWrapper {
     }
 
     try {
-      Log.d("MediaPlayerWrapper opret() "+mediaPlayerWrapperKlasse);
-      MediaPlayerWrapper ret = mediaPlayerWrapperKlasse.newInstance();
-      return ret;
+      Log.d("MediaPlayerWrapper opret() " + mediaPlayerWrapperKlasse);
+      return mediaPlayerWrapperKlasse.newInstance();
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }

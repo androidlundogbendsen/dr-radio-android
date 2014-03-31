@@ -9,7 +9,7 @@ import java.util.TreeSet;
  * Created by j on 01-03-14.
  */
 public class Programserie { //implements Serializable {
-//  private static final long serialVersionUID = 1L;
+  //  private static final long serialVersionUID = 1L;
   public String titel;
   public String beskrivelse;
   public String slug;
@@ -35,7 +35,7 @@ public class Programserie { //implements Serializable {
   */
 
   public void tilføjUdsendelser(List<Udsendelse> uds) {
-    if (this.udsendelser==null) {
+    if (this.udsendelser == null) {
       this.udsendelser = new ArrayList<Udsendelse>(uds);
     } else {
       this.udsendelser.addAll(uds);
@@ -46,8 +46,8 @@ public class Programserie { //implements Serializable {
 
   public int findUdsendelseIndexFraSlug(String slug) {
     int n = -1;
-    if (udsendelser!=null) {
-      for (int i=0; i<udsendelser.size(); i++) {
+    if (udsendelser != null) {
+      for (int i = 0; i < udsendelser.size(); i++) {
         if (slug.equals(udsendelser.get(i).slug)) n = i;
       }
     }

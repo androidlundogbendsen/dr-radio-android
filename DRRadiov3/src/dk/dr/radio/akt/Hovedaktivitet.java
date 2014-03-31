@@ -27,7 +27,7 @@ public class Hovedaktivitet extends Basisaktivitet {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // android:logo="@drawable/dr_logo" ignoreres på Android 2, sæt det derfor også her:
-    if (Build.VERSION.SDK_INT<Build.VERSION_CODES.HONEYCOMB) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
       getSupportActionBar().setLogo(R.drawable.dr_logo);
     }
 
@@ -57,7 +57,6 @@ public class Hovedaktivitet extends Basisaktivitet {
         getSupportFragmentManager().beginTransaction()
             .replace(R.id.indhold_frag, f)
             .commit();
-        return;
       } else {
         // Startet op fra hjemmeskærm eller notifikation
         getSupportFragmentManager().beginTransaction()
@@ -82,7 +81,9 @@ public class Hovedaktivitet extends Basisaktivitet {
         venstremenuFrag.sætListemarkering(Venstremenu_frag.FORSIDE_INDEX); // "Forside
       }
 
-    } catch (Exception e) { Log.rapporterFejl(e); }
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
+    }
   }
 
 

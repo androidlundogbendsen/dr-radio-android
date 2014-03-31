@@ -49,7 +49,7 @@ public class DRData {
   public Rapportering rapportering = new Rapportering();
   public SenestLyttede senestLyttede = new SenestLyttede();
   public Favoritter favoritter = new Favoritter();
-  public HentedeUdsendelser hentedeUdsendelser= new HentedeUdsendelser();  // Understøttes ikke på Android 2.2
+  public HentedeUdsendelser hentedeUdsendelser = new HentedeUdsendelser();  // Understøttes ikke på Android 2.2
 
 
   /**

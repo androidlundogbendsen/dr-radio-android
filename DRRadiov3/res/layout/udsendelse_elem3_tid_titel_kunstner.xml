@@ -54,6 +54,7 @@
                     android:maxLines="2"
                     tools:ignore="HardcodedText"/>
         </LinearLayout>
+
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

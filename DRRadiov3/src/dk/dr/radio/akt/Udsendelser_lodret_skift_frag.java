@@ -48,22 +48,20 @@ public class Udsendelser_lodret_skift_frag extends Basisfragment {
     kanal = DRData.instans.grunddata.kanalFraKode.get(getArguments().getString(Kanal_frag.P_kode));
     udsendelse = DRData.instans.udsendelseFraSlug.get(getArguments().getString(DRJson.Slug.name()));
     programserie = DRData.instans.programserieFraSlug.get(udsendelse.programserieSlug);
-    Log.d("onCreateView " + this + " viser " + programserie + " / "+udsendelse);
+    Log.d("onCreateView " + this + " viser " + programserie + " / " + udsendelse);
 
     viewPager = new VerticalViewPager(getActivity()) {
       @Override
       protected boolean canScroll(View v, boolean checkV, int dy, int x, int y) {
-        if(v != this && v instanceof ListView) {
+        if (v != this && v instanceof ListView) {
           ListView lv = (ListView) v;
-          if (dy<0 && lv.getLastVisiblePosition() == lv.getAdapter().getCount() -1 &&
-              lv.getChildAt(lv.getChildCount() - 1).getBottom() <= lv.getHeight())
-          {
+          if (dy < 0 && lv.getLastVisiblePosition() == lv.getAdapter().getCount() - 1 &&
+              lv.getChildAt(lv.getChildCount() - 1).getBottom() <= lv.getHeight()) {
             //It is scrolled all the way down here
             return false;
           }
-          if (dy>0 && lv.getFirstVisiblePosition() == 0 &&
-              lv.getChildAt(0).getTop() >= 0)
-          {
+          if (dy > 0 && lv.getFirstVisiblePosition() == 0 &&
+              lv.getChildAt(0).getTop() >= 0) {
             //It is scrolled all the way up here
             return false;
 
@@ -78,25 +76,25 @@ public class Udsendelser_lodret_skift_frag extends Basisfragment {
     // fragmentmanageren - ikke på aktivitens (getFragmentManager)
     adapter = new UdsendelserAdapter(getChildFragmentManager());
 
-    int n = programserie==null?-1:findUdsendelseIndexFraSlug(udsendelse.slug, programserie.getUdsendelser());
+    int n = programserie == null ? -1 : findUdsendelseIndexFraSlug(udsendelse.slug, programserie.getUdsendelser());
 
-    Log.d("programserie.udsendelser.indexOf(udsendelse) = "+n);
-    if (n>=0) {
+    Log.d("programserie.udsendelser.indexOf(udsendelse) = " + n);
+    if (n >= 0) {
       liste.addAll(programserie.getUdsendelser());
       viewPager.setAdapter(adapter);
       viewPager.setCurrentItem(n);
     } else {
       liste.add(udsendelse);
       viewPager.setAdapter(adapter);
-      if (programserie==null) hentUdsendelser(0);
+      if (programserie == null) hentUdsendelser(0);
     }
     return viewPager;
   }
 
   private int findUdsendelseIndexFraSlug(String slug, ArrayList<Udsendelse> udsendelser) {
     int n = -1;
-    if (udsendelser!=null) {
-      for (int i=0; i<udsendelser.size(); i++) {
+    if (udsendelser != null) {
+      for (int i = 0; i < udsendelser.size(); i++) {
         if (slug.equals(udsendelser.get(i).slug)) n = i;
       }
     }
@@ -105,15 +103,15 @@ public class Udsendelser_lodret_skift_frag extends Basisfragment {
 
 
   private void opdaterListe() {
-    if (viewPager==null) return;
+    if (viewPager == null) return;
     Udsendelse udsFør = liste.get(viewPager.getCurrentItem());
 
     liste.clear();
     liste.addAll(programserie.getUdsendelser());
     Log.d("programserie.udsendelser. = " + programserie.getUdsendelser());
     int nEft = findUdsendelseIndexFraSlug(udsFør.slug, liste);
-    Log.d("programserie nEft== "+nEft);
-    if (nEft>=0) {
+    Log.d("programserie nEft== " + nEft);
+    if (nEft >= 0) {
       adapter.notifyDataSetChanged();
       viewPager.setCurrentItem(nEft, false);
     } else {
@@ -153,7 +151,7 @@ public class Udsendelser_lodret_skift_frag extends Basisfragment {
             DRData.instans.programserieFraSlug.put(udsendelse.programserieSlug, programserie);
           } else {
             ArrayList<Udsendelse> flereUdsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
-            if (flereUdsendelser.size()==0) return; // Ingen opdatering
+            if (flereUdsendelser.size() == 0) return; // Ingen opdatering
             programserie.getUdsendelser().addAll(flereUdsendelser);
           }
           opdaterListe();

@@ -116,7 +116,6 @@ public enum DRJson {
   }
 
 
-
   private static Udsendelse opretUdsendelse(DRData drData, JSONObject o) throws JSONException {
     String slug = o.optString(DRJson.Slug.name());  // Bemærk - kan være tom!
     Udsendelse u = null; //drData.udsendelseFraSlug.get(slug);
@@ -255,13 +254,14 @@ public enum DRJson {
 
   /**
    * Parser et Programserie-objekt
-   * @param o JSON
+   *
+   * @param o  JSON
    * @param ps et eksisterende objekt, der skal opdateres, eller null
    * @return objektet
    * @throws JSONException
    */
   public static Programserie parsProgramserie(JSONObject o, Programserie ps) throws JSONException {
-    if (ps==null) ps = new Programserie();
+    if (ps == null) ps = new Programserie();
     ps.titel = o.getString(DRJson.Title.name());
     ps.beskrivelse = o.optString(DRJson.Description.name());
     ps.slug = o.getString(DRJson.Slug.name());

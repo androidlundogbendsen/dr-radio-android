@@ -115,7 +115,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
 
   @Override
   public void onClick(View v) {
-    DRData.instans.favoritter.sætFavorit(programserieSlug, programserie.antalUdsendelser, favorit.isChecked());
+    DRData.instans.favoritter.sætFavorit(programserieSlug, favorit.isChecked());
     Log.registrérTestet("Valg af favoritprogram", programserieSlug);
   }
 
@@ -145,7 +145,8 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     @Override
     public int getCount() {
       if (programserie == null) return 0;
-      if (programserie.antalUdsendelser == programserie.getUdsendelser().size()) return programserie.getUdsendelser().size() + 1;
+      if (programserie.antalUdsendelser == programserie.getUdsendelser().size())
+        return programserie.getUdsendelser().size() + 1;
       return programserie.getUdsendelser().size() + 2; // Vis 'tidligere'-listeelement
     }
 

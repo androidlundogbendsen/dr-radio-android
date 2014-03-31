@@ -46,122 +46,123 @@ import dk.dr.radio.diverse.Log;
 public class DrDiskBasedCache implements Cache {
 
     /** Tidsstempel der kan bruges til at afgøre hvilke filer der faktisk er brugt efter denne opstart */
-    private final long TIDSSTEMPEL_VED_OPSTART;
+  private final long TIDSSTEMPEL_VED_OPSTART;
 
     /** Map of the Key, CacheHeader pairs */
-    private final Map<String, CacheHeader> mEntries =
-            new LinkedHashMap<String, CacheHeader>(16, .75f, true);
+  private final Map<String, CacheHeader> mEntries =
+      new LinkedHashMap<String, CacheHeader>(16, .75f, true);
     /** Total amount of space currently used by the cache in bytes. */
-    private long mTotalSize = 0;
+  private long mTotalSize = 0;
 
     /** The root directory to use for the cache. */
-    private final File mRootDirectory;
+  private final File mRootDirectory;
 
     /** The maximum size of the cache in bytes. */
-    private final int mMaxCacheSizeInBytes;
+  private final int mMaxCacheSizeInBytes;
 
     /** Default maximum disk usage in bytes. 1MB cache burde være rigeligt */
-    private static final int DEFAULT_DISK_USAGE_BYTES = 1 * 1024 * 1024; // DR ÆNDRING
+  private static final int DEFAULT_DISK_USAGE_BYTES = 1 * 1024 * 1024; // DR ÆNDRING
 
     /** High water mark percentage for the cache */
-    private static final float HYSTERESIS_FACTOR = 0.9f;
+  private static final float HYSTERESIS_FACTOR = 0.9f;
 
     /** Magic number for current version of cache file format. */
-    private static final int CACHE_MAGIC = 0x20120504;
+  private static final int CACHE_MAGIC = 0x20120504;
 
-    /**
-     * Constructs an instance of the DiskBasedCache at the specified directory.
-     * @param rootDirectory The root directory of the cache.
-     * @param maxCacheSizeInBytes The maximum size of the cache in bytes.
-     */
-    public DrDiskBasedCache(File rootDirectory, int maxCacheSizeInBytes) {
-        mRootDirectory = rootDirectory;
-        mMaxCacheSizeInBytes = maxCacheSizeInBytes;
-        //mRootDirectory.mkdirs();
-        TIDSSTEMPEL_VED_OPSTART = System.currentTimeMillis();
+  /**
+   * Constructs an instance of the DiskBasedCache at the specified directory.
+   *
+   * @param rootDirectory       The root directory of the cache.
+   * @param maxCacheSizeInBytes The maximum size of the cache in bytes.
+   */
+  public DrDiskBasedCache(File rootDirectory, int maxCacheSizeInBytes) {
+    mRootDirectory = rootDirectory;
+    mMaxCacheSizeInBytes = maxCacheSizeInBytes;
+    //mRootDirectory.mkdirs();
+    TIDSSTEMPEL_VED_OPSTART = System.currentTimeMillis();
+  }
+
+  /**
+   * Constructs an instance of the DiskBasedCache at the specified directory using
+   * the default maximum cache size of 5MB.
+   *
+   * @param rootDirectory The root directory of the cache.
+   */
+  public DrDiskBasedCache(File rootDirectory) {
+    this(rootDirectory, DEFAULT_DISK_USAGE_BYTES);
+  }
+
+  /**
+   * Clears the cache. Deletes all cached files from disk.
+   */
+  @Override
+  public synchronized void clear() {
+    File[] files = mRootDirectory.listFiles();
+    if (files != null) {
+      for (File file : files) {
+        file.delete();
+      }
+    }
+    mEntries.clear();
+    mTotalSize = 0;
+    VolleyLog.d("Cache cleared.");
+  }
+
+  /**
+   * Returns the cache entry with the specified key if it exists, null otherwise.
+   */
+  @Override
+  public synchronized Entry get(String key) {
+    CacheHeader entry = mEntries.get(key);
+    File file = getFileForKey(key);
+    if (entry == null && !file.exists()) { // DR ÆNDRING
+      // if the entry does not exist, return.
+      Log.d("DrVolleyDiskBasedCache miss for " + key);
+      return null;
     }
 
-    /**
-     * Constructs an instance of the DiskBasedCache at the specified directory using
-     * the default maximum cache size of 5MB.
-     * @param rootDirectory The root directory of the cache.
-     */
-    public DrDiskBasedCache(File rootDirectory) {
-        this(rootDirectory, DEFAULT_DISK_USAGE_BYTES);
-    }
-
-    /**
-     * Clears the cache. Deletes all cached files from disk.
-     */
-    @Override
-    public synchronized void clear() {
-        File[] files = mRootDirectory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                file.delete();
-            }
-        }
-        mEntries.clear();
-        mTotalSize = 0;
-        VolleyLog.d("Cache cleared.");
-    }
-
-    /**
-     * Returns the cache entry with the specified key if it exists, null otherwise.
-     */
-    @Override
-    public synchronized Entry get(String key) {
-        CacheHeader entry = mEntries.get(key);
-        File file = getFileForKey(key);
-        if (entry == null && !file.exists()) { // DR ÆNDRING
-            // if the entry does not exist, return.
-          Log.d("DrVolleyDiskBasedCache miss for " + key);
-            return null;
-              }
-
-        boolean  ny = entry==null; // DR ÆNDRING
-        CountingInputStream cis = null;
+    boolean ny = entry == null; // DR ÆNDRING
+    CountingInputStream cis = null;
+    try {
+      cis = new CountingInputStream(new FileInputStream(file));
+      CacheHeader nyEntry = CacheHeader.readHeader(cis); // eat header
+      byte[] data = streamToBytes(cis, (int) (file.length() - cis.bytesRead));
+      if (ny) { // DR ÆNDRING
+        Log.d("DrVolleyDiskBasedCache fil0-hit for " + key);
+        entry = nyEntry;
+        entry.size = file.length();
+        putEntry(entry.key, entry);
+        file.setLastModified(System.currentTimeMillis()); // Opdatér tidsstempel så vi kan se den er blevet brugt
+      } else {
+        Log.d("DrVolleyDiskBasedCache fil1-hit for " + key);
+      }
+      return entry.toCacheEntry(data);
+    } catch (IOException e) {
+      VolleyLog.d("%s: %s", file.getAbsolutePath(), e.toString());
+      remove(key);
+      return null;
+    } finally {
+      if (cis != null) {
         try {
-            cis = new CountingInputStream(new FileInputStream(file));
-            CacheHeader nyEntry = CacheHeader.readHeader(cis); // eat header
-            byte[] data = streamToBytes(cis, (int) (file.length() - cis.bytesRead));
-            if (ny) { // DR ÆNDRING
-              Log.d("DrVolleyDiskBasedCache fil0-hit for "+key);
-              entry = nyEntry;
-              entry.size = file.length();
-              putEntry(entry.key, entry);
-              file.setLastModified(System.currentTimeMillis()); // Opdatér tidsstempel så vi kan se den er blevet brugt
-            } else {
-              Log.d("DrVolleyDiskBasedCache fil1-hit for "+key);
-            }
-            return entry.toCacheEntry(data);
-        } catch (IOException e) {
-            VolleyLog.d("%s: %s", file.getAbsolutePath(), e.toString());
-            remove(key);
-            return null;
-        } finally {
-            if (cis != null) {
-                try {
-                    cis.close();
-                } catch (IOException ioe) {
-                    return null;
-                }
-            }
+          cis.close();
+        } catch (IOException ioe) {
+          return null;
         }
+      }
     }
+  }
 
-    /**
-     * Initializes the DiskBasedCache by scanning for all files currently in the
-     * specified root directory. Creates the root directory if necessary.
-     */
-    @Override
-    public synchronized void initialize() {
-        if (!mRootDirectory.exists()) {
-            if (!mRootDirectory.mkdirs()) {
-                VolleyLog.e("Unable to create cache dir %s", mRootDirectory.getAbsolutePath());
-            }
-            return;
-        }
+  /**
+   * Initializes the DiskBasedCache by scanning for all files currently in the
+   * specified root directory. Creates the root directory if necessary.
+   */
+  @Override
+  public synchronized void initialize() {
+    if (!mRootDirectory.exists()) {
+      if (!mRootDirectory.mkdirs()) {
+        VolleyLog.e("Unable to create cache dir %s", mRootDirectory.getAbsolutePath());
+      }
+    }
 /* DR ÆNDRING - løb ikke igennem cache-mappen, det tager henved 1 sekund per 100 elementer
         File[] files = mRootDirectory.listFiles();
         if (files == null) {
@@ -187,303 +188,312 @@ public class DrDiskBasedCache implements Cache {
             }
         }
         */
+  }
+
+  /**
+   * Invalidates an entry in the cache.
+   *
+   * @param key        Cache key
+   * @param fullExpire True to fully expire the entry, false to soft expire
+   */
+  @Override
+  public synchronized void invalidate(String key, boolean fullExpire) {
+    Entry entry = get(key);
+    if (entry != null) {
+      entry.softTtl = 0;
+      if (fullExpire) {
+        entry.ttl = 0;
+      }
+      put(key, entry);
     }
 
-    /**
-     * Invalidates an entry in the cache.
-     * @param key Cache key
-     * @param fullExpire True to fully expire the entry, false to soft expire
-     */
-    @Override
-    public synchronized void invalidate(String key, boolean fullExpire) {
-        Entry entry = get(key);
-        if (entry != null) {
-            entry.softTtl = 0;
-            if (fullExpire) {
-                entry.ttl = 0;
-            }
-            put(key, entry);
-        }
+  }
 
+  /**
+   * Puts the entry with the specified key into the cache.
+   */
+  @Override
+  public synchronized void put(String key, Entry entry) {
+    pruneIfNeeded(entry.data.length);
+    File file = getFileForKey(key);
+    try {
+      FileOutputStream fos = new FileOutputStream(file);
+      CacheHeader e = new CacheHeader(key, entry);
+      e.writeHeader(fos);
+      fos.write(entry.data);
+      fos.close();
+      putEntry(key, e);
+      return;
+    } catch (IOException e) {
+      Log.e(e);
     }
-
-    /**
-     * Puts the entry with the specified key into the cache.
-     */
-    @Override
-    public synchronized void put(String key, Entry entry) {
-        pruneIfNeeded(entry.data.length);
-        File file = getFileForKey(key);
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            CacheHeader e = new CacheHeader(key, entry);
-            e.writeHeader(fos);
-            fos.write(entry.data);
-            fos.close();
-            putEntry(key, e);
-            return;
-        } catch (IOException e) { Log.e(e);
-        }
-        boolean deleted = file.delete();
-        if (!deleted) {
-            VolleyLog.d("Could not clean up file %s", file.getAbsolutePath());
-        }
+    boolean deleted = file.delete();
+    if (!deleted) {
+      VolleyLog.d("Could not clean up file %s", file.getAbsolutePath());
     }
+  }
 
-    /**
-     * Removes the specified key from the cache if it exists.
-     */
-    @Override
-    public synchronized void remove(String key) {
-        boolean deleted = getFileForKey(key).delete();
-        removeEntry(key);
-        if (!deleted) {
-            VolleyLog.d("Could not delete cache entry for key=%s, filename=%s",
-                    key, getFilenameForKey(key));
-        }
+  /**
+   * Removes the specified key from the cache if it exists.
+   */
+  @Override
+  public synchronized void remove(String key) {
+    boolean deleted = getFileForKey(key).delete();
+    removeEntry(key);
+    if (!deleted) {
+      VolleyLog.d("Could not delete cache entry for key=%s, filename=%s",
+          key, getFilenameForKey(key));
     }
+  }
 
-    private static final String NORMALT_PRÆFIX = "http://www.dr.dk/tjenester/mu-apps/";
-    private static final Pattern ULOVLIGE_TEGN_I_FILNAVN = Pattern.compile("[^a-zA-Z0-9_.-]");
-    /**
-     * Creates a pseudo-unique filename for the specified cache key.
-     * @param key The key to generate a file name for.
-     * @return A pseudo-unique filename.
-     */
-    private String getFilenameForKey(String key) {
-      if (key.startsWith(NORMALT_PRÆFIX)) key = key.substring(NORMALT_PRÆFIX.length()); // DR ÆNDRING
-      //key = key.replace('?', '_').replace('/', '_').replace('&', '_');
-      // sikrere (og hurtigere?) er
-      key = ULOVLIGE_TEGN_I_FILNAVN.matcher(key).replaceAll("_"); // DR ÆNDRING
-      return key;
+  private static final String NORMALT_PRÆFIX = "http://www.dr.dk/tjenester/mu-apps/";
+  private static final Pattern ULOVLIGE_TEGN_I_FILNAVN = Pattern.compile("[^a-zA-Z0-9_.-]");
+
+  /**
+   * Creates a pseudo-unique filename for the specified cache key.
+   *
+   * @param key The key to generate a file name for.
+   * @return A pseudo-unique filename.
+   */
+  private String getFilenameForKey(String key) {
+    if (key.startsWith(NORMALT_PRÆFIX)) key = key.substring(NORMALT_PRÆFIX.length()); // DR ÆNDRING
+    //key = key.replace('?', '_').replace('/', '_').replace('&', '_');
+    // sikrere (og hurtigere?) er
+    key = ULOVLIGE_TEGN_I_FILNAVN.matcher(key).replaceAll("_"); // DR ÆNDRING
+    return key;
       /*
         int firstHalfLength = key.length() / 2;
         String localFilename = String.valueOf(key.substring(0, firstHalfLength).hashCode());
         localFilename += String.valueOf(key.substring(firstHalfLength).hashCode());
         return localFilename;
         */
+  }
+
+  /**
+   * Returns a file object for the given cache key.
+   */
+  public File getFileForKey(String key) {
+    return new File(mRootDirectory, getFilenameForKey(key));
+  }
+
+  /**
+   * Prunes the cache to fit the amount of bytes specified.
+   *
+   * @param neededSpace The amount of bytes we are trying to fit into the cache.
+   */
+  private void pruneIfNeeded(int neededSpace) {
+    if ((mTotalSize + neededSpace) < mMaxCacheSizeInBytes) {
+      return;
+    }
+    if (VolleyLog.DEBUG) {
+      VolleyLog.v("Pruning old cache entries.");
     }
 
-    /**
-     * Returns a file object for the given cache key.
-     */
-    public File getFileForKey(String key) {
-        return new File(mRootDirectory, getFilenameForKey(key));
+    long before = mTotalSize;
+    int prunedFiles = 0;
+    long startTime = SystemClock.elapsedRealtime();
+
+    Iterator<Map.Entry<String, CacheHeader>> iterator = mEntries.entrySet().iterator();
+    while (iterator.hasNext()) {
+      Map.Entry<String, CacheHeader> entry = iterator.next();
+      CacheHeader e = entry.getValue();
+      boolean deleted = getFileForKey(e.key).delete();
+      if (deleted) {
+        mTotalSize -= e.size;
+      } else {
+        VolleyLog.d("Could not delete cache entry for key=%s, filename=%s",
+            e.key, getFilenameForKey(e.key));
+      }
+      iterator.remove();
+      prunedFiles++;
+
+      if ((mTotalSize + neededSpace) < mMaxCacheSizeInBytes * HYSTERESIS_FACTOR) {
+        break;
+      }
     }
 
-    /**
-     * Prunes the cache to fit the amount of bytes specified.
-     * @param neededSpace The amount of bytes we are trying to fit into the cache.
-     */
-    private void pruneIfNeeded(int neededSpace) {
-        if ((mTotalSize + neededSpace) < mMaxCacheSizeInBytes) {
-            return;
-        }
-        if (VolleyLog.DEBUG) {
-            VolleyLog.v("Pruning old cache entries.");
-        }
-
-        long before = mTotalSize;
-        int prunedFiles = 0;
-        long startTime = SystemClock.elapsedRealtime();
-
-        Iterator<Map.Entry<String, CacheHeader>> iterator = mEntries.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, CacheHeader> entry = iterator.next();
-            CacheHeader e = entry.getValue();
-            boolean deleted = getFileForKey(e.key).delete();
-            if (deleted) {
-                mTotalSize -= e.size;
-            } else {
-               VolleyLog.d("Could not delete cache entry for key=%s, filename=%s",
-                       e.key, getFilenameForKey(e.key));
-            }
-            iterator.remove();
-            prunedFiles++;
-
-            if ((mTotalSize + neededSpace) < mMaxCacheSizeInBytes * HYSTERESIS_FACTOR) {
-                break;
-            }
-        }
-
-        if (VolleyLog.DEBUG) {
-            VolleyLog.v("pruned %d files, %d bytes, %d ms",
-                    prunedFiles, (mTotalSize - before), SystemClock.elapsedRealtime() - startTime);
-        }
+    if (VolleyLog.DEBUG) {
+      VolleyLog.v("pruned %d files, %d bytes, %d ms",
+          prunedFiles, (mTotalSize - before), SystemClock.elapsedRealtime() - startTime);
     }
+  }
 
-    /**
-     * Puts the entry with the specified key into the cache.
-     * @param key The key to identify the entry by.
-     * @param entry The entry to cache.
-     */
-    private void putEntry(String key, CacheHeader entry) {
-        if (!mEntries.containsKey(key)) {
-            mTotalSize += entry.size;
-        } else {
-            CacheHeader oldEntry = mEntries.get(key);
-            mTotalSize += (entry.size - oldEntry.size);
-        }
-        mEntries.put(key, entry);
+  /**
+   * Puts the entry with the specified key into the cache.
+   *
+   * @param key   The key to identify the entry by.
+   * @param entry The entry to cache.
+   */
+  private void putEntry(String key, CacheHeader entry) {
+    if (!mEntries.containsKey(key)) {
+      mTotalSize += entry.size;
+    } else {
+      CacheHeader oldEntry = mEntries.get(key);
+      mTotalSize += (entry.size - oldEntry.size);
     }
+    mEntries.put(key, entry);
+  }
 
-    /**
-     * Removes the entry identified by 'key' from the cache.
-     */
-    private void removeEntry(String key) {
-        CacheHeader entry = mEntries.get(key);
-        if (entry != null) {
-            mTotalSize -= entry.size;
-            mEntries.remove(key);
-        }
+  /**
+   * Removes the entry identified by 'key' from the cache.
+   */
+  private void removeEntry(String key) {
+    CacheHeader entry = mEntries.get(key);
+    if (entry != null) {
+      mTotalSize -= entry.size;
+      mEntries.remove(key);
     }
+  }
 
-    /**
-     * Reads the contents of an InputStream into a byte[].
-     * */
-    private static byte[] streamToBytes(InputStream in, int length) throws IOException {
-        byte[] bytes = new byte[length];
-        int count;
-        int pos = 0;
-        while (pos < length && ((count = in.read(bytes, pos, length - pos)) != -1)) {
-            pos += count;
-        }
-        if (pos != length) {
-            throw new IOException("Expected " + length + " bytes, read " + pos + " bytes");
-        }
-        return bytes;
+  /**
+   * Reads the contents of an InputStream into a byte[].
+   */
+  private static byte[] streamToBytes(InputStream in, int length) throws IOException {
+    byte[] bytes = new byte[length];
+    int count;
+    int pos = 0;
+    while (pos < length && ((count = in.read(bytes, pos, length - pos)) != -1)) {
+      pos += count;
     }
+    if (pos != length) {
+      throw new IOException("Expected " + length + " bytes, read " + pos + " bytes");
+    }
+    return bytes;
+  }
 
-    /**
-     * Handles holding onto the cache headers for an entry.
-     */
-    // Visible for testing.
-    static class CacheHeader {
+  /**
+   * Handles holding onto the cache headers for an entry.
+   */
+  // Visible for testing.
+  static class CacheHeader {
         /** The size of the data identified by this CacheHeader. (This is not
          * serialized to disk. */
-        public long size;
+    public long size;
 
         /** The key that identifies the cache entry. */
-        public String key;
+    public String key;
 
         /** ETag for cache coherence. */
-        public String etag;
+    public String etag;
 
         /** Date of this response as reported by the server. */
-        public long serverDate;
+    public long serverDate;
 
         /** TTL for this record. */
-        public long ttl;
+    public long ttl;
 
         /** Soft TTL for this record. */
-        public long softTtl;
+    public long softTtl;
 
         /** Headers from the response resulting in this cache entry. */
-        public Map<String, String> responseHeaders;
+    public Map<String, String> responseHeaders;
 
-        private CacheHeader() { }
-
-        /**
-         * Instantiates a new CacheHeader object
-         * @param key The key that identifies the cache entry
-         * @param entry The cache entry.
-         */
-        public CacheHeader(String key, Entry entry) {
-            this.key = key;
-            this.size = entry.data.length;
-            this.etag = entry.etag;
-            this.serverDate = entry.serverDate;
-            this.ttl = entry.ttl;
-            this.softTtl = entry.softTtl;
-            this.responseHeaders = entry.responseHeaders;
-        }
-
-        /**
-         * Reads the header off of an InputStream and returns a CacheHeader object.
-         * @param is The InputStream to read from.
-         * @throws IOException
-         */
-        public static CacheHeader readHeader(InputStream is) throws IOException {
-            CacheHeader entry = new CacheHeader();
-            int magic = readInt(is);
-            if (magic != CACHE_MAGIC) {
-                // don't bother deleting, it'll get pruned eventually
-                throw new IOException();
-            }
-            entry.key = readString(is);
-            entry.etag = readString(is);
-            if (entry.etag.equals("")) {
-                entry.etag = null;
-            }
-            entry.serverDate = readLong(is);
-            entry.ttl = readLong(is);
-            entry.softTtl = readLong(is);
-            entry.responseHeaders = readStringStringMap(is);
-            return entry;
-        }
-
-        /**
-         * Creates a cache entry for the specified data.
-         */
-        public Entry toCacheEntry(byte[] data) {
-            Entry e = new Entry();
-            e.data = data;
-            e.etag = etag;
-            e.serverDate = serverDate;
-            e.ttl = ttl;
-            e.softTtl = softTtl;
-            e.responseHeaders = responseHeaders;
-            return e;
-        }
-
-
-        /**
-         * Writes the contents of this CacheHeader to the specified OutputStream.
-         */
-        public boolean writeHeader(OutputStream os) {
-            try {
-                writeInt(os, CACHE_MAGIC);
-                writeString(os, key);
-                writeString(os, etag == null ? "" : etag);
-                writeLong(os, serverDate);
-                writeLong(os, ttl);
-                writeLong(os, softTtl);
-                writeStringStringMap(responseHeaders, os);
-                os.flush();
-                return true;
-            } catch (IOException e) {
-                VolleyLog.d("%s", e.toString());
-                return false;
-            }
-        }
-
+    private CacheHeader() {
     }
 
-    private static class CountingInputStream extends FilterInputStream {
-        private int bytesRead = 0;
-
-        private CountingInputStream(InputStream in) {
-            super(in);
-        }
-
-        @Override
-        public int read() throws IOException {
-            int result = super.read();
-            if (result != -1) {
-                bytesRead++;
-            }
-            return result;
-        }
-
-        @Override
-        public int read(byte[] buffer, int offset, int count) throws IOException {
-            int result = super.read(buffer, offset, count);
-            if (result != -1) {
-                bytesRead += result;
-            }
-            return result;
-        }
+    /**
+     * Instantiates a new CacheHeader object
+     *
+     * @param key   The key that identifies the cache entry
+     * @param entry The cache entry.
+     */
+    public CacheHeader(String key, Entry entry) {
+      this.key = key;
+      this.size = entry.data.length;
+      this.etag = entry.etag;
+      this.serverDate = entry.serverDate;
+      this.ttl = entry.ttl;
+      this.softTtl = entry.softTtl;
+      this.responseHeaders = entry.responseHeaders;
     }
+
+    /**
+     * Reads the header off of an InputStream and returns a CacheHeader object.
+     *
+     * @param is The InputStream to read from.
+     * @throws IOException
+     */
+    public static CacheHeader readHeader(InputStream is) throws IOException {
+      CacheHeader entry = new CacheHeader();
+      int magic = readInt(is);
+      if (magic != CACHE_MAGIC) {
+        // don't bother deleting, it'll get pruned eventually
+        throw new IOException();
+      }
+      entry.key = readString(is);
+      entry.etag = readString(is);
+      if (entry.etag.equals("")) {
+        entry.etag = null;
+      }
+      entry.serverDate = readLong(is);
+      entry.ttl = readLong(is);
+      entry.softTtl = readLong(is);
+      entry.responseHeaders = readStringStringMap(is);
+      return entry;
+    }
+
+    /**
+     * Creates a cache entry for the specified data.
+     */
+    public Entry toCacheEntry(byte[] data) {
+      Entry e = new Entry();
+      e.data = data;
+      e.etag = etag;
+      e.serverDate = serverDate;
+      e.ttl = ttl;
+      e.softTtl = softTtl;
+      e.responseHeaders = responseHeaders;
+      return e;
+    }
+
+
+    /**
+     * Writes the contents of this CacheHeader to the specified OutputStream.
+     */
+    public boolean writeHeader(OutputStream os) {
+      try {
+        writeInt(os, CACHE_MAGIC);
+        writeString(os, key);
+        writeString(os, etag == null ? "" : etag);
+        writeLong(os, serverDate);
+        writeLong(os, ttl);
+        writeLong(os, softTtl);
+        writeStringStringMap(responseHeaders, os);
+        os.flush();
+        return true;
+      } catch (IOException e) {
+        VolleyLog.d("%s", e.toString());
+        return false;
+      }
+    }
+
+  }
+
+  private static class CountingInputStream extends FilterInputStream {
+    private int bytesRead = 0;
+
+    private CountingInputStream(InputStream in) {
+      super(in);
+    }
+
+    @Override
+    public int read() throws IOException {
+      int result = super.read();
+      if (result != -1) {
+        bytesRead++;
+      }
+      return result;
+    }
+
+    @Override
+    public int read(byte[] buffer, int offset, int count) throws IOException {
+      int result = super.read(buffer, offset, count);
+      if (result != -1) {
+        bytesRead += result;
+      }
+      return result;
+    }
+  }
 
     /*
      * Homebrewed simple serialization system used for reading and writing cache
@@ -492,94 +502,94 @@ public class DrDiskBasedCache implements Cache {
      * on reflection (even for standard types) and generates a ton of garbage.
      */
 
-    /**
-     * Simple wrapper around {@link InputStream#read()} that throws EOFException
-     * instead of returning -1.
-     */
-    private static int read(InputStream is) throws IOException {
-        int b = is.read();
-        if (b == -1) {
-            throw new EOFException();
-        }
-        return b;
+  /**
+   * Simple wrapper around {@link InputStream#read()} that throws EOFException
+   * instead of returning -1.
+   */
+  private static int read(InputStream is) throws IOException {
+    int b = is.read();
+    if (b == -1) {
+      throw new EOFException();
     }
+    return b;
+  }
 
-    static void writeInt(OutputStream os, int n) throws IOException {
-        os.write((n >> 0) & 0xff);
-        os.write((n >> 8) & 0xff);
-        os.write((n >> 16) & 0xff);
-        os.write((n >> 24) & 0xff);
-    }
+  static void writeInt(OutputStream os, int n) throws IOException {
+    os.write((n >> 0) & 0xff);
+    os.write((n >> 8) & 0xff);
+    os.write((n >> 16) & 0xff);
+    os.write((n >> 24) & 0xff);
+  }
 
-    static int readInt(InputStream is) throws IOException {
-        int n = 0;
-        n |= (read(is) << 0);
-        n |= (read(is) << 8);
-        n |= (read(is) << 16);
-        n |= (read(is) << 24);
-        return n;
-    }
+  static int readInt(InputStream is) throws IOException {
+    int n = 0;
+    n |= (read(is) << 0);
+    n |= (read(is) << 8);
+    n |= (read(is) << 16);
+    n |= (read(is) << 24);
+    return n;
+  }
 
-    static void writeLong(OutputStream os, long n) throws IOException {
-        os.write((byte)(n >>> 0));
-        os.write((byte)(n >>> 8));
-        os.write((byte)(n >>> 16));
-        os.write((byte)(n >>> 24));
-        os.write((byte)(n >>> 32));
-        os.write((byte)(n >>> 40));
-        os.write((byte)(n >>> 48));
-        os.write((byte)(n >>> 56));
-    }
+  static void writeLong(OutputStream os, long n) throws IOException {
+    os.write((byte) (n >>> 0));
+    os.write((byte) (n >>> 8));
+    os.write((byte) (n >>> 16));
+    os.write((byte) (n >>> 24));
+    os.write((byte) (n >>> 32));
+    os.write((byte) (n >>> 40));
+    os.write((byte) (n >>> 48));
+    os.write((byte) (n >>> 56));
+  }
 
-    static long readLong(InputStream is) throws IOException {
-        long n = 0;
-        n |= ((read(is) & 0xFFL) << 0);
-        n |= ((read(is) & 0xFFL) << 8);
-        n |= ((read(is) & 0xFFL) << 16);
-        n |= ((read(is) & 0xFFL) << 24);
-        n |= ((read(is) & 0xFFL) << 32);
-        n |= ((read(is) & 0xFFL) << 40);
-        n |= ((read(is) & 0xFFL) << 48);
-        n |= ((read(is) & 0xFFL) << 56);
-        return n;
-    }
+  static long readLong(InputStream is) throws IOException {
+    long n = 0;
+    n |= ((read(is) & 0xFFL) << 0);
+    n |= ((read(is) & 0xFFL) << 8);
+    n |= ((read(is) & 0xFFL) << 16);
+    n |= ((read(is) & 0xFFL) << 24);
+    n |= ((read(is) & 0xFFL) << 32);
+    n |= ((read(is) & 0xFFL) << 40);
+    n |= ((read(is) & 0xFFL) << 48);
+    n |= ((read(is) & 0xFFL) << 56);
+    return n;
+  }
 
-    static void writeString(OutputStream os, String s) throws IOException {
-        byte[] b = s.getBytes("UTF-8");
-        writeLong(os, b.length);
-        os.write(b, 0, b.length);
-    }
+  static void writeString(OutputStream os, String s) throws IOException {
+    byte[] b = s.getBytes("UTF-8");
+    writeLong(os, b.length);
+    os.write(b, 0, b.length);
+  }
 
-    static String readString(InputStream is) throws IOException {
-        int n = (int) readLong(is);
-        byte[] b = streamToBytes(is, n);
-        return new String(b, "UTF-8");
-    }
+  static String readString(InputStream is) throws IOException {
+    int n = (int) readLong(is);
+    byte[] b = streamToBytes(is, n);
+    return new String(b, "UTF-8");
+  }
 
-    static void writeStringStringMap(Map<String, String> map, OutputStream os) throws IOException {
-        if (map != null) {
-            writeInt(os, map.size());
-            for (Map.Entry<String, String> entry : map.entrySet()) {
-                writeString(os, entry.getKey());
-                writeString(os, entry.getValue());
-            }
-        } else {
-            writeInt(os, 0);
-        }
+  static void writeStringStringMap(Map<String, String> map, OutputStream os) throws IOException {
+    if (map != null) {
+      writeInt(os, map.size());
+      for (Map.Entry<String, String> entry : map.entrySet()) {
+        writeString(os, entry.getKey());
+        writeString(os, entry.getValue());
+      }
+    } else {
+      writeInt(os, 0);
     }
+  }
 
-    static Map<String, String> readStringStringMap(InputStream is) throws IOException {
-        int size = readInt(is);
-        Map<String, String> result = (size == 0)
-                ? Collections.<String, String>emptyMap()
-                : new HashMap<String, String>(size);
-        for (int i = 0; i < size; i++) {
-            String key = readString(is).intern();
-            String value = readString(is).intern();
-            result.put(key, value);
-        }
-        return result;
+  static Map<String, String> readStringStringMap(InputStream is) throws IOException {
+    int size = readInt(is);
+    Map<String, String> result = (size == 0)
+        ? Collections.<String, String>emptyMap()
+        : new HashMap<String, String>(size);
+    for (int i = 0; i < size; i++) {
+      String key = readString(is).intern();
+      String value = readString(is).intern();
+      result.put(key, value);
     }
+    return result;
+  }
 
 
 }

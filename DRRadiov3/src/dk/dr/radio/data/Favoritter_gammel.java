@@ -31,7 +31,7 @@ public class Favoritter_gammel {
     String str = App.prefs.getString(PREF_NØGLE, "");
     Log.d("Favoritter: læst " + str);
     favoritTilStartnummer = strengTilMap(str);
-    if (favoritTilStartnummer.isEmpty()) antalNyeUdsendelser=0;
+    if (favoritTilStartnummer.isEmpty()) antalNyeUdsendelser = 0;
   }
 
 
@@ -43,7 +43,7 @@ public class Favoritter_gammel {
 
   public void sætFavorit(String programserieSlug, int startFraNummer, boolean checked) {
     tjekDataOprettet();
-    if (checked) favoritTilStartnummer.put(programserieSlug, ""+startFraNummer);
+    if (checked) favoritTilStartnummer.put(programserieSlug, "" + startFraNummer);
     else favoritTilStartnummer.remove(programserieSlug);
     gem();
     for (Runnable r : observatører) r.run(); // Informér observatører
@@ -67,7 +67,7 @@ public class Favoritter_gammel {
     if (startFraNummer == null) return -1;
     if (programserie == null) return -2;
     int antalNye = programserie.antalUdsendelser - Integer.parseInt(startFraNummer);
-    if (antalNye<0) {
+    if (antalNye < 0) {
       Log.rapporterFejl(new IllegalStateException("antalNye=" + antalNye + " for " + programserieSlug));
       favoritTilStartnummer.put(programserieSlug, "" + programserie.antalUdsendelser);
       gem();
@@ -84,7 +84,7 @@ public class Favoritter_gammel {
       for (Map.Entry<String, String> e : favoritTilStartnummer.entrySet()) {
         final String programserieSlug = e.getKey();
         Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
-        if (programserie!=null) continue; // Allerede hentet
+        if (programserie != null) continue; // Allerede hentet
         int offset = 0;
         String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
         Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
@@ -124,17 +124,17 @@ public class Favoritter_gammel {
           int nye = programserie.antalUdsendelser - Integer.parseInt(startFraNummer);
           if (nye < 0) {
             Log.rapporterFejl(new IllegalStateException("Antal nye favoritter=" + nye + " for " + programserieSlug));
-            e.setValue(""+programserie.antalUdsendelser);
+            e.setValue("" + programserie.antalUdsendelser);
             gem();
             continue;
           }
           antalNyeIAlt += nye;
-          Log.d("Favoritter: "+programserie+" har "+nye+", antalNyeIAlt=" +antalNyeIAlt);
+          Log.d("Favoritter: " + programserie + " har " + nye + ", antalNyeIAlt=" + antalNyeIAlt);
         }
       }
       if (antalNyeUdsendelser != antalNyeIAlt) {
-        Log.d("Favoritter: Ny favoritTilStartnummer="+favoritTilStartnummer);
-        Log.d("Favoritter: Fortæller observatører at antalNyeUdsendelser er ændret fra "+antalNyeUdsendelser+" til "+ antalNyeIAlt);
+        Log.d("Favoritter: Ny favoritTilStartnummer=" + favoritTilStartnummer);
+        Log.d("Favoritter: Fortæller observatører at antalNyeUdsendelser er ændret fra " + antalNyeUdsendelser + " til " + antalNyeIAlt);
         antalNyeUdsendelser = antalNyeIAlt;
         for (Runnable r : observatører) r.run();  // Informér observatører - i forgrundstråden
       }
@@ -150,7 +150,6 @@ public class Favoritter_gammel {
     tjekDataOprettet();
     return antalNyeUdsendelser;
   }
-
 
 
   public static HashMap<String, String> strengTilMap(String str) {
