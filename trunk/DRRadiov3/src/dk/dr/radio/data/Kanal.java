@@ -44,6 +44,9 @@ public class Kanal extends Lydkilde {
     return kode;// + "/" + navn + "/" + logoUrl;
   }
 
+  public boolean harUdsendelserForDag(String dato) {
+    return udsendelserPerDag.containsKey(dato);
+  }
 
   public void setUdsendelserForDag(ArrayList<Udsendelse> uliste, String dato) throws JSONException, ParseException {
     udsendelserPerDag.put(dato, uliste);
