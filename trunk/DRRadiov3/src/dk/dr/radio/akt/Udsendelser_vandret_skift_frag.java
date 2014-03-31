@@ -22,9 +22,9 @@ import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Programserie;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
 import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
-import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
 public class Udsendelser_vandret_skift_frag extends Basisfragment implements ViewPager.OnPageChangeListener {
@@ -89,7 +89,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     int nEft = programserie.findUdsendelseIndexFraSlug(udsFør.slug);
     adapter.notifyDataSetChanged();
     viewPager.setCurrentItem(nEft, false);
-    pager_title_strip.setVisibility(liste.size()>1?View.VISIBLE:View.INVISIBLE);
+    pager_title_strip.setVisibility(liste.size() > 1 ? View.VISIBLE : View.INVISIBLE);
 /*
     if (programserie.getUdsendelser().size() < programserie.antalUdsendelser) {
       hentUdsendelser(programserie.getUdsendelser().size());

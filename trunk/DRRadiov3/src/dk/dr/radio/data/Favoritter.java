@@ -12,9 +12,9 @@ import java.util.Map;
 import java.util.Set;
 
 import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
 import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
-import dk.dr.radio.diverse.Log;
 
 /**
  * Håndtering af favoritter.
