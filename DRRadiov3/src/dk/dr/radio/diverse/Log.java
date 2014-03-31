@@ -27,7 +27,6 @@ import android.os.Build;
 import com.bugsense.trace.BugSenseHandler;
 
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 
 /**
  * Loggerklasse
@@ -131,6 +130,11 @@ public class Log {
 
   public static String lavKontaktinfo() {
     String ret = "";
+
+    for (String afprøvet: afprøvedeTing.keySet()) {
+      ret += "\n"+afprøvet + ": "+afprøvedeTing.get(afprøvet);
+    }
+    ret += "\nOvenstående er korrekt: JA/NEJ\n\n";
     /*
     PackageManager pm = instans.getPackageManager();
     String version;
@@ -147,11 +151,6 @@ public class Log {
     ret += App.versionsnavn +
         "\nTelefonmodel: " + Build.MODEL + " " + Build.PRODUCT +
         "\nAndroid v" + Build.VERSION.RELEASE + " (sdk: " + Build.VERSION.SDK + ")";
-
-    for (String afprøvet: afprøvedeTing.keySet()) {
-      ret += "\n"+afprøvet + ": "+afprøvedeTing.get(afprøvet);
-    }
-    ret += "\nJeg har gået ovenstående igennem og kan bekræfte, at disse ting er afprøvet: NEJ";
 
     return ret;
   }

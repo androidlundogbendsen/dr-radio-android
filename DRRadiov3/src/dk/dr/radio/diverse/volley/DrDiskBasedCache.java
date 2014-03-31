@@ -20,7 +20,6 @@ import android.os.SystemClock;
 
 import com.android.volley.Cache;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.DiskBasedCache;
 
 import java.io.EOFException;
 import java.io.File;

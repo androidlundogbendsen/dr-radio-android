@@ -8,10 +8,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 
-import java.util.Date;
-
 import dk.dr.radio.diverse.App;
-import dk.dr.radio.diverse.Log;
 
 /**
  * Created by j on 13-03-14.

@@ -5,7 +5,6 @@ import android.media.MediaPlayer;
 
 import java.io.IOException;
 
-import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
 /**
