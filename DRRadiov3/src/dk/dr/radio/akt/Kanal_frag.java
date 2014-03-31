@@ -125,6 +125,9 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   private void hentSendeplanForDag(Date dag, final boolean idag) {
     final String dato = DRJson.apiDatoFormat.format(dag);
+    if (kanal.harUdsendelserForDag(dato)) {
+      opdaterListe();
+    }
 
     final String url = kanal.getUdsendelserUrl() + "/date/" + dato;
     Log.d("hentSendeplanForDag url=" + url + " efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
