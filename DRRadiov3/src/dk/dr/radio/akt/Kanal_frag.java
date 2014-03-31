@@ -557,9 +557,9 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
 
       Fragment f =
-          App.prefs.getBoolean("udsendelser_bladr_ikke", false) ? new Udsendelse_frag() :
-              App.prefs.getBoolean("udsendelser_vandret_skift", false) ? new Udsendelser_vandret_skift_frag() :
-                  new Udsendelser_lodret_skift_frag();
+          !App.prefs.getBoolean("udsendelser_bladr", true) ? new Udsendelse_frag() :
+              App.prefs.getBoolean("udsendelser_lodret_skift", false) ? new Udsendelser_lodret_skift_frag() :
+                  new Udsendelser_vandret_skift_frag(); // standard
       f.setArguments(new Intent()
           .putExtra(P_kode, kanal.kode)
           .putExtra(Udsendelse_frag.AKTUEL_UDSENDELSE_SLUG, aktuelUdsendelseSlug)

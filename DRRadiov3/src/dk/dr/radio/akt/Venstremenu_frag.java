@@ -390,23 +390,22 @@ public class Venstremenu_frag extends Fragment implements Runnable {
 
     public VenstremenuAdapter(final Context themedContext) {
       layoutInflater = (LayoutInflater) themedContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-      boolean gib = App.prefs.getBoolean("brugGibsonIVenstremenu", true);
 
       tilføj(R.layout.venstremenu_elem_soeg, Soeg_efter_program_frag.class);
-      if (gib) aq.id(R.id.tekst).typeface(App.skrift_gibson_fed);
+      aq.id(R.id.tekst).typeface(App.skrift_gibson_fed);
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
       FORSIDE_INDEX = elem.size();
       tilføj(R.layout.venstremenu_elem_overskrift, Kanaler_frag.class);
       aq.id(R.id.tekst).text("Forside");
-      if (gib) aq.typeface(App.skrift_gibson_fed);
+      aq.typeface(App.skrift_gibson_fed);
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
       tilføj(R.layout.venstremenu_elem_overskrift, Senest_lyttede_frag.class);
       aq.id(R.id.tekst).text("Senest lyttede");
-      if (gib) aq.typeface(App.skrift_gibson_fed);
+      aq.typeface(App.skrift_gibson_fed);
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
@@ -423,7 +422,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
           return view;
         }
       });
-      if (gib) aq.id(R.id.tekst).typeface(App.skrift_gibson_fed).id(R.id.tekst2).typeface(App.skrift_gibson);
+      aq.id(R.id.tekst).typeface(App.skrift_gibson_fed).id(R.id.tekst2).typeface(App.skrift_gibson);
 
       if (DRData.instans.hentedeUdsendelser.virker()) {
         tilføj(R.layout.venstremenu_elem_adskiller_tynd);
@@ -436,7 +435,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
             return view;
           }
         });
-        if (gib) aq.id(R.id.tekst).typeface(App.skrift_gibson_fed).id(R.id.tekst2).typeface(App.skrift_gibson);
+        aq.id(R.id.tekst).typeface(App.skrift_gibson_fed).id(R.id.tekst2).typeface(App.skrift_gibson);
       }
 
       /*
@@ -450,7 +449,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
 
       tilføj(R.layout.venstremenu_elem_overskrift, P4kanalvalg_frag.class);
       aq.id(R.id.tekst).text("Vælg P4-region");
-      if (gib) aq.typeface(App.skrift_gibson_fed);
+      aq.typeface(App.skrift_gibson_fed);
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
       tilføj(R.layout.venstremenu_elem_overskrift, new Runnable() {
@@ -472,12 +471,12 @@ public class Venstremenu_frag extends Fragment implements Runnable {
         }
       });
       aq.id(R.id.tekst).text("Indstillinger");
-      if (gib) aq.typeface(App.skrift_gibson_fed);
+      aq.typeface(App.skrift_gibson_fed);
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
       tilføj(R.layout.venstremenu_elem_overskrift, Kontakt_info_om_frag.class);
       aq.id(R.id.tekst).text("Kontakt / info / om");
-      if (gib) aq.typeface(App.skrift_gibson_fed);
+      aq.typeface(App.skrift_gibson_fed);
 
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
@@ -490,7 +489,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       aq.id(R.id.tekst).text("Hent nyeste udvikler-version.\nNuværende version:\n" + App.versionsnavn
           + "\n" + App.res.getString(R.string.akamaistatistik_device) + "/" + Build.MODEL + " " + Build.PRODUCT);
 
-      if (gib) aq.typeface(App.skrift_gibson).textSize(12);
+      aq.typeface(App.skrift_gibson).textSize(12);
 
     }
 

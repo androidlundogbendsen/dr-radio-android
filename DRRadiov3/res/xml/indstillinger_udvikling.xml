@@ -7,21 +7,21 @@
             android:summaryOn="Sæt app i fejlsøgningstilstand (også efter genstart)"/>
 
     <CheckBoxPreference
-            android:key="udsendelser_vandret_skift"
-            android:title="Vandret skift mellem udsendelser"
-            android:defaultValue="false"
-            android:summary="Bladr mellem udsendelser på den normale måde på Android, med vertikalt swipe"/>
+            android:key="udsendelser_bladr"
+            android:title="Swipe mellem udsendelser"
+            android:defaultValue="true"
+            android:summary="Swipe for at bladre mellem udsendelser fra samme programserie"/>
 
     <CheckBoxPreference
-            android:key="udsendelser_bladr_ikke"
-            android:title="Slå skift mellem udsendelser fra"
+            android:key="udsendelser_lodret_skift"
+            android:title="Lodret swipe mellem udsendelser"
             android:defaultValue="false"
-            android:summary="Slå bladring mellem udsendelser helt fra"/>
+            android:summary="Bladr mellem udsendelser med lodret swipe"/>
 
     <CheckBoxPreference
             android:key="tving_lodret_visning" android:title="Tving lodret visning"
             android:defaultValue="true"
-            android:summary="... tving folk til at rejse deres tablet/telefon op (kræver genstart)"/>
+            android:summary="Tving folk til at rejse deres tablet/telefon op (kræver genstart)"/>
 
 
 
@@ -29,13 +29,13 @@
         android:summary="Skriv din e-postadresse hvis du vil kunne kontaktes i forbindelse
         med udvikling" android:defaultValue="" /> -->
 
-
+<!--
     <CheckBoxPreference
             android:key="brugGibsonIVenstremenu"
             android:title="Brug Gibson i venstre-menu"
             android:defaultValue="true"
             android:summary="Gibson ser grimt ud i venstremenu på visse enheder. Kræver app-genstart"/>
-
+-->
 
     <CheckBoxPreference
             android:key="kunSortLigeBagTekst"

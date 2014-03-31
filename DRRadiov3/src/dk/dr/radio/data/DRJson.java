@@ -102,7 +102,7 @@ public enum DRJson {
   public static final DateFormat datoformat = new SimpleDateFormat("d. MMM yyyy", dansk);
 
 
-  private static Udsendelse getUdsendelse(DRData drData, JSONObject o) throws JSONException {
+  private static Udsendelse opretUdsendelse(DRData drData, JSONObject o) throws JSONException {
     String slug = o.optString(DRJson.Slug.name());  // Bemærk - kan være tom!
     Udsendelse u = null; //drData.udsendelseFraSlug.get(slug);
     if (u == null) {
@@ -119,7 +119,6 @@ public enum DRJson {
 
   /**
    * Parser udsendelser for getKanal. A la http://www.dr.dk/tjenester/mu-apps/schedule/P3/0
-   * Deduplikerer objekterne undervejs
    */
   public static ArrayList<Udsendelse> parseUdsendelserForKanal(JSONArray jsonArray, Kanal kanal, DRData drData) throws JSONException, ParseException {
     long nu = App.serverCurrentTimeMillis();
@@ -130,7 +129,7 @@ public enum DRJson {
     ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
     for (int n = 0; n < jsonArray.length(); n++) {
       JSONObject o = jsonArray.getJSONObject(n);
-      Udsendelse u = getUdsendelse(drData, o);
+      Udsendelse u = opretUdsendelse(drData, o);
       u.kanalSlug = o.optString(DRJson.ChannelSlug.name(), kanal.slug);  // Bemærk - kan være tom..
       u.kanHøres = o.getBoolean(DRJson.Watchable.name());
       u.startTid = servertidsformat.parse(o.getString(DRJson.StartTime.name()));
@@ -151,13 +150,12 @@ public enum DRJson {
 
   /**
    * Parser udsendelser for getKanal. A la http://www.dr.dk/tjenester/mu-apps/series/sprogminuttet?type=radio&includePrograms=true
-   * Deduplikerer objekterne undervejs
    */
   public static ArrayList<Udsendelse> parseUdsendelserForProgramserie(JSONArray jsonArray, DRData drData) throws JSONException, ParseException {
     ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
     for (int n = 0; n < jsonArray.length(); n++) {
       JSONObject o = jsonArray.getJSONObject(n);
-      Udsendelse u = getUdsendelse(drData, o);
+      Udsendelse u = opretUdsendelse(drData, o);
       u.kanalSlug = o.getString(DRJson.ChannelSlug.name());
       u.startTid = servertidsformat.parse(o.getString(DRJson.FirstBroadcast.name()));
       u.slutTid = new Date(u.startTid.getTime() + o.getInt(DRJson.DurationInSeconds.name()) * 1000);
