@@ -126,9 +126,9 @@ public class App extends Application implements Runnable {
     String packageName = getPackageName();
     try {
       //noinspection ConstantConditions
-      App.versionsnavn = packageName+"/"+getPackageManager().getPackageInfo(packageName, 0).versionName;
+      App.versionsnavn = packageName + "/" + getPackageManager().getPackageInfo(packageName, 0).versionName;
       if (EMULATOR) App.versionsnavn += " UDV";
-      Log.d("App.versionsnavn="+App.versionsnavn);
+      Log.d("App.versionsnavn=" + App.versionsnavn);
       Class.forName("android.os.AsyncTask"); // Fix for http://code.google.com/p/android/issues/detail?id=20915
     } catch (Exception e) {
       Log.rapporterFejl(e);
@@ -143,9 +143,9 @@ public class App extends Application implements Runnable {
     // Prior to Gingerbread, HttpUrlConnection was unreliable.
     // See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
     HttpStack stack =
-          Build.VERSION.SDK_INT >= 9 ? new HurlStack()
-        : Build.VERSION.SDK_INT >= 8 ? new HttpClientStack(AndroidHttpClient.newInstance(App.versionsnavn))
-        : new HttpClientStack(new DefaultHttpClient()); // Android 2.1
+        Build.VERSION.SDK_INT >= 9 ? new HurlStack()
+            : Build.VERSION.SDK_INT >= 8 ? new HttpClientStack(AndroidHttpClient.newInstance(App.versionsnavn))
+            : new HttpClientStack(new DefaultHttpClient()); // Android 2.1
 
     // Vi bruger vores eget Netværkslag, da DRs Varnish-servere ofte svarer med HTTP-kode 500,
     // som skal håndteres som et timeout og at der skal prøves igen
@@ -163,9 +163,9 @@ public class App extends Application implements Runnable {
 
       String kanalkode = prefs.getString(FORETRUKKEN_KANAL, null);
       Kanal aktuelKanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
-      if (aktuelKanal == null || aktuelKanal==Grunddata.ukendtKanal) {
+      if (aktuelKanal == null || aktuelKanal == Grunddata.ukendtKanal) {
         aktuelKanal = DRData.instans.grunddata.forvalgtKanal;
-        Log.d("forvalgtKanal="+aktuelKanal);
+        Log.d("forvalgtKanal=" + aktuelKanal);
       }
 
       DRData.instans.afspiller = new Afspiller();
@@ -240,7 +240,7 @@ public class App extends Application implements Runnable {
     boolean færdig = true;
     // Tidligere hentSupplerendeDataBg
 
-    if (App.netværk.status== Netvaerksstatus.Status.WIFI)  { // Tjek at alle kanaler har deres streamsurler
+    if (App.netværk.status == Netvaerksstatus.Status.WIFI) { // Tjek at alle kanaler har deres streamsurler
       for (final Kanal k : DRData.instans.grunddata.kanaler) {
         if (k.streams != null) continue;
 //        Log.d("run()1 " + (System.currentTimeMillis() - opstartstidspunkt) + " ms");
@@ -434,6 +434,7 @@ public class App extends Application implements Runnable {
 
   /**
    * Giver et aktuelt tidsstempel på hvad serverens ur viser
+   *
    * @return tiden, i  millisekunder siden 1. Januar 1970 00:00:00.0 UTC.
    */
   public static long serverCurrentTimeMillis() {
@@ -443,9 +444,9 @@ public class App extends Application implements Runnable {
   public static void sætServerCurrentTimeMillis(long servertid) {
     long serverkorrektionTilKlienttidMs2 = servertid - System.currentTimeMillis();
     if (Math.abs(App.serverkorrektionTilKlienttidMs - serverkorrektionTilKlienttidMs2) > 30000) {
-      Log.d("SERVERTID korrigerer tid - serverkorrektionTilKlienttidMs=" + serverkorrektionTilKlienttidMs2+" klokken på serveren er "+new Date(servertid));
+      Log.d("SERVERTID korrigerer tid - serverkorrektionTilKlienttidMs=" + serverkorrektionTilKlienttidMs2 + " klokken på serveren er " + new Date(servertid));
       App.serverkorrektionTilKlienttidMs = serverkorrektionTilKlienttidMs2;
-      new Exception("SERVERTID korrigeret til "+new Date(servertid)).printStackTrace();
+      new Exception("SERVERTID korrigeret til " + new Date(servertid)).printStackTrace();
     }
   }
 

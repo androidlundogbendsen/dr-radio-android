@@ -26,7 +26,6 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
   private Venstremenu_frag venstremenuFrag;
   private int mForgåendePosition = -1;
   private int mNuværendePosition = -1;
-  private boolean visSlideMenu = false;
 
 
   @Override
@@ -123,7 +122,7 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
 
     @Override
     public Basisfragment getItem(int position) {
-      Basisfragment f = position<kanaler.size()-1?  new Kanal_frag() : new Kanal_nyheder_frag();
+      Basisfragment f = position < kanaler.size() - 1 ? new Kanal_frag() : new Kanal_nyheder_frag();
       Bundle b = new Bundle();
       b.putString(Kanal_frag.P_kode, kanaler.get(position).kode);
       f.setArguments(b);

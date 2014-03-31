@@ -99,7 +99,7 @@ public class Kanal_nyheder_frag extends Basisfragment implements View.OnClickLis
 
   @Override
   public void run() {
-    Log.d(this+" run()");
+    Log.d(this + " run()");
     App.forgrundstråd.removeCallbacks(this);
 
     if (kanal.streams == null && App.erOnline()) {
@@ -126,7 +126,6 @@ public class Kanal_nyheder_frag extends Basisfragment implements View.OnClickLis
             (spillerDenneKanal ? " SPILLER " : " HØR ") + kanal.navn.toUpperCase() + " LIVE");
 
   }
-
 
 
   @Override

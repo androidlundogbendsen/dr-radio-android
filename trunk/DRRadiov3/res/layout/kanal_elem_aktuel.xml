@@ -137,20 +137,20 @@
     Vi udvider derfor knappens trykområde med teknikken beskrevet i
     http://stackoverflow.com/questions/2949407/can-i-increase-a-buttons-onclick-area-programmatically
             -->
-    <Button
-            android:id="@+id/hør_live"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/hørknap_højde"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="16dp"
-            android:drawableLeft="@drawable/dri_lyd_hvid"
-            android:text=" HØR P3 LIVE"
-            android:textColor="@color/hvid"
-            android:background="@drawable/knap_blaa_bg"/>
+        <Button
+                android:id="@+id/hør_live"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/hørknap_højde"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="16dp"
+                android:drawableLeft="@drawable/dri_lyd_hvid"
+                android:text=" HØR P3 LIVE"
+                android:textColor="@color/hvid"
+                android:background="@drawable/knap_blaa_bg"/>
     </LinearLayout>
 
 

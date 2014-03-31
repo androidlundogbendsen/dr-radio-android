@@ -61,7 +61,7 @@ public class Udsendelse extends Lydkilde implements Comparable {
     Kanal k = DRData.instans.grunddata.kanalFraSlug.get(kanalSlug);
     if (k == null) {
       Log.rapporterFejl(new Exception(kanalSlug + " manglede i grunddata.kanalFraSlug=" + DRData.instans.grunddata.kanalFraSlug));
-      k = DRData.instans.grunddata.ukendtKanal;
+      k = Grunddata.ukendtKanal;
     }
     return k;
   }
@@ -78,15 +78,15 @@ public class Udsendelse extends Lydkilde implements Comparable {
 
   @Override
   public boolean equals(Object o) {
-    if (o==null || !(o instanceof Udsendelse)) return false;
+    if (o == null || !(o instanceof Udsendelse)) return false;
     Udsendelse u2 = (Udsendelse) o;
-    if (slug==null && u2.slug!=null) return false;
+    if (slug == null && u2.slug != null) return false;
     return slug.equals(u2.slug);
   }
 
   @Override
   public int compareTo(Object o) {
-    if (o==null || !(o instanceof Udsendelse)) return -1;
+    if (o == null || !(o instanceof Udsendelse)) return -1;
     Udsendelse u2 = (Udsendelse) o;
     int e1 = episodeIProgramserie;
     int e2 = u2.episodeIProgramserie;

@@ -51,12 +51,12 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
             "Favoritprogrammer kan vælges ved at markere hjerte-ikonet ved de enkelte programserievisninger."
     ).getView());
     listView.setCacheColorHint(Color.WHITE);
-    
+
     aq.id(R.id.overskrift).typeface(App.skrift_gibson_fed).text("Dine favoritprogrammer").getTextView();
 
     favoritter.observatører.add(this);
     run();
-    if (favoritter.getAntalNyeUdsendelser()<0 || sidstOpdateretAntalNyeUdsendelser>System.currentTimeMillis()+1000*60*10) {
+    if (favoritter.getAntalNyeUdsendelser() < 0 || sidstOpdateretAntalNyeUdsendelser > System.currentTimeMillis() + 1000 * 60 * 10) {
       // Opdatering af nye antal udsendelser er ikke sket endnu - eller det er mere end end ti minutter siden.
       DRData.instans.favoritter.startOpdaterAntalNyeUdsendelser.run();
       sidstOpdateretAntalNyeUdsendelser = System.currentTimeMillis();
@@ -82,9 +82,9 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
       Log.d(this + " psss = " + pss);
       for (final String programserieSlug : pss) {
         Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
-        if (programserie!=null) liste.add(programserie);
+        if (programserie != null) liste.add(programserie);
         else {
-          Log.d("programserieSlug gav ingen værdi: "+programserieSlug);
+          Log.d("programserieSlug gav ingen værdi: " + programserieSlug);
           int offset = 0;
           String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
           Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
@@ -128,10 +128,10 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
         if (obj instanceof Programserie) {
           Programserie ps = (Programserie) obj;
           aq.id(R.id.startid).text(ps.titel).typeface(App.skrift_gibson_fed).textColor(Color.BLACK);
-            int n = favoritter.getAntalNyeUdsendelser(ps.slug);
-            String txt = (n == 1 ? n + " ny udsendelse" : n + " nye udsendelser");
-            aq.id(R.id.titel_og_kunstner).text(txt).typeface(App.skrift_gibson);
-          aq.id(R.id.stiplet_linje).background(position==0?R.drawable.linje:R.drawable.stiplet_linje);
+          int n = favoritter.getAntalNyeUdsendelser(ps.slug);
+          String txt = (n == 1 ? n + " ny udsendelse" : n + " nye udsendelser");
+          aq.id(R.id.titel_og_kunstner).text(txt).typeface(App.skrift_gibson);
+          aq.id(R.id.stiplet_linje).background(position == 0 ? R.drawable.linje : R.drawable.stiplet_linje);
         } else {
           Udsendelse udsendelse = (Udsendelse) obj;
           aq.id(R.id.startid).text(DRJson.datoformat.format(udsendelse.startTid)).typeface(App.skrift_gibson);
@@ -142,7 +142,9 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
 
 
         udvikling_checkDrSkrifter(v, this.getClass() + " ");
-      } catch (Exception e) { Log.rapporterFejl(e); }
+      } catch (Exception e) {
+        Log.rapporterFejl(e);
+      }
 
       return v;
     }

@@ -44,11 +44,11 @@
             android:maxLines="2"
             tools:ignore="HardcodedText"/>
 
-<!--
-            <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/hør"
-                    android:src="@drawable/dri_lyd_blaa"/>
--->
+    <!--
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/hør"
+                        android:src="@drawable/dri_lyd_blaa"/>
+    -->
 </LinearLayout>

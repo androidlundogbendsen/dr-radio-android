@@ -39,8 +39,7 @@ import dk.dr.radio.diverse.Log;
 
 /**
  * Created by j on 28-03-14.
- */
-/**
+ *
  * A network performing Volley requests over an {@link HttpStack}.
  * DRs (Varnish-?)servere svarer ofte med HTTP-kode 500 eller 533,
  * der bliver håndteret som et timeout så der prøves igen
@@ -67,7 +66,7 @@ public class DrBasicNetwork implements Network {
 
   /**
    * @param httpStack HTTP stack to be used
-   * @param pool a buffer pool that improves GC performance in copy operations
+   * @param pool      a buffer pool that improves GC performance in copy operations
    */
   public DrBasicNetwork(HttpStack httpStack, ByteArrayPool pool) {
     mHttpStack = httpStack;
@@ -130,11 +129,11 @@ public class DrBasicNetwork implements Network {
         } else {
           throw new NoConnectionError(e);
         }
-        if (statusCode>=500) {
-          Log.d("XXXXXXXXXXXX caching-problem på serversiden? kode "+statusCode+" for "+request.getUrl());
+        if (statusCode >= 500) {
+          Log.d("XXXXXXXXXXXX caching-problem på serversiden? kode " + statusCode + " for " + request.getUrl());
         }
 
-        if (statusCode==500 || statusCode==533) {
+        if (statusCode == 500 || statusCode == 533) {
           attemptRetryOnException("DR: caching-problem på serversiden", request, new TimeoutError());
           continue;
         }
@@ -173,6 +172,7 @@ public class DrBasicNetwork implements Network {
   /**
    * Attempts to prepare the request for a retry. If there are no more attempts remaining in the
    * request's retry policy, a timeout exception is thrown.
+   *
    * @param request The request to use.
    */
   private static void attemptRetryOnException(String logPrefix, Request<?> request,
@@ -211,7 +211,9 @@ public class DrBasicNetwork implements Network {
     VolleyLog.v("HTTP ERROR(%s) %d ms to fetch %s", what, (now - start), url);
   }
 
-  /** Reads the contents of HttpEntity into a byte[]. */
+  /**
+   * Reads the contents of HttpEntity into a byte[].
+   */
   private byte[] entityToBytes(HttpEntity entity) throws IOException, ServerError {
     PoolingByteArrayOutputStream bytes =
         new PoolingByteArrayOutputStream(mPool, (int) entity.getContentLength());

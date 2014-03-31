@@ -10,6 +10,5 @@ public interface MediaPlayerLytter extends
     MediaPlayer.OnSeekCompleteListener,
     MediaPlayer.OnCompletionListener,
     MediaPlayer.OnErrorListener,
-    MediaPlayer.OnBufferingUpdateListener
-{
+    MediaPlayer.OnBufferingUpdateListener {
 }

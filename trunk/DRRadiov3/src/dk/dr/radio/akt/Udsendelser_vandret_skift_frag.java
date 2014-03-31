@@ -51,7 +51,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     kanal = DRData.instans.grunddata.kanalFraKode.get(getArguments().getString(Kanal_frag.P_kode));
     udsendelse = DRData.instans.udsendelseFraSlug.get(getArguments().getString(DRJson.Slug.name()));
     programserie = DRData.instans.programserieFraSlug.get(udsendelse.programserieSlug);
-    Log.d("onCreateView " + this + " viser " + programserie + " / "+udsendelse);
+    Log.d("onCreateView " + this + " viser " + programserie + " / " + udsendelse);
 
     View rod = inflater.inflate(R.layout.udsendelser_vandret_skift_frag, container, false);
 
@@ -63,26 +63,26 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     adapter = new UdsendelserAdapter(getChildFragmentManager());
     DRJson.opdateriDagIMorgenIGårDatoStr(App.serverCurrentTimeMillis());
 
-    int n = programserie==null?-1:programserie.findUdsendelseIndexFraSlug(udsendelse.slug);
+    int n = programserie == null ? -1 : programserie.findUdsendelseIndexFraSlug(udsendelse.slug);
 
-    Log.d("programserie.udsendelser.indexOf(udsendelse) = "+n);
-    if (n>=0) {
+    Log.d("programserie.udsendelser.indexOf(udsendelse) = " + n);
+    if (n >= 0) {
       liste.addAll(programserie.getUdsendelser());
       viewPager.setAdapter(adapter);
       viewPager.setCurrentItem(n);
     } else {
       liste.add(udsendelse);
       viewPager.setAdapter(adapter);
-      if (programserie==null) hentUdsendelser(0);
+      if (programserie == null) hentUdsendelser(0);
     }
-    pager_title_strip.setVisibility(liste.size()>1?View.VISIBLE:View.INVISIBLE);
+    pager_title_strip.setVisibility(liste.size() > 1 ? View.VISIBLE : View.INVISIBLE);
     viewPager.setOnPageChangeListener(this);
     return rod;
   }
 
 
   private void opdaterListe() {
-    if (viewPager==null) return;
+    if (viewPager == null) return;
     Udsendelse udsFør = liste.get(viewPager.getCurrentItem());
     liste.clear();
     liste.addAll(programserie.getUdsendelser());
@@ -95,7 +95,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
       hentUdsendelser(programserie.getUdsendelser().size());
     }
     */
-    if (nEft == liste.size()-1 && antalHentedeSendeplaner++ < 7) { // Hent flere udsendelser
+    if (nEft == liste.size() - 1 && antalHentedeSendeplaner++ < 7) { // Hent flere udsendelser
       hentUdsendelser(programserie.getUdsendelser().size());
     }
   }

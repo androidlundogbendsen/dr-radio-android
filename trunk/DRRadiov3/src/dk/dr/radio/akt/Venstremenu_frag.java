@@ -71,7 +71,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
   private boolean mFromSavedInstanceState;
   private boolean mUserLearnedDrawer;
   private VenstremenuAdapter venstremenuAdapter;
-  private HashMap<Class,Integer> fragmentklasseTilMenuposition = new HashMap<Class, Integer>();
+  private HashMap<Class, Integer> fragmentklasseTilMenuposition = new HashMap<Class, Integer>();
 
 
   @Override
@@ -198,12 +198,12 @@ public class Venstremenu_frag extends Fragment implements Runnable {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         List<Fragment> fragments = new ArrayList<Fragment>(fm.getFragments());
         Collections.reverse(fragments);
-        for(Fragment fragment : fragments) {
-          Log.d("fragment="+fragment);
-          if(fragment != null && fragment.isVisible()) {
+        for (Fragment fragment : fragments) {
+          Log.d("fragment=" + fragment);
+          if (fragment != null && fragment.isVisible()) {
             Integer pos = fragmentklasseTilMenuposition.get(fragment.getClass());
-            if (pos==null) continue;
-            Log.d("... fundet pos="+pos);
+            if (pos == null) continue;
+            Log.d("... fundet pos=" + pos);
             sætListemarkering(pos);
           }
 //        return fragment;
@@ -295,6 +295,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
 
 
   public static int FORSIDE_INDEX = 3;
+
   class VenstremenuAdapter extends Basisadapter {
     ArrayList<MenuElement> elem = new ArrayList<MenuElement>();
 
@@ -415,10 +416,10 @@ public class Venstremenu_frag extends Fragment implements Runnable {
           TextView tekst2 = (TextView) view.findViewById(R.id.tekst2);
           int antal = DRData.instans.favoritter.getAntalNyeUdsendelser();
           tekst2.setText(
-              antal<0 ?    "" : // i gang med at indlæse
-              antal==0 ?   "(ingen nye udsendelser)" :
-              antal == 1 ? "(1 ny udsendelse)" :
-                           "(" + antal + " nye udsendelser)");
+              antal < 0 ? "" : // i gang med at indlæse
+                  antal == 0 ? "(ingen nye udsendelser)" :
+                      antal == 1 ? "(1 ny udsendelse)" :
+                          "(" + antal + " nye udsendelser)");
           return view;
         }
       });
@@ -509,12 +510,12 @@ public class Venstremenu_frag extends Fragment implements Runnable {
         FragmentManager fm = akt.getSupportFragmentManager();
         // Fjern backstak - så vi starter forfra i 'roden'
         fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        Log.d("Venstremenu viser "+e.fragKlasse);
+        Log.d("Venstremenu viser " + e.fragKlasse);
         Basisfragment f = e.fragKlasse.newInstance();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.indhold_frag, f);
         // Tilbageknappen skal gå til forsiden - undtagen hvis vi ER på forsiden
-        if (position!=FORSIDE_INDEX) ft.addToBackStack("Venstremenu");
+        if (position != FORSIDE_INDEX) ft.addToBackStack("Venstremenu");
         ft.commit();
       } catch (Exception e1) {
         Log.rapporterFejl(e1);

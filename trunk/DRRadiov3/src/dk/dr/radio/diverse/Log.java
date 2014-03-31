@@ -123,7 +123,8 @@ public class Log {
     ab.create().show();
   }
 
-  private static LinkedHashMap<String,String> afprøvedeTing = new LinkedHashMap<String,String>();
+  private static LinkedHashMap<String, String> afprøvedeTing = new LinkedHashMap<String, String>();
+
   public static void registrérTestet(String hvad, String res) {
     afprøvedeTing.put(hvad, res);
   }
@@ -131,8 +132,8 @@ public class Log {
   public static String lavKontaktinfo() {
     String ret = "";
 
-    for (String afprøvet: afprøvedeTing.keySet()) {
-      ret += "\n"+afprøvet + ": "+afprøvedeTing.get(afprøvet);
+    for (String afprøvet : afprøvedeTing.keySet()) {
+      ret += "\n" + afprøvet + ": " + afprøvedeTing.get(afprøvet);
     }
     ret += "\nOvenstående er korrekt: JA/NEJ\n\n";
     /*

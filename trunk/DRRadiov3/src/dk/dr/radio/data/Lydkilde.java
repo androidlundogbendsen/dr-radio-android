@@ -24,8 +24,8 @@ public abstract class Lydkilde implements Serializable {
 
   @Override
   public boolean equals(Object o) {
-    if (o==null) return false;
-    if (o instanceof Lydkilde && slug!=null) return slug.equals(((Lydkilde)o).slug);
+    if (o == null) return false;
+    if (o instanceof Lydkilde && slug != null) return slug.equals(((Lydkilde) o).slug);
     return super.equals(o);
   }
 
@@ -34,7 +34,7 @@ public abstract class Lydkilde implements Serializable {
   }
 
   public void nulstilForetrukkenStream() {
-    if (streams==null) return;
+    if (streams == null) return;
     for (Lydstream s : streams) s.foretrukken = false;
   }
 
@@ -45,8 +45,8 @@ public abstract class Lydkilde implements Serializable {
     String ønsketformat = App.prefs.getString("lydformat", "auto");
 
     ArrayList<Lydstream> kandidater = new ArrayList<Lydstream>();
-    if (hentetStream!=null) kandidater.add(hentetStream);
-    if (streams==null) return kandidater;
+    if (hentetStream != null) kandidater.add(hentetStream);
+    if (streams == null) return kandidater;
 
     Lydstream sxxx = null;
       næste_stream:
