@@ -1,6 +1,7 @@
 package dk.dr.radio.data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -43,11 +44,19 @@ public class Programserie { //implements Serializable {
       udsendelserSorteret = new TreeSet<Udsendelse>(uds);
       udsendelserListe = new ArrayList<Udsendelse>(udsendelserSorteret);
     } else {
+      if (udsendelserListe.containsAll(uds)) {
+        Log.d("tilføjUdsendelser - liste allerede tilføjet.");
+        return;
+      }
+      udsendelserListe.addAll(uds);
       udsendelserSorteret.addAll(uds);
-      udsendelserListe.clear();
-      udsendelserListe.addAll(udsendelserSorteret);
+      if (!Arrays.equals(udsendelserListe.toArray(), udsendelserSorteret.toArray())) {
+        Log.d("tilføjUdsendelser INKONSISTENS??!?nu:\n"+ udsendelserListe+"\n"+udsendelserSorteret);
+      }
+//      udsendelserListe.clear();
+//      udsendelserListe.addAll(udsendelserSorteret);
     }
-    Log.d("tilføjUdsendelser nu:\n"+ udsendelserListe);
+    //Log.d("tilføjUdsendelser nu:\n"+ udsendelserListe);
     /*
     {
       ArrayList<Udsendelse> udsendelser = this.udsendelserListe;
