@@ -51,10 +51,8 @@ public class Soeg_efter_program_frag extends Basisfragment implements
   private TextView tomStr;
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
-    rod = inflater.inflate(R.layout.soeg_efter_program_frag/* kanal_frag */, container,
-        false);
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    rod = inflater.inflate(R.layout.soeg_efter_program_frag, container, false);
 
     AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this)
@@ -74,26 +72,18 @@ public class Soeg_efter_program_frag extends Basisfragment implements
 
       @Override
       public void onTextChanged(CharSequence s, int start, int before, int count) {
-        // TODO Auto-generated method stub
-
       }
 
       @Override
-      public void beforeTextChanged(CharSequence s, int start, int count,
-                                    int after) {
-        // TODO Auto-generated method stub
-
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
       }
 
       @Override
       public void afterTextChanged(Editable s) {
-        // TODO Auto-generated method stub
         if (søgFelt.getText().toString().length() > 0)
           søgKnap.setVisibility(View.VISIBLE);
         else
           søgKnap.setVisibility(View.INVISIBLE);
-
-
       }
     });
 
@@ -139,19 +129,14 @@ public class Soeg_efter_program_frag extends Basisfragment implements
       Udsendelse udsendelse = liste.get(position);
       if (v == null) {
         v = getLayoutInflater(null).inflate(
-            R.layout.elem_tid_titel_kunstner, parent,
-            false);
+            R.layout.elem_tid_titel_kunstner, parent,false);
         vh = new Viewholder();
         a = vh.aq = new AQuery(v);
-        vh.startid = a.id(R.id.startid).typeface(App.skrift_gibson)
-            .getTextView();
+        vh.startid = a.id(R.id.startid).typeface(App.skrift_gibson).getTextView();
         a.id(R.id.slutttid).gone();
 
-        vh.titel = a.id(R.id.titel_og_kunstner)
-            .typeface(App.skrift_gibson_fed).getTextView();
-
+        vh.titel = a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson_fed).getTextView();
         v.setTag(vh);
-
       } else {
         vh = (Viewholder) v.getTag();
         a = vh.aq;
@@ -185,8 +170,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
   private String søgStr;
 
   @Override
-  public void onItemClick(AdapterView<?> listView, View v, int position,
-                          long id) {
+  public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
     Udsendelse u = liste.get(position);
     // startActivity(new Intent(getActivity(), VisFragment_akt.class)
     // .putExtra(P_kode, getKanal.kode)
@@ -197,8 +181,10 @@ public class Soeg_efter_program_frag extends Basisfragment implements
     Fragment f = new Udsendelse_frag();
     f.setArguments(new Intent().putExtra(P_kode, u.getKanal().kode)
         .putExtra(DRJson.Slug.name(), u.slug).getExtras());
-    getActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.indhold_frag, f).addToBackStack(null)
+    getActivity().getSupportFragmentManager()
+        .beginTransaction()
+        .replace(R.id.indhold_frag, f)
+        .addToBackStack(null)
         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         .commit();
   }
