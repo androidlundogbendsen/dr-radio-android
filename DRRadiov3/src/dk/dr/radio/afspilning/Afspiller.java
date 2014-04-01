@@ -173,6 +173,8 @@ public class Afspiller {
     if (onAudioFocusChangeListener == null)
       onAudioFocusChangeListener = new OnAudioFocusChangeListener() {
 
+        public int lydstyreFørDuck = -1;
+
         @TargetApi(Build.VERSION_CODES.FROYO)
         public void onAudioFocusChange(int focusChange) {
           AudioManager am = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
@@ -182,7 +184,8 @@ public class Afspiller {
             case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK):
               // Lower the volume while ducking.
               Log.d("JPER duck");
-              am.setStreamVolume(AudioManager.STREAM_MUSIC, 1, AudioManager.FLAG_SHOW_UI);
+              lydstyreFørDuck = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+              am.setStreamVolume(AudioManager.STREAM_MUSIC, 1, 0);
               break;
 
             case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT):
@@ -203,8 +206,11 @@ public class Afspiller {
                 //gør intet da playeren ikke spiller.
               } else {
                 // Return the volume to normal and resume if paused.
-                am.setStreamVolume(AudioManager.STREAM_MUSIC, 5, AudioManager.FLAG_SHOW_UI);
-                startAfspilningIntern();
+                if (lydstyreFørDuck>0) {
+                  am.setStreamVolume(AudioManager.STREAM_MUSIC, lydstyreFørDuck, 0);
+                }
+                // Genstart ikke afspilning
+                //startAfspilningIntern();
 
               }
 
