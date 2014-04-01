@@ -9,7 +9,7 @@ import dk.dr.radio.diverse.Log;
  * Repræsenterer en udsendelse
  * Created by j on 28-01-14.
  */
-public class Udsendelse extends Lydkilde implements Comparable {
+public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
   private static final long serialVersionUID = -4522417772156322526L;
   public String titel;
   public String beskrivelse;
@@ -36,7 +36,7 @@ public class Udsendelse extends Lydkilde implements Comparable {
 
   @Override
   public String toString() {
-    return slug;// + "/" + startTid + "/" + slutTid;
+    return slug + "/" + episodeIProgramserie;//startTid + "/" + slutTid;
   }
 
   // http://www.dr.dk/tjenester/mu-apps/program/monte-carlo-361
@@ -78,18 +78,15 @@ public class Udsendelse extends Lydkilde implements Comparable {
 
   @Override
   public boolean equals(Object o) {
-    if (o == null || !(o instanceof Udsendelse)) return false;
-    Udsendelse u2 = (Udsendelse) o;
-    if (slug == null && u2.slug != null) return false;
-    return slug.equals(u2.slug);
+    if (o instanceof Udsendelse) return compareTo((Udsendelse) o)==0;
+    return false;
   }
 
   @Override
-  public int compareTo(Object o) {
-    if (o == null || !(o instanceof Udsendelse)) return -1;
-    Udsendelse u2 = (Udsendelse) o;
-    int e1 = episodeIProgramserie;
+  public int compareTo(Udsendelse u2) {
+    int e = episodeIProgramserie;
     int e2 = u2.episodeIProgramserie;
-    return e2 < e1 ? 1 : (e2 == e1 ? 0 : -1);
+    if (e != e2) return e2 < e ? -1 : 1;
+    return slug.compareTo(u2.slug);
   }
 }

@@ -61,7 +61,8 @@ public abstract class DrVolleyResonseListener implements Response.Listener<Strin
    * @param error Fejlen
    */
   protected void fikFejl(VolleyError error) {
-    Log.e("fikFejl for " + url + " " + error.networkResponse, error);
+    Log.e("fikFejl '" + error.networkResponse+"' for "+url, error);
+    //error.printStackTrace();
     Log.e("fikFejl startet herfra:", startetHerfra);
   }
 

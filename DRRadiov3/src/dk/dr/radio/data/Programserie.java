@@ -1,9 +1,12 @@
 package dk.dr.radio.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TreeSet;
+
+import dk.dr.radio.diverse.Log;
 
 /**
  * Created by j on 01-03-14.
@@ -15,11 +18,12 @@ public class Programserie { //implements Serializable {
   public String slug;
   public int antalUdsendelser;
   public String urn;
-  private ArrayList<Udsendelse> udsendelser;
+  private ArrayList<Udsendelse> udsendelserListe;
+  private TreeSet<Udsendelse> udsendelserSorteret;
   public Date senesteUdsendelseTid;
 
   public ArrayList<Udsendelse> getUdsendelser() {
-    return udsendelser;
+    return udsendelserListe;
   }
 
   /*
@@ -30,25 +34,36 @@ public class Programserie { //implements Serializable {
       int e1 = u1.episodeIProgramserie;
       int e2 = u2.episodeIProgramserie;
       return e2 < e1 ? 1 : (e2 == e1 ? 0 : -1);
-    }
-  };
+    }  };
   */
 
   public void tilføjUdsendelser(List<Udsendelse> uds) {
-    if (this.udsendelser == null) {
-      this.udsendelser = new ArrayList<Udsendelse>(uds);
+    Log.d("tilføjUdsendelser:\n"+ udsendelserListe + "\nfår tilføjet:\n" +uds);
+    if (this.udsendelserListe == null) {
+      udsendelserSorteret = new TreeSet<Udsendelse>(uds);
+      udsendelserListe = new ArrayList<Udsendelse>(udsendelserSorteret);
     } else {
-      this.udsendelser.addAll(uds);
-      //Collections.sort(udsendelser);
-      this.udsendelser = new ArrayList<Udsendelse>(new TreeSet<Udsendelse>(this.udsendelser));
+      udsendelserSorteret.addAll(uds);
+      udsendelserListe.clear();
+      udsendelserListe.addAll(udsendelserSorteret);
     }
+    Log.d("tilføjUdsendelser nu:\n"+ udsendelserListe);
+    /*
+    {
+      ArrayList<Udsendelse> udsendelser = this.udsendelserListe;
+      Collections.sort(udsendelser);
+      udsendelser = new ArrayList<Udsendelse>(new TreeSet<Udsendelse>(udsendelser));
+      Log.d("tilføjUdsendelser sorteret ville være:\n"+udsendelser);
+    }
+    */
+
   }
 
   public int findUdsendelseIndexFraSlug(String slug) {
     int n = -1;
-    if (udsendelser != null) {
-      for (int i = 0; i < udsendelser.size(); i++) {
-        if (slug.equals(udsendelser.get(i).slug)) n = i;
+    if (udsendelserListe != null) {
+      for (int i = 0; i < udsendelserListe.size(); i++) {
+        if (slug.equals(udsendelserListe.get(i).slug)) n = i;
       }
     }
     return n;
