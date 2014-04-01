@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="dk.dr.radio.v3"
           android:versionCode="1"
-          android:versionName="0.1.6.1 - 31.marts">
+          android:versionName="0.1.6.3 - 1.april">
 
     <uses-sdk
             android:minSdkVersion="7"

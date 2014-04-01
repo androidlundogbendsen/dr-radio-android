@@ -14,7 +14,6 @@ import com.android.volley.Request;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
@@ -31,7 +30,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
 
   private ViewPager viewPager;
 
-  private Udsendelse udsendelse;
+  private Udsendelse startudsendelse;
   private Programserie programserie;
   private ArrayList<Udsendelse> liste = new ArrayList<Udsendelse>();
   private Kanal kanal;
@@ -49,9 +48,9 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     Log.d("onCreateView " + this);
 
     kanal = DRData.instans.grunddata.kanalFraKode.get(getArguments().getString(Kanal_frag.P_kode));
-    udsendelse = DRData.instans.udsendelseFraSlug.get(getArguments().getString(DRJson.Slug.name()));
-    programserie = DRData.instans.programserieFraSlug.get(udsendelse.programserieSlug);
-    Log.d("onCreateView " + this + " viser " + programserie + " / " + udsendelse);
+    startudsendelse = DRData.instans.udsendelseFraSlug.get(getArguments().getString(DRJson.Slug.name()));
+    programserie = DRData.instans.programserieFraSlug.get(startudsendelse.programserieSlug);
+    Log.d("onCreateView " + this + " viser " + programserie + " / " + startudsendelse);
 
     View rod = inflater.inflate(R.layout.udsendelser_vandret_skift_frag, container, false);
 
@@ -63,18 +62,36 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     adapter = new UdsendelserAdapter(getChildFragmentManager());
     DRJson.opdateriDagIMorgenIGårDatoStr(App.serverCurrentTimeMillis());
 
-    int n = programserie == null ? -1 : programserie.findUdsendelseIndexFraSlug(udsendelse.slug);
+    if (programserie==null) {
+      liste.add(startudsendelse);
+      viewPager.setAdapter(adapter);
+      hentUdsendelser(0);
+    } else {
+      int n = programserie.findUdsendelseIndexFraSlug(startudsendelse.slug);
+      if (n<0) {
+        liste.add(startudsendelse);
+        viewPager.setAdapter(adapter);
+        hentUdsendelser(0);
+      } else {
+        liste.addAll(programserie.getUdsendelser());
+        viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(n);
+      }
+    }
 
-    Log.d("programserie.udsendelser.indexOf(udsendelse) = " + n);
+/*    int n = programserie == null ? -1 : programserie.findUdsendelseIndexFraSlug(startudsendelse.slug);
+
+    Log.d("programserie.udsendelser.indexOf(startudsendelse) = " + n);
     if (n >= 0) {
       liste.addAll(programserie.getUdsendelser());
       viewPager.setAdapter(adapter);
       viewPager.setCurrentItem(n);
     } else {
-      liste.add(udsendelse);
+      liste.add(startudsendelse);
       viewPager.setAdapter(adapter);
       if (programserie == null) hentUdsendelser(0);
     }
+    */
     pager_title_strip.setVisibility(liste.size() > 1 ? View.VISIBLE : View.INVISIBLE);
     viewPager.setOnPageChangeListener(this);
     return rod;
@@ -86,7 +103,16 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     Udsendelse udsFør = liste.get(viewPager.getCurrentItem());
     liste.clear();
     liste.addAll(programserie.getUdsendelser());
+    if (programserie.findUdsendelseIndexFraSlug(startudsendelse.slug)<0) {
+      liste.add(startudsendelse);
+      // hvis startudsendelse ikke er med i listen, så hent nogle flere, i håb om at komme hen til
+      // startudsendelsen (hvis vi ikke allerede har forsøgt 7 gange)
+      if (antalHentedeSendeplaner++ < 7) {
+        hentUdsendelser(programserie.getUdsendelser().size());
+      }
+    }
     int nEft = programserie.findUdsendelseIndexFraSlug(udsFør.slug);
+    if (nEft<0) nEft = liste.size()-1; // startudsendelsen
     adapter.notifyDataSetChanged();
     viewPager.setCurrentItem(nEft, false);
     pager_title_strip.setVisibility(liste.size() > 1 ? View.VISIBLE : View.INVISIBLE);
@@ -94,10 +120,13 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     if (programserie.getUdsendelser().size() < programserie.antalUdsendelser) {
       hentUdsendelser(programserie.getUdsendelser().size());
     }
-    */
-    if (nEft == liste.size() - 1 && antalHentedeSendeplaner++ < 7) { // Hent flere udsendelser
-      hentUdsendelser(programserie.getUdsendelser().size());
+    // hvis vi er sidst i listen og der er flere at hente, så hent nogle flere,
+    // i håb om at komme hen til den aktuelle startudsendelse (hvis vi ikke allerede har forsøgt 7 gange)
+    if (nEft==liste.size()-1 && nEft<programserie.antalUdsendelser-1 && antalHentedeSendeplaner++ < 7) {
+      // da det element vi viser lige nu
+      hentUdsendelser(programserie.getUdsendelser().size()-1);
     }
+*/
   }
 
   @Override
@@ -111,7 +140,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     // svarer til v3_programserie.json
     // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true
     // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true&includeStreams=true
-    final String url = "http://www.dr.dk/tjenester/mu-apps/series/" + udsendelse.programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
+    final String url = "http://www.dr.dk/tjenester/mu-apps/series/" + startudsendelse.programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
     Log.d("XXX url=" + url);
 
     Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
@@ -123,10 +152,10 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
           JSONObject data = new JSONObject(json);
           if (offset == 0) {
             programserie = DRJson.parsProgramserie(data, programserie);
-            DRData.instans.programserieFraSlug.put(udsendelse.programserieSlug, programserie);
+            DRData.instans.programserieFraSlug.put(startudsendelse.programserieSlug, programserie);
           }
           programserie.tilføjUdsendelser(DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans));
-          programserie.tilføjUdsendelser(Arrays.asList(udsendelse));
+          //programserie.tilføjUdsendelser(Arrays.asList(startudsendelse));
           opdaterListe();
         }
       }
