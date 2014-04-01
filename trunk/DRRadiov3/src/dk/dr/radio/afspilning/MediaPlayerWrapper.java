@@ -2,13 +2,19 @@ package dk.dr.radio.afspilning;
 
 import android.content.Context;
 import android.media.MediaPlayer;
-
+import android.net.Uri;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import dk.dr.radio.diverse.Log;
 
 /**
- * Created by j on 25-03-14.
+ * Wrapper til MediaPlayer.
+ * Akamai kræver at MediaPlayer'en bliver 'wrappet' sådan at deres statistikmodul
+ * kommer ind imellem den og resten af programmet.
+ * Dette muliggør også fjernafspilning (a la AirPlay), da f.eks.
+ * ChromeCast-understøttelse kræver præcist den samme wrapping.
+ * Oprettet af  Jacob Nordfalk 25-03-14.
  */
 public class MediaPlayerWrapper {
   MediaPlayer mediaPlayer;
@@ -26,6 +32,18 @@ public class MediaPlayerWrapper {
   }
 
   public void setDataSource(String lydUrl) throws IOException {
+    if (lydUrl.startsWith("file:")) {
+      /* FIX: Det ser ud til at nogle telefonmodellers MediaPlayer har problemer
+         med at åbne filer på SD-kortet hvis vi bare kalder setDataSource("file:///...
+         Det er bl.a. set på:
+         Telefonmodel: LT26i LT26i_1257-7813   - Android v4.1.2 (sdk: 16)
+         Derfor bruger vi for en FileDescriptor i dette tilfælde
+       */
+      FileInputStream fis = new FileInputStream(Uri.parse(lydUrl).getPath());
+      mediaPlayer.setDataSource(fis.getFD());
+      fis.close();
+      return;
+    }
     mediaPlayer.setDataSource(lydUrl);
   }
 
