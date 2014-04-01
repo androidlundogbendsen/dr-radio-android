@@ -47,7 +47,7 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).text(
 //        "Ingen favoritter\nGå ind på en programserie og tryk på hjertet for at gøre det til en favorit"
-        "Du har endnu ikke tilføjet nogle favoritprogrammer.\n" +
+        "Du har endnu ikke tilføjet nogle favoritprogrammer.\n\n" +
             "Favoritprogrammer kan vælges ved at markere hjerte-ikonet ved de enkelte programserievisninger."
     ).getView());
     listView.setCacheColorHint(Color.WHITE);
