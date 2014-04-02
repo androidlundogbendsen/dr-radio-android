@@ -3,6 +3,7 @@ package dk.dr.radio.akt;
 //import android.R;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -28,12 +29,14 @@ import com.android.volley.VolleyError;
 import com.androidquery.AQuery;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
+import dk.dr.radio.data.Programserie;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
@@ -45,13 +48,15 @@ import dk.dr.radio.v3.R;
 public class Soeg_efter_program_frag extends Basisfragment implements
     OnClickListener, AdapterView.OnItemClickListener {
 
+  private static final boolean SØG_OGSÅ_EFTER_UDSENDELSER = true;
   private ListView listView;
   private EditText søgFelt;
-  private ArrayList<Udsendelse> liste = new ArrayList<Udsendelse>();
+  private ArrayList<Object> liste = new ArrayList<Object>(); // Indeholder både udsendelser og -serier
   protected View rod;
   private ImageView søgKnap;
-  private String url;
   private TextView tomStr;
+  private ArrayList<Udsendelse> udsendelseListe = new ArrayList<Udsendelse>();
+  private ArrayList<Programserie> programserieListe = new ArrayList<Programserie>();
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -140,16 +145,6 @@ public class Soeg_efter_program_frag extends Basisfragment implements
     App.volleyRequestQueue.cancelAll(this);
   }
 
-  /**
-   * Viewholder designmønster - hold direkte referencer til de views og
-   * objekter der bruges hele tiden
-   */
-  private static class Viewholder {
-    public AQuery aq;
-    public TextView titel;
-    public TextView startid;
-    public Udsendelse udsendelse;
-  }
 
   private BaseAdapter adapter = new Basisadapter() {
     @Override
@@ -159,9 +154,33 @@ public class Soeg_efter_program_frag extends Basisfragment implements
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
-      Viewholder vh;
-      AQuery a;
-      Udsendelse udsendelse = liste.get(position);
+      try {
+        if (v == null) v = getLayoutInflater(null).inflate(R.layout.elem_tid_titel_kunstner, parent, false);
+        v.setBackgroundResource(0);
+        AQuery aq = new AQuery(v);
+        Object obj = liste.get(position);
+        if (obj instanceof Programserie) {
+          Programserie ps = (Programserie) obj;
+          aq.id(R.id.startid).text(ps.titel).typeface(App.skrift_gibson_fed).textColor(Color.BLACK);
+          aq.id(R.id.titel_og_kunstner).text(ps.titel).typeface(App.skrift_gibson);
+        } else {
+          Udsendelse udsendelse = (Udsendelse) obj;
+          aq.id(R.id.startid).text(DRJson.datoformat.format(udsendelse.startTid)).typeface(App.skrift_gibson);
+          aq.id(R.id.titel_og_kunstner).text(udsendelse.titel).typeface(App.skrift_gibson);
+        }
+        v.setBackgroundResource(0);
+
+
+        udvikling_checkDrSkrifter(v, this.getClass() + " ");
+      } catch (Exception e) {
+        Log.rapporterFejl(e);
+      }
+
+      return v;
+    }
+/*
+    @Override
+    public View getView(int position, View v, ViewGroup parent) {
       if (v == null) {
         v = getLayoutInflater(null).inflate(
             R.layout.elem_tid_titel_kunstner, parent,false);
@@ -178,51 +197,51 @@ public class Soeg_efter_program_frag extends Basisfragment implements
         a = vh.aq;
       }
 
-      // Opdatér viewholderens data
-      vh.udsendelse = udsendelse;
-
-//      SimpleDateFormat ft = new SimpleDateFormat("HH:mm");
-      Date startTid = udsendelse.getUdsendelse().startTid;
-
-      vh.startid.setText(DRJson.datoformat.format(startTid)/*"" + ft.format(startTid)*/);
-
       String titel = udsendelse.getUdsendelse().titel;
       Spannable spannable = new SpannableString(titel);
       spannable.setSpan(App.skrift_gibson_fed_span, 0, titel.length(),
           Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
       vh.titel.setText(spannable);
 
-      // vh.titel.setText(udsendelse.titel);
-      // a.id(R.id.stiplet_linje).visibility(position ==
-      // aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
-      // a.id(R.id.hør).visibility(udsendelse.kanHøres ? View.VISIBLE :
-      // View.GONE);
-
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
 
       return v;
     }
+*/
   };
   private String søgStr;
 
   @Override
   public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
-    Udsendelse u = liste.get(position);
-    // startActivity(new Intent(getActivity(), VisFragment_akt.class)
-    // .putExtra(P_kode, getKanal.kode)
-    // .putExtra(VisFragment_akt.KLASSE,
-    // Udsendelse_frag.class.getName()).putExtra(DRJson.Slug.name(),
-    // u.slug)); // Udsenselses-ID
+    Object obj = liste.get(position);
+    if (obj instanceof Programserie) {
+      Programserie programserie = (Programserie) obj;
+      Fragment f = new Programserie_frag();
+      f.setArguments(new Intent()
+          .putExtra(DRJson.SeriesSlug.name(), programserie.slug)
+          .getExtras());
+      getActivity().getSupportFragmentManager().beginTransaction()
+          .replace(R.id.indhold_frag, f)
+          .addToBackStack(null)
+          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+          .commit();
 
-    Fragment f = new Udsendelse_frag();
-    f.setArguments(new Intent().putExtra(P_kode, u.getKanal().kode)
-        .putExtra(DRJson.Slug.name(), u.slug).getExtras());
-    getActivity().getSupportFragmentManager()
-        .beginTransaction()
-        .replace(R.id.indhold_frag, f)
-        .addToBackStack(null)
-        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-        .commit();
+    } else {
+      Udsendelse udsendelse = (Udsendelse) obj;
+      Fragment f = new Udsendelse_frag();
+      f.setArguments(new Intent()
+//        .putExtra(Udsendelse_frag.BLOKER_VIDERE_NAVIGERING, true)
+//        .putExtra(P_kode, titel.kode)
+          .putExtra(DRJson.Slug.name(), udsendelse.slug)
+          .getExtras());
+      getActivity().getSupportFragmentManager().beginTransaction()
+          .replace(R.id.indhold_frag, f)
+          .addToBackStack(null)
+          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+          .commit();
+
+    }
+
   }
 
   @Override
@@ -251,25 +270,29 @@ public class Soeg_efter_program_frag extends Basisfragment implements
         adapter.notifyDataSetChanged();
       }
 
-        url = "http://www.dr.dk/tjenester/mu-apps/search/series?q=" + søgStr + "&type=radio";
 
+      if (SØG_OGSÅ_EFTER_UDSENDELSER) {
+        String url = "http://www.dr.dk/tjenester/mu-apps/search/programs?q=" + søgStr + "&type=radio";
         Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
-            @Override
-            public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
-              Log.d("SØG: fikSvar fraCache="+fraCache+" uændret="+uændret+" data = " + json);
-                if (json != null && !"null".equals(json) && !uændret) {
-                    JSONArray data = new JSONArray(json);
-                    liste = DRJson.parseUdsendelserForProgramserie(data, DRData.instans);
-                    Log.d("liste = " + liste);
-                    adapter.notifyDataSetChanged();
+          @Override
+          public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+            Log.d("SØG: fikSvar fraCache=" + fraCache + " uændret=" + uændret + " data = " + json);
+            if (json != null && !"null".equals(json) && !uændret) {
+              JSONArray data = new JSONArray(json);
+              udsendelseListe = DRJson.parseUdsendelserForProgramserie(data, DRData.instans);
+              liste.clear();
+              liste.addAll(programserieListe);
+              liste.addAll(udsendelseListe);
+              Log.d("liste = " + liste);
+              adapter.notifyDataSetChanged();
 
-                    if (liste.size() == 0) {
-                        tomStr.setText("Søgningen gav intet resultat");
-                    }
-                    return;
-                }
-                Log.d("Slut søgning!");
+              if (liste.size() == 0) {
+                tomStr.setText("Søgningen gav intet resultat");
+              }
+              return;
             }
+            Log.d("Slut søgning!");
+          }
 
           @Override
           protected void fikFejl(VolleyError error) {
@@ -280,5 +303,43 @@ public class Soeg_efter_program_frag extends Basisfragment implements
           }
         }).setTag(this);
         App.volleyRequestQueue.add(req);
+      }
+
+      String url = "http://www.dr.dk/tjenester/mu-apps/search/series?q=" + søgStr + "&type=radio";
+      Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
+        @Override
+        public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+          Log.d("SØG: fikSvar fraCache=" + fraCache + " uændret=" + uændret + " data = " + json);
+          if (json != null && !"null".equals(json) && !uændret) {
+            JSONArray data = new JSONArray(json);
+            programserieListe.clear();
+            for (int n=0; n<data.length(); n++) {
+              JSONObject elem = data.getJSONObject(n);
+              programserieListe.add(DRJson.parsProgramserie(elem, null));
+            }
+            liste.clear();
+            liste.addAll(programserieListe);
+            liste.addAll(udsendelseListe);
+            Log.d("liste = " + liste);
+            adapter.notifyDataSetChanged();
+
+            if (liste.size() == 0) {
+              tomStr.setText("Søgningen gav intet resultat");
+            }
+            return;
+          }
+          Log.d("Slut søgning!");
+        }
+
+        @Override
+        protected void fikFejl(VolleyError error) {
+          super.fikFejl(error);
+          liste.clear();
+          adapter.notifyDataSetChanged();
+          tomStr.setText("Der skete en fejl\n- prøv igen senere");
+        }
+      }).setTag(this);
+      App.volleyRequestQueue.add(req);
+
     }
 }
