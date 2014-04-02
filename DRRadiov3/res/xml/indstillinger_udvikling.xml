@@ -13,6 +13,12 @@
             android:summary="Swipe for at bladre mellem udsendelser fra samme programserie"/>
 
     <CheckBoxPreference
+            android:key="vispager_title_strip"
+            android:title="Titel på udsendelser"
+            android:defaultValue="false"
+            android:summary="Vis faneblade med titler for nemmere at bladre mellem udsendelser"/>
+
+    <CheckBoxPreference
             android:key="udsendelser_lodret_skift"
             android:title="Lodret swipe mellem udsendelser"
             android:defaultValue="false"

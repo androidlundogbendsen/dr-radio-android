@@ -179,7 +179,7 @@ Jeg bruger selv følgende macro'er i C til generering af URIs:
    */
   public static String skalérSlugBilledeUrl(String slug, int bredde, int højde) {
     String res = "http://asset.dr.dk/imagescaler/?file=/mu/programcard/imageuri/" + slug + "&w=" + bredde + "&h=" + højde + "&scaleAfter=crop";
-    Log.d("skalérSlugBilledeUrl " + slug + " " + bredde + "x" + højde + " giver: " + res);
+    if (App.fejlsøgning) Log.d("skalérSlugBilledeUrl " + slug + " " + bredde + "x" + højde + " giver: " + res);
     return res;
   }
 
@@ -192,7 +192,7 @@ Jeg bruger selv følgende macro'er i C til generering af URIs:
    * ScaledImage: "http://asset.dr.dk/discoImages/?discoserver=api.discogs.com&file=%2fimage%2fA-4970-1339439274-8053.jpeg&h=400&w=400&scaleafter=crop&quality=85",
    */
   public static String skalérDiscoBilledeUrl(String url, int bredde, int højde) {
-    Log.d("skalérDiscoBilledeUrl url1 = " + url);
+    if (App.fejlsøgning) Log.d("skalérDiscoBilledeUrl url1 = " + url);
     if (url == null || url.length() == 0 || "null".equals(url)) return null;
     try {
       URL u = new URL(url);

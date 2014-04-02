@@ -94,9 +94,15 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
       if (programserie == null) hentUdsendelser(0);
     }
     */
-    pager_title_strip.setVisibility(liste.size() > 1 ? View.VISIBLE : View.INVISIBLE);
+    vispager_title_strip();
     viewPager.setOnPageChangeListener(this);
     return rod;
+  }
+
+  private void vispager_title_strip() {
+    pager_title_strip.setVisibility(
+        !App.prefs.getBoolean("vispager_title_strip",false)?View.GONE :
+        liste.size() > 1 ? View.VISIBLE : View.INVISIBLE);
   }
 
 
@@ -117,7 +123,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     if (nEft<0) nEft = liste.size()-1; // startudsendelsen
     adapter.notifyDataSetChanged();
     viewPager.setCurrentItem(nEft, false);
-    pager_title_strip.setVisibility(liste.size() > 1 ? View.VISIBLE : View.INVISIBLE);
+    vispager_title_strip();
 /*
     if (programserie.getUdsendelser().size() < programserie.antalUdsendelser) {
       hentUdsendelser(programserie.getUdsendelser().size());

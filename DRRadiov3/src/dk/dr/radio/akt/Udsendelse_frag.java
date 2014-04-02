@@ -28,6 +28,7 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.androidquery.AQuery;
 
@@ -73,12 +74,12 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   private boolean fragmentErSynligt;
   private boolean aktuelUdsendelsePåKanalen;
 
-  private HashMap<Udsendelse, Long> streamsVarTom = new HashMap<Udsendelse, Long>();
+  private static HashMap<Udsendelse, Long> streamsVarTom = new HashMap<Udsendelse, Long>();
   private int antalGangeForsøgtHentet;
   private Runnable hentStreams = new Runnable() {
     @Override
     public void run() {
-      if (udsendelse.hentetStream == null && udsendelse.streams==null || udsendelse.streams.size()==0 && antalGangeForsøgtHentet++<0) {
+      if (udsendelse.hentetStream == null && (udsendelse.streams==null || udsendelse.streams.size()==0) && antalGangeForsøgtHentet++<5) {
         Request<?> req = new DrVolleyStringRequest(udsendelse.getStreamsUrl(), new DrVolleyResonseListener() {
           @Override
           public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
@@ -89,7 +90,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
               if (udsendelse.streams.size()==0) {
                 Log.d("SSSSS TOM "+udsendelse.slug+ " ... men det passer måske ikke! " +udsendelse.getStreamsUrl());
                 streamsVarTom.put(udsendelse, System.currentTimeMillis());
-                App.forgrundstråd.postDelayed(hentStreams, 3000);
+                App.volleyRequestQueue.getCache().remove(url);
+                App.forgrundstråd.postDelayed(hentStreams, 5000);
               } else if (streamsVarTom.containsKey(udsendelse)) {
                 long t0 = streamsVarTom.get(udsendelse);
                 App.kortToast("Serveren har ombestemt sig, nu er streams ikke mere tom for "+udsendelse.slug);
@@ -166,7 +168,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     Request<?> req = new DrVolleyStringRequest(kanal.getPlaylisteUrl(udsendelse), new DrVolleyResonseListener() {
       @Override
       public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
-        Log.d("fikSvar playliste(" + fraCache + " " + url + "   " + this);
+        if (App.fejlsøgning) Log.d("fikSvar playliste(" + fraCache + " " + url + "   " + this);
         if (uændret) return;
         if (fraCache && udsendelse.playliste != null)
           return; // Vi har allerede en liste, det må være den fra cachen
@@ -192,7 +194,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
   @Override
   public void setUserVisibleHint(boolean isVisibleToUser) {
-    Log.d(" QQQ setUserVisibleHint " + isVisibleToUser + "  " + this);
+    //Log.d(" QQQ setUserVisibleHint " + isVisibleToUser + "  " + this);
     fragmentErSynligt = isVisibleToUser;
     if (fragmentErSynligt) {
       App.forgrundstråd.post(new Runnable() {

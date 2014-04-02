@@ -67,7 +67,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    Log.d(this + " onCreateView startet efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
+    //Log.d(this + " onCreateView startet efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     String kanalkode = getArguments().getString(P_kode);
     p4 = Kanal.P4kode.equals(kanalkode);
     rod = null;
@@ -102,14 +102,14 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).getView());
 
-    Log.d(this + " onCreateView 3 efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
+    //Log.d(this + " onCreateView 3 efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     // Hent sendeplan for den pågældende dag. Døgnskifte sker kl 5, så det kan være dagen før
     hentSendeplanForDag(new Date(App.serverCurrentTimeMillis() - 5 * 60 * 60 * 1000), true);
-    Log.d(this + " onCreateView 4 efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
+    //Log.d(this + " onCreateView 4 efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     udvikling_checkDrSkrifter(rod, this + " rod");
     DRData.instans.afspiller.observatører.add(this);
     App.netværk.observatører.add(this);
-    Log.d(this + " onCreateView færdig efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
+    // Log.d(this + " onCreateView færdig efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     return rod;
   }
 
@@ -128,15 +128,14 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     }
 
     final String url = kanal.getUdsendelserUrl() + "/date/" + dato;
-    Log.d("hentSendeplanForDag url=" + url + " efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
+    if (App.fejlsøgning) Log.d("hentSendeplanForDag url=" + url + " efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
 
     Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
 
       @Override
       public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
-        Log.d("fikSvar(" + fraCache + " " + url);
         if (getActivity() == null || uændret) return;
-        Log.d("hentSendeplanForDag url " + url + " fraCache=" + fraCache + " efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
+        Log.d("hentSendeplanForDag fikSvar for url " + url + " fraCache=" + fraCache + " efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
         if (json != null && !"null".equals(json)) {
           if (idag) {
             kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json), kanal, DRData.instans), dato);
@@ -186,7 +185,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   @Override
   public void setUserVisibleHint(boolean isVisibleToUser) {
-    Log.d(kanal + " QQQ setUserVisibleHint " + isVisibleToUser + "  " + this);
+    //Log.d(kanal + " QQQ setUserVisibleHint " + isVisibleToUser + "  " + this);
     fragmentErSynligt = isVisibleToUser;
     if (fragmentErSynligt) {
       senesteSynligeFragment = this;
@@ -426,7 +425,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
 
   private void opdaterSenestSpillet2(AQuery aq, Udsendelse u) {
-    Log.d("DDDDD opdaterSenestSpillet2 " + u.playliste);
+    if (App.fejlsøgning) Log.d("DDDDD opdaterSenestSpillet2 " + u.playliste);
     if (u.playliste != null && u.playliste.size() > 0) {
       aq.id(R.id.senest_spillet_container).visible();
       Playlisteelement elem = u.playliste.get(0);
@@ -475,15 +474,15 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         final Udsendelse u2 = u;
         final AQuery aq2 = vh.aq;
         final String url = kanal.getPlaylisteUrl(u); // http://www.dr.dk/tjenester/mu-apps/playlist/monte-carlo-352/p3
-        Log.d("Henter playliste " + url);
+        //Log.d("Henter playliste " + url);
         Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
           @Override
           public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
-            Log.d(kanal.kode + " opdaterSenestSpillet url " + url);
+            if (App.fejlsøgning) Log.d(kanal.kode + " opdaterSenestSpillet url " + url);
             if (getActivity() == null || uændret) return;
             if (json != null && !"null".equals(json)) {
               u2.playliste = DRJson.parsePlayliste(new JSONArray(json));
-              Log.d(kanal.kode + " parsePlayliste gav " + u2.playliste.size() + " elemener");
+              //Log.d(kanal.kode + " parsePlayliste gav " + u2.playliste.size() + " elemener");
             }
             opdaterSenestSpillet2(aq2, u2);
           }

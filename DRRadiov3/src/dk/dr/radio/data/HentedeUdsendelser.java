@@ -139,9 +139,9 @@ public class HentedeUdsendelser {
   public Cursor getStatusCursor(Udsendelse udsendelse) {
     if (!virker()) return null;
     tjekDataOprettet();
-    Log.d("getStatus downloadIdFraSlug = " + data.downloadIdFraSlug + "  u=" + udsendelse);
     Long downloadId = data.downloadIdFraSlug.get(udsendelse.slug);
     if (downloadId == null) return null;
+    Log.d("HentedeUdsendelser getStatus gav downloadId = " + downloadId + " for u=" + udsendelse);
     DownloadManager.Query query = new DownloadManager.Query();
     query.setFilterById(downloadId);
     Cursor c = downloadService.query(query);

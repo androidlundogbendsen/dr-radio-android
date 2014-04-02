@@ -79,7 +79,7 @@ public class Kanal_nyheder_frag extends Basisfragment implements View.OnClickLis
 
   @Override
   public void setUserVisibleHint(boolean isVisibleToUser) {
-    Log.d(kanal + " QQQ setUserVisibleHint " + isVisibleToUser + "  " + this);
+    //Log.d(kanal + " QQQ setUserVisibleHint " + isVisibleToUser + "  " + this);
     fragmentErSynligt = isVisibleToUser;
     if (fragmentErSynligt) {
       App.forgrundstråd.post(this); // Opdatér lidt senere, efter onCreateView helt sikkert har kørt
