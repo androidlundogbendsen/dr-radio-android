@@ -85,7 +85,7 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
         if (programserie != null) liste.add(programserie);
         else {
           Log.d("programserieSlug gav ingen værdi: " + programserieSlug);
-          int offset = 0;
+          final int offset = 0;
           String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
           Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
             @Override
@@ -94,7 +94,7 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
               if (!uændret && json != null && !"null".equals(json)) {
                 JSONObject data = new JSONObject(json);
                 Programserie programserie = DRJson.parsProgramserie(data, null);
-                programserie.tilføjUdsendelser(DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans));
+                programserie.tilføjUdsendelser(offset, DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans));
                 DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
               }
               App.forgrundstråd.postDelayed(Favoritprogrammer_frag.this, 250); // Vent 1/4 sekund på eventuelt andre svar

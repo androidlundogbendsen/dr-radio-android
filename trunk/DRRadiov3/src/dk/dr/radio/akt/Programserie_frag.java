@@ -92,12 +92,9 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
           JSONObject data = new JSONObject(json);
           if (offset == 0) {
             programserie = DRJson.parsProgramserie(data, programserie);
-            programserie.tilføjUdsendelser(DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans));
             DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
-          } else {
-            ArrayList<Udsendelse> flereUdsendelser = DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans);
-            programserie.tilføjUdsendelser(flereUdsendelser);
           }
+          programserie.tilføjUdsendelser(offset, DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans));
           adapter.notifyDataSetChanged();
           return;
         }

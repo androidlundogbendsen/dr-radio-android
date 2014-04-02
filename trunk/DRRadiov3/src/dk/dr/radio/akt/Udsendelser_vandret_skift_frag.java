@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,6 +63,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     adapter = new UdsendelserAdapter(getChildFragmentManager());
     DRJson.opdateriDagIMorgenIGårDatoStr(App.serverCurrentTimeMillis());
 
+    liste.clear(); // undgå dubletter i tilfælde af at onCreateView kaldes flere gange
     if (programserie==null) {
       liste.add(startudsendelse);
       viewPager.setAdapter(adapter);
@@ -154,7 +156,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
             programserie = DRJson.parsProgramserie(data, programserie);
             DRData.instans.programserieFraSlug.put(startudsendelse.programserieSlug, programserie);
           }
-          programserie.tilføjUdsendelser(DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans));
+          programserie.tilføjUdsendelser(offset, DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans));
           //programserie.tilføjUdsendelser(Arrays.asList(startudsendelse));
           opdaterListe();
         }
@@ -169,7 +171,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
 
   @Override
   public void onPageSelected(int position) {
-    if (position == liste.size()-1 && antalHentedeSendeplaner++ < 7) { // Hent flere udsendelser
+    if (programserie!=null && position==liste.size()-1 && antalHentedeSendeplaner++ < 7) { // Hent flere udsendelser
       hentUdsendelser(programserie.getUdsendelser().size());
     }
   }
@@ -178,7 +180,8 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
   public void onPageScrollStateChanged(int state) {
   }
 
-  public class UdsendelserAdapter extends FragmentPagerAdapter {
+//  public class UdsendelserAdapter extends FragmentPagerAdapter {
+  public class UdsendelserAdapter extends FragmentStatePagerAdapter {
 
     public UdsendelserAdapter(FragmentManager fm) {
       super(fm);

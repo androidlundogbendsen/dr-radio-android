@@ -96,17 +96,20 @@ public class HentedeUdsendelser {
     try {
       Uri uri = Uri.parse(udsendelse.findBedsteStream(true).url);
       Log.d("uri=" + uri);
+      File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
+      dir.mkdirs();
+      if (!dir.exists()) {
+        Log.d("FEJL - HentedeUdsendelser kunne ikke oprette "+dir);
+        App.langToast("Adgang til eksternt lager mangler");
+        return;
+      }
 
       DownloadManager.Request req = new DownloadManager.Request(uri)
           .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
           .setAllowedOverRoaming(false)
           .setTitle(udsendelse.titel)
           .setDescription(udsendelse.beskrivelse);
-      File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
-      dir.mkdirs();
-      if (dir.exists()) {
-        req.setDestinationInExternalPublicDir(Environment.DIRECTORY_PODCASTS, udsendelse.slug + ".mp3");
-      }
+      req.setDestinationInExternalPublicDir(Environment.DIRECTORY_PODCASTS, udsendelse.slug + ".mp3");
 
       if (Build.VERSION.SDK_INT >= 11) req.allowScanningByMediaScanner();
 
