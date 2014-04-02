@@ -37,6 +37,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import dk.dr.radio.afspilning.Afspiller;
@@ -72,6 +73,44 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   private boolean fragmentErSynligt;
   private boolean aktuelUdsendelsePåKanalen;
 
+  private HashMap<Udsendelse, Long> streamsVarTom = new HashMap<Udsendelse, Long>();
+  private int antalGangeForsøgtHentet;
+  private Runnable hentStreams = new Runnable() {
+    @Override
+    public void run() {
+      if (udsendelse.hentetStream == null && udsendelse.streams==null || udsendelse.streams.size()==0 && antalGangeForsøgtHentet++<0) {
+        Request<?> req = new DrVolleyStringRequest(udsendelse.getStreamsUrl(), new DrVolleyResonseListener() {
+          @Override
+          public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+            if (uændret) return;
+            if (json != null && !"null".equals(json)) {
+              JSONObject o = new JSONObject(json);
+              udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
+              if (udsendelse.streams.size()==0) {
+                Log.d("SSSSS TOM "+udsendelse.slug+ " ... men det passer måske ikke! " +udsendelse.getStreamsUrl());
+                streamsVarTom.put(udsendelse, System.currentTimeMillis());
+                App.forgrundstråd.postDelayed(hentStreams, 3000);
+              } else if (streamsVarTom.containsKey(udsendelse)) {
+                long t0 = streamsVarTom.get(udsendelse);
+                App.kortToast("Serveren har ombestemt sig, nu er streams ikke mere tom for "+udsendelse.slug);
+                App.kortToast("Tidsforskel mellem de to svar: "+(System.currentTimeMillis()-t0)/1000+" sek");
+                //Log.rapporterFejl(new Exception("Server ombestemte sig, der var streams alligevel - for "+udsendelse.slug));
+                streamsVarTom.remove(udsendelse);
+              }
+              udsendelse.produktionsnummer = o.optString(DRJson.ProductionNumber.name());
+              udsendelse.kanHøres = streamsErKlar();
+              if (fragmentErSynligt && udsendelse.kanHøres && afspiller.getAfspillerstatus() == Status.STOPPET) {
+                afspiller.setLydkilde(udsendelse);
+              }
+              adapter.notifyDataSetChanged(); // Opdatér views
+            }
+          }
+        }).setTag(this);
+        App.volleyRequestQueue.add(req);
+      }
+    }
+  };
+
   @Override
   public String toString() {
     return super.toString() + "/" + kanal + "/" + udsendelse;
@@ -101,25 +140,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     listView.setOnItemClickListener(this);
 
     tjekOmHentet(udsendelse);
-    if (udsendelse.hentetStream == null && udsendelse.streams == null) {
-      Request<?> req = new DrVolleyStringRequest(udsendelse.getStreamsUrl(), new DrVolleyResonseListener() {
-        @Override
-        public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
-          if (uændret) return;
-          if (json != null && !"null".equals(json)) {
-            JSONObject o = new JSONObject(json);
-            udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
-            udsendelse.produktionsnummer = o.optString(DRJson.ProductionNumber.name());
-            udsendelse.kanHøres = streamsErKlar();
-            if (fragmentErSynligt && udsendelse.kanHøres && afspiller.getAfspillerstatus() == Status.STOPPET) {
-              afspiller.setLydkilde(udsendelse);
-            }
-            adapter.notifyDataSetChanged(); // Opdatér views
-          }
-        }
-      }).setTag(this);
-      App.volleyRequestQueue.add(req);
-    }
+    hentStreams.run();
 
 //    if (streamsErKlar() && DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
 //      DRData.instans.afspiller.setLydkilde(udsendelse);
@@ -454,6 +475,9 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           aq.id(R.id.kan_endnu_ikke_hentes).typeface(App.skrift_gibson);
           if (!DRData.instans.hentedeUdsendelser.virker()) aq.gone(); // Understøttes ikke på Android 2.2
           aq.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
+        } else if (type == PLAYLISTE_KAPITLER_INFO_OVERSKRIFT) {
+          aq.id(R.id.playliste).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
+          aq.id(R.id.info).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         } else if (type == INFO) {
           String forkortInfoStr = udsendelse.beskrivelse;
           Spannable spannable = new SpannableString(forkortInfoStr);//null;
@@ -473,11 +497,9 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           aq.id(R.id.hør).visibility(udsendelse.kanHøres && u.offsetMs >= 0 ? View.VISIBLE : View.GONE);
         } else if (type == VIS_HELE_PLAYLISTEN) {
           aq.id(R.id.vis_hele_playlisten).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
-        } else if (type == PLAYLISTE_KAPITLER_INFO_OVERSKRIFT) {
-          aq.id(R.id.playliste).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
-          aq.id(R.id.info).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
+        } else if (type == ALLE_UDS) {
+          aq.id(R.id.titel).typeface(App.skrift_gibson_fed);
         }
-        //aq.id(R.id.højttalerikon).visible().clicked(new UdsendelseClickListener(vh));
       } else {
         vh = (Viewholder) v.getTag();
         aq = vh.aq;
