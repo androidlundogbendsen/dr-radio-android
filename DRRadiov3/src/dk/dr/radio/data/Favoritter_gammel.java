@@ -85,7 +85,7 @@ public class Favoritter_gammel {
         final String programserieSlug = e.getKey();
         Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
         if (programserie != null) continue; // Allerede hentet
-        int offset = 0;
+        final int offset = 0;
         String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
         Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
           @Override
@@ -95,8 +95,8 @@ public class Favoritter_gammel {
               if (json != null && !"null".equals(json)) {
                 JSONObject data = new JSONObject(json);
                 Programserie programserie = DRJson.parsProgramserie(data, null);
-                programserie.tilføjUdsendelser(DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans));
                 DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
+                programserie.tilføjUdsendelser(offset, DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans));
               }
             }
             App.forgrundstråd.postDelayed(beregnAntalNyeUdsendelser, 500); // Vent 1/2 sekund på eventuelt andre svar

@@ -2,6 +2,7 @@ package dk.dr.radio.data;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InvalidClassException;
 import java.util.ArrayList;
 
 import dk.dr.radio.diverse.App;
@@ -21,6 +22,8 @@ public class SenestLyttede {
     if (new File(FILNAVN).exists()) try {
       liste = (ArrayList<Lydkilde>) Serialisering.hent(FILNAVN);
       return;
+    } catch (InvalidClassException e) {
+      Log.d("SenestLyttede: "+ e);
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }

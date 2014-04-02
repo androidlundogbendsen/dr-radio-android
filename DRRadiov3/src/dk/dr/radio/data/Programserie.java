@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import dk.dr.radio.diverse.Log;
@@ -20,6 +22,7 @@ public class Programserie { //implements Serializable {
   public int antalUdsendelser;
   public String urn;
   private ArrayList<Udsendelse> udsendelserListe;
+  private TreeMap<Integer, ArrayList<Udsendelse>> udsendelserListeFraOffset = new TreeMap<Integer, ArrayList<Udsendelse>>();
   private TreeSet<Udsendelse> udsendelserSorteret;
   public Date senesteUdsendelseTid;
 
@@ -27,31 +30,24 @@ public class Programserie { //implements Serializable {
     return udsendelserListe;
   }
 
-  /*
-  private static Comparator<Udsendelse> udsendelseComparator = new Comparator<Udsendelse>() {
 
-    @Override
-    public int compare(Udsendelse u1, Udsendelse u2) {
-      int e1 = u1.episodeIProgramserie;
-      int e2 = u2.episodeIProgramserie;
-      return e2 < e1 ? 1 : (e2 == e1 ? 0 : -1);
-    }  };
-  */
+  public void tilføjUdsendelser(int offset, ArrayList<Udsendelse> uds) {
+    Log.d(this+ " tilføjUdsendelser:"+(udsendelserListe==null?"nul":udsendelserListe.size())+" elem liste:\n"+ udsendelserListe + "\nfår tilføjet "+(uds==null?"nul":uds.size())+" elem:\n" +uds);
 
-  public void tilføjUdsendelser(List<Udsendelse> uds) {
-    Log.d("tilføjUdsendelser:\n"+ udsendelserListe + "\nfår tilføjet:\n" +uds);
+    udsendelserListeFraOffset.put(offset, uds);
+    Log.d("tilføjUdsendelser udsendelserListeFraOffset: "+ udsendelserListeFraOffset.keySet());
+
     if (this.udsendelserListe == null) {
       udsendelserSorteret = new TreeSet<Udsendelse>(uds);
       udsendelserListe = new ArrayList<Udsendelse>(udsendelserSorteret);
     } else {
-      if (udsendelserListe.containsAll(uds)) {
-        Log.d("tilføjUdsendelser - liste allerede tilføjet.");
-        return;
+      udsendelserListe.clear();
+      for (ArrayList<Udsendelse> lx : udsendelserListeFraOffset.values()) {
+        udsendelserListe.addAll(lx);
       }
-      udsendelserListe.addAll(uds);
       udsendelserSorteret.addAll(uds);
       if (!Arrays.equals(udsendelserListe.toArray(), udsendelserSorteret.toArray())) {
-        Log.d("tilføjUdsendelser INKONSISTENS??!?nu:\n"+ udsendelserListe+"\n"+udsendelserSorteret);
+        Log.d("tilføjUdsendelser INKONSISTENS??!?nu:\nlisten:"+ udsendelserListe+"\nsorter:"+udsendelserSorteret);
       }
 //      udsendelserListe.clear();
 //      udsendelserListe.addAll(udsendelserSorteret);

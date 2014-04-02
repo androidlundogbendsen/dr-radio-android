@@ -446,7 +446,7 @@ public class App extends Application implements Runnable {
     if (Math.abs(App.serverkorrektionTilKlienttidMs - serverkorrektionTilKlienttidMs2) > 30000) {
       Log.d("SERVERTID korrigerer tid - serverkorrektionTilKlienttidMs=" + serverkorrektionTilKlienttidMs2 + " klokken på serveren er " + new Date(servertid));
       App.serverkorrektionTilKlienttidMs = serverkorrektionTilKlienttidMs2;
-      new Exception("SERVERTID korrigeret til " + new Date(servertid)).printStackTrace();
+      new Exception("SERVERTID korrigeret med "+serverkorrektionTilKlienttidMs2/1000/60+" min til " + new Date(servertid)).printStackTrace();
     }
   }
 

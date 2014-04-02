@@ -232,7 +232,7 @@ public enum DRJson {
         lydData.add(l);
         if (App.fejlsøgning) Log.d("lydstream=" + l);
       } catch (Exception e) {
-        Log.e(e);
+        Log.rapporterFejl(e);
       }
     return lydData;
   }
