@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.android.volley.Request;
+import com.android.volley.VolleyError;
 import com.androidquery.AQuery;
 
 import org.json.JSONArray;
@@ -99,6 +100,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
               tomStr.setText("");
           }
 
+        searchProgram();
 
       }
     });
@@ -108,12 +110,13 @@ public class Soeg_efter_program_frag extends Basisfragment implements
           @Override
           public boolean onEditorAction(TextView v, int actionId,
                                         KeyEvent event) {
+            Log.d("actionId="+actionId);
               boolean handled = false;
-              if (actionId == KeyEvent.KEYCODE_ENTER) {
+              //if (actionId == KeyEvent.KEYCODE_ENTER) {
                   searchProgram();
 
                   handled = true;
-              }
+              //}
               return handled;
           }
       });
@@ -133,6 +136,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
   @Override
   public void onDestroyView() {
     super.onDestroyView();
+    // Anullér en eventuel søgning
     App.volleyRequestQueue.cancelAll(this);
   }
 
@@ -226,6 +230,8 @@ public class Soeg_efter_program_frag extends Basisfragment implements
       søgStr = søgFelt.getText().toString();
       if (søgStr.length() > 0) {
           søgFelt.setText("");
+        liste.clear();
+        adapter.notifyDataSetChanged();
       } else {
 
       }
@@ -236,17 +242,23 @@ public class Soeg_efter_program_frag extends Basisfragment implements
     public void searchProgram() {
         Log.d("Liste " + liste);
 
+        // Anullér forrige søgning
+        App.volleyRequestQueue.cancelAll(this);
 
         søgStr = søgFelt.getText().toString();
+      if (søgStr.length()==0) {
+        liste.clear();
+        adapter.notifyDataSetChanged();
+      }
 
-        url = "http://www.dr.dk/tjenester/mu-apps/search/programs?q=" + søgStr + "&type=radio";
+        url = "http://www.dr.dk/tjenester/mu-apps/search/series?q=" + søgStr + "&type=radio";
 
         Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
             @Override
             public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+              Log.d("SØG: fikSvar fraCache="+fraCache+" uændret="+uændret+" data = " + json);
                 if (json != null && !"null".equals(json) && !uændret) {
                     JSONArray data = new JSONArray(json);
-                    Log.d("data = " + data.toString(2));
                     liste = DRJson.parseUdsendelserForProgramserie(data, DRData.instans);
                     Log.d("liste = " + liste);
                     adapter.notifyDataSetChanged();
@@ -258,6 +270,14 @@ public class Soeg_efter_program_frag extends Basisfragment implements
                 }
                 Log.d("Slut søgning!");
             }
+
+          @Override
+          protected void fikFejl(VolleyError error) {
+            super.fikFejl(error);
+            liste.clear();
+            adapter.notifyDataSetChanged();
+            tomStr.setText("Der skete en fejl\n- prøv igen senere");
+          }
         }).setTag(this);
         App.volleyRequestQueue.add(req);
     }
