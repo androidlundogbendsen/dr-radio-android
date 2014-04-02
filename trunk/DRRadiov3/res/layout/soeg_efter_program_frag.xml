@@ -19,6 +19,7 @@
                     android:layout_marginRight="60dp"
                     android:hint="Søg efter program"
                     android:singleLine="true"
+                android:inputType="text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 
@@ -29,15 +30,13 @@
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
                     android:scaleType="center"
-                    android:background="@drawable/knap_hvid_bg"
-                    android:src="@drawable/dri_soeg_blaa"/>
+                android:src="@drawable/dri_soeg_blaa" />
         </RelativeLayout>
 
         <ListView
                 android:id="@+id/listView"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:cacheColorHint="@color/grå20"
                 android:divider="@null"
                 android:dividerHeight="0px"
                 android:fadingEdgeLength="4dp"
