@@ -26,7 +26,7 @@ public enum DRJson {
   StartTime, EndTime,
   Streams,
   Uri, Played, Artist, Image,
-  Type, Kind, Quality, Kbps, ChannelSlug, TotalPrograms, Programs, FirstBroadcast, Watchable, DurationInSeconds, Format, OffsetMs, ProductionNumber, LatestProgramBroadcasted, Episode;
+    Type, Kind, Quality, Kbps, ChannelSlug, TotalPrograms, Programs, FirstBroadcast, Watchable, DurationInSeconds, Format, OffsetMs, ProductionNumber, ShareLink, LatestProgramBroadcasted, Episode;
 
   /*
     public enum StreamType {

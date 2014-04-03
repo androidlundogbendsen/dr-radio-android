@@ -28,7 +28,6 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.androidquery.AQuery;
 
@@ -100,6 +99,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
                 streamsVarTom.remove(udsendelse);
               }
               udsendelse.produktionsnummer = o.optString(DRJson.ProductionNumber.name());
+                udsendelse.ShareLink = o.optString(DRJson.ShareLink.name());
               udsendelse.kanHøres = streamsErKlar();
               if (fragmentErSynligt && udsendelse.kanHøres && afspiller.getAfspillerstatus() == Status.STOPPET) {
                 afspiller.setLydkilde(udsendelse);
@@ -629,7 +629,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           + udsendelse.beskrivelse + "\n\n" +
 // http://www.dr.dk/radio/ondemand/p6beat/debut-65
 // http://www.dr.dk/radio/ondemand/ramasjangradio/ramasjang-formiddag-44#!/00:03
-          "http://dr.dk/radio/ondemand/" + kanal.slug + "/" + udsendelse.slug
+                      udsendelse.ShareLink
 //          + "\n\n" + udsendelse.findBedsteStream(true).url
       );
 //www.dr.dk/p1/mennesker-og-medier/mennesker-og-medier-100

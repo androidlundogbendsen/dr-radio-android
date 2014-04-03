@@ -24,6 +24,7 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
   public transient ArrayList<Playlisteelement> playliste;
   public boolean kanHøres; // om der er nogle streams eller ej
   public String produktionsnummer;
+    public String ShareLink;
   public transient int startposition;// hvis der allerede er lyttet til denne lydkilde så notér det her så afspilning kan fortsætte herfra
   public int episodeIProgramserie;
 
