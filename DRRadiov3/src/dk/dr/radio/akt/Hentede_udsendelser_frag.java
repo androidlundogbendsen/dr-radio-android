@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -42,8 +43,10 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
 
     AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
-    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).text(
-        "Du har endnu ikke hentet nogen udsendelser."
+      listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).text
+              (Html.fromHtml("<b>Du har ingen downloads</b><br><br>Du kan downloade udsendelser og lytte til dem her uden internetforbindelse.")
+
+
     ).getView());
     listView.setCacheColorHint(Color.WHITE);
 

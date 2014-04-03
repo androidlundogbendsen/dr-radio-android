@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -31,8 +29,8 @@ import com.androidquery.AQuery;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Date;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
@@ -266,13 +264,14 @@ public class Soeg_efter_program_frag extends Basisfragment implements
 
         søgStr = søgFelt.getText().toString();
       if (søgStr.length()==0) {
+          tomStr.setText("");
         liste.clear();
         adapter.notifyDataSetChanged();
       }
 
 
       if (SØG_OGSÅ_EFTER_UDSENDELSER) {
-        String url = "http://www.dr.dk/tjenester/mu-apps/search/programs?q=" + søgStr + "&type=radio";
+          String url = "http://www.dr.dk/tjenester/mu-apps/search/programs?q=" + URLEncoder.encode(søgStr) + "&type=radio";
         Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
           @Override
           public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
@@ -299,13 +298,13 @@ public class Soeg_efter_program_frag extends Basisfragment implements
             super.fikFejl(error);
             liste.clear();
             adapter.notifyDataSetChanged();
-            tomStr.setText("Der skete en fejl\n- prøv igen senere");
+              tomStr.setText("Søgningen gav intet resultat");
           }
         }).setTag(this);
         App.volleyRequestQueue.add(req);
       }
 
-      String url = "http://www.dr.dk/tjenester/mu-apps/search/series?q=" + søgStr + "&type=radio";
+        String url = "http://www.dr.dk/tjenester/mu-apps/search/series?q=" + URLEncoder.encode(søgStr) + "&type=radio";
       Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
         @Override
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
@@ -336,7 +335,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
           super.fikFejl(error);
           liste.clear();
           adapter.notifyDataSetChanged();
-          tomStr.setText("Der skete en fejl\n- prøv igen senere");
+            tomStr.setText("Søgningen gav intet resultat");
         }
       }).setTag(this);
       App.volleyRequestQueue.add(req);

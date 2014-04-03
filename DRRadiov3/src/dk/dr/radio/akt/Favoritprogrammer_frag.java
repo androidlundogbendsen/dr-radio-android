@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,9 +48,10 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).text(
 //        "Ingen favoritter\nGå ind på en programserie og tryk på hjertet for at gøre det til en favorit"
-        "Du har endnu ikke tilføjet nogle favoritprogrammer.\n\n" +
-            "Favoritprogrammer kan vælges ved at markere hjerte-ikonet ved de enkelte programserievisninger."
-    ).getView());
+                    Html.fromHtml("<b>Saml dine favoritter her</b><br><br>Klik på hjertet på dine yndlingsprogrammer. Du får nem adgang til dine favoritter – og du kan hurtigt se, når der er kommet nye udsendelser.")
+
+            ).getView()
+    );
     listView.setCacheColorHint(Color.WHITE);
 
     aq.id(R.id.overskrift).typeface(App.skrift_gibson_fed).text("Dine favoritprogrammer").getTextView();
@@ -61,7 +63,8 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
       DRData.instans.favoritter.startOpdaterAntalNyeUdsendelser.run();
       sidstOpdateretAntalNyeUdsendelser = System.currentTimeMillis();
     }
-    udvikling_checkDrSkrifter(rod, this + " rod");
+
+      udvikling_checkDrSkrifter(rod, this + " rod");
     return rod;
   }
 
