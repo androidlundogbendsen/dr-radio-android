@@ -86,6 +86,8 @@ public class Soeg_efter_program_frag extends Basisfragment implements
               søgKnap.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
 
           } else {
+              liste.clear();
+              adapter.notifyDataSetChanged();
               søgKnap.setImageResource(R.drawable.dri_soeg_blaa);
           }
 
@@ -99,12 +101,12 @@ public class Soeg_efter_program_frag extends Basisfragment implements
       public void afterTextChanged(Editable s) {
 
           if (søgFelt.getText().toString().length() > 0) {
-
+              searchProgram();
           } else {
               tomStr.setText("");
+
           }
 
-        searchProgram();
 
       }
     });
@@ -161,7 +163,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
         if (obj instanceof Programserie) {
           Programserie ps = (Programserie) obj;
           aq.id(R.id.startid).text(ps.titel).typeface(App.skrift_gibson_fed).textColor(Color.BLACK);
-          aq.id(R.id.titel_og_kunstner).text(ps.titel).typeface(App.skrift_gibson);
+            aq.id(R.id.titel_og_kunstner).text(ps.beskrivelse).typeface(App.skrift_gibson);
         } else {
           Udsendelse udsendelse = (Udsendelse) obj;
           aq.id(R.id.startid).text(DRJson.datoformat.format(udsendelse.startTid)).typeface(App.skrift_gibson);
@@ -251,8 +253,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
       søgStr = søgFelt.getText().toString();
       if (søgStr.length() > 0) {
           søgFelt.setText("");
-        liste.clear();
-        adapter.notifyDataSetChanged();
+
       } else {
 
 
