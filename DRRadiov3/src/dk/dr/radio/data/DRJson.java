@@ -267,11 +267,12 @@ public enum DRJson {
     ps.slug = o.getString(DRJson.Slug.name());
     ps.urn = o.optString(DRJson.Urn.name());
     ps.antalUdsendelser = o.getInt(DRJson.TotalPrograms.name());
-    try {
+      //når denne ikke er udkommenteret blir json aldrig returneret.
+    /*try {
       ps.senesteUdsendelseTid = servertidsformat.parse(o.getString(DRJson.LatestProgramBroadcasted.name()));
     } catch (ParseException e) {
       Log.rapporterFejl(e);
-    }
+    }*/
     return ps;
   }
 
