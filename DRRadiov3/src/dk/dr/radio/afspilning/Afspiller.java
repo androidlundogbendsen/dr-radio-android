@@ -174,28 +174,31 @@ public class Afspiller {
       onAudioFocusChangeListener = new OnAudioFocusChangeListener() {
 
         public int lydstyreFørDuck = -1;
+          public String soundStatus;
 
         @TargetApi(Build.VERSION_CODES.FROYO)
         public void onAudioFocusChange(int focusChange) {
           AudioManager am = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
-
+            lydstyreFørDuck = am.getStreamVolume(AudioManager.STREAM_MUSIC);
 
           switch (focusChange) {
             case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK):
               // Lower the volume while ducking.
               Log.d("JPER duck");
-              lydstyreFørDuck = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+                soundStatus = "duck";
               am.setStreamVolume(AudioManager.STREAM_MUSIC, 1, 0);
               break;
 
             case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT):
               Log.d("JPER pause");
+                soundStatus = "pause";
               pauseAfspilning();
               break;
 
             case (AudioManager.AUDIOFOCUS_LOSS):
               Log.d("JPER stop");
               //stopAfspilning();
+                soundStatus = "stop";
               pauseAfspilning();
               am.abandonAudioFocus(this);
               break;
@@ -203,11 +206,19 @@ public class Afspiller {
             case (AudioManager.AUDIOFOCUS_GAIN):
               Log.d("JPER Gain");
               if (DRData.instans.afspiller.afspillerstatus == Status.STOPPET) {
-                //gør intet da playeren ikke spiller.
+                  if (soundStatus == "stop") {
+                      Log.d("JPER afspiller stoppet vi gør intet");
+                  } else {
+                      am.setStreamVolume(AudioManager.STREAM_MUSIC, lydstyreFørDuck, 0);
+                      startAfspilningIntern();
+                  }//gør intet da playeren ikke spiller.
+
+
               } else {
                 // Return the volume to normal and resume if paused.
                 if (lydstyreFørDuck>0) {
-                  am.setStreamVolume(AudioManager.STREAM_MUSIC, lydstyreFørDuck, 0);
+                    Log.d("JPER afspiller pauset vi gør resumer");
+                    am.setStreamVolume(AudioManager.STREAM_MUSIC, lydstyreFørDuck, 0);
                 }
                 // Genstart ikke afspilning
                 //startAfspilningIntern();
