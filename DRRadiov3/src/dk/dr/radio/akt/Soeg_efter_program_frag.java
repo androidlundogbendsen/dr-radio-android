@@ -46,7 +46,7 @@ import dk.dr.radio.v3.R;
 public class Soeg_efter_program_frag extends Basisfragment implements
     OnClickListener, AdapterView.OnItemClickListener {
 
-  private static final boolean SØG_OGSÅ_EFTER_UDSENDELSER = true;
+    private static final boolean SØG_OGSÅ_EFTER_UDSENDELSER = false;
   private ListView listView;
   private EditText søgFelt;
   private ArrayList<Object> liste = new ArrayList<Object>(); // Indeholder både udsendelser og -serier
@@ -80,6 +80,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
       @Override
       public void onTextChanged(CharSequence s, int start, int before, int count) {
           Log.d("JPER text changed");
+
           if (søgFelt.getText().toString().length() > 0) {
 
               søgKnap.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
@@ -244,12 +245,16 @@ public class Soeg_efter_program_frag extends Basisfragment implements
 
   @Override
   public void onClick(View v) {
+      AQuery aq = new AQuery(rod);
+      tomStr = aq.id(R.id.tom).getTextView();
+      tomStr.setText("");
       søgStr = søgFelt.getText().toString();
       if (søgStr.length() > 0) {
           søgFelt.setText("");
         liste.clear();
         adapter.notifyDataSetChanged();
       } else {
+
 
       }
 
@@ -276,7 +281,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
           @Override
           public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
             Log.d("SØG: fikSvar fraCache=" + fraCache + " uændret=" + uændret + " data = " + json);
-            if (json != null && !"null".equals(json) && !uændret) {
+              if (json != null && !"null".equals(json)) {
               JSONArray data = new JSONArray(json);
               udsendelseListe = DRJson.parseUdsendelserForProgramserie(data, DRData.instans);
               liste.clear();
@@ -298,7 +303,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
             super.fikFejl(error);
             liste.clear();
             adapter.notifyDataSetChanged();
-              tomStr.setText("Søgningen gav intet resultat");
+              //tomStr.setText("Søgningen gav intet resultat");
           }
         }).setTag(this);
         App.volleyRequestQueue.add(req);
@@ -309,7 +314,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
         @Override
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
           Log.d("SØG: fikSvar fraCache=" + fraCache + " uændret=" + uændret + " data = " + json);
-          if (json != null && !"null".equals(json) && !uændret) {
+            if (json != null) {
             JSONArray data = new JSONArray(json);
             programserieListe.clear();
             for (int n=0; n<data.length(); n++) {
@@ -335,7 +340,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
           super.fikFejl(error);
           liste.clear();
           adapter.notifyDataSetChanged();
-            tomStr.setText("Søgningen gav intet resultat");
+            //tomStr.setText("Søgningen gav intet resultat");
         }
       }).setTag(this);
       App.volleyRequestQueue.add(req);
