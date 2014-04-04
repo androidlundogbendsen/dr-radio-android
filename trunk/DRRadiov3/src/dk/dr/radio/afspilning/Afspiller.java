@@ -179,14 +179,15 @@ public class Afspiller {
         @TargetApi(Build.VERSION_CODES.FROYO)
         public void onAudioFocusChange(int focusChange) {
           AudioManager am = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
-            lydstyreFørDuck = am.getStreamVolume(AudioManager.STREAM_MUSIC);
 
           switch (focusChange) {
             case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK):
               // Lower the volume while ducking.
+              lydstyreFørDuck = am.getStreamVolume(AudioManager.STREAM_MUSIC);
               Log.d("JPER duck");
                 soundStatus = "duck";
-              am.setStreamVolume(AudioManager.STREAM_MUSIC, 1, 0);
+              // Sæt lydstyrken ned til en 1/3-del
+              am.setStreamVolume(AudioManager.STREAM_MUSIC, (lydstyreFørDuck+2)/3, 0);
               break;
 
             case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT):
