@@ -53,6 +53,8 @@ import dk.dr.radio.diverse.Opkaldshaandtering;
 public class Afspiller {
 
   public Status afspillerstatus = Status.STOPPET;
+  // Burde være en del af afspillerstatus
+  private boolean afspilningPåPause;
 
   private MediaPlayerWrapper mediaPlayer;
   private MediaPlayerLytter lytter = new MediaPlayerLytterImpl();
@@ -137,20 +139,16 @@ public class Afspiller {
 
       AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
       if (Build.VERSION.SDK_INT >= 8) {
-        // Request audio focus for playback
-        int result = audioManager.requestAudioFocus(opretFocusChangeListener(),
-            // Use the music stream.
+        // Se http://developer.android.com/training/managing-audio/audio-focus.html
+        int result = audioManager.requestAudioFocus(getOnAudioFocusChangeListener(),
             AudioManager.STREAM_MUSIC,
-            // Request permanent focus.
             AudioManager.AUDIOFOCUS_GAIN);
-
+        Log.d("requestAudioFocus res="+result);
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-          startAfspilningIntern();
+          MediabuttonReceiver.registrér();
         }
-      } else {
-        startAfspilningIntern();
       }
-      MediabuttonReceiver.registrér();
+      startAfspilningIntern();
 
 
       // Skru op til 1/5 styrke hvis volumen er lavere end det
@@ -164,74 +162,65 @@ public class Afspiller {
   }
 
 
-  // Da OnAudioFocusChangeListener ikke findes i API<8 kan vi ikke bruge klassen her
+  /**
+   * Typen er OnAudioFocusChangeListener, men da den ikke findes i API<8 kan vi ikke bruge klassen her
+   */
   Object onAudioFocusChangeListener;
 
   /**
    * Responding to the loss of audio focus
    */
   @SuppressLint("NewApi")
-  private OnAudioFocusChangeListener opretFocusChangeListener() {
+  private OnAudioFocusChangeListener getOnAudioFocusChangeListener() {
     if (onAudioFocusChangeListener == null)
       onAudioFocusChangeListener = new OnAudioFocusChangeListener() {
 
-        public int lydstyreFørDuck = -1;
-          public String soundStatus;
+        private int lydstyreFørDuck = -1;
 
         @TargetApi(Build.VERSION_CODES.FROYO)
         public void onAudioFocusChange(int focusChange) {
+          Log.d("onAudioFocusChange "+focusChange);
           AudioManager am = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
 
           switch (focusChange) {
+            // Kommer ved f.eks. en SMS eller taleinstruktion i Google Maps
             case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK):
-              // Lower the volume while ducking.
-              lydstyreFørDuck = am.getStreamVolume(AudioManager.STREAM_MUSIC);
               Log.d("JPER duck");
-                soundStatus = "duck";
+              // Vi 'dukker' lyden mens den vigtigere lyd høres
               // Sæt lydstyrken ned til en 1/3-del
+              lydstyreFørDuck = am.getStreamVolume(AudioManager.STREAM_MUSIC);
               am.setStreamVolume(AudioManager.STREAM_MUSIC, (lydstyreFørDuck+2)/3, 0);
               break;
 
+            // Dette sker ved f.eks. opkald
             case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT):
               Log.d("JPER pause");
-                soundStatus = "pause";
-              pauseAfspilning();
+              if (afspillerstatus!=Status.STOPPET) {
+                pauseAfspilning(); // sætter afspilningPåPause=false
+                afspilningPåPause = true;
+              }
               break;
 
+            // Dette sker hvis en anden app med lyd startes, f.eks. et spil
             case (AudioManager.AUDIOFOCUS_LOSS):
               Log.d("JPER stop");
-              //stopAfspilning();
-                soundStatus = "stop";
-              pauseAfspilning();
+              stopAfspilning();
               am.abandonAudioFocus(this);
               break;
 
+            // Dette sker når opkaldet er slut og ved f.eks. opkald
             case (AudioManager.AUDIOFOCUS_GAIN):
               Log.d("JPER Gain");
-              if (DRData.instans.afspiller.afspillerstatus == Status.STOPPET) {
-                  if (soundStatus == "stop") {
-                      Log.d("JPER afspiller stoppet vi gør intet");
-                  } else {
-                      am.setStreamVolume(AudioManager.STREAM_MUSIC, lydstyreFørDuck, 0);
-                      startAfspilningIntern();
-                  }//gør intet da playeren ikke spiller.
-
-
+              if (afspillerstatus==Status.STOPPET) {
+                if (afspilningPåPause) startAfspilningIntern();
               } else {
-                // Return the volume to normal and resume if paused.
+                // Genskab lydstyrke før den blev dukket
                 if (lydstyreFørDuck>0) {
-                    Log.d("JPER afspiller pauset vi gør resumer");
-                    am.setStreamVolume(AudioManager.STREAM_MUSIC, lydstyreFørDuck, 0);
+                  am.setStreamVolume(AudioManager.STREAM_MUSIC, lydstyreFørDuck, 0);
                 }
-                // Genstart ikke afspilning
+                // Genstart ikke afspilning, der spilles allerede!
                 //startAfspilningIntern();
-
               }
-
-              break;
-
-            default:
-              break;
           }
         }
       };
@@ -260,6 +249,7 @@ public class Afspiller {
     MediabuttonReceiver.registrér();
 
     afspillerstatus = Status.FORBINDER;
+    afspilningPåPause=false;
     sendOnAfspilningForbinder(-1);
     opdaterObservatører();
     handler.removeCallbacks(startAfspilningIntern);
@@ -318,6 +308,7 @@ public class Afspiller {
     sætMediaPlayerLytter(mediaPlayer, this.lytter); // registrér lyttere på den nye instans
 
     afspillerstatus = Status.STOPPET;
+    afspilningPåPause = false;
     opdaterObservatører();
   }
 
