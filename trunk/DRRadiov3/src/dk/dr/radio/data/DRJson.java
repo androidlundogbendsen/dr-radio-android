@@ -26,7 +26,9 @@ public enum DRJson {
   StartTime, EndTime,
   Streams,
   Uri, Played, Artist, Image,
-    Type, Kind, Quality, Kbps, ChannelSlug, TotalPrograms, Programs, FirstBroadcast, Watchable, DurationInSeconds, Format, OffsetMs, ProductionNumber, ShareLink, LatestProgramBroadcasted, Episode;
+    Type, Kind, Quality, Kbps, ChannelSlug, TotalPrograms, Programs,
+  FirstBroadcast, Watchable, DurationInSeconds, Format, OffsetMs,
+  ProductionNumber, ShareLink, Episode;
 
   /*
     public enum StreamType {
@@ -141,7 +143,7 @@ public enum DRJson {
     for (int n = 0; n < jsonArray.length(); n++) {
       JSONObject o = jsonArray.getJSONObject(n);
       Udsendelse u = opretUdsendelse(drData, o);
-      u.kanalSlug = o.optString(DRJson.ChannelSlug.name(), kanal.slug);  // Bemærk - kan være tom..
+      u.kanalSlug = o.optString(DRJson.ChannelSlug.name(), kanal.slug);  // Bemærk - kan være tom.
       u.kanHøres = o.getBoolean(DRJson.Watchable.name());
       u.startTid = servertidsformat.parse(o.getString(DRJson.StartTime.name()));
       u.startTidKl = klokkenformat.format(u.startTid);
@@ -160,14 +162,15 @@ public enum DRJson {
   }
 
   /**
-   * Parser udsendelser for getKanal. A la http://www.dr.dk/tjenester/mu-apps/series/sprogminuttet?type=radio&includePrograms=true
+   * Parser udsendelser for programserie.
+   * A la http://www.dr.dk/tjenester/mu-apps/series/sprogminuttet?type=radio&includePrograms=true
    */
   public static ArrayList<Udsendelse> parseUdsendelserForProgramserie(JSONArray jsonArray, DRData drData) throws JSONException, ParseException {
     ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
     for (int n = 0; n < jsonArray.length(); n++) {
       JSONObject o = jsonArray.getJSONObject(n);
       Udsendelse u = opretUdsendelse(drData, o);
-        //u.kanalSlug = o.getString(DRJson.ChannelSlug.name());
+      u.kanalSlug = o.optString(DRJson.ChannelSlug.name());   // Bemærk - kan være tom.
       u.startTid = servertidsformat.parse(o.getString(DRJson.FirstBroadcast.name()));
       u.slutTid = new Date(u.startTid.getTime() + o.getInt(DRJson.DurationInSeconds.name()) * 1000);
       uliste.add(u);

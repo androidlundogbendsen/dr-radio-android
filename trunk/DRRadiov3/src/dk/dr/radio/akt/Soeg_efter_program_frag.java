@@ -100,7 +100,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
       @Override
       public void afterTextChanged(Editable s) {
 
-          if (søgFelt.getText().toString().length() > 0) {
+          if (søgFelt.getText().length() > 0) {
               searchProgram();
           } else {
               tomStr.setText("");
@@ -117,13 +117,8 @@ public class Soeg_efter_program_frag extends Basisfragment implements
           public boolean onEditorAction(TextView v, int actionId,
                                         KeyEvent event) {
             Log.d("actionId="+actionId);
-              boolean handled = false;
-              //if (actionId == KeyEvent.KEYCODE_ENTER) {
-                  searchProgram();
-
-                  handled = true;
-              //}
-              return handled;
+            searchProgram();
+            return true;
           }
       });
 
@@ -179,36 +174,6 @@ public class Soeg_efter_program_frag extends Basisfragment implements
 
       return v;
     }
-/*
-    @Override
-    public View getView(int position, View v, ViewGroup parent) {
-      if (v == null) {
-        v = getLayoutInflater(null).inflate(
-            R.layout.elem_tid_titel_kunstner, parent,false);
-          v.setBackgroundResource(0);
-        vh = new Viewholder();
-        a = vh.aq = new AQuery(v);
-        vh.startid = a.id(R.id.startid).typeface(App.skrift_gibson).getTextView();
-        a.id(R.id.slutttid).gone();
-
-        vh.titel = a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson_fed).getTextView();
-        v.setTag(vh);
-      } else {
-        vh = (Viewholder) v.getTag();
-        a = vh.aq;
-      }
-
-      String titel = udsendelse.getUdsendelse().titel;
-      Spannable spannable = new SpannableString(titel);
-      spannable.setSpan(App.skrift_gibson_fed_span, 0, titel.length(),
-          Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-      vh.titel.setText(spannable);
-
-      udvikling_checkDrSkrifter(v, this.getClass() + " ");
-
-      return v;
-    }
-*/
   };
   private String søgStr;
 
@@ -250,16 +215,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
       AQuery aq = new AQuery(rod);
       tomStr = aq.id(R.id.tom).getTextView();
       tomStr.setText("");
-      søgStr = søgFelt.getText().toString();
-      if (søgStr.length() > 0) {
-          søgFelt.setText("");
-
-      } else {
-
-
-      }
-
-
+      søgFelt.setText("");
   }
 
     public void searchProgram() {
