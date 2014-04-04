@@ -78,7 +78,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   private Runnable hentStreams = new Runnable() {
     @Override
     public void run() {
-      if (udsendelse.hentetStream == null && (udsendelse.streams==null || udsendelse.streams.size()==0) && antalGangeForsøgtHentet++<5) {
+      if (udsendelse.hentetStream == null && (udsendelse.streams==null || udsendelse.streams.size()==0) && antalGangeForsøgtHentet++<1) {
         Request<?> req = new DrVolleyStringRequest(udsendelse.getStreamsUrl(), new DrVolleyResonseListener() {
           @Override
           public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
@@ -87,15 +87,17 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
               JSONObject o = new JSONObject(json);
               udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
               if (udsendelse.streams.size()==0) {
-                Log.d("SSSSS TOM "+udsendelse.slug+ " ... men det passer måske ikke! for "+udsendelse.slug+" " +udsendelse.getStreamsUrl());
+                Log.d("SSSSS TOMME STREAMS ... men det passer måske ikke! for "+udsendelse.slug+" " +udsendelse.getStreamsUrl());
                 streamsVarTom.put(udsendelse, System.currentTimeMillis());
-                App.volleyRequestQueue.getCache().remove(url);
+                //App.volleyRequestQueue.getCache().remove(url);
                 App.forgrundstråd.postDelayed(hentStreams, 5000);
               } else if (streamsVarTom.containsKey(udsendelse)) {
                 long t0 = streamsVarTom.get(udsendelse);
-                App.kortToast("Serveren har ombestemt sig, nu er streams ikke mere tom for "+udsendelse.slug+" "+udsendelse.getStreamsUrl());
-                App.kortToast("Tidsforskel mellem de to svar: "+(System.currentTimeMillis()-t0)/1000+" sek");
-                //Log.rapporterFejl(new Exception("Server ombestemte sig, der var streams alligevel - for "+udsendelse.slug));
+                if (!App.PRODUKTION){
+                  App.langToast("Serveren har ombestemt sig, nu er streams ikke mere tom for "+udsendelse.slug);
+                  App.langToast("Tidsforskel mellem de to svar: "+(System.currentTimeMillis()-t0)/1000+" sek");
+                }
+                Log.rapporterFejl(new Exception("Server ombestemte sig, der var streams alligevel - for "+udsendelse.slug+"  dt="+(System.currentTimeMillis()-t0)));
                 streamsVarTom.remove(udsendelse);
               }
               udsendelse.produktionsnummer = o.optString(DRJson.ProductionNumber.name());
@@ -238,7 +240,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           udsendelse.kanHøres = true;
           Log.registrérTestet("Afspille hentet udsendelse", udsendelse.slug);
         } else {
-          Log.rapporterFejl(new IllegalStateException("Fil " + file + "  fandtes ikke alligevel??! for " + udsendelse));
+//          Log.rapporterFejl(new IllegalStateException("Fil " + file + "  fandtes ikke alligevel??! for " + udsendelse));
+          Log.rapporterFejl(new IllegalStateException("Fil " + file + "  fandtes ikke alligevel??!"));
         }
       } finally {
         c.close();

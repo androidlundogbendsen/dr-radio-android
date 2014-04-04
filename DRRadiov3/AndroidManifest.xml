@@ -86,10 +86,7 @@
         <receiver android:name="dk.dr.radio.afspilning.AfspillerStartStopReciever"/>
 
 
-        <!-- Til håndtering af knapper på fjernbetjening (f.eks. på Bluetooth headset.)
-             Mangler: God håndtering i tråd med forslag i
-             http://android-developers.blogspot.com/2010/06/allowing-applications-to-play-nicer.html
-        -->
+        <!-- Til håndtering af knapper på fjernbetjening (f.eks. på Bluetooth headset.) -->
         <receiver android:name="dk.dr.radio.diverse.MediabuttonReceiver">
             <intent-filter android:priority="1">
                 <action android:name="android.intent.action.MEDIA_BUTTON"/>
