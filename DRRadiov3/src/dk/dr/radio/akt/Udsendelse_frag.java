@@ -177,7 +177,12 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           bygListe();
         }
       }
-    }).setTag(this);
+    }) {
+      @Override
+      public Priority getPriority() {
+        return Priority.LOW; // Det vigtigste er at hente streams, spillelisten er knapt så vigtig
+      }
+    }.setTag(this);
     App.volleyRequestQueue.add(req);
   }
 
@@ -461,7 +466,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
             aq.id(R.id.p4navn).text("");
           }
 
-          aq.id(R.id.titel_og_tid).typeface(App.skrift_gibson).text(lavFedSkriftTil(udsendelse.titel + " - " + DRJson.datoformat.format(udsendelse.startTid), udsendelse.titel.length()));
+          aq.id(R.id.titel_og_tid).typeface(App.skrift_gibson)
+              .text(lavFedSkriftTil(udsendelse.titel + " - " + udsendelse.startTid==null?"(ukendt)":DRJson.datoformat.format(udsendelse.startTid), udsendelse.titel.length()));
 
           //aq.id(R.id.beskrivelse).text(udsendelse.beskrivelse).typeface(App.skrift_georgia);
           //Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS);
