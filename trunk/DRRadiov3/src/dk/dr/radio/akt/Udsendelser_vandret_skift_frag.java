@@ -178,7 +178,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
   @Override
   public void onPageSelected(int position) {
     if (programserie!=null && position==liste.size()-1 && antalHentedeSendeplaner++ < 7) { // Hent flere udsendelser
-      hentUdsendelser(programserie.getUdsendelser().size());
+      hentUdsendelser(programserie.getUdsendelser()==null?0:programserie.getUdsendelser().size());
     }
   }
 
