@@ -24,7 +24,6 @@ public class Programserie { //implements Serializable {
   private ArrayList<Udsendelse> udsendelserListe;
   private TreeMap<Integer, ArrayList<Udsendelse>> udsendelserListeFraOffset = new TreeMap<Integer, ArrayList<Udsendelse>>();
   private TreeSet<Udsendelse> udsendelserSorteret;
-  public Date senesteUdsendelseTid;
 
   public ArrayList<Udsendelse> getUdsendelser() {
     return udsendelserListe;
