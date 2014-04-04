@@ -322,9 +322,10 @@ public class Afspiller {
   }
 
   synchronized public void pauseAfspilning() {
-    if (!lydkilde.erDirekte())
+    if (!lydkilde.erDirekte() && afspillerstatus==Status.SPILLER)
       try { // Gem position - og spol herhen næste gang udsendelsen spiller
         lydkilde.getUdsendelse().startposition = mediaPlayer.getCurrentPosition();
+        Log.d("GEMT POSITION for "+lydkilde +" : "+ lydkilde.getUdsendelse().startposition);
       } catch (Exception e) {
         Log.rapporterFejl(e); // TODO fjern hvis der aldrig kommer fejl her
       }
