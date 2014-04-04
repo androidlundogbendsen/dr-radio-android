@@ -467,7 +467,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           }
 
           aq.id(R.id.titel_og_tid).typeface(App.skrift_gibson)
-              .text(lavFedSkriftTil(udsendelse.titel + " - " + udsendelse.startTid==null?"(ukendt)":DRJson.datoformat.format(udsendelse.startTid), udsendelse.titel.length()));
+              .text(lavFedSkriftTil(udsendelse.titel + " - " + (udsendelse.startTid==null?"(ukendt)":DRJson.datoformat.format(udsendelse.startTid)), udsendelse.titel.length()));
 
           //aq.id(R.id.beskrivelse).text(udsendelse.beskrivelse).typeface(App.skrift_georgia);
           //Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS);
