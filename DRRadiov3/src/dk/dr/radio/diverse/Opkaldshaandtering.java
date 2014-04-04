@@ -40,16 +40,11 @@ public class Opkaldshaandtering extends PhoneStateListener {
   @Override
   public void onCallStateChanged(int state, String incomingNumber) {
     Status afspilningsstatus = afspiller.getAfspillerstatus();
+    Log.d("Opkaldshaandtering Opkaldshaandtering "+state+" afspilningsstatus="+afspilningsstatus);
     switch (state) {
       case TelephonyManager.CALL_STATE_OFFHOOK:
-        Log.d("Offhook state detected");
-        if (afspilningsstatus != Status.STOPPET) {
-          venterPåKaldetAfsluttes = true;
-          afspiller.pauseAfspilning();
-        }
-        break;
       case TelephonyManager.CALL_STATE_RINGING:
-        Log.d("Ringing detected");
+        Log.d("Opkald i gang");
         if (afspilningsstatus != Status.STOPPET) {
           venterPåKaldetAfsluttes = true;
           afspiller.pauseAfspilning();
@@ -65,9 +60,6 @@ public class Opkaldshaandtering extends PhoneStateListener {
           }
           venterPåKaldetAfsluttes = false;
         }
-        break;
-      default:
-        Log.d("Unknown phone state=" + state);
     }
   }
 }
