@@ -87,13 +87,13 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
               JSONObject o = new JSONObject(json);
               udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
               if (udsendelse.streams.size()==0) {
-                Log.d("SSSSS TOM "+udsendelse.slug+ " ... men det passer måske ikke! " +udsendelse.getStreamsUrl());
+                Log.d("SSSSS TOM "+udsendelse.slug+ " ... men det passer måske ikke! for "+udsendelse.slug+" " +udsendelse.getStreamsUrl());
                 streamsVarTom.put(udsendelse, System.currentTimeMillis());
                 App.volleyRequestQueue.getCache().remove(url);
                 App.forgrundstråd.postDelayed(hentStreams, 5000);
               } else if (streamsVarTom.containsKey(udsendelse)) {
                 long t0 = streamsVarTom.get(udsendelse);
-                App.kortToast("Serveren har ombestemt sig, nu er streams ikke mere tom for "+udsendelse.slug);
+                App.kortToast("Serveren har ombestemt sig, nu er streams ikke mere tom for "+udsendelse.slug+" "+udsendelse.getStreamsUrl());
                 App.kortToast("Tidsforskel mellem de to svar: "+(System.currentTimeMillis()-t0)/1000+" sek");
                 //Log.rapporterFejl(new Exception("Server ombestemte sig, der var streams alligevel - for "+udsendelse.slug));
                 streamsVarTom.remove(udsendelse);
