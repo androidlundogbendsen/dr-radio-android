@@ -44,6 +44,7 @@ import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.AfspillerIkonOgNotifikation;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.MediabuttonReceiver;
 import dk.dr.radio.diverse.Opkaldshaandtering;
 
 /**
@@ -149,6 +150,7 @@ public class Afspiller {
       } else {
         startAfspilningIntern();
       }
+      MediabuttonReceiver.registrér();
 
 
       // Skru op til 1/5 styrke hvis volumen er lavere end det
@@ -255,6 +257,7 @@ public class Afspiller {
 
   synchronized private void startAfspilningIntern() {
     Log.d("mediaPlayer.setDataSource( " + lydUrl);
+    MediabuttonReceiver.registrér();
 
     afspillerstatus = Status.FORBINDER;
     sendOnAfspilningForbinder(-1);

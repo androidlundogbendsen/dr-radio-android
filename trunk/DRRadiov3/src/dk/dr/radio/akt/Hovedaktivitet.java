@@ -14,6 +14,7 @@ import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.MediabuttonReceiver;
 import dk.dr.radio.v3.R;
 
 public class Hovedaktivitet extends Basisaktivitet {
@@ -84,6 +85,7 @@ public class Hovedaktivitet extends Basisaktivitet {
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
+    MediabuttonReceiver.registrér();
   }
 
 
@@ -93,6 +95,7 @@ public class Hovedaktivitet extends Basisaktivitet {
       venstremenuFrag.skjulMenu();
     } else {
       super.onBackPressed();
+      MediabuttonReceiver.afregistrér();
     }
   }
 

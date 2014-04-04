@@ -35,6 +35,12 @@
             android:summary="Hakker afspilningen når skærmen er slukket så prøv at krydse af her (bruger mere batteri). Nødvendigt på XPeria Play."/>
 
     <CheckBoxPreference
+            android:key="MediabuttonReceiver" android:title="Fjernbetjening"
+            android:defaultValue="true"
+            android:summary="Reagér på knapper på fjernbetjening (f.eks. på Bluetooth headset)"/>
+
+
+    <CheckBoxPreference
             android:key="udviklerEkstra" android:title="Udvikler"
             android:defaultValue="false" android:summaryOff=""
             android:summaryOn="Vis ekstra muligheder til udviklere og fejlfinding."/>

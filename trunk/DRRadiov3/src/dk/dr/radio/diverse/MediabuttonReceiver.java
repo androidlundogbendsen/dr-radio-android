@@ -18,61 +18,70 @@
 
 package dk.dr.radio.diverse;
 
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 
 import dk.dr.radio.afspilning.AfspillerStartStopReciever;
+import dk.dr.radio.afspilning.Status;
+import dk.dr.radio.data.DRData;
 
+/**
+ * Til håndtering af knapper på fjernbetjening (f.eks. på Bluetooth headset.)
+ * Se også http://android-developers.blogspot.com/2010/06/allowing-applications-to-play-nicer.html
+ */
 public class MediabuttonReceiver extends BroadcastReceiver {
 
   @Override
   public void onReceive(Context context, Intent intent) {
-    Log.d("MediabuttonReciever recived event.");
+    KeyEvent event = (KeyEvent) intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+    Log.d("MediabuttonReciever " + intent+" "+event);
 
-    String intentAction = intent.getAction();
-
-    if (!Intent.ACTION_MEDIA_BUTTON.equals(intentAction)) {
+    if (!Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction()) || event==null || event.getAction()!=KeyEvent.ACTION_DOWN) {
       return;
     }
 
-    KeyEvent MediaButtonEvent = (KeyEvent) intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
-
-    if (MediaButtonEvent == null) {
-      return;
-    }
-
-    int keycode = MediaButtonEvent.getKeyCode();
-    int action = MediaButtonEvent.getAction();
-
-    if (action == KeyEvent.ACTION_DOWN) {
-      SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-      Boolean MediaButtonEnable = prefs.getBoolean("MediaButtonEnable", false);
-
-      if (MediaButtonEnable) {
-        switch (keycode) {
-
-          case KeyEvent.KEYCODE_HEADSETHOOK:
-          case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-            Log.d("MediabuttonReciever supported event.");
-            context.sendBroadcast(new Intent(context, AfspillerStartStopReciever.class));
-            break;
-          case KeyEvent.KEYCODE_MEDIA_NEXT:
-          case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-          case KeyEvent.KEYCODE_MEDIA_STOP:
-          default:
-            Log.d("MediabuttonReciever got not yet supported media key enent.");
-            return;
+    switch (event.getKeyCode()) {
+      case KeyEvent.KEYCODE_HEADSETHOOK:
+      case KeyEvent.KEYCODE_MEDIA_STOP:
+        if (DRData.instans.afspiller.getAfspillerstatus()!= Status.STOPPET) {
+          DRData.instans.afspiller.stopAfspilning();
         }
-
-        //Do not send the broadcast to the receivers with
-        //lower priority
-        abortBroadcast();
-
-      }
+        break;
+      case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+      case KeyEvent.KEYCODE_MEDIA_NEXT:
+      case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+      default:
+        if (DRData.instans.afspiller.getAfspillerstatus()!= Status.STOPPET) {
+          DRData.instans.afspiller.stopAfspilning();
+        } else {
+          DRData.instans.afspiller.startAfspilning();
+        }
     }
+  }
+
+  @TargetApi(Build.VERSION_CODES.FROYO)
+  public static void registrér() {
+    if (Build.VERSION.SDK_INT < 8) return;
+    if (!App.prefs.getBoolean("MediabuttonReceiver", false)) return;
+
+    ComponentName eventReceiver = new ComponentName(App.instans.getPackageName(), MediabuttonReceiver.class.getName());
+    AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
+    audioManager.registerMediaButtonEventReceiver(eventReceiver);
+  }
+
+  @TargetApi(Build.VERSION_CODES.FROYO)
+  public static void afregistrér() {
+    if (Build.VERSION.SDK_INT < 8) return;
+    ComponentName eventReceiver = new ComponentName(App.instans.getPackageName(), MediabuttonReceiver.class.getName());
+    AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
+    audioManager.unregisterMediaButtonEventReceiver(eventReceiver);
   }
 }
