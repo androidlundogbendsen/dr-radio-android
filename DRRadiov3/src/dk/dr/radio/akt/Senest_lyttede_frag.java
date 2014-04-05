@@ -104,13 +104,13 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
       Lydkilde lydkilde = liste.get(position);
 
       if (v == null) {
-        v = getLayoutInflater(null).inflate(R.layout.elem_tid_titel_kunstner, parent, false);
+        v = getLayoutInflater(null).inflate(R.layout.listeelem_2linjer, parent, false);
         v.setBackgroundResource(0);
 
         vh = new Viewholder();
         a = vh.aq = new AQuery(v);
-        vh.metainformation = a.id(R.id.startid).typeface(App.skrift_gibson_fed).textColor(Color.BLACK).getTextView();
-        vh.titel = a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
+        vh.metainformation = a.id(R.id.linje1).typeface(App.skrift_gibson_fed).textColor(Color.BLACK).getTextView();
+        vh.titel = a.id(R.id.linje2).typeface(App.skrift_gibson).getTextView();
 
 
         v.setTag(vh);
@@ -125,8 +125,8 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
       vh.aq.id(R.id.stiplet_linje).background(position == 0 ? R.drawable.linje : R.drawable.stiplet_linje);
 
 
-//      TextView titel = (TextView) v.findViewById(R.id.startid);
-//      TextView titel = (TextView) v.findViewById(R.id.titel_og_kunstner);
+//      TextView titel = (TextView) v.findViewById(R.id.linje1);
+//      TextView titel = (TextView) v.findViewById(R.id.linje2);
 
       Lydkilde k = liste.get(position);
       //titel.setText(k.titel().navn);
@@ -139,7 +139,7 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
         titelStr = ((Kanal) k).navn + " (Direkte)";
       } else {
         titelStr = ((Udsendelse) k).titel;
-        //titel.setText(u.titel + " (" + DRJson.datoformat.format(u.startTid) + ")");
+        //titel.setText(u.titel + " (" + DRJson.datoformat.format(u.linje1) + ")");
       }
 
       //spannable = new SpannableString(titelStr);

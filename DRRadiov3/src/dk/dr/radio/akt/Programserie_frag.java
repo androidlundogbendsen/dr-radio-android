@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Kanal;
-import dk.dr.radio.data.Playlisteelement;
 import dk.dr.radio.data.Programserie;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
@@ -152,7 +151,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
   static final int[] layoutFraType = {
       R.layout.programserie_elem0_top,
       R.layout.programserie_elem1_udsendelse,
-      R.layout.kanal_elem_tidligere_senere,
+      R.layout.kanal_elem2_tidligere_senere,
   };
 
   private BaseAdapter adapter = new Basisadapter() {
