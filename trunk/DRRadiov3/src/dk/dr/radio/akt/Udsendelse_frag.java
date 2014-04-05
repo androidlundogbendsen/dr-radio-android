@@ -70,7 +70,6 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   private TextView seekBarMaxTekst;
   private boolean seekBarBetjenesAktivt;
   private SeekBar seekBar;
-  private boolean fragmentErSynligt;
 
   private static HashMap<Udsendelse, Long> streamsVarTom = new HashMap<Udsendelse, Long>();
   private int antalGangeForsøgtHentet;
@@ -102,7 +101,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
               }
               udsendelse.produktionsnummer = o.optString(DRJson.ProductionNumber.name());
                 udsendelse.ShareLink = o.optString(DRJson.ShareLink.name());
-              if (fragmentErSynligt && udsendelse.streamsKlar() && afspiller.getAfspillerstatus() == Status.STOPPET) {
+              if (getUserVisibleHint() && udsendelse.streamsKlar() && afspiller.getAfspillerstatus() == Status.STOPPET) {
                 afspiller.setLydkilde(udsendelse);
               }
               adapter.notifyDataSetChanged(); // Opdatér views
@@ -162,6 +161,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   public void onResume() {
     super.onResume();
     if (aktuelUdsendelsePåKanalen() || udsendelse.playliste == null) opdaterSpillelisteRunnable.run();
+    App.forgrundstråd.post(sætEventueltAfspillersLydkilde);
   }
 
   private boolean aktuelUdsendelsePåKanalen() {
@@ -208,20 +208,23 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
   @Override
   public void setUserVisibleHint(boolean isVisibleToUser) {
-    //Log.d(" QQQ setUserVisibleHint " + isVisibleToUser + "  " + this);
-    fragmentErSynligt = isVisibleToUser;
-    if (fragmentErSynligt) {
-      App.forgrundstråd.post(new Runnable() {
-        @Override
-        public void run() {
-          if (udsendelse.kanHøres && afspiller.getAfspillerstatus() == Status.STOPPET) {
-            afspiller.setLydkilde(udsendelse);
-          }
-        }
-      });
-    }
     super.setUserVisibleHint(isVisibleToUser);
+    Log.d(" QQQ setUserVisibleHint " + isVisibleToUser + "  " + this);
+    if (getUserVisibleHint()) {
+      App.forgrundstråd.post(sætEventueltAfspillersLydkilde);
+    }
   }
+
+  Runnable sætEventueltAfspillersLydkilde = new Runnable() {
+    @Override
+    public void run() {
+      if (getUserVisibleHint()) return;
+      if (udsendelse.kanHøres && afspiller.getAfspillerstatus() == Status.STOPPET) {
+        afspiller.setLydkilde(udsendelse);
+        Log.d("XXXXXXXXXXXXXXXXXXXX "+udsendelse);
+      }
+    }
+  };
 
   private static void tjekOmHentet(Udsendelse udsendelse) {
     if (udsendelse.hentetStream == null) {
@@ -358,22 +361,32 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     @Override
     public void run() {
       App.forgrundstråd.removeCallbacks(this);
-      boolean denneUdsSpiller = udsendelse.equals(afspiller.getLydkilde()) && afspiller.getAfspillerstatus() == Status.SPILLER;
-      if (!denneUdsSpiller) return;
+      boolean denneUdsSpiller = udsendelse.equals(afspiller.getLydkilde()) && afspiller.getAfspillerstatus() != Status.STOPPET;
+      if (!denneUdsSpiller) {
+        seekBar.setVisibility(View.GONE);
+        seekBarTekst.setVisibility(View.GONE);
+        seekBarMaxTekst.setVisibility(View.GONE);
+        return;
+      }
       try {
         if (!seekBarBetjenesAktivt) { // Kun hvis vi ikke er i gang med at søge i udsendelsen
           int længdeMs = afspiller.getDuration();
           if (længdeMs > 0) {
+            seekBar.setVisibility(View.VISIBLE);
+            seekBarTekst.setVisibility(View.VISIBLE);
+            seekBarMaxTekst.setVisibility(View.VISIBLE);
             seekBar.setMax(længdeMs);
             seekBarMaxTekst.setText(DateUtils.formatElapsedTime(længdeMs / 1000));
+            int pos = afspiller.getCurrentPosition();
+            Log.d("   pos " + pos + "   " + afspiller.getDuration());
+            seekBarTekst_opdater(pos);
+            seekBar.setProgress(pos);
           } else {
             seekBarMaxTekst.setText("");
+            seekBar.setVisibility(View.INVISIBLE);
+            seekBarTekst.setVisibility(View.INVISIBLE);
+            seekBarMaxTekst.setVisibility(View.INVISIBLE);
           }
-          seekBarMaxTekst.setText(længdeMs > 0 ? DateUtils.formatElapsedTime(afspiller.getDuration() / 1000) : "");
-          int pos = afspiller.getCurrentPosition();
-          Log.d("   pos " + pos + "   " + afspiller.getDuration());
-          seekBarTekst_opdater(pos);
-          seekBar.setProgress(pos);
         }
         App.forgrundstråd.postDelayed(this, 1000);
       } catch (Exception e) {
@@ -526,10 +539,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         boolean spiller = afspiller.getAfspillerstatus()==Status.SPILLER;
         boolean forbinder = afspiller.getAfspillerstatus()==Status.FORBINDER;
         boolean erOnline = App.netværk.erOnline();
-        seekBar.setVisibility( spiller && lydkildeErDenneUds ? View.VISIBLE : View.GONE);
-        seekBarTekst.setVisibility(spiller && lydkildeErDenneUds ? View.VISIBLE : View.GONE);
-        seekBarMaxTekst.setVisibility(spiller && lydkildeErDenneUds ? View.VISIBLE : View.GONE);
-        if (spiller && lydkildeErDenneUds) opdaterSeekBar.run();
+        opdaterSeekBar.run();
 
         aq.id(R.id.hør).visible().enabled(true);
         if (udsendelse.hentetStream != null)         // Hentede udsendelser
