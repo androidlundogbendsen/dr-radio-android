@@ -173,12 +173,12 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
       Log.rapporterFejl(e);
     } // TODO fjern try-catch efter nogle måneder i drift
 
-    NotificationCompat.Builder b = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.dr_lyd_not)
+    NotificationCompat.Builder b = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.dr_notifikation)
         .setContentTitle("DR Radio")
         .setContentText(kanalNavn)
         .setOngoing(true)
         .setAutoCancel(false)
-        .setPriority(1000) // holder den øverst
+        .setPriority(1001) // holder den øverst
         .setContentIntent(PendingIntent.getActivity(ctx, 0, new Intent(ctx, Hovedaktivitet.class), 0));
     // PendingIntent er til at pege på aktiviteten der skal startes hvis
     // brugeren vælger notifikationen

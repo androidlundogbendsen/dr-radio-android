@@ -74,7 +74,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
     adapter.notifyDataSetChanged();
   }
 
-
+/*
   private static View.OnTouchListener farvKnapNårDenErTrykketNed = new View.OnTouchListener() {
     public boolean onTouch(View view, MotionEvent me) {
       ImageView ib = (ImageView) view;
@@ -87,7 +87,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
       return false;
     }
   };
-
+*/
   private BaseAdapter adapter = new Basisadapter() {
     @Override
     public int getCount() {
@@ -100,30 +100,30 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
       Udsendelse udsendelse = liste.get(position);
       AQuery aq;
       if (v == null) {
-        v = getLayoutInflater(null).inflate(R.layout.udsendelse_elem3_playlisteelem, parent, false);
+        v = getLayoutInflater(null).inflate(R.layout.hentede_udsendelser_listeelem_2linjer, parent, false);
         v.setBackgroundResource(0);
         aq = new AQuery(v);
-        aq.id(R.id.hør).image(R.drawable.trash).clicked(Hentede_udsendelser_frag.this)
-            .getView().setOnTouchListener(farvKnapNårDenErTrykketNed);
-        aq.id(R.id.startid).typeface(App.skrift_gibson_fed);
-        aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson);
+        aq.id(R.id.slet).clicked(Hentede_udsendelser_frag.this);
+//            .getView().setOnTouchListener(farvKnapNårDenErTrykketNed);
+        aq.id(R.id.linje1).typeface(App.skrift_gibson_fed);
+        aq.id(R.id.linje2).typeface(App.skrift_gibson);
       } else {
         aq = new AQuery(v);
       }
       if (udsendelse == null) {
         udsendelse = new Udsendelse("Indlæser...");
         // TODO baggrundsindlæsning
-        aq.id(R.id.startid).text("");
+        aq.id(R.id.linje1).text("");
       } else {
         Cursor c = hentedeUdsendelser.getStatusCursor(udsendelse);
         if (c == null) {
-          aq.id(R.id.titel_og_kunstner).text("Ikke tilgængelig");
+          aq.id(R.id.linje2).text("Ikke tilgængelig");
         } else {
           int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
           String statustekst = HentedeUdsendelser.getStatustekst(c);
           c.close();
 
-          aq.id(R.id.titel_og_kunstner).text(DRJson.datoformat.format(udsendelse.startTid) + " - " + statustekst);
+          aq.id(R.id.linje2).text(DRJson.datoformat.format(udsendelse.startTid) + " - " + statustekst);
 
           if (status != DownloadManager.STATUS_SUCCESSFUL && status != DownloadManager.STATUS_FAILED) {
             App.forgrundstråd.removeCallbacks(Hentede_udsendelser_frag.this);
@@ -131,14 +131,14 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
           }
         }
       }
-      aq.id(R.id.startid).text(udsendelse.titel)
+      aq.id(R.id.linje1).text(udsendelse.titel)
           .textColor(udsendelse.kanHøres ? Color.BLACK : App.color.grå60);
       // Skjul stiplet linje over øverste listeelement
       aq.id(R.id.stiplet_linje).background(position == 0 ? R.drawable.linje : R.drawable.stiplet_linje);
 
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
 
-      aq.id(R.id.hør).tag(udsendelse);
+      aq.id(R.id.slet).tag(udsendelse);
 
       return v;
     }
