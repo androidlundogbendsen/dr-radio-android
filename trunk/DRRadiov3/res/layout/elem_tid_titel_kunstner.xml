@@ -11,8 +11,8 @@
         android:orientation="vertical">
 
     <!--
-        android:layerType="software" er nødvendig, ellers tegnes der en vandret
-         streg i stedet for stiplet linje på Android 3+
+        android:layerType="software" er nødvendig,
+        ellers tegnes der en vandret streg i stedet for stiplet linje på Android 3+
         -->
 
     <View
@@ -43,12 +43,4 @@
             android:text="P3 Sporten  |  Polarkreis 18"
             android:maxLines="2"
             tools:ignore="HardcodedText"/>
-
-    <!--
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/hør"
-                        android:src="@drawable/dri_lyd_blaa"/>
-    -->
 </LinearLayout>
