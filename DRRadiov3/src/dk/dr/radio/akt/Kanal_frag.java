@@ -56,7 +56,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   private Kanal kanal;
   protected View rod;
   private boolean fragmentErSynligt;
-  private boolean p4;
   private int antalHentedeSendeplaner;
   public static Kanal_frag senesteSynligeFragment;
 
@@ -66,10 +65,16 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   }
 
   @Override
+  public void onCreate(Bundle savedInstanceState) {
+    if (savedInstanceState==null) hopTilAktuelUdsendelseUdestår=true;
+    super.onCreate(savedInstanceState);
+  }
+
+  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     //Log.d(this + " onCreateView startet efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     String kanalkode = getArguments().getString(P_kode);
-    p4 = Kanal.P4kode.equals(kanalkode);
+    boolean p4 = Kanal.P4kode.equals(kanalkode);
     rod = null;
 
     if (p4) {
@@ -123,7 +128,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   private void hentSendeplanForDag(Date dag, final boolean idag) {
     final String dato = DRJson.apiDatoFormat.format(dag);
-    if (kanal.harUdsendelserForDag(dato)) {
+    if (kanal.harUdsendelserForDag(dato)) { // brug værdier i RAMen
       opdaterListe();
     }
 
@@ -135,12 +140,12 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       @Override
       public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
         if (getActivity() == null || uændret) return;
+        if (kanal.harUdsendelserForDag(dato) && fraCache) return; // så er værdierne i RAMen gode nok
         Log.d(kanal + " hentSendeplanForDag fikSvar for url " + url + " fraCache=" + fraCache + " efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
         if (json != null && !"null".equals(json)) {
           if (idag) {
             kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json), kanal, DRData.instans), dato);
             opdaterListe();
-            scrollTilAktuelUdsendelse();
           } else {
             // Nu ændres der i listen for at vise en dag før eller efter - sørg for at det synlige indhold ikke rykker sig
             Udsendelse næstøversteSynlig = liste.get(listView.getFirstVisiblePosition() + 1);
@@ -167,16 +172,22 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     App.volleyRequestQueue.add(req);
   }
 
-  public void scrollTilAktuelUdsendelse() {
-    Log.d(this + " scrollTilAktuelUdsendelse()");
-    if (aktuelUdsendelseIndex < 0) return;
-    int topmargen = getResources().getDimensionPixelOffset(R.dimen.kanalvisning_aktuelUdsendelse_topmargen);
-    listView.setSelectionFromTop(aktuelUdsendelseIndex, topmargen);
-  }
+  private boolean hopTilAktuelUdsendelseUdestår;
+  private Runnable hopTilAktuelUdsendelse = new Runnable() {
+    @Override
+    public void run() {
+      if (!hopTilAktuelUdsendelseUdestår) return;
+      Log.d("hopTilAktuelUdsendelse() aktuelUdsendelseIndex="+aktuelUdsendelseIndex+" "+this);
+      if (aktuelUdsendelseIndex < 0) return;
+      int topmargen = getResources().getDimensionPixelOffset(R.dimen.kanalvisning_aktuelUdsendelse_topmargen);
+      listView.setSelectionFromTop(aktuelUdsendelseIndex, topmargen);
+      hopTilAktuelUdsendelseUdestår = false;
+    }
+  };
 
 
-  public void scrollTilAktuelUdsendelseBlødt() {
-    Log.d(this + " scrollTilAktuelUdsendelseBlødt()");
+  public void rulBlødtTilAktuelUdsendelseBlødt() {
+    Log.d(this + " rulBlødtTilAktuelUdsendelseBlødt()");
     if (aktuelUdsendelseIndex < 0) return;
     int topmargen = getResources().getDimensionPixelOffset(R.dimen.kanalvisning_aktuelUdsendelse_topmargen);
     if (Build.VERSION.SDK_INT >= 11) listView.smoothScrollToPositionFromTop(aktuelUdsendelseIndex, topmargen);
@@ -193,7 +204,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       App.forgrundstråd.post(new Runnable() {
         @Override
         public void run() {
-          //scrollTilAktuelUdsendelse();
+          //hopTilAktuelUdsendelse();
           if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET && DRData.instans.afspiller.getLydkilde() != kanal) {
             DRData.instans.afspiller.setLydkilde(kanal);
           }
@@ -209,6 +220,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   @Override
   public void onResume() {
     super.onResume();
+    if (hopTilAktuelUdsendelseUdestår) App.forgrundstråd.postDelayed(hopTilAktuelUdsendelse,0);
     //App.forgrundstråd.postDelayed(this, 50);
   }
 
@@ -217,7 +229,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     super.onPause();
     App.forgrundstråd.removeCallbacks(this);
     if (senesteSynligeFragment == this) senesteSynligeFragment = null;
-    Log.d(this + " onPause() " + this);
+    Log.d(this + " onPause() ");
   }
 
   @Override
@@ -277,6 +289,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     }
     Log.d("opdaterListe " + kanal.kode + "  aktuelUdsendelseIndex=" + aktuelUdsendelseIndex);
     adapter.notifyDataSetChanged();
+    if (fragmentErSynligt && hopTilAktuelUdsendelseUdestår) App.forgrundstråd.postDelayed(hopTilAktuelUdsendelse,0);
   }
 
 
@@ -408,7 +421,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         case TIDLIGERE_SENERE:
           vh.titel.setText(udsendelse.titel);
 
-          if (antalHentedeSendeplaner++ < 7) {
+          if (antalHentedeSendeplaner++ < 7  && !hopTilAktuelUdsendelseUdestår) {
             a.id(R.id.progressBar).visible();   // De første 7 henter vi bare for brugeren
             vh.titel.setVisibility(View.VISIBLE);
             hentSendeplanForDag(udsendelse.startTid, false);
@@ -460,7 +473,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       vh.slutttidbjælke.setLayoutParams(lp);
       if (passeretPct >= 100) { // Hop til næste udsendelse
         opdaterListe();
-        if (vh.starttidbjælke.isShown()) scrollTilAktuelUdsendelseBlødt();
+        if (vh.starttidbjælke.isShown()) rulBlødtTilAktuelUdsendelseBlødt();
       }
 
       boolean spillerDenneKanal = DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET && DRData.instans.afspiller.getLydkilde() == kanal;

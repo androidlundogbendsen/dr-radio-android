@@ -261,7 +261,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         //}
         // Grimt hack, men desværre umuligt at gøre på en anden måde
         if (Kanal_frag.senesteSynligeFragment != null) {
-          Kanal_frag.senesteSynligeFragment.scrollTilAktuelUdsendelseBlødt();
+          Kanal_frag.senesteSynligeFragment.rulBlødtTilAktuelUdsendelseBlødt();
         }
         // XXX INDSAT TIL DR RADIO slut
       }
