@@ -60,9 +60,13 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
   @Override
   public Kanal getKanal() {
     Kanal k = DRData.instans.grunddata.kanalFraSlug.get(kanalSlug);
+    if (Kanal.P4kode.equals(k.kode)) {
+      Log.rapporterFejl(new IllegalStateException("Vi fik P4 overkanalen - ved ikke hvilken underkanal"));
+      return Grunddata.ukendtKanal;
+    }
     if (k == null) {
       Log.rapporterFejl(new Exception(kanalSlug + " manglede i grunddata.kanalFraSlug=" + DRData.instans.grunddata.kanalFraSlug));
-      k = Grunddata.ukendtKanal;
+      return Grunddata.ukendtKanal;
     }
     return k;
   }

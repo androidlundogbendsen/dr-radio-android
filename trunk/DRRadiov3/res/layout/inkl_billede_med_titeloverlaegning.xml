@@ -58,7 +58,7 @@
                 android:background="@color/sort"
                 android:textColor="@color/hvid"
                 android:text="PRESSEN PÅ P3"
-                android:textSize="26sp"
+                android:textSize="24sp"
                 android:gravity="center_vertical"
                 android:textStyle="bold"
                 android:paddingTop="0dp"

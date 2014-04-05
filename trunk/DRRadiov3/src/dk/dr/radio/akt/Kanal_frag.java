@@ -135,7 +135,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       @Override
       public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
         if (getActivity() == null || uændret) return;
-        Log.d("hentSendeplanForDag fikSvar for url " + url + " fraCache=" + fraCache + " efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
+        Log.d(kanal + " hentSendeplanForDag fikSvar for url " + url + " fraCache=" + fraCache + " efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
         if (json != null && !"null".equals(json)) {
           if (idag) {
             kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json), kanal, DRData.instans), dato);

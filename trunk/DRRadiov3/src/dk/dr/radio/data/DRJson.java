@@ -143,7 +143,7 @@ public enum DRJson {
     for (int n = 0; n < jsonArray.length(); n++) {
       JSONObject o = jsonArray.getJSONObject(n);
       Udsendelse u = opretUdsendelse(drData, o);
-      u.kanalSlug = o.optString(DRJson.ChannelSlug.name(), kanal.slug);  // Bemærk - kan være tom.
+      u.kanalSlug = kanal.slug;// o.optString(DRJson.ChannelSlug.name(), kanal.slug);  // Bemærk - kan være tom.
       u.kanHøres = o.getBoolean(DRJson.Watchable.name());
       u.startTid = servertidsformat.parse(o.getString(DRJson.StartTime.name()));
       u.startTidKl = klokkenformat.format(u.startTid);
