@@ -98,7 +98,8 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
     } else if (type == TYPE_notifikation_stor) {
       remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_stor);
     } else if (type == TYPE_låseskærm) {
-      remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_laaseskaerm);
+      //remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_laaseskaerm);
+      remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_stor);
     } else {
       remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_levendeikon);
     }
@@ -145,7 +146,7 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
     }
 
 
-    if (type == TYPE_notifikation_lille || type == TYPE_notifikation_stor) {
+    if (type==TYPE_notifikation_lille || type==TYPE_notifikation_stor || type==TYPE_låseskærm) {
       Intent startPauseI = new Intent(App.instans, AfspillerStartStopReciever.class).setAction(AfspillerStartStopReciever.PAUSE);
       PendingIntent startPausePI = PendingIntent.getBroadcast(App.instans, 0, startPauseI, PendingIntent.FLAG_UPDATE_CURRENT);
       remoteViews.setOnClickPendingIntent(R.id.startStopKnap, startPausePI);
