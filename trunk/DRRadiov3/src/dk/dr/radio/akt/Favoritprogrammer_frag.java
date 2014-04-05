@@ -16,6 +16,7 @@ import android.widget.ListView;
 import com.android.volley.Request;
 import com.androidquery.AQuery;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.Collections;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Favoritter;
+import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Programserie;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
@@ -97,7 +99,9 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
               if (!uændret && json != null && !"null".equals(json)) {
                 JSONObject data = new JSONObject(json);
                 Programserie programserie = DRJson.parsProgramserie(data, null);
-                programserie.tilføjUdsendelser(offset, DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans));
+                JSONArray prg = data.getJSONArray(DRJson.Programs.name());
+                ArrayList<Udsendelse> udsendelser = DRJson.parseUdsendelserForProgramserie(prg, null, DRData.instans);
+                programserie.tilføjUdsendelser(offset, udsendelser);
                 DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
               }
               App.forgrundstråd.postDelayed(Favoritprogrammer_frag.this, 250); // Vent 1/4 sekund på eventuelt andre svar

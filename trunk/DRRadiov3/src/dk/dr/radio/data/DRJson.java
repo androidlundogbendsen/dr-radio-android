@@ -165,12 +165,13 @@ public enum DRJson {
    * Parser udsendelser for programserie.
    * A la http://www.dr.dk/tjenester/mu-apps/series/sprogminuttet?type=radio&includePrograms=true
    */
-  public static ArrayList<Udsendelse> parseUdsendelserForProgramserie(JSONArray jsonArray, DRData drData) throws JSONException, ParseException {
+  public static ArrayList<Udsendelse> parseUdsendelserForProgramserie(JSONArray jsonArray, Kanal kanal, DRData drData) throws JSONException, ParseException {
     ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
     for (int n = 0; n < jsonArray.length(); n++) {
       JSONObject o = jsonArray.getJSONObject(n);
       Udsendelse u = opretUdsendelse(drData, o);
-      u.kanalSlug = o.optString(DRJson.ChannelSlug.name());   // Bemærk - kan være tom.
+      if (kanal!=null) u.kanalSlug = kanal.slug;
+      else u.kanalSlug = o.optString(DRJson.ChannelSlug.name());  // Bemærk - kan være tom.
       u.startTid = servertidsformat.parse(o.getString(DRJson.FirstBroadcast.name()));
       u.slutTid = new Date(u.startTid.getTime() + o.getInt(DRJson.DurationInSeconds.name()) * 1000);
       uliste.add(u);

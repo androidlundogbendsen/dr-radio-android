@@ -95,7 +95,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
           programserie = DRJson.parsProgramserie(data, programserie);
           DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
         }
-        programserie.tilføjUdsendelser(offset, DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans));
+        programserie.tilføjUdsendelser(offset, DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), kanal, DRData.instans));
         bygListe();
       }
 
