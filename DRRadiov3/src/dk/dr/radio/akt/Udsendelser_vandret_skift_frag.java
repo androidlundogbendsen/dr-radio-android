@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.android.volley.Request;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     kanal = DRData.instans.grunddata.kanalFraKode.get(getArguments().getString(Kanal_frag.P_kode));
     startudsendelse = DRData.instans.udsendelseFraSlug.get(getArguments().getString(DRJson.Slug.name()));
     programserie = DRData.instans.programserieFraSlug.get(startudsendelse.programserieSlug);
-    Log.d("onCreateView " + this + " viser " + programserie + " / " + startudsendelse);
+    Log.d("onCreateView " + this + " viser " + " / " + startudsendelse);
 
     View rod = inflater.inflate(R.layout.udsendelser_vandret_skift_frag, container, false);
 
@@ -165,7 +166,9 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
             programserie = DRJson.parsProgramserie(data, programserie);
             DRData.instans.programserieFraSlug.put(startudsendelse.programserieSlug, programserie);
           }
-          programserie.tilføjUdsendelser(offset, DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans));
+          JSONArray prg = data.getJSONArray(DRJson.Programs.name());
+          ArrayList<Udsendelse> udsendelser = DRJson.parseUdsendelserForProgramserie(prg, kanal, DRData.instans);
+          programserie.tilføjUdsendelser(offset, udsendelser);
           //programserie.tilføjUdsendelser(Arrays.asList(startudsendelse));
           opdaterListe();
         }

@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import dk.dr.radio.afspilning.Afspiller;
@@ -94,7 +95,9 @@ public class DRData {
           if ("null".equals(str)) continue;
           JSONObject data = new JSONObject(str);
           ps = DRJson.parsProgramserie(data, null);
-          ps.tilføjUdsendelser(0, DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans));
+          JSONArray prg = data.getJSONArray(DRJson.Programs.name());
+          ArrayList<Udsendelse> udsendelser = DRJson.parseUdsendelserForProgramserie(prg, kanal, DRData.instans);
+          ps.tilføjUdsendelser(0, udsendelser);
           i.programserieFraSlug.put(u.programserieSlug, ps);
 
         }

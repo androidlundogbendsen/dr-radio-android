@@ -240,7 +240,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
             Log.d("SØG: fikSvar fraCache=" + fraCache + " uændret=" + uændret + " data = " + json);
               if (json != null && !"null".equals(json)) {
               JSONArray data = new JSONArray(json);
-              udsendelseListe = DRJson.parseUdsendelserForProgramserie(data, DRData.instans);
+              udsendelseListe = DRJson.parseUdsendelserForProgramserie(data, null, DRData.instans);
               liste.clear();
               liste.addAll(programserieListe);
               liste.addAll(udsendelseListe);

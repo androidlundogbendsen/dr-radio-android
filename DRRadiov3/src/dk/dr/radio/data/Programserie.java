@@ -72,4 +72,9 @@ public class Programserie { //implements Serializable {
     }
     return n;
   }
+
+  @Override
+  public String toString() {
+    return "ps:"+slug;
+  }
 }

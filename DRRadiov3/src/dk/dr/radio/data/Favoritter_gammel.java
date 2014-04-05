@@ -96,7 +96,7 @@ public class Favoritter_gammel {
                 JSONObject data = new JSONObject(json);
                 Programserie programserie = DRJson.parsProgramserie(data, null);
                 DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
-                programserie.tilføjUdsendelser(offset, DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), DRData.instans));
+                programserie.tilføjUdsendelser(offset, DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), null, DRData.instans));
               }
             }
             App.forgrundstråd.postDelayed(beregnAntalNyeUdsendelser, 500); // Vent 1/2 sekund på eventuelt andre svar

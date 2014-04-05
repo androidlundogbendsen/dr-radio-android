@@ -207,6 +207,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
           if (App.fejlsøgning) Log.d("fikSvar playliste(" + fraCache + " " + url + "   " + this);
           if (uændret) return;
+          if (udsendelse.playliste!=null && fraCache) return; // så har vi allerede den nyeste liste i MEM
           if (json != null && !"null".equals(json)) {
             udsendelse.playliste = DRJson.parsePlayliste(new JSONArray(json));
             bygListe();
@@ -317,6 +318,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   boolean visHelePlaylisten = false;
 
   void bygListe() {
+    Log.d("Udsendelse_frag bygListe");
     liste.clear();
     liste.add(TOP);
     if (visInfo) {
@@ -360,6 +362,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     @Override
     public void run() {
       App.forgrundstråd.removeCallbacks(this);
+      if (seekBar==null) return; // det er set ske i abetest
       boolean denneUdsSpiller = udsendelse.equals(afspiller.getLydkilde()) && afspiller.getAfspillerstatus() != Status.STOPPET;
       if (!denneUdsSpiller) {
         seekBar.setVisibility(View.GONE);
@@ -507,18 +510,19 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           aq.id(R.id.playliste).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
           aq.id(R.id.info).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         } else if (type == INFOTEKST) {
+          aq.id(R.id.titel).typeface(App.skrift_georgia);
           String forkortInfoStr = udsendelse.beskrivelse;
           Spannable spannable = new SpannableString(forkortInfoStr);//null;
           if (udsendelse.beskrivelse.length() > 100) {
             forkortInfoStr = forkortInfoStr.substring(0, 100);
             forkortInfoStr += "...(læs mere)";
-
             spannable = new SpannableString(forkortInfoStr);
             spannable.setSpan(new ForegroundColorSpan(App.color.blå), forkortInfoStr.length() - "(læs mere)".length(), forkortInfoStr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            forkortInfo = true;
+            aq.clicked(Udsendelse_frag.this).text(spannable/*forkortInfoStr*/);
+          } else {
+            aq.text(forkortInfoStr);
+            Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS);
           }
-          aq.id(R.id.titel).clicked(Udsendelse_frag.this).text(spannable/*forkortInfoStr*/).typeface(App.skrift_georgia);
-          Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS);
         } else if (type == PLAYLISTEELEM_NU || type == PLAYLISTEELEM) {
           vh.titel = aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
         } else if (type == VIS_HELE_PLAYLISTEN_KNAP) {
@@ -602,7 +606,6 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       return v;
     }
   };
-  private boolean forkortInfo = false;
 
 
   @Override
@@ -618,30 +621,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       bygListe();
     } else if (v.getId() == R.id.titel) {
       TextView titel = (TextView) v;
-      if (forkortInfo) {
-        titel.setText(udsendelse.beskrivelse);
-        forkortInfo = false;
-      } else {
-//    		String forkortInfoStr = udsendelse.beskrivelse;
-//        	if (udsendelse.beskrivelse.length() > 100){
-//        		forkortInfoStr = forkortInfoStr.substring(0, 100);
-//        		forkortInfoStr += "...(læs mere)";
-//        		forkortInfo = true;
-//        	}
-
-        String forkortInfoStr = udsendelse.beskrivelse;
-        if (udsendelse.beskrivelse.length() > 100) {
-          forkortInfoStr = forkortInfoStr.substring(0, 100);
-          forkortInfoStr += "...(læs mere)";
-
-          SpannableString spannable = new SpannableString(forkortInfoStr);
-          spannable.setSpan(new ForegroundColorSpan(App.color.blå), forkortInfoStr.length() - "(læs mere)".length(), forkortInfoStr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-          forkortInfo = true;
-        }
-        titel.setText(forkortInfoStr);
-
-      }
-      bygListe();
+      titel.setText(udsendelse.beskrivelse);
+      Linkify.addLinks(titel, Linkify.WEB_URLS);
     } else if (v.getId() == R.id.playliste) {
       visInfo = false;
       bygListe();
