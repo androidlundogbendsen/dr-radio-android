@@ -100,7 +100,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
       Udsendelse udsendelse = liste.get(position);
       AQuery aq;
       if (v == null) {
-        v = getLayoutInflater(null).inflate(R.layout.udsendelse_elem3_tid_titel_kunstner, parent, false);
+        v = getLayoutInflater(null).inflate(R.layout.udsendelse_elem3_playlisteelem, parent, false);
         v.setBackgroundResource(0);
         aq = new AQuery(v);
         aq.id(R.id.hør).image(R.drawable.trash).clicked(Hentede_udsendelser_frag.this)
