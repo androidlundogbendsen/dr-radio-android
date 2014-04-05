@@ -96,6 +96,9 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     */
     vispager_title_strip();
     viewPager.setOnPageChangeListener(this);
+    // Nødvendigt fordi underfragmenter har optionsmenu
+    // - ellers nulstilles optionsmenuen ikke når man hopper ud igen!
+    setHasOptionsMenu(true);
     return rod;
   }
 
