@@ -157,12 +157,34 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     return rod;
   }
 
+
+  @Override
+  public void setUserVisibleHint(boolean isVisibleToUser) {
+    super.setUserVisibleHint(isVisibleToUser);
+    Log.d(" QQQ setUserVisibleHint " + isVisibleToUser + "  " + this);
+    if (!isVisibleToUser || !isResumed()) return;
+    App.forgrundstråd.post(tjekFragmentSynligt);
+  }
+
   @Override
   public void onResume() {
     super.onResume();
-    if (aktuelUdsendelsePåKanalen() || udsendelse.playliste == null) opdaterSpillelisteRunnable.run();
-    App.forgrundstråd.post(sætEventueltAfspillersLydkilde);
+    if (!getUserVisibleHint()) return;
+    App.forgrundstråd.post(tjekFragmentSynligt);
   }
+
+  private Runnable tjekFragmentSynligt = new Runnable() {
+    @Override
+    public void run() {
+      App.forgrundstråd.removeCallbacks(tjekFragmentSynligt);
+      if (!getUserVisibleHint() || !isResumed()) return; // Ekstra tjek
+      Log.d("Udsendelse_frag tjekFragmentSynligt ");
+      if (aktuelUdsendelsePåKanalen() || udsendelse.playliste == null) opdaterSpillelisteRunnable.run();
+      if (udsendelse.kanHøres && afspiller.getAfspillerstatus() == Status.STOPPET) {
+        afspiller.setLydkilde(udsendelse);
+      }
+    }
+  };
 
   private boolean aktuelUdsendelsePåKanalen() {
     boolean res = udsendelse.equals(udsendelse.getKanal().getUdsendelse());
@@ -170,58 +192,35 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     return res;
   }
 
-  private void startOpdaterSpilleliste() {
-    if ("".equals(kanal.slug)) {
-      Log.e(new Exception("Kender ikke kanalen"));
-      return;
-    }
-    //new Exception("startOpdaterSpilleliste() for "+this).printStackTrace();
-    Request<?> req = new DrVolleyStringRequest(kanal.getPlaylisteUrl(udsendelse), new DrVolleyResonseListener() {
-      @Override
-      public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
-        if (App.fejlsøgning) Log.d("fikSvar playliste(" + fraCache + " " + url + "   " + this);
-        if (uændret) return;
-        if (json != null && !"null".equals(json)) {
-          udsendelse.playliste = DRJson.parsePlayliste(new JSONArray(json));
-          bygListe();
-        }
-      }
-    }) {
-      @Override
-      public Priority getPriority() {
-        return Priority.LOW; // Det vigtigste er at hente streams, spillelisten er knapt så vigtig
-      }
-    }.setTag(this);
-    App.volleyRequestQueue.add(req);
-  }
-
   Runnable opdaterSpillelisteRunnable = new Runnable() {
     @Override
     public void run() {
       App.forgrundstråd.removeCallbacks(opdaterSpillelisteRunnable);
-      startOpdaterSpilleliste();
-      if (aktuelUdsendelsePåKanalen() && isResumed()) {
-        App.forgrundstråd.postDelayed(opdaterSpillelisteRunnable, 15000);
+      if (!getUserVisibleHint() || !isResumed()) return;
+      if ("".equals(kanal.slug)) {
+        Log.d("startOpdaterSpilleliste: Kender ikke kanalen");
+        return;
       }
-    }
-  };
-
-  @Override
-  public void setUserVisibleHint(boolean isVisibleToUser) {
-    super.setUserVisibleHint(isVisibleToUser);
-    Log.d(" QQQ setUserVisibleHint " + isVisibleToUser + "  " + this);
-    if (getUserVisibleHint()) {
-      App.forgrundstråd.post(sætEventueltAfspillersLydkilde);
-    }
-  }
-
-  Runnable sætEventueltAfspillersLydkilde = new Runnable() {
-    @Override
-    public void run() {
-      if (getUserVisibleHint()) return;
-      if (udsendelse.kanHøres && afspiller.getAfspillerstatus() == Status.STOPPET) {
-        afspiller.setLydkilde(udsendelse);
-        Log.d("XXXXXXXXXXXXXXXXXXXX "+udsendelse);
+      //new Exception("startOpdaterSpilleliste() for "+this).printStackTrace();
+      Request<?> req = new DrVolleyStringRequest(kanal.getPlaylisteUrl(udsendelse), new DrVolleyResonseListener() {
+        @Override
+        public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+          if (App.fejlsøgning) Log.d("fikSvar playliste(" + fraCache + " " + url + "   " + this);
+          if (uændret) return;
+          if (json != null && !"null".equals(json)) {
+            udsendelse.playliste = DRJson.parsePlayliste(new JSONArray(json));
+            bygListe();
+          }
+        }
+      }) {
+        @Override
+        public Priority getPriority() {
+          return Priority.LOW; // Det vigtigste er at hente streams, spillelisten er knapt så vigtig
+        }
+      }.setTag(Udsendelse_frag.this);
+      App.volleyRequestQueue.add(req);
+      if (aktuelUdsendelsePåKanalen()) {
+        App.forgrundstråd.postDelayed(opdaterSpillelisteRunnable, 15000);
       }
     }
   };
@@ -353,8 +352,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   @Override
   public void run() {
     tjekOmHentet(udsendelse);
-    opdaterSeekBar.run();
     adapter.notifyDataSetChanged(); // Opdater knapper etc
+    App.forgrundstråd.post(opdaterSeekBar);
   }
 
   Runnable opdaterSeekBar = new Runnable() {
@@ -559,7 +558,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
             else if (erOnline) aq.text("HØR "+ kanal.navn.toUpperCase() + " LIVE");
             else aq.enabled(false).text("Internetforbindelse mangler");
           }
-          else aq.enabled(false);
+          else aq.gone();
         }
 
 

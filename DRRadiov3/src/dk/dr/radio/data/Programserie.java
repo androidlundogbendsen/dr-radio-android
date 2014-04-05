@@ -38,7 +38,7 @@ public class Programserie { //implements Serializable {
 
     if (this.udsendelserListe == null) {
       udsendelserSorteret = new TreeSet<Udsendelse>(uds);
-      udsendelserListe = new ArrayList<Udsendelse>(udsendelserSorteret);
+      udsendelserListe = new ArrayList<Udsendelse>(uds);
     } else {
       udsendelserListe.clear();
       for (ArrayList<Udsendelse> lx : udsendelserListeFraOffset.values()) {
