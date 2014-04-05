@@ -79,6 +79,7 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
 
   @Override
   public boolean equals(Object o) {
+    if (o == this) return true;
     if (o instanceof Udsendelse) return compareTo((Udsendelse) o)==0;
     return false;
   }
@@ -90,5 +91,9 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
     if (e != e2) return e2 < e ? -1 : 1;
     if (slug==null) return u2.slug==null? 0 : 1;
     return slug.compareTo(u2.slug);
+  }
+
+  public boolean streamsKlar() {
+    return hentetStream != null || streams != null && streams.size() > 0;
   }
 }
