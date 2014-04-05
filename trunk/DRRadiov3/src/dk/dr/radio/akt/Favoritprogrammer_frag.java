@@ -124,21 +124,21 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
     @Override
     public View getView(int position, View v, ViewGroup parent) {
       try {
-        if (v == null) v = getLayoutInflater(null).inflate(R.layout.elem_tid_titel_kunstner, parent, false);
+        if (v == null) v = getLayoutInflater(null).inflate(R.layout.listeelem_2linjer, parent, false);
         AQuery aq = new AQuery(v);
 
         Object obj = liste.get(position);
         if (obj instanceof Programserie) {
           Programserie ps = (Programserie) obj;
-          aq.id(R.id.startid).text(ps.titel).typeface(App.skrift_gibson_fed).textColor(Color.BLACK);
+          aq.id(R.id.linje1).text(ps.titel).typeface(App.skrift_gibson_fed).textColor(Color.BLACK);
           int n = favoritter.getAntalNyeUdsendelser(ps.slug);
           String txt = (n == 1 ? n + " ny udsendelse" : n + " nye udsendelser");
-          aq.id(R.id.titel_og_kunstner).text(txt).typeface(App.skrift_gibson);
+          aq.id(R.id.linje2).text(txt).typeface(App.skrift_gibson);
           aq.id(R.id.stiplet_linje).background(position == 0 ? R.drawable.linje : R.drawable.stiplet_linje);
         } else {
           Udsendelse udsendelse = (Udsendelse) obj;
-          aq.id(R.id.startid).text(DRJson.datoformat.format(udsendelse.startTid)).typeface(App.skrift_gibson);
-          aq.id(R.id.titel_og_kunstner).text(udsendelse.titel).typeface(App.skrift_gibson);
+          aq.id(R.id.linje1).text(DRJson.datoformat.format(udsendelse.startTid)).typeface(App.skrift_gibson);
+          aq.id(R.id.linje2).text(udsendelse.titel).typeface(App.skrift_gibson);
           aq.id(R.id.stiplet_linje).background(R.drawable.stiplet_linje);
         }
         v.setBackgroundResource(0);
