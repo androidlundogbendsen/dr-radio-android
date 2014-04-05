@@ -373,17 +373,19 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           int længdeMs = afspiller.getDuration();
           if (længdeMs > 0) {
             seekBar.setVisibility(View.VISIBLE);
+            seekBar.setEnabled(true);
+            seekBar.setMax(længdeMs);
             seekBarTekst.setVisibility(View.VISIBLE);
             seekBarMaxTekst.setVisibility(View.VISIBLE);
-            seekBar.setMax(længdeMs);
             seekBarMaxTekst.setText(DateUtils.formatElapsedTime(længdeMs / 1000));
             int pos = afspiller.getCurrentPosition();
             Log.d("   pos " + pos + "   " + afspiller.getDuration());
             seekBarTekst_opdater(pos);
             seekBar.setProgress(pos);
           } else {
-            seekBarMaxTekst.setText("");
-            seekBar.setVisibility(View.INVISIBLE);
+            seekBar.setVisibility(View.VISIBLE);
+            seekBar.setEnabled(false);
+            seekBar.setProgress(0);
             seekBarTekst.setVisibility(View.INVISIBLE);
             seekBarMaxTekst.setVisibility(View.INVISIBLE);
           }

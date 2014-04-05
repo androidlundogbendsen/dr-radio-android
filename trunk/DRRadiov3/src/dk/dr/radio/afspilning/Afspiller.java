@@ -339,7 +339,7 @@ public class Afspiller {
       Log.e(new IllegalStateException("setLydkilde(null"));
       return;
     }
-    if (App.fejlsøgning) App.kortToast("setLydkilde:\n" + lydkilde);
+    Log.d("setLydkilde(" + lydkilde);
 
 
     if ((afspillerstatus == Status.SPILLER) || (afspillerstatus == Status.FORBINDER)) {

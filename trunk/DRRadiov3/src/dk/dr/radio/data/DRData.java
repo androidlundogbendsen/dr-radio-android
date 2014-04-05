@@ -77,8 +77,8 @@ public class DRData {
         //Log.d(obj.toString(2));
         u.streams = DRJson.parsStreams(obj.getJSONArray(DRJson.Streams.name()));
         if (u.streams.size() == 0) Log.d("Ingen lydstreams");
-        if (u.streams.size() == 0 && u.kanHøres) throw new IllegalStateException("u.streams.size() == 0 && u.kanHøres");
-        if (u.streams.size() > 0 && !u.kanHøres) throw new IllegalStateException("u.streams.size() > 0 && !u.kanHøres");
+        //if (u.streams.size() == 0 && u.kanHøres) throw new IllegalStateException("u.streams.size() == 0 && u.kanHøres");
+        //if (u.streams.size() > 0 && !u.kanHøres) throw new IllegalStateException("u.streams.size() > 0 && !u.kanHøres");
 
         try {
           u.playliste = DRJson.parsePlayliste(new JSONArray(main_hent(kanal.getPlaylisteUrl(u))));

@@ -94,7 +94,8 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
 
     RemoteViews remoteViews;
     if (type == TYPE_notifikation_lille) {
-      remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_lille);
+      //remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_lille);
+      remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_stor);
     } else if (type == TYPE_notifikation_stor) {
       remoteViews = new RemoteViews(App.instans.getPackageName(), R.layout.afspiller_notifikation_stor);
     } else if (type == TYPE_låseskærm) {
