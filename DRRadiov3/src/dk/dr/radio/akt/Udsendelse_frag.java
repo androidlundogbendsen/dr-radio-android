@@ -100,7 +100,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
                 streamsVarTom.remove(udsendelse);
               }
               udsendelse.produktionsnummer = o.optString(DRJson.ProductionNumber.name());
-                udsendelse.ShareLink = o.optString(DRJson.ShareLink.name());
+                udsendelse.shareLink = o.optString(DRJson.ShareLink.name());
               if (getUserVisibleHint() && udsendelse.streamsKlar() && afspiller.getAfspillerstatus() == Status.STOPPET) {
                 afspiller.setLydkilde(udsendelse);
               }
@@ -648,7 +648,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 // http://www.dr.dk/radio/ondemand/p6beat/debut-65
 // http://www.dr.dk/radio/ondemand/ramasjangradio/ramasjang-formiddag-44#!/00:03
               // "http://dr.dk/radio/ondemand/" + kanal.slug + "/" + udsendelse.slug
-                      udsendelse.ShareLink
+          (udsendelse.shareLink!=null?udsendelse.shareLink:"")
 //          + "\n\n" + udsendelse.findBedsteStream(true).url
       );
 //www.dr.dk/p1/mennesker-og-medier/mennesker-og-medier-100

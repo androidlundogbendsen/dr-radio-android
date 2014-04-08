@@ -10,7 +10,7 @@ import dk.dr.radio.diverse.Log;
  * Created by j on 28-01-14.
  */
 public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
-  private static final long serialVersionUID = -4522417772156322526L;
+  private static final long serialVersionUID = 1L;
   public String titel;
   public String beskrivelse;
   public String kanalSlug;  // Bemærk - kan være tom!
@@ -24,7 +24,7 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
   public transient ArrayList<Playlisteelement> playliste;
   public boolean kanHøres; // om der er nogle streams eller ej
   public String produktionsnummer;
-    public String ShareLink;
+  public String shareLink;
   public transient int startposition;// hvis der allerede er lyttet til denne lydkilde så notér det her så afspilning kan fortsætte herfra
   public int episodeIProgramserie;
 
