@@ -17,8 +17,10 @@ import android.widget.TextView;
 import com.androidquery.AQuery;
 
 import java.util.Date;
+import java.util.List;
 
 import dk.dr.radio.data.DRData;
+import dk.dr.radio.data.Lydstream;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.P4Stedplacering;
@@ -88,8 +90,9 @@ public class Basisaktivitet extends ActionBarActivity {
         }.execute();
         return true;
       case 1643:
-        startActivity(new Intent(android.content.Intent.ACTION_VIEW)
-            .setDataAndType(Uri.parse(DRData.instans.afspiller.getLydkilde().findBedsteStream(false).url), "audio/*"));
+        List<Lydstream> l = DRData.instans.afspiller.getLydkilde().findBedsteStreams(false);
+        if (!l.isEmpty()) startActivity(
+            new Intent(android.content.Intent.ACTION_VIEW).setDataAndType(Uri.parse(l.get(0).url), "audio/*"));
         return true;
       case 2645:
         DRData.instans.hentedeUdsendelser.status();

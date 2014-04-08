@@ -122,7 +122,7 @@ public class Favoritter {
         Log.d("Favoritter: Ny favoritTilStartdato=" + favoritTilStartdato);
         Log.d("Favoritter: Fortæller observatører at antalNyeUdsendelser er ændret fra " + antalNyeUdsendelser + " til " + antalNyeIAlt);
         antalNyeUdsendelser = antalNyeIAlt;
-        for (Runnable r : observatører) r.run();  // Informér observatører - i forgrundstråden
+        for (Runnable r : new ArrayList<Runnable>(observatører)) r.run();  // Informér observatører - i forgrundstråden
       }
     }
   };
