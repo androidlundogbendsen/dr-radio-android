@@ -313,16 +313,27 @@ public class Afspiller {
   }
 
   synchronized public void pauseAfspilning() {
-    if (!lydkilde.erDirekte() && afspillerstatus==Status.SPILLER)
-      try { // Gem position - og spol herhen næste gang udsendelsen spiller
-        lydkilde.getUdsendelse().startposition = mediaPlayer.getCurrentPosition();
-        Log.d("GEMT POSITION for "+lydkilde +" : "+ lydkilde.getUdsendelse().startposition);
-      } catch (Exception e) {
-        Log.rapporterFejl(e); // TODO fjern hvis der aldrig kommer fejl her
-      }
+    gemPosition();
     pauseAfspilningIntern();
     if (wifilock != null) wifilock.release();
     // Informer evt aktivitet der lytter
+  }
+
+  /**
+   * Gem position - og spol herhen næste gang udsendelsen spiller
+   */
+  private void gemPosition() {
+    if (!lydkilde.erDirekte() && afspillerstatus==Status.SPILLER)
+      try {
+      int pos = mediaPlayer.getCurrentPosition();
+      if (pos>0) {
+        lydkilde.getUdsendelse().startposition = pos;
+        if (App.udviklerEkstra) App.kortToast("GEMT POSITION\n"+ lydkilde.getUdsendelse().startposition);
+        Log.d("GEMT POSITION for "+lydkilde +" : "+ lydkilde.getUdsendelse().startposition);
+      }
+    } catch (Exception e) {
+      Log.rapporterFejl(e); // TODO fjern hvis der aldrig kommer fejl her
+    }
   }
 
 
@@ -391,22 +402,28 @@ public class Afspiller {
   Handler handler = new Handler();
   Runnable startAfspilningIntern = new Runnable() {
     public void run() {
+      startAfspilningIntern();
+    }
+  };
+
+  Runnable venterPåAtKommeOnline = new Runnable() {
+    @Override
+    public void run() {
+      App.netværk.observatører.remove(venterPåAtKommeOnline);
+      //if (afspillerstatus==Status.STOPPET) return; // Spiller ikke
+      if (lydkilde.hentetStream != null) return; // Offline afspilning - ignorér
       try {
-        if (App.netværk.observatører.contains(startAfspilningIntern)) {
-          if (!App.erOnline())
-            Log.e(new IllegalStateException("Burde være online her??!"));
-          long dt = System.currentTimeMillis() - onErrorTællerNultid;
-          Log.d("Vi kom online igen efter " + dt + " ms");
-          if (dt < 5 * 60 * 1000) {
-            Log.d("Genstart afspilning");
-            startAfspilningIntern(); // Genstart
-          } else {
-            Log.d("Brugeren har nok glemt os, afslut");
-            stopAfspilning();
-          }
-          return;
+        if (!App.erOnline())
+          Log.e(new IllegalStateException("Burde være online her??!"));
+        long dt = System.currentTimeMillis() - onErrorTællerNultid;
+        Log.d("Vi kom online igen efter " + dt + " ms");
+        if (dt < 5 * 60 * 1000) {
+          Log.d("Genstart afspilning");
+          startAfspilningIntern(); // Genstart
+        } else {
+          Log.d("Brugeren har nok glemt os, afslut");
+          stopAfspilning();
         }
-        startAfspilningIntern();
       } catch (Exception e) {
         Log.rapporterFejl(e);
       }
@@ -525,7 +542,7 @@ public class Afspiller {
           } else {
             Log.d("Vent på at vi kommer online igen");
             onErrorTællerNultid = System.currentTimeMillis();
-            App.netværk.observatører.add(startAfspilningIntern);
+            App.netværk.observatører.add(venterPåAtKommeOnline);
           }
         } else {
           pauseAfspilning(); // Vi giver op efter 10. forsøg
