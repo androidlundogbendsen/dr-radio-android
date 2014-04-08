@@ -117,7 +117,7 @@ public class HentedeUdsendelser {
       data.downloadIdFraSlug.put(udsendelse.slug, downloadId);
       data.udsendelseFraDownloadId.put(downloadId, udsendelse);
       gemListe.run();
-      for (Runnable obs : observatører) obs.run();
+      for (Runnable obs : new ArrayList<Runnable>(observatører)) obs.run();
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
@@ -183,7 +183,7 @@ public class HentedeUdsendelser {
     Log.d("Hentning: data.downloadIdFraSlug=" + data.downloadIdFraSlug);
     downloadService.remove(id);
     gemListe.run();
-    for (Runnable obs : observatører) obs.run();
+    for (Runnable obs : new ArrayList<Runnable>(observatører)) obs.run();
   }
 
 
@@ -211,7 +211,7 @@ public class HentedeUdsendelser {
         }
         c.close();
         DRData.instans.hentedeUdsendelser.gemListe.run();
-        for (Runnable obs : DRData.instans.hentedeUdsendelser.observatører) obs.run();
+        for (Runnable obs : new ArrayList<Runnable>(DRData.instans.hentedeUdsendelser.observatører)) obs.run();
       } catch (Exception e) {
         Log.rapporterFejl(e);
       }

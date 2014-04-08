@@ -42,7 +42,7 @@ public class Netvaerksstatus extends BroadcastReceiver {
     if (status != nyStatus) {
       status = nyStatus;
       if (App.fejlsøgning) App.kortToast("Netvaerksstatus\n" + status);
-      for (Runnable o : observatører) o.run();
+      for (Runnable o : new ArrayList<Runnable>(observatører)) o.run();
     }
   }
 }
