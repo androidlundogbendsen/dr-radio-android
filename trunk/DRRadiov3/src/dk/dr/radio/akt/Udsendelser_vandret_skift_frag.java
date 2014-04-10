@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,12 +50,25 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     Log.d("onCreateView " + this);
 
+    View rod = inflater.inflate(R.layout.udsendelser_vandret_skift_frag, container, false);
+
     kanal = DRData.instans.grunddata.kanalFraKode.get(getArguments().getString(Kanal_frag.P_kode));
     startudsendelse = DRData.instans.udsendelseFraSlug.get(getArguments().getString(DRJson.Slug.name()));
+    if (startudsendelse==null) { // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/805598045
+      Log.rapporterFejl(new IllegalStateException("startudsendelse==null"));
+      // Fjern backstak og hop ud
+      FragmentManager fm = getActivity().getSupportFragmentManager();
+      fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      FragmentTransaction ft = fm.beginTransaction();
+      ft.replace(R.id.indhold_frag, new Kanaler_frag());
+      ft.addToBackStack(null);
+      ft.commit();
+
+      return rod;
+    }
     programserie = DRData.instans.programserieFraSlug.get(startudsendelse.programserieSlug);
     Log.d("onCreateView " + this + " viser " + " / " + startudsendelse);
 
-    View rod = inflater.inflate(R.layout.udsendelser_vandret_skift_frag, container, false);
 
     viewPager = (ViewPager) rod.findViewById(R.id.pager);
     viewPager.setId(123);
