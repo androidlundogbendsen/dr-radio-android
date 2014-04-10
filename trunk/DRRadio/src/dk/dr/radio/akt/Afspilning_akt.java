@@ -433,7 +433,7 @@ public class Afspilning_akt extends Activity implements AfspillerListener {
 
     @Override
     public void onReceive(Context ctx, Intent i) {
-      Log.d("spillerNuListeOpdateretReciever");
+      //Log.d("spillerNuListeOpdateretReciever");
       // visSpillerNuInfo() er dyr at kalde så den kalder vi kun hvis data er ændret
       String spillerNu = "null";
 

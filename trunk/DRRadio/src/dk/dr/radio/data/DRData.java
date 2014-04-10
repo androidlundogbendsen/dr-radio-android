@@ -237,9 +237,8 @@ public class DRData {
   }
 
   public String findKanalUrlFraKode(Kanal kanal) {
-    /*
-    String lydformat = prefs.getString(NØGLE_lydformat, "shoutcast");
-    boolean højKvalitet = "høj".equals(prefs.getString("lydkvalitet", "standard"));
+    String lydformat = App.prefs.getString(NØGLE_lydformat, "shoutcast");
+    boolean højKvalitet = "høj".equals(App.prefs.getString("lydkvalitet", "standard"));
     rapportering.nulstil();
     rapportering.lydformat = lydformat + (højKvalitet ? "_høj" : "_standard");
     String url = kanal.shoutcastUrl;
@@ -252,10 +251,9 @@ public class DRData {
       url = url.replace("L.stream", "H.stream");    // MP3, RTSP stream navn workaround
     }
     String info = "Kanal: " + kanal.longName + "\nlydformat: " + lydformat + "\nKvalitet: " + (højKvalitet ? "Høj" : "Normal") + "\n" + url;
-    if (DRData.udvikling) langToast(info);
+    if (DRData.udvikling) App.langToast(info);
     Log.d(info);
-    */
-    String url = kanal.shoutcastUrl;
+    //String url = kanal.shoutcastUrl;
     return url;
   }
 
