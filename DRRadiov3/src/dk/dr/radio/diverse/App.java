@@ -78,7 +78,7 @@ public class App extends Application implements Runnable {
   public static final String P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING = "P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING";
   public static final String P4_FORETRUKKEN_AF_BRUGER = "P4_FORETRUKKEN_AF_BRUGER";
   public static final String FORETRUKKEN_KANAL = "FORETRUKKEN_kanal";
-  public static final boolean PRODUKTION = false;
+  public static final boolean PRODUKTION = true;
   public static boolean EMULATOR = true;
   public static App instans;
   public static SharedPreferences prefs;
@@ -152,7 +152,7 @@ public class App extends Application implements Runnable {
     Network network = new DrBasicNetwork(stack);
     // Vi bruger vores egen DrDiskBasedCache, da den indbyggede i Volley
     // har en opstartstid på flere sekunder
-    File cacheDir = new File(getCacheDir(), "volley4");
+    File cacheDir = new File(getCacheDir(), "volley");
     volleyRequestQueue = new RequestQueue(new DrDiskBasedCache(cacheDir), network);
     volleyRequestQueue.start();
 

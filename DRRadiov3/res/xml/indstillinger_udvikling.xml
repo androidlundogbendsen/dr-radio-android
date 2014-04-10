@@ -7,6 +7,30 @@
             android:summaryOn="Sæt app i fejlsøgningstilstand (også efter genstart)"/>
 
     <CheckBoxPreference
+            android:key="tving_lodret_visning" android:title="Tving lodret visning"
+            android:defaultValue="true"
+            android:summary="Tving folk til at rejse deres tablet/telefon op (kræver genstart)"/>
+
+
+    <!-- 	<EditTextPreference android:key="udviklerKontakt" android:title="Kontakt"
+        android:summary="Skriv din e-postadresse hvis du vil kunne kontaktes i forbindelse
+        med udvikling" android:defaultValue="" /> -->
+
+
+    <CheckBoxPreference
+            android:key="kunSortLigeBagTekst"
+            android:title="Kun sort bag tekst i titler"
+            android:defaultValue="false"
+            android:summary="Kræver app-genstart"/>
+
+    <CheckBoxPreference
+            android:key="manuelStreamvalg"
+            android:title="Manuelt streamvalg"
+            android:defaultValue="false"
+            android:summary="Vælg manuelt mellem de tilgængelige streams, indtil API'et kan give korrekte streamtyper"/>
+
+
+    <CheckBoxPreference
             android:key="udsendelser_bladr"
             android:title="Swipe mellem udsendelser"
             android:defaultValue="true"
@@ -23,36 +47,5 @@
             android:title="Lodret swipe mellem udsendelser"
             android:defaultValue="false"
             android:summary="Bladr mellem udsendelser med lodret swipe"/>
-
-    <CheckBoxPreference
-            android:key="tving_lodret_visning" android:title="Tving lodret visning"
-            android:defaultValue="true"
-            android:summary="Tving folk til at rejse deres tablet/telefon op (kræver genstart)"/>
-
-
-    <!-- 	<EditTextPreference android:key="udviklerKontakt" android:title="Kontakt"
-        android:summary="Skriv din e-postadresse hvis du vil kunne kontaktes i forbindelse
-        med udvikling" android:defaultValue="" /> -->
-
-    <!--
-        <CheckBoxPreference
-                android:key="brugGibsonIVenstremenu"
-                android:title="Brug Gibson i venstre-menu"
-                android:defaultValue="true"
-                android:summary="Gibson ser grimt ud i venstremenu på visse enheder. Kræver app-genstart"/>
-    -->
-
-    <CheckBoxPreference
-            android:key="kunSortLigeBagTekst"
-            android:title="Kun sort bag tekst i titler"
-            android:defaultValue="false"
-            android:summary="Ser også grimt ud. Kræver app-genstart"/>
-
-    <CheckBoxPreference
-            android:key="manuelStreamvalg"
-            android:title="Manuelt streamvalg"
-            android:defaultValue="false"
-            android:summary="Vælg manuelt mellem de tilgængelige streams, indtil API'et kan give korrekte streamtyper"/>
-
 
 </PreferenceScreen>
