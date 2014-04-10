@@ -458,19 +458,19 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       aq.id(R.id.tekst).text("Kontakt / info / om");
       aq.typeface(App.skrift_gibson_fed);
 
+      if (!App.PRODUKTION || App.udviklerEkstra) {
+        tilføj(R.layout.venstremenu_elem_adskiller_tynd);
+        tilføj(R.layout.venstremenu_elem_overskrift, new Runnable() {
+          @Override
+          public void run() {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://javabog.dk/privat/DRRadiov3.apk")));
+          }
+        });
+        aq.id(R.id.tekst).text("Hent nyeste udvikler-version.\nNuværende version:\n" + App.versionsnavn
+            + "\n" + App.res.getString(R.string.akamaistatistik_device) + "/" + Build.MODEL + " " + Build.PRODUCT);
 
-      tilføj(R.layout.venstremenu_elem_adskiller_tynd);
-      tilføj(R.layout.venstremenu_elem_overskrift, new Runnable() {
-        @Override
-        public void run() {
-          startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://javabog.dk/privat/DRRadiov3.apk")));
-        }
-      });
-      aq.id(R.id.tekst).text("Hent nyeste udvikler-version.\nNuværende version:\n" + App.versionsnavn
-          + "\n" + App.res.getString(R.string.akamaistatistik_device) + "/" + Build.MODEL + " " + Build.PRODUCT);
-
-      aq.typeface(App.skrift_gibson).textSize(12);
-
+        aq.typeface(App.skrift_gibson).textSize(12);
+      }
     }
 
     public void vælgMenu(FragmentActivity akt, int position) {
