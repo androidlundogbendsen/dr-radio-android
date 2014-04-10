@@ -152,6 +152,19 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
     } else Log.d(" forkert status=" + afspillerstatus);
   }
 
+  long setDataSourceTid = 0;
+  boolean setDataSourceLyd = false;
+  private String mpTils() {
+    AudioManager ar = (AudioManager) App.instans.getSystemService(App.AUDIO_SERVICE);
+    //return mediaPlayer.getCurrentPosition()+ "/"+mediaPlayer.getDuration() + "    "+mediaPlayer.isPlaying()+ar.isMusicActive();
+    if (!setDataSourceLyd && ar.isMusicActive()) {
+      setDataSourceLyd = true;
+      App.langToast("Det tog "+(System.currentTimeMillis() - setDataSourceTid)/100/10.0+" sek før lyden kom");
+    }
+    return "    "+mediaPlayer.isPlaying()+ar.isMusicActive()+" dt="+(System.currentTimeMillis() - setDataSourceTid)+"ms";
+  }
+
+
   synchronized private void startAfspilningIntern() {
     Log.d("Starter streaming fra " + kanalNavn);
     Log.d("mediaPlayer.setDataSource( " + kanalUrl);
@@ -167,11 +180,15 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
       public void run() {
         Log.d("mediaPlayer.setDataSource() start");
         try {
+          setDataSourceTid = System.currentTimeMillis();
+          setDataSourceLyd = false;
           mediaPlayer.setDataSource(kanalUrl);
-          Log.d("mediaPlayer.setDataSource() slut");
+          Log.d("mediaPlayer.setDataSource() slut  " + mpTils());
           mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-          mediaPlayer.prepareAsync();
+          mediaPlayer.prepare();
+          Log.d("mediaPlayer.prepare() slut  " + mpTils());
         } catch (Exception ex) {
+          ex.printStackTrace();
           //ex = new Exception("spiller "+kanalNavn+" "+kanalUrl, ex);
           //Log.kritiskFejlStille(ex);
           handler.post(new Runnable() {
@@ -309,7 +326,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
   //    TILBAGEKALD FRA MEDIAPLAYER
   //
   public void onPrepared(MediaPlayer mp) {
-    Log.d("onPrepared");
+    Log.d("onPrepared "+mpTils());
     afspillerstatus = STATUS_SPILLER; //No longer buffering
     if (observatører != null) {
       opdaterWidgets();
@@ -321,9 +338,9 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
     // (i hvert fald på Samsung Galaxy S III), så vi kalder det i baggrunden
     new Thread() {
       public void run() {
-        Log.d("mediaPlayer.start()");
+        Log.d("mediaPlayer.start() "+mpTils());
         mediaPlayer.start();
-        Log.d("mediaPlayer.start() slut");
+        Log.d("mediaPlayer.start() slut "+mpTils());
       }
     }.start();
   }
@@ -357,7 +374,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
 
   public boolean onInfo(MediaPlayer mp, int hvad, int extra) {
     //Log.d("onInfo(" + MedieafspillerInfo.infokodeTilStreng(hvad) + "(" + hvad + ") " + extra);
-    Log.d("onInfo(" + hvad + ") " + extra);
+    Log.d("onInfo(" + hvad + ") " + extra+ " "+mpTils());
     return true;
   }
 
@@ -423,6 +440,7 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
 
   public void onBufferingUpdate(MediaPlayer mp, int procent) {
     //Log.d("Afspiller onBufferingUpdate : " + procent + "% - lyttere er "+observatører );
+    Log.d("Afspiller onBufferingUpdate : " + procent + " "+mpTils());
     if (procent < -100) procent = -1; // Ignorér vilde tal
 
     sendOnAfspilningForbinder(procent);
@@ -434,3 +452,22 @@ public class Afspiller implements OnPreparedListener, OnSeekCompleteListener, On
 
 
 }
+/* x86v10
+02-20 16:24:06.846    1398-1398/dk.dr.radio D/DRRadio﹕ startAfspilning() http://live-icy.gss.dr.dk:8000/A/A03L.mp3
+02-20 16:24:06.856    1398-1398/dk.dr.radio D/DRRadio﹕ Starter streaming fra DR P1
+02-20 16:24:06.856    1398-1398/dk.dr.radio D/DRRadio﹕ mediaPlayer.setDataSource( http://live-icy.gss.dr.dk:8000/A/A03L.mp3
+02-20 16:24:06.856    1398-1398/dk.dr.radio D/DRRadio﹕ Forbinder...
+02-20 16:24:06.856    1398-1430/dk.dr.radio D/DRRadio﹕ mediaPlayer.setDataSource() start
+02-20 16:24:06.856    1398-1430/dk.dr.radio D/DRRadio﹕ mediaPlayer.setDataSource() slut
+02-20 16:24:06.856    1398-1398/dk.dr.radio D/DRRadio﹕ AfspillerService onStartCommand(Intent { cmp=dk.dr.radio/.afspilning.HoldAppIHukommelsenService (has extras) } 2 1
+
+02-20 16:24:24.546    1398-1398/dk.dr.radio D/DRRadio﹕ Afspiller onBufferingUpdate : -2147483648 0
+02-20 16:24:24.546    1398-1398/dk.dr.radio D/DRRadio﹕ Forbinder...
+02-20 16:24:24.546    1398-1398/dk.dr.radio D/DRRadio﹕ onPrepared
+02-20 16:24:24.546    1398-1398/dk.dr.radio D/DRRadio﹕ Afspiller
+02-20 16:24:24.546    1398-1433/dk.dr.radio D/DRRadio﹕ mediaPlayer.start()
+02-20 16:24:24.556    1398-1433/dk.dr.radio D/DRRadio﹕ mediaPlayer.start() slut
+02-20 16:24:25.556    1398-1398/dk.dr.radio D/DRRadio﹕ Afspiller onBufferingUpdate : -2147483648 1437
+02-20 16:24:25.556    1398-1398/dk.dr.radio D/DRRadio﹕ [ 02-20 16:24:26.566  1398:0x576 D/DRRadio  ]
+    Afspiller onBufferingUpdate : -2147483648 2455
+ */

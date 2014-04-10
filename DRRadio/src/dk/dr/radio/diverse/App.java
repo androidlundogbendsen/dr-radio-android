@@ -213,7 +213,9 @@ public class App extends Application {
     try {
       akt.startActivity(i);
     } catch (Exception e) {
-      Log.rapporterOgvisFejl(akt, e);
+      e.printStackTrace();
+      Log.d(txt);
+      Log.d(vedhæftning);
     }
   }
 }

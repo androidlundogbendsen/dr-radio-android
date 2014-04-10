@@ -123,7 +123,7 @@ public class JsonIndlaesning {
       httpClient = new DefaultHttpClient(params);
     }
     //dt("");
-    Log.d("Henter " + url);
+    //Log.d("Henter " + url);
     //Log.e(new Exception("Henter "+url));
     //InputStream is = new URL(url).openStream();
 

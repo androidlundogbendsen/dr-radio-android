@@ -23,7 +23,7 @@
             android:process="dk.dr.radio"
             android:allowBackup="true"
             android:label="DR Radio">
-
+<!--
         <activity
                 android:theme="@android:style/Theme.Light"
                 android:name=".akt_v3.ListeAkt">
@@ -32,7 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
+-->
         <activity
                 android:name=".akt.Splash_akt"
                 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
