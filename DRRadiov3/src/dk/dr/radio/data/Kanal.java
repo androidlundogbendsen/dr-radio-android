@@ -67,7 +67,8 @@ public class Kanal extends Lydkilde {
 
   public String getPlaylisteUrl(Udsendelse u) {
     // http://www.dr.dk/tjenester/mu-apps/playlist/monte-carlo-352/p3
-    return "http://www.dr.dk/tjenester/mu-apps/playlist/" + u.slug + "/" + slug;
+      //we dont need to know the slug så we just put a random 0 at the end
+      return "http://www.dr.dk/tjenester/mu-apps/playlist/" + u.slug + "/0";
   }
 
   @Override
