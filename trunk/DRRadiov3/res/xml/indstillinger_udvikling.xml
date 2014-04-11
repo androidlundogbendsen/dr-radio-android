@@ -16,13 +16,13 @@
         android:summary="Skriv din e-postadresse hvis du vil kunne kontaktes i forbindelse
         med udvikling" android:defaultValue="" /> -->
 
-
+<!--
     <CheckBoxPreference
             android:key="kunSortLigeBagTekst"
             android:title="Kun sort bag tekst i titler"
             android:defaultValue="false"
             android:summary="Kræver app-genstart"/>
-
+-->
     <CheckBoxPreference
             android:key="manuelStreamvalg"
             android:title="Manuelt streamvalg"

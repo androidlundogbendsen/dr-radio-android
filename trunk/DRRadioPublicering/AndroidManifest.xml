@@ -5,7 +5,7 @@
           android:versionName="3.0.0">
 
     <uses-sdk
-            android:minSdkVesion="7"
+            android:minSdkVersion="7"
             android:targetSdkVersion="19"/>
 
 
