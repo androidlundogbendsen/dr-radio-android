@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="dk.dr.radio"
-          android:versionCode="32"
+          android:versionCode="34"
           android:versionName="3.0.0">
 
     <uses-sdk
-            android:minSdkVersion="7"
+            android:minSdkVesion="7"
             android:targetSdkVersion="19"/>
 
 

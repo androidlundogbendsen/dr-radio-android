@@ -69,7 +69,7 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
 
   @Override
   public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    Log.d("onPageScrolled( " + position + " " + positionOffset);
+    //Log.d("onPageScrolled( " + position + " " + positionOffset);
     mNuværendePosition = position;
   }
 

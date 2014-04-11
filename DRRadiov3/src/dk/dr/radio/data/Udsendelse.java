@@ -84,7 +84,9 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
   @Override
   public boolean equals(Object o) {
     if (o == this) return true;
-    if (o instanceof Udsendelse) return slug.equals(((Udsendelse) o).slug);
+    if (!(o instanceof Udsendelse)) return false;
+    Udsendelse u = (Udsendelse) o;
+    if (slug!=null) return slug.equals(u.slug);
     return false;
   }
 

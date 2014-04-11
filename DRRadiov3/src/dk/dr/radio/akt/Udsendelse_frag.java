@@ -95,8 +95,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
                 if (!App.PRODUKTION){
                   App.langToast("Serveren har ombestemt sig, nu er streams ikke mere tom for " + udsendelse.slug);
                   App.langToast("Tidsforskel mellem de to svar: " + (System.currentTimeMillis() - t0) / 1000 + " sek");
+                  Log.rapporterFejl(new Exception("Server ombestemte sig, der var streams alligevel - for "+udsendelse.slug+"  dt="+(System.currentTimeMillis()-t0)));
                 }
-                Log.rapporterFejl(new Exception("Server ombestemte sig, der var streams alligevel - for "+udsendelse.slug+"  dt="+(System.currentTimeMillis()-t0)));
                 streamsVarTom.remove(udsendelse);
               }
               udsendelse.produktionsnummer = o.optString(DRJson.ProductionNumber.name());
