@@ -197,9 +197,34 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     public void run() {
       App.forgrundstråd.removeCallbacks(opdaterSpillelisteRunnable);
       if (!getUserVisibleHint() || !isResumed()) return;
+        Log.d("Kanal:" + udsendelse);
       if ("".equals(kanal.slug)) {
-        Log.d("startOpdaterSpilleliste: Kender ikke kanalen");
-        return;
+          //Log.d("startOpdaterSpilleliste: Kender ikke kanalen");
+          //return;
+          //new Exception("startOpdaterSpilleliste() for "+this).printStackTrace();
+          Request<?> req = new DrVolleyStringRequest(kanal.getPlaylisteUrl(udsendelse), new DrVolleyResonseListener() {
+              @Override
+              public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+                  if (App.fejlsøgning)
+                      Log.d("fikSvar playliste(" + fraCache + " " + url + "   " + this);
+                  if (uændret) return;
+                  if (udsendelse.playliste != null && fraCache)
+                      return; // så har vi allerede den nyeste liste i MEM
+                  if (json != null && !"null".equals(json)) {
+                      udsendelse.playliste = DRJson.parsePlayliste(new JSONArray(json));
+                      bygListe();
+                  }
+              }
+          }) {
+              @Override
+              public Priority getPriority() {
+                  return Priority.LOW; // Det vigtigste er at hente streams, spillelisten er knapt så vigtig
+              }
+          }.setTag(Udsendelse_frag.this);
+          App.volleyRequestQueue.add(req);
+          if (aktuelUdsendelsePåKanalen()) {
+              App.forgrundstråd.postDelayed(opdaterSpillelisteRunnable, 15000);
+          }
       }
       //new Exception("startOpdaterSpilleliste() for "+this).printStackTrace();
       Request<?> req = new DrVolleyStringRequest(kanal.getPlaylisteUrl(udsendelse), new DrVolleyResonseListener() {
