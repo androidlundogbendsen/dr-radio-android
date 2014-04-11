@@ -29,8 +29,10 @@ public abstract class Lydkilde implements Serializable {
     return super.equals(o);
   }
 
-  public Lydstream findBedsteStream(boolean tilHentning) {
-    return findBedsteStreams(tilHentning).get(0);
+  public String findBedsteStreamUrl(boolean tilHentning) {
+    List<Lydstream> prioriteretListe = findBedsteStreams(tilHentning);
+    if (prioriteretListe.size()==0) return null;
+    return prioriteretListe.get(0).url;
   }
 
   public void nulstilForetrukkenStream() {

@@ -120,7 +120,12 @@ public class Afspiller {
       App.kortToast("Kunne ikke oprette forbindelse");
       return;
     }
-    lydUrl = lydkilde.findBedsteStream(false).url;
+    lydUrl = lydkilde.findBedsteStreamUrl(false);
+    if (lydUrl==null) {
+      Log.rapporterFejl(new IllegalStateException("Ingen lydUrl for "+lydkilde+": "+lydkilde.streams));
+      App.kortToast("Kunne ikke oprette forbindelse");
+      return;
+    }
     DRData.instans.senestLyttede.registrérLytning(lydkilde);
 
     Log.d("startAfspilning() " + lydUrl);
