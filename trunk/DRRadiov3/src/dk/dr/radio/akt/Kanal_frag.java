@@ -178,7 +178,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     public void run() {
       if (!hopTilAktuelUdsendelseUdestår || getActivity()==null) return;
       Log.d("hopTilAktuelUdsendelse() aktuelUdsendelseIndex="+aktuelUdsendelseIndex+" "+this);
-      if (aktuelUdsendelseIndex <= 0) return;
+      if (aktuelUdsendelseIndex < 0) return;
       int topmargen = getResources().getDimensionPixelOffset(R.dimen.kanalvisning_aktuelUdsendelse_topmargen);
       listView.setSelectionFromTop(aktuelUdsendelseIndex, topmargen);
       hopTilAktuelUdsendelseUdestår = false;

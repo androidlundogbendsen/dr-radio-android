@@ -145,8 +145,12 @@ public class App extends Application implements Runnable {
     HttpStack stack =
         Build.VERSION.SDK_INT >= 9 ? new HurlStack()
             : Build.VERSION.SDK_INT >= 8 ? new HttpClientStack(AndroidHttpClient.newInstance(App.versionsnavn))
-            : new HttpClientStack(new DefaultHttpClient()); // Android 2.1
-
+//            : new HttpClientStack(new DefaultHttpClient()); // Android 2.1 -
+            : new HurlStack(); // Android 2.1
+    // HTTP connection reuse which was buggy pre-froyo
+    if (Integer.parseInt(Build.VERSION.SDK) < Build.VERSION_CODES.FROYO) {
+      System.setProperty("http.keepAlive", "false");
+    }
     // Vi bruger vores eget Netværkslag, da DRs Varnish-servere ofte svarer med HTTP-kode 500,
     // som skal håndteres som et timeout og at der skal prøves igen
     Network network = new DrBasicNetwork(stack);
@@ -282,7 +286,7 @@ public class App extends Application implements Runnable {
               String p4kanal = P4Stedplacering.findP4KanalnavnFraIP();
               if (App.fejlsøgning) App.langToast("p4kanal: " + p4kanal);
               if (p4kanal != null) prefs.edit().putString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, p4kanal).commit();
-              Log.rapporterFejl(new Exception("Ny enhed - fundet P4-kanal " + p4kanal));
+              if (!App.PRODUKTION) Log.rapporterFejl(new Exception("Ny enhed - fundet P4-kanal " + p4kanal));
             } catch (Exception e) {
               e.printStackTrace();
             }

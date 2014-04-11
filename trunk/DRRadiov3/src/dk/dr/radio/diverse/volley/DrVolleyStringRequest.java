@@ -66,9 +66,12 @@ public class DrVolleyStringRequest extends StringRequest {
     Log.d("YYYY servertid " + response.headers.get("Expires"));
     Log.d("YYYY servertid " + response.headers);
 */
-    long servertid = HttpHeaderParser.parseDateAsEpoch(response.headers.get("Date"));
-    if (servertid > 0) {
-      App.sætServerCurrentTimeMillis(servertid);
+    String servertidStr = response.headers.get("Date");
+    if (servertidStr!=null) { // Er set på nogle ældre enheder
+      long servertid = HttpHeaderParser.parseDateAsEpoch(servertidStr);
+      if (servertid > 0) {
+        App.sætServerCurrentTimeMillis(servertid);
+      }
     }
 
     return super.parseNetworkResponse(response);
