@@ -94,7 +94,7 @@ public class HentedeUdsendelser {
   public void hent(Udsendelse udsendelse) {
     tjekDataOprettet();
     try {
-      Uri uri = Uri.parse(udsendelse.findBedsteStream(true).url);
+      Uri uri = Uri.parse(udsendelse.findBedsteStreamUrl(true));
       Log.d("uri=" + uri);
       File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
       dir.mkdirs();
