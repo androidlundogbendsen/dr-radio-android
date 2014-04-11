@@ -57,6 +57,13 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
   }
 
 
+  public String getPlaylisteUrl() {
+    // Tidligere (marts 2014) skulle kanalens slug med, såsom
+    // http://www.dr.dk/tjenester/mu-apps/playlist/monte-carlo-352/p3
+    // Det er tilsyneladende ikke nødvendigt mere, per april 2014
+    return "http://www.dr.dk/tjenester/mu-apps/playlist/" + slug + "/0";
+  }
+
   @Override
   public Kanal getKanal() {
     Kanal k = DRData.instans.grunddata.kanalFraSlug.get(kanalSlug);

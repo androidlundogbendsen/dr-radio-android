@@ -82,7 +82,7 @@ public class DRData {
         //if (u.streams.size() > 0 && !u.kanHøres) throw new IllegalStateException("u.streams.size() > 0 && !u.kanHøres");
 
         try {
-          u.playliste = DRJson.parsePlayliste(new JSONArray(main_hent(kanal.getPlaylisteUrl(u))));
+          u.playliste = DRJson.parsePlayliste(new JSONArray(main_hent(u.getPlaylisteUrl())));
           Log.d("u.playliste= " + u.playliste);
         } catch (IOException e) {
           e.printStackTrace();

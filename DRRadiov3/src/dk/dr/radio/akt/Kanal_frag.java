@@ -486,7 +486,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         // optimering - brug kun final i enkelte tilfælde. Final forårsager at variabler lægges i heap i stedet for stakken) at garbage collectoren skal køre fordi final
         final Udsendelse u2 = u;
         final AQuery aq2 = vh.aq;
-        final String url = kanal.getPlaylisteUrl(u); // http://www.dr.dk/tjenester/mu-apps/playlist/monte-carlo-352/p3
+        final String url = u.getPlaylisteUrl(); // http://www.dr.dk/tjenester/mu-apps/playlist/monte-carlo-352/p3
         //Log.d("Henter playliste " + url);
         Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
           @Override
