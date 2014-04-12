@@ -72,6 +72,7 @@ public class Kanal_nyheder_frag extends Basisfragment implements View.OnClickLis
   @Override
   public void onDestroyView() {
     super.onDestroyView();
+    //TODO: rod = null; aq=null;
     DRData.instans.afspiller.observatører.remove(this);
     App.netværk.observatører.remove(this);
 

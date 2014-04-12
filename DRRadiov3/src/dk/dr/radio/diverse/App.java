@@ -320,7 +320,7 @@ public class App extends Application implements Runnable {
    *
    * @param netværkErIGang true for påbegyndt og false for afsluttet.
    */
-  public static void sætErIGang(boolean netværkErIGang) {
+  public static synchronized void sætErIGang(boolean netværkErIGang) {
     boolean før = erIGang > 0;
     erIGang += netværkErIGang ? 1 : -1;
     boolean nu = erIGang > 0;
