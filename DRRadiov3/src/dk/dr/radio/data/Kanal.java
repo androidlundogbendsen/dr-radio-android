@@ -27,6 +27,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
 
 public class Kanal extends Lydkilde {
   private static final long serialVersionUID = 1L;
@@ -83,16 +84,24 @@ public class Kanal extends Lydkilde {
   }
 
   public int getAktuelUdsendelseIndex() {
+    if (udsendelser.size()==0) return -2;
     Date nu = new Date(App.serverCurrentTimeMillis()); // Kompenseret for forskelle mellem telefonens ur og serverens ur
     // Nicolai: "jeg løber listen igennem fra bunden og op,
     // og så finder jeg den første der har starttid >= nuværende tid + sluttid <= nuværende tid."
     for (int n = udsendelser.size() - 1; n > 1; n--) {
       Udsendelse u = udsendelser.get(n);
       //Log.d(n + " " + nu.after(u.startTid) + u.slutTid.before(nu) + "  " + u);
-      if (u.startTid.before(nu) && nu.before(u.slutTid)) {
+      if (u.startTid.before(nu)) { // && nu.before(u.slutTid)) {
         return n;
       }
     }
+    Log.e(new IllegalStateException("Ingen aktuel udsendelse fundet!"));
+    Log.d("nu = " + nu+"  - "+nu.getTime()+" "+DRJson.servertidsformat.format(nu));
+    for (int n=0; n<udsendelser.size(); n++) {
+      Udsendelse u = udsendelser.get(n);
+      Log.d(n + " " + u.startTid.before(nu) + nu.before(u.slutTid) + "  " + u+" "+DRJson.servertidsformat.format(u.startTid)+" - "+DRJson.servertidsformat.format(u.slutTid));
+    }
+    if (nu.before(udsendelser.get(0).slutTid)) return 0;
     return -2;
   }
 }
