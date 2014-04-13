@@ -88,6 +88,17 @@ public class Hovedaktivitet extends Basisaktivitet {
         App.netværk.observatører.add(App.instans.onlineinitialisering); // Vent på vi kommer online og lav så et tjek
       }
 
+      //Log.d("getIntent()="+getIntent().getFlags());
+      if (App.prefs.getBoolean("startAfspilningMedDetSammme", false) && DRData.instans.afspiller.getAfspillerstatus()==Status.STOPPET) {
+        App.forgrundstråd.post(new Runnable() {
+          @Override
+          public void run() {
+            try {
+              DRData.instans.afspiller.startAfspilning();
+            } catch (Exception e) { Log.rapporterFejl(e); }
+          }
+        });
+      }
 
     } catch (Exception e) {
       Log.rapporterFejl(e);

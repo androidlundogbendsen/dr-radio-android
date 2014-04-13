@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-<!--
     <CheckBoxPreference
             android:key="startAfspilningMedDetSammme"
             android:title="Start automatisk"
             android:defaultValue="false"
-            android:summary="Start afspilning automatisk, når appen åbnes"/>
--->
+            android:summaryOff="Start afspilning automatisk, når appen åbnes"
+            android:summaryOn="Afspilning starter automatisk, når appen åbnes"/>
+
     <ListPreference
             android:key="lydkvalitet"
             android:title="Lydkvalitet"
