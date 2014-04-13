@@ -85,7 +85,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         kanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
         if (kanal == null) {
           Log.e("P4 IKKE FUNDET kanalkode=" + kanalkode, null);
-          kanalkode = DRData.instans.grunddata.p4koder.get(0);
+          kanalkode = DRData.instans.grunddata.p4koder.get(3); // KH4
           kanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
         }
         rod = inflater.inflate(R.layout.kanal_p4_frag, container, false);

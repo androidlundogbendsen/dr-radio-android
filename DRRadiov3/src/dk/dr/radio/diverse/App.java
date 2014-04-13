@@ -160,6 +160,10 @@ public class App extends Application {
     volleyRequestQueue = new RequestQueue(new DrDiskBasedCache(cacheDir), network);
     volleyRequestQueue.start();
 
+    // P4 stedplacering skal ske så tidligt som muligt - ellers
+    // når P4-valgskærmbilledet at blive instantieret med ukendt placering og foreslår derfor København
+    if (prefs.getString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, null) == null) startP4stedplacering();
+
     try {
       DRData.instans = new DRData();
       DRData.instans.grunddata = new Grunddata();
@@ -246,6 +250,24 @@ public class App extends Application {
     Log.d("onCreate tog " + (System.currentTimeMillis() - opstartstidspunkt) + " ms");
   }
 
+
+  private void startP4stedplacering() {
+    new AsyncTask() {
+      @Override
+      protected Object doInBackground(Object[] params) {
+        try {
+          String p4kanal = P4Stedplacering.findP4KanalnavnFraIP();
+          if (App.fejlsøgning) App.langToast("p4kanal: " + p4kanal);
+          if (p4kanal != null) prefs.edit().putString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, p4kanal).commit();
+          if (!App.PRODUKTION) Log.rapporterFejl(new Exception("Ny enhed - fundet P4-kanal " + p4kanal));
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+        return null;
+      }
+    }.execute();
+  }
+
   /**
    * ONLINEINITIALISERING
    */
@@ -291,20 +313,7 @@ public class App extends Application {
     if (prefs.getString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, null) == null) {
       {
         færdig = false;
-        new AsyncTask() {
-          @Override
-          protected Object doInBackground(Object[] params) {
-            try {
-              String p4kanal = P4Stedplacering.findP4KanalnavnFraIP();
-              if (App.fejlsøgning) App.langToast("p4kanal: " + p4kanal);
-              if (p4kanal != null) prefs.edit().putString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, p4kanal).commit();
-              if (!App.PRODUKTION) Log.rapporterFejl(new Exception("Ny enhed - fundet P4-kanal " + p4kanal));
-            } catch (Exception e) {
-              e.printStackTrace();
-            }
-            return null;
-          }
-        }.execute();
+        startP4stedplacering();
       }
     }
     if (færdig) {
