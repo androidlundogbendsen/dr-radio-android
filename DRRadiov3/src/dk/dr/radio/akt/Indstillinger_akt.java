@@ -51,7 +51,7 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
 
       // Find lydformat
       PreferenceScreen ps = this.getPreferenceScreen();
-      final int POS_lydformat = 1;
+      final int POS_lydformat = 2;
 
       lydformatlp = (ListPreference) ps.getRootAdapter().getItem(POS_lydformat);
       lydformatlp.setEnabled(Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH);
