@@ -466,6 +466,7 @@ public class Afspiller {
       // (i hvert fald på Samsung Galaxy S III), så vi kalder det i baggrunden
       new Thread() {
         public void run() {
+         try { // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/825188032
           Log.d("mediaPlayer.start() " + mpTils());
           Udsendelse u = lydkilde.getUdsendelse();
           int startposition = u == null ? 0 : u.startposition;
@@ -475,6 +476,7 @@ public class Afspiller {
           }
           mediaPlayer.start();
           Log.d("mediaPlayer.start() slut " + mpTils());
+         } catch (Exception e) { Log.rapporterFejl(e); }
         }
       }.start();
     }
