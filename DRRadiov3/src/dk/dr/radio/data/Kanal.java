@@ -88,7 +88,7 @@ public class Kanal extends Lydkilde {
     Date nu = new Date(App.serverCurrentTimeMillis()); // Kompenseret for forskelle mellem telefonens ur og serverens ur
     // Nicolai: "jeg løber listen igennem fra bunden og op,
     // og så finder jeg den første der har starttid >= nuværende tid + sluttid <= nuværende tid."
-    for (int n = udsendelser.size() - 1; n > 1; n--) {
+    for (int n = udsendelser.size() - 1; n >= 0; n--) {
       Udsendelse u = udsendelser.get(n);
       //Log.d(n + " " + nu.after(u.startTid) + u.slutTid.before(nu) + "  " + u);
       if (u.startTid.before(nu)) { // && nu.before(u.slutTid)) {
