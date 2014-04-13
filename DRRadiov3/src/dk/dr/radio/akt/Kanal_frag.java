@@ -235,7 +235,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     App.forgrundstråd.removeCallbacks(this);
     App.forgrundstråd.postDelayed(this, 15000);
 
-    if (kanal.streams == null && App.erOnline()) {
+    if (kanal.streams == null) { // ikke && App.erOnline(), det kan være vi har en cachet udgave
       Request<?> req = new DrVolleyStringRequest(kanal.getStreamsUrl(), new DrVolleyResonseListener() {
         @Override
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {

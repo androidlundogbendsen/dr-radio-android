@@ -231,6 +231,7 @@ Jeg bruger selv følgende macro'er i C til generering af URIs:
 
 
   protected static void udvikling_checkDrSkrifter(View view, String beskrivelse) {
+    if (App.PRODUKTION) return;
     if (view instanceof ViewGroup) {
       ViewGroup vg = (ViewGroup) view;
       for (int i = 0; i < vg.getChildCount(); i++) {
