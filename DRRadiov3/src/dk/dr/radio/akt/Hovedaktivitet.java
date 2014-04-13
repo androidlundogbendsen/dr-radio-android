@@ -82,6 +82,13 @@ public class Hovedaktivitet extends Basisaktivitet {
         venstremenuFrag.sætListemarkering(Venstremenu_frag.FORSIDE_INDEX); // "Forside
       }
 
+      if (App.erOnline()) {
+        App.forgrundstråd.postDelayed(App.instans.onlineinitialisering, 500); // Initialisér onlinedata
+      } else {
+        App.netværk.observatører.add(App.instans.onlineinitialisering); // Vent på vi kommer online og lav så et tjek
+      }
+
+
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }

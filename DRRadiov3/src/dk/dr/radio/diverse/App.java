@@ -74,7 +74,7 @@ import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
 import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 import dk.dr.radio.v3.R;
 
-public class App extends Application implements Runnable {
+public class App extends Application {
   public static final String P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING = "P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING";
   public static final String P4_FORETRUKKEN_AF_BRUGER = "P4_FORETRUKKEN_AF_BRUGER";
   public static final String FORETRUKKEN_KANAL = "FORETRUKKEN_kanal";
@@ -172,6 +172,22 @@ public class App extends Application implements Runnable {
         Log.d("forvalgtKanal=" + aktuelKanal);
       }
 
+      if (aktuelKanal.streams == null) { // ikke && App.erOnline(), det kan være vi har en cachet udgave
+        final Kanal kanal = aktuelKanal;
+        Request<?> req = new DrVolleyStringRequest(aktuelKanal.getStreamsUrl(), new DrVolleyResonseListener() {
+          @Override
+          public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+            if (uændret) return; // ingen grund til at parse det igen
+            JSONObject o = new JSONObject(json);
+            kanal.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
+            Log.d("hentSupplerendeDataBgX " + kanal.kode + " fraCache=" + fraCache + " => " + kanal.slug + " k.lydUrl=" + kanal.streams);
+          }
+        }) {
+          public Priority getPriority() { return Priority.HIGH;}
+        };
+        App.volleyRequestQueue.add(req);
+      }
+
       DRData.instans.afspiller = new Afspiller();
       DRData.instans.afspiller.setLydkilde(aktuelKanal);
 
@@ -185,12 +201,6 @@ public class App extends Application implements Runnable {
       registerReceiver(netværk, filter);
       netværk.onReceive(this, null); // Få opdateret netværksstatus
       //langToast("xxxx "+App.fejlsøgning);
-
-      if (erOnline()) {
-        App.forgrundstråd.postDelayed(this, 100); // Initialisér onlinedata
-      } else {
-        netværk.observatører.add(this); // Vent på vi kommer online og lav så et tjek
-      }
 
 
 
@@ -239,7 +249,9 @@ public class App extends Application implements Runnable {
   /**
    * ONLINEINITIALISERING
    */
-  public void run() {
+  public Runnable onlineinitialisering = new Runnable() {
+   @Override
+   public void run() {
     if (!erOnline()) return;
     boolean færdig = true;
     // Tidligere hentSupplerendeDataBg
@@ -298,7 +310,9 @@ public class App extends Application implements Runnable {
     if (færdig) {
       netværk.observatører.remove(this); // Hold ikke mere øje med om vi kommer online
     }
-  }
+   }
+  };
+
 
 
   /*
