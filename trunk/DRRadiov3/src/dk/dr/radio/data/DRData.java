@@ -65,7 +65,7 @@ public class DRData {
 //    i.grunddata.skrald_parseAlleKanaler(Diverse.læsStreng(new FileInputStream("res/raw/skrald__alle_kanaler.json")));
 //    i.grunddata = Stamdata.parseAndroidStamdata(Diverse.læsStreng(new FileInputStream("res/raw/stamdata1_android_v3_01.json")));
     i.grunddata = new Grunddata();
-    i.grunddata.parseFællesGrunddata(Diverse.læsStreng(new FileInputStream("res/raw/grunddata.json")));
+    i.grunddata.parseFællesGrunddata(Diverse.læsStreng(new FileInputStream("../DRRadiov3/res/raw/grunddata.json")));
     i.grunddata.hentSupplerendeDataBg_KUN_TIL_UDVIKLING();
 
     for (Kanal kanal : i.grunddata.kanaler) {

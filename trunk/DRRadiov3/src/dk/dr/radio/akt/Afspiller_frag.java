@@ -116,7 +116,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
       } else {
         DRData.instans.afspiller.stopAfspilning();
       }
-    } else {
+    } else try {
       // Ved klik på baggrunden skal kanalforside eller aktuel udsendelsesside vises
       Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
       FragmentManager fm = getFragmentManager();
@@ -141,6 +141,6 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .commit();
       }
-    }
+    } catch (Exception e) { Log.rapporterFejl(e); } // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/825688064
   }
 }
