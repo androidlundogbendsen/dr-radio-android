@@ -84,8 +84,9 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
       Log.rapporterFejl(ex);
     }
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) try {
       getActionBar().setDisplayHomeAsUpEnabled(true);
+    } catch (Exception e) { Log.rapporterFejl(e); } // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/824608029
   }
 
   @Override

@@ -94,6 +94,8 @@ public class HentedeUdsendelser {
   public void hent(Udsendelse udsendelse) {
     tjekDataOprettet();
     try {
+      String url = udsendelse.findBedsteStreamUrl(true);
+      if (url == null) throw new IllegalStateException("ingen streamurl for "+udsendelse.slug);
       Uri uri = Uri.parse(udsendelse.findBedsteStreamUrl(true));
       Log.d("uri=" + uri);
       File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);

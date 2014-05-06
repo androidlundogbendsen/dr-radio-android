@@ -333,7 +333,7 @@ public class Afspiller {
       int pos = mediaPlayer.getCurrentPosition();
       if (pos>0) {
         lydkilde.getUdsendelse().startposition = pos;
-        if (App.udviklerEkstra) App.kortToast("GEMT POSITION\n"+ lydkilde.getUdsendelse().startposition);
+        if (App.fejlsøgning) App.kortToast("GEMT POSITION\n"+ lydkilde.getUdsendelse().startposition);
         Log.d("GEMT POSITION for "+lydkilde +" : "+ lydkilde.getUdsendelse().startposition);
       }
     } catch (Exception e) {

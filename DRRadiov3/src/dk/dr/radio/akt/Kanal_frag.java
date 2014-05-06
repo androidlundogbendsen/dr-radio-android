@@ -97,7 +97,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       }
     }
     kanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
-    Log.d(this + " onCreateView 2 efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
+    //Log.d(this + " onCreateView 2 efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     if (rod == null) rod = inflater.inflate(R.layout.kanal_frag, container, false);
     if (kanal == null) {
       afbrydManglerData();
@@ -198,7 +198,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   public void setUserVisibleHint(boolean isVisibleToUser) {
     //Log.d(kanal + " QQQ setUserVisibleHint " + isVisibleToUser + "  " + this);
     fragmentErSynligt = isVisibleToUser;
-    if (fragmentErSynligt) {
+    if (fragmentErSynligt && kanal!=null) { // kanal==null afbryder onCreateView, men et tjek også her er nødvendigt - fixer https://www.bugsense.com/dashboard/project/cd78aa05/errors/833298030
       senesteSynligeFragment = this;
       App.forgrundstråd.post(this); // Opdatér lidt senere, efter onCreateView helt sikkert har kørt
       App.forgrundstråd.post(new Runnable() {
@@ -415,7 +415,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           opdaterSenestSpillet2(a, udsendelse);
           break;
         case NORMAL:
-          vh.startid.setText(udsendelse.startTidKl);
+          vh.startid.setText(udsendelse.startTidKl); // TODO Her kommer NullPointerException en sjælden gang imellem - se https://www.bugsense.com/dashboard/project/cd78aa05/errors/836338028
           vh.titel.setText(udsendelse.titel);
           a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
           vh.titel.setTextColor(udsendelse.kanHøres ? Color.BLACK : App.color.grå60);
@@ -581,7 +581,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           .replace(R.id.indhold_frag, f)
           .addToBackStack(null)
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-          .commit();
+          .commitAllowingStateLoss(); // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/830038058
     }
   }
 }

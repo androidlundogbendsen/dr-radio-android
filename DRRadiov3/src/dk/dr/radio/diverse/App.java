@@ -130,11 +130,11 @@ public class App extends Application {
       if (EMULATOR) App.versionsnavn += " UDV";
       Log.d("App.versionsnavn=" + App.versionsnavn);
       Class.forName("android.os.AsyncTask"); // Fix for http://code.google.com/p/android/issues/detail?id=20915
+      FilCache.init(getCacheDir()); // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/867898048
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
 
-    FilCache.init(getCacheDir());
 
 
     // Initialisering af Volley
@@ -148,7 +148,7 @@ public class App extends Application {
 //            : new HttpClientStack(new DefaultHttpClient()); // Android 2.1 -
             : new HurlStack(); // Android 2.1
     // HTTP connection reuse which was buggy pre-froyo
-    if (Integer.parseInt(Build.VERSION.SDK) < Build.VERSION_CODES.FROYO) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
       System.setProperty("http.keepAlive", "false");
     }
     // Vi bruger vores eget Netværkslag, da DRs Varnish-servere ofte svarer med HTTP-kode 500,
