@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="dk.dr.radio"
+          android:installLocation="auto"
           android:versionCode="35"
           android:versionName="3.0.1">
 
