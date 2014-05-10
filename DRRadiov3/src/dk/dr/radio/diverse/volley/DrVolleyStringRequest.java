@@ -8,7 +8,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 
+import org.apache.http.protocol.HTTP;
+
 import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
 
 /**
  * Created by j on 13-03-14.
@@ -34,6 +37,10 @@ public class DrVolleyStringRequest extends StringRequest {
     final Cache.Entry response = App.volleyRequestQueue.getCache().get(url);
     if (response == null) return; // Vi har ikke en cachet udgave
     try {
+      //String contentType = response.responseHeaders.get(HTTP.CONTENT_TYPE);
+      // Fix: Det er set at Volley ikke husker contentType, og dermed går tegnsættet tabt. Gæt på UTF-8 hvis det sker
+      //String charset = contentType==null?HTTP.UTF_8:HttpHeaderParser.parseCharset(response.responseHeaders);
+      //lytter.cachetVærdi = new String(response.data, charset);
       lytter.cachetVærdi = new String(response.data, HttpHeaderParser.parseCharset(response.responseHeaders));
     } catch (Exception e) {
       e.printStackTrace();
@@ -66,6 +73,7 @@ public class DrVolleyStringRequest extends StringRequest {
     Log.d("YYYY servertid " + response.headers.get("Expires"));
     Log.d("YYYY servertid " + response.headers);
 */
+    Log.d("YYYY parseNetworkResponse " + response.headers);
     String servertidStr = response.headers.get("Date");
     if (servertidStr!=null) { // Er set på nogle ældre enheder
       long servertid = HttpHeaderParser.parseDateAsEpoch(servertidStr);

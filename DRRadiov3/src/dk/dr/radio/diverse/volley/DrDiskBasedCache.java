@@ -36,6 +36,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
 /**
@@ -117,7 +118,7 @@ public class DrDiskBasedCache implements Cache {
     File file = getFileForKey(key);
     if (entry == null && !file.exists()) { // DR ÆNDRING
       // if the entry does not exist, return.
-      Log.d("DrVolleyDiskBasedCache miss for " + key);
+      if (App.fejlsøgning) Log.d("DrVolleyDiskBasedCache miss for " + key);
       return null;
     }
 
@@ -128,13 +129,13 @@ public class DrDiskBasedCache implements Cache {
       CacheHeader nyEntry = CacheHeader.readHeader(cis); // eat header
       byte[] data = streamToBytes(cis, (int) (file.length() - cis.bytesRead));
       if (ny) { // DR ÆNDRING
-        Log.d("DrVolleyDiskBasedCache fil0-hit for " + key);
+        if (App.fejlsøgning) Log.d("DrVolleyDiskBasedCache fil0-hit for " + key);
         entry = nyEntry;
         entry.size = file.length();
         putEntry(entry.key, entry);
         file.setLastModified(System.currentTimeMillis()); // Opdatér tidsstempel så vi kan se den er blevet brugt
       } else {
-        Log.d("DrVolleyDiskBasedCache fil1-hit for " + key);
+        if (App.fejlsøgning) Log.d("DrVolleyDiskBasedCache fil1-hit for " + key);
       }
       return entry.toCacheEntry(data);
     } catch (IOException e) {

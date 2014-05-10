@@ -39,7 +39,10 @@ import dk.dr.radio.diverse.Rapportering;
 public class DRData {
 
   public static DRData instans;
+  // scp /home/j/android/dr-radio-android/DRRadiov3/res/raw/grunddata_testaendring.json j:javabog.dk/privat/drradiov3_grunddata.json
   public static final String GRUNDDATA_URL = "http://javabog.dk/privat/drradiov3_grunddata.json";
+  //public static final String GRUNDDATA_URL = "http://www.dr.dk/tjenester/iphone/radio/settings/iphone200d.json";
+  //public static final String GRUNDDATA_URL = "http://www.dr.dk/tjenester/iphone/radio/settings/iphone200d.drxml";
 
   public Grunddata grunddata;
   public Afspiller afspiller;
@@ -67,6 +70,10 @@ public class DRData {
     i.grunddata = new Grunddata();
     i.grunddata.parseFællesGrunddata(Diverse.læsStreng(new FileInputStream("../DRRadiov3/res/raw/grunddata.json")));
     i.grunddata.hentSupplerendeDataBg_KUN_TIL_UDVIKLING();
+
+    i.grunddata.parseFællesGrunddata(Diverse.læsStreng(new FileInputStream("../DRRadiov3/res/raw/grunddata_testaendring.json")));
+    if (!i.grunddata.kanalFraKode.get("DRN").navn.equals("DR NyhederÆNDRET")) throw new InternalError("xx1");
+    if (i.grunddata.kanaler.size()>11) throw new InternalError("i.grunddata.kanaler.size()="+i.grunddata.kanaler.size());
 
     for (Kanal kanal : i.grunddata.kanaler) {
       Log.d("\n\n===========================================\n\nkanal = " + kanal);

@@ -54,7 +54,6 @@ import com.android.volley.toolbox.Volley;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.bugsense.trace.BugSenseHandler;
 
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -78,8 +77,8 @@ public class App extends Application {
   public static final String P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING = "P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING";
   public static final String P4_FORETRUKKEN_AF_BRUGER = "P4_FORETRUKKEN_AF_BRUGER";
   public static final String FORETRUKKEN_KANAL = "FORETRUKKEN_kanal";
-  public static final boolean PRODUKTION = true;
-  public static boolean EMULATOR = true;
+  public static final boolean PRODUKTION = false;
+  public static boolean EMULATOR = true; // Sæt i onCreate(), ellers virker det ikke i std Java
   public static App instans;
   public static SharedPreferences prefs;
   public static ConnectivityManager connectivityManager;
@@ -167,7 +166,13 @@ public class App extends Application {
     try {
       DRData.instans = new DRData();
       DRData.instans.grunddata = new Grunddata();
-      DRData.instans.grunddata.parseFællesGrunddata(Diverse.læsStreng(res.openRawResource(R.raw.grunddata)));
+
+      // Indlæsning af grunddata/stamdata.
+      // Først tjekkes om vi har en udgave i prefs, og ellers bruges den i raw-mappen
+      // På et senere tidspunkt henter vi nye grunddata
+      String grunddata = prefs.getString(DRData.GRUNDDATA_URL, null);
+      if (grunddata==null) grunddata = Diverse.læsStreng(res.openRawResource(R.raw.grunddata));
+      DRData.instans.grunddata.parseFællesGrunddata(grunddata);
 
       String kanalkode = prefs.getString(FORETRUKKEN_KANAL, null);
       Kanal aktuelKanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
@@ -207,29 +212,6 @@ public class App extends Application {
       //langToast("xxxx "+App.fejlsøgning);
 
 
-
-
-      /*
-      // indlæs grunddata fra Prefs hvis de findes
-      String stamdatastr = prefs.getString(DRData.GRUNDDATA_URL, null);
-
-      if (stamdatastr == null) {
-        // Indlæs fra raw this vi ikke har nogle cachede grunddata i prefs
-        InputStream is = getResources().openRawResource(R.raw.stamdata1_android_v3_01);
-        stamdatastr = Diverse.læsStreng(is);
-      }
-
-      DRData.instans.grunddata = Stamdata.xxx_parseStamdatafil(stamdatastr);
-      String alleKanalerUrl = DRData.instans.grunddata.json.getString("alleKanalerUrl");
-
-      String alleKanalerStr = prefs.getString(alleKanalerUrl, null);
-      if (alleKanalerStr == null) {
-        // Indlæs fra raw this vi ikke har nogle cachede grunddata i prefs
-        InputStream is = getResources().openRawResource(R.raw.skrald__alle_kanaler);
-        alleKanalerStr = Diverse.læsStreng(is);
-      }
-      DRData.instans.grunddata.skrald_parseAlleKanaler(alleKanalerStr);
-      */
     } catch (Exception ex) {
       // TODO popop-advarsel til bruger om intern fejl og rapporter til udvikler-dialog
       Log.rapporterFejl(ex);
@@ -259,7 +241,7 @@ public class App extends Application {
           String p4kanal = P4Stedplacering.findP4KanalnavnFraIP();
           if (App.fejlsøgning) App.langToast("p4kanal: " + p4kanal);
           if (p4kanal != null) prefs.edit().putString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, p4kanal).commit();
-          if (!App.PRODUKTION) Log.rapporterFejl(new Exception("Ny enhed - fundet P4-kanal " + p4kanal));
+          //if (!App.PRODUKTION) Log.rapporterFejl(new Exception("Ny enhed - fundet P4-kanal " + p4kanal));
         } catch (Exception e) {
           e.printStackTrace();
         }
@@ -269,7 +251,8 @@ public class App extends Application {
   }
 
   /**
-   * ONLINEINITIALISERING
+   * Initialisering af resterende data.
+   * Dette sker når app'en er kommet op og køre, og også når telefonen kommer online
    */
   public Runnable onlineinitialisering = new Runnable() {
    @Override
@@ -277,6 +260,7 @@ public class App extends Application {
     if (!erOnline()) return;
     boolean færdig = true;
     // Tidligere hentSupplerendeDataBg
+    Log.d("Onlineinitialisering starter efter "+(System.currentTimeMillis() - opstartstidspunkt) + " ms");
 
     if (App.netværk.status == Netvaerksstatus.Status.WIFI) { // Tjek at alle kanaler har deres streamsurler
       for (final Kanal k : DRData.instans.grunddata.kanaler) {
@@ -319,10 +303,37 @@ public class App extends Application {
     if (færdig) {
       netværk.observatører.remove(this); // Hold ikke mere øje med om vi kommer online
     }
+    Log.d("Onlineinitialisering færdig="+færdig);
    }
   };
 
 
+  public static Runnable hentEvtNyeGrunddata = new Runnable() {
+    long sidstTjekket = 0;
+    @Override
+    public void run() {
+      if (!App.erOnline()) return;
+      if (sidstTjekket + (App.EMULATOR?1000:DRData.instans.grunddata.opdaterGrunddataEfterMs) > System.currentTimeMillis()) return;
+      sidstTjekket = System.currentTimeMillis();
+      Log.d("hentEvtNyeGrunddata "+(sidstTjekket-App.opstartstidspunkt));
+      Request<?> req = new DrVolleyStringRequest(DRData.GRUNDDATA_URL, new DrVolleyResonseListener() {
+        @Override
+        public void fikSvar(String nyeGrunddata, boolean fraCache, boolean uændret) throws Exception {
+          if (uændret || fraCache) return; // ingen grund til at parse det igen
+          String gamleGrunddata = prefs.getString(DRData.GRUNDDATA_URL, null);
+          if (nyeGrunddata.equals(gamleGrunddata)) return; // Det samme som var i prefs
+          Log.d("Vi fik nye grunddata: fraCache="+fraCache+nyeGrunddata);
+          if (!PRODUKTION || App.fejlsøgning) App.kortToast("Vi fik nye grunddata");
+          DRData.instans.grunddata.parseFællesGrunddata(nyeGrunddata);
+          // Er vi nået hertil så gik parsning godt - gem de nye stamdata i prefs, så de også bruges ved næste opstart
+          prefs.edit().putString(DRData.GRUNDDATA_URL, nyeGrunddata).commit();
+        }
+      }) {
+        public Priority getPriority() { return Priority.LOW;}
+      };
+      App.volleyRequestQueue.add(req);
+    }
+  };
 
   /*
    * Kilde: http://developer.android.com/training/basics/network-ops/managing.html
