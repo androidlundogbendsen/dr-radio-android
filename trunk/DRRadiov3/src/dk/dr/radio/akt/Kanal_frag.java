@@ -110,7 +110,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     listView.setOnScrollListener(new AbsListView.OnScrollListener() {
       @Override
       public void onScrollStateChanged(AbsListView view, int scrollState) {
-        Log.d(kanal + " onScrollStateChanged "+scrollState);
+        if (App.fejlsøgning) Log.d(kanal + " onScrollStateChanged "+scrollState);
         brugerHarNavigeret = true;
       }
 
@@ -154,7 +154,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
         if (getActivity() == null || uændret) return;
         if (kanal.harUdsendelserForDag(dato) && fraCache) return; // så er værdierne i RAMen gode nok
-        Log.d(kanal + " hentSendeplanForDag fikSvar for url " + url + " fraCache=" + fraCache + " efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
+        //Log.d(kanal + " hentSendeplanForDag fikSvar for url " + url + " fraCache=" + fraCache + " efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
         if (json != null && !"null".equals(json)) {
           int næstøversteSynligPos = listView.getFirstVisiblePosition()+1;
           if (!brugerHarNavigeret || næstøversteSynligPos>=liste.size()) {
@@ -163,7 +163,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           } else {
             // Nu ændres der i listen for at vise en dag før eller efter - sørg for at det synlige indhold ikke rykker sig
             Udsendelse næstøversteSynlig = liste.get(næstøversteSynligPos);
-            Log.d("næstøversteSynlig = " + næstøversteSynlig);
+            //Log.d("næstøversteSynlig = " + næstøversteSynlig);
             View v = listView.getChildAt(1);
             int næstøversteSynligOffset = (v == null) ? 0 : v.getTop();
 
@@ -226,12 +226,12 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     super.onPause();
     App.forgrundstråd.removeCallbacks(this);
     if (senesteSynligeFragment == this) senesteSynligeFragment = null;
-    Log.d(this + " onPause() ");
+    if (App.fejlsøgning) Log.d(this + " onPause() ");
   }
 
   @Override
   public void run() {
-    Log.d(this + " run() synlig=" + fragmentErSynligt);
+    if (App.fejlsøgning) Log.d(this + " run() synlig=" + fragmentErSynligt);
     App.forgrundstråd.removeCallbacks(this);
     App.forgrundstråd.postDelayed(this, 15000);
 
@@ -242,7 +242,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           if (uændret) return; // ingen grund til at parse det igen
           JSONObject o = new JSONObject(json);
           kanal.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
-          Log.d("hentSupplerendeDataBg " + kanal.kode + " fraCache=" + fraCache + " => " + kanal.slug + " k.lydUrl=" + kanal.streams);
+          if (App.fejlsøgning) Log.d("hentSupplerendeDataBg " + kanal.kode + " fraCache=" + fraCache + " => " + kanal.slug + " k.lydUrl=" + kanal.streams);
           run(); // Opdatér igen
         }
       }) {
@@ -257,7 +257,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     if (aktuelUdsendelseViewholder == null) return;
     Viewholder vh = aktuelUdsendelseViewholder;
     if (!vh.starttidbjælke.isShown() || !fragmentErSynligt) {
-      Log.d(kanal + " opdaterAktuelUdsendelse starttidbjælke ikke synlig");
+      if (App.fejlsøgning) Log.d(kanal + " opdaterAktuelUdsendelse starttidbjælke ikke synlig");
       return;
     }
     opdaterAktuelUdsendelse(vh);
@@ -271,7 +271,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       Udsendelse tidligere = new Udsendelse("Tidligere");
       Udsendelse senere = new Udsendelse("Senere");
       ArrayList<Udsendelse> nyuliste = kanal.udsendelser;
-      Log.d(kanal + " opdaterListe " + nyuliste.size());
+      if (App.fejlsøgning) Log.d(kanal + " opdaterListe " + nyuliste.size());
       tidligere.startTid = new Date(nyuliste.get(0).startTid.getTime() - 12 * 60 * 60 * 1000); // Døgnet starter kl 5, så vi er på den sikre side med 12 timer
       senere.startTid = new Date(nyuliste.get(nyuliste.size() - 1).slutTid.getTime() + 12 * 60 * 60 * 1000); // Til tider rækker udsendelserne ikke ind i det næste døgn, så vi lægger 12 timer til
 
@@ -281,10 +281,10 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       liste.add(senere);
       aktuelUdsendelseIndex = kanal.getAktuelUdsendelseIndex() + 1;
       aktuelUdsendelseViewholder = null;
-      Log.d("opdaterListe " + kanal.kode + "  aktuelUdsendelseIndex=" + aktuelUdsendelseIndex);
+      if (App.fejlsøgning) Log.d("opdaterListe " + kanal.kode + "  aktuelUdsendelseIndex=" + aktuelUdsendelseIndex);
       adapter.notifyDataSetChanged();
       if (!brugerHarNavigeret) {
-        Log.d("hopTilAktuelUdsendelse() aktuelUdsendelseIndex="+aktuelUdsendelseIndex+" "+this);
+        if (App.fejlsøgning) Log.d("hopTilAktuelUdsendelse() aktuelUdsendelseIndex="+aktuelUdsendelseIndex+" "+this);
         if (aktuelUdsendelseIndex < 0) return;
         int topmargen = getResources().getDimensionPixelOffset(R.dimen.kanalvisning_aktuelUdsendelse_topmargen);
         listView.setSelectionFromTop(aktuelUdsendelseIndex, topmargen);

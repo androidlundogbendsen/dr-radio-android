@@ -17,23 +17,28 @@ import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.PagerSlidingTabStrip;
 import dk.dr.radio.v3.R;
 
-public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChangeListener {
+public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChangeListener, Runnable {
 
   private ViewPager viewPager;
+  private KanalAdapter adapter;
   private ArrayList<Kanal> kanaler = new ArrayList<Kanal>();
 
 
   private Venstremenu_frag venstremenuFrag;
   private int mForgåendePosition = -1;
   private int mNuværendePosition = -1;
+  private PagerSlidingTabStrip kanalfaneblade;
 
 
   @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
+  public void run() {
+    kanaler.clear();
     for (Kanal k : DRData.instans.grunddata.kanaler) {
       if (!k.p4underkanal) kanaler.add(k);
+    }
+    if (adapter!=null) {
+      adapter.notifyDataSetChanged();
+      kanalfaneblade.notifyDataSetChanged();
     }
   }
 
@@ -42,28 +47,38 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
     Log.d("onCreateView " + this);
     View rod = inflater.inflate(R.layout.kanaler_frag, container, false);
 
+    run();
+    adapter = new KanalAdapter(getChildFragmentManager());
     viewPager = (ViewPager) rod.findViewById(R.id.pager);
-    viewPager.setAdapter(new KanalAdapter(getChildFragmentManager()));
+    viewPager.setAdapter(adapter);
 
     venstremenuFrag = (Venstremenu_frag) getFragmentManager().findFragmentById(R.id.venstremenu_frag);
 
 
-    PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) rod.findViewById(R.id.tabs);
-    tabs.setViewPager(viewPager);
+    kanalfaneblade = (PagerSlidingTabStrip) rod.findViewById(R.id.tabs);
+    kanalfaneblade.setViewPager(viewPager);
     if (savedInstanceState == null) {
       int kanalindex = kanaler.indexOf(DRData.instans.afspiller.getLydkilde().getKanal());
       if (kanalindex == -1) kanalindex = 3; // Hvis vi ikke rammer nogen af de overordnede kanaler, så er det P4
       viewPager.setCurrentItem(kanalindex);
     }
-    tabs.setOnPageChangeListener(this);
+    kanalfaneblade.setOnPageChangeListener(this);
+    DRData.instans.grunddata.observatører.add(this);
 
     return rod;
   }
 
+  @Override
+  public void onResume() {
+    App.hentEvtNyeGrunddata.run();
+    super.onResume();
+  }
 
   @Override
   public void onDestroyView() {
     viewPager = null;
+    adapter = null;
+    DRData.instans.grunddata.observatører.remove(this);
     super.onDestroyView();
   }
 
@@ -86,9 +101,9 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
 
   @Override
   public void onPageScrollStateChanged(int state) {
-    Log.d("onPageScrollStateChanged( " + state);
+    //Log.d("onPageScrollStateChanged( " + state);
 
-    Log.d("mNuværendePosition " + mNuværendePosition + ", mForgåendePosition " + mForgåendePosition);
+    //Log.d("mNuværendePosition " + mNuværendePosition + ", mForgåendePosition " + mForgåendePosition);
 
     if (state == 1 && mForgåendePosition == 0 && mNuværendePosition == 0) {
       //visSlideMenu = (mForgåendePosition == 0 && mNuværendePosition == 0) ;

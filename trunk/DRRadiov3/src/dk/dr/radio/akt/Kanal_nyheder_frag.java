@@ -36,7 +36,7 @@ public class Kanal_nyheder_frag extends Basisfragment implements View.OnClickLis
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    Log.d(this + " onCreateView startet efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
+    //Log.d(this + " onCreateView startet efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     String kanalkode = getArguments().getString(P_kode);
     kanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
     rod = inflater.inflate(R.layout.kanal_nyheder_frag, container, false);
@@ -65,7 +65,7 @@ public class Kanal_nyheder_frag extends Basisfragment implements View.OnClickLis
     udvikling_checkDrSkrifter(rod, this + " rod");
     DRData.instans.afspiller.observatører.add(this);
     App.netværk.observatører.add(this);
-    Log.d(this + " onCreateView færdig efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
+    //Log.d(this + " onCreateView færdig efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     return rod;
   }
 

@@ -1,11 +1,22 @@
 package dk.dr.radio.akt;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
+import android.widget.TextView;
 
 import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.data.DRData;
@@ -17,7 +28,7 @@ import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.MediabuttonReceiver;
 import dk.dr.radio.v3.R;
 
-public class Hovedaktivitet extends Basisaktivitet {
+public class Hovedaktivitet extends Basisaktivitet implements Runnable {
 
   /**
    * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -112,11 +123,105 @@ public class Hovedaktivitet extends Basisaktivitet {
     if (venstremenuFrag.isDrawerOpen()) {
       venstremenuFrag.skjulMenu();
     } else {
-      super.onBackPressed();
+      AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+      int volumen = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+
+      //boolean lukAfspillerServiceVedAfslutning = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("lukAfspillerServiceVedAfslutning", false);
+
+      // Hvis der er skruet helt ned så stop afspilningen
+      if (volumen == 0 && DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET) {
+        DRData.instans.afspiller.stopAfspilning();
+        super.onBackPressed();
+      } else if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
+        super.onBackPressed();
+      } else {
+        // Spørg brugeren om afspilningen skal stoppes
+        showDialog(1);
+      }
       MediabuttonReceiver.afregistrér();
     }
   }
 
+  @Override
+  protected void onResume() {
+    super.onResume();
+    DRData.instans.grunddata.observatører.add(this);
+    run();
+  }
+
+  @Override
+  protected void onPause() {
+    DRData.instans.grunddata.observatører.remove(this);
+    super.onPause();
+  }
+
+  private static final String drift_statusmeddelelse_NØGLE = "drift_statusmeddelelse";
+  private static String vis_drift_statusmeddelelse;
+  private boolean viser_drift_statusmeddelelse;
+
+  @Override
+  public void run() {
+    if (viser_drift_statusmeddelelse) return;
+    if (vis_drift_statusmeddelelse==null) {
+      String drift_statusmeddelelse = DRData.instans.grunddata.android_json.optString(drift_statusmeddelelse_NØGLE).trim();
+      // Tjek i prefs om denne drifmeddelelse allerede er vist.
+      // Der er 1 ud af en millards chance for at hashkoden ikke er ændret, den risiko tør vi godt løbe
+      int drift_statusmeddelelse_hash = drift_statusmeddelelse.hashCode();
+      final int gammelHashkode = App.prefs.getInt(drift_statusmeddelelse_NØGLE, 0);
+      Log.d("drift_statusmeddelelse='" + drift_statusmeddelelse + "' nyHashkode=" + drift_statusmeddelelse_hash + " gammelHashkode=" + gammelHashkode);
+      if (gammelHashkode != drift_statusmeddelelse_hash && !"".equals(drift_statusmeddelelse)) { // Driftmeddelelsen er ændret. Vis den...
+        vis_drift_statusmeddelelse = drift_statusmeddelelse;
+      }
+    }
+    if (vis_drift_statusmeddelelse!=null) {
+      AlertDialog.Builder ab = new AlertDialog.Builder(this);
+      ab.setMessage(Html.fromHtml(vis_drift_statusmeddelelse));
+      ab.setPositiveButton("OK", new AlertDialog.OnClickListener() {
+        public void onClick(DialogInterface arg0, int arg1) {
+          App.prefs.edit().putInt(drift_statusmeddelelse_NØGLE, vis_drift_statusmeddelelse.hashCode()).commit(); // ...og gem ny hashkode i prefs
+          vis_drift_statusmeddelelse = null;
+          viser_drift_statusmeddelelse = false;
+          run(); // Se om der er flere meddelelser
+        }
+      });
+      AlertDialog d = ab.create();
+      d.show();
+      viser_drift_statusmeddelelse = true;
+      ((TextView) (d.findViewById(android.R.id.message))).setMovementMethod(LinkMovementMethod.getInstance());
+    }
+  }
+
+
+  @Override
+  protected Dialog onCreateDialog(final int id) {
+    AlertDialog.Builder ab = new AlertDialog.Builder(this);
+    if (id == 0) {
+    } else { // if (id == 1)
+      ab.setMessage("Stop afspilningen?");
+      ab.setPositiveButton("Stop\nradioen", new AlertDialog.OnClickListener() {
+        public void onClick(DialogInterface arg0, int arg1) {
+          DRData.instans.afspiller.stopAfspilning();
+          finish();
+        }
+      });
+      ab.setNeutralButton("Fortsæt i\nbaggrunden", new AlertDialog.OnClickListener() {
+        public void onClick(DialogInterface arg0, int arg1) {
+          finish();
+        }
+      });
+      //ab.setNegativeButton("Annullér", null);
+    }
+    return ab.create();
+  }
+/*
+  @Override
+  public void onPrepareDialog(int id, Dialog d) {
+    if (id == 0) try {
+      ((AlertDialog) d).setMessage(Html.fromHtml(vis_drift_statusmeddelelse));
+      ((TextView) (d.findViewById(android.R.id.message))).setMovementMethod(LinkMovementMethod.getInstance());
+    } catch (Exception e) { Log.rapporterFejl(e); }
+  }
+*/
   /**
    * Om tilbageknappen skal afslutte programmet eller vise venstremenuen
    static boolean tilbageViserVenstremenu = true; // hack - static, ellers skulle den gemmes i savedInstanceState

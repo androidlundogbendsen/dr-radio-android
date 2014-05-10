@@ -310,8 +310,6 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     public View getView(int position, View convertView, ViewGroup parent) {
       View l = elem.get(position).getView();
       if (position == mCurrentSelectedPosition) {
-        Log.d("Selected posion,getView " + mCurrentSelectedPosition);
-//        l.setBackgroundResource(R.drawable.knap_blaa_bg);
         l.setBackgroundResource(R.color.grå10);
       } else {
         l.setBackgroundResource(0);
