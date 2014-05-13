@@ -32,12 +32,19 @@
             android:key="holdSkærmTændt"
             android:title="Hold skærmen tændt"
             android:defaultValue="false"
-            android:summary="Hakker afspilningen når skærmen er slukket så prøv at krydse af her (bruger mere batteri). Nødvendigt på XPeria Play."/>
+            android:summary="Hakker afspilningen når skærmen er slukket så prøv at krydse af her (bruger mere batteri)."/>
 
     <CheckBoxPreference
-            android:key="MediabuttonReceiver" android:title="Fjernbetjening"
+            android:key="MediabuttonReceiver"
+            android:title="Fjernbetjening"
             android:defaultValue="true"
             android:summary="Reagér på knapper på fjernbetjening (f.eks. på Bluetooth headset)"/>
+
+    <ListPreference
+            android:key="placeringAfHentedeFiler"
+            android:title="Hentede udsendelser"
+            android:summary="Vælg hvor på telefonen du vil gemme udsendelser, du henter ned til offline brug."
+            />
 
     <CheckBoxPreference
             android:key="udviklerEkstra" android:title="Udvikler"

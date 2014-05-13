@@ -13,7 +13,9 @@ import android.os.Environment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import dk.dr.radio.akt.Hentede_udsendelser_frag;
 import dk.dr.radio.akt.Hovedaktivitet;
@@ -36,6 +39,7 @@ import dk.dr.radio.v3.R;
 @SuppressLint("NewApi")
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 public class HentedeUdsendelser {
+  public static final String NØGLE_placeringAfHentedeFiler = "placeringAfHentedeFiler";
   private DownloadManager downloadService = null;
 
   public static class Data implements Serializable {
@@ -98,20 +102,24 @@ public class HentedeUdsendelser {
       if (url == null) throw new IllegalStateException("ingen streamurl for "+udsendelse.slug);
       Uri uri = Uri.parse(udsendelse.findBedsteStreamUrl(true));
       Log.d("uri=" + uri);
-      File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
+
+      String brugervalg = App.prefs.getString(NØGLE_placeringAfHentedeFiler, null);
+      File dir;
+      if (brugervalg!=null && new File(brugervalg).exists()) dir = new File(brugervalg);
+      else dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
+      dir = new File(dir, "DR_Radio");
       dir.mkdirs();
-      if (!dir.exists()) {
-        Log.d("FEJL - HentedeUdsendelser kunne ikke oprette "+dir);
-        App.langToast("Adgang til eksternt lager mangler");
-        return;
-      }
+      if (!dir.exists()) throw new IOException("kunne ikke oprette "+dir);
 
       DownloadManager.Request req = new DownloadManager.Request(uri)
           .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
           .setAllowedOverRoaming(false)
           .setTitle(udsendelse.titel)
           .setDescription(udsendelse.beskrivelse);
-      req.setDestinationInExternalPublicDir(Environment.DIRECTORY_PODCASTS, udsendelse.slug + ".mp3");
+      //req.setDestinationInExternalPublicDir(Environment.DIRECTORY_PODCASTS, udsendelse.slug + ".mp3");
+      //req.setDestinationInExternalPublicDir("DR_Radio", udsendelse.slug + ".mp3");
+      //req.setDestinationInExternalFilesDir(App.instans, Environment.DIRECTORY_PODCASTS, "DRRADIO4xx"+ udsendelse.slug + ".mp3");
+      req.setDestinationUri(Uri.fromFile(new File(dir, udsendelse.slug + ".mp3")));
 
       if (Build.VERSION.SDK_INT >= 11) req.allowScanningByMediaScanner();
 
@@ -122,9 +130,68 @@ public class HentedeUdsendelser {
       for (Runnable obs : new ArrayList<Runnable>(observatører)) obs.run();
     } catch (Exception e) {
       Log.rapporterFejl(e);
+      App.langToast("Kunne ikke få addgang til eksternt lager.\nSe eventuelt indstillingen til placering af hentede udsendelser");
     }
   }
 
+  /**
+   * Finder stien til et eksternt SD-kort - altså ikke til den 'external storage' der fra Android 4.2
+   * oftest er intern.
+   * Se også http://source.android.com/devices/tech/storage/,
+   * http://stackoverflow.com/questions/13646669/android-securityexception-destination-must-be-on-external-storage og
+   * http://www.androidpolice.com/2014/02/17/external-blues-google-has-brought-big-changes-to-sd-cards-in-kitkat-and-even-samsung-may-be-implementing-them/
+   * @return en liste af stier, hvor en af dem muligvis er til et eksternt SD-kort
+   */
+  public static ArrayList<File> findMuligeEksternLagerstier() {
+
+    // Hjælpemetode til at tjekke
+    class Res {
+      LinkedHashMap<File, File> res = new LinkedHashMap<File, File>();
+
+      public void put(File dir) {
+        File nøgle = dir;
+        try {
+          nøgle = nøgle.getCanonicalFile();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+        if (!res.containsKey(nøgle)) {
+          // Se om der er en mappe, eller vi kan lave en
+          boolean fandtesFørMkdirs = dir.exists();
+          dir.mkdirs();
+          if (dir.isDirectory()) res.put(nøgle, dir);
+          if (!fandtesFørMkdirs) dir.delete(); // ryd op
+        }
+      }
+    }
+
+    Res res = new Res();
+    res.put(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS));
+
+    File fstab = new File("/etc/vold.fstab"); // læs i vold.fstab hvor der t.o.m Android 4.2 er nævnt det rigtige SD-kort
+    if (fstab.canRead()) {
+      try {
+        Scanner scanner = new Scanner(fstab);
+
+        while (scanner.hasNext()) {
+          String s = scanner.nextLine().trim();
+          if (s.startsWith("dev_mount")) {
+            // dev_mount sdcard /mnt/sdcard auto /devices/platform/goldfish_mmc.0 /devices/platform/msm_sdcc.2/mmc_host/mmc1
+            String sti = s.split("\\s")[2]; // /mnt/sdcard
+            Log.d("findStiTilRigtigtSDKort - fandt " + sti);
+            res.put(new File(sti, Environment.DIRECTORY_PODCASTS));
+          }
+        }
+        scanner.close();
+      } catch (Exception e) {
+        Log.rapporterFejl(e);
+      }
+    }
+
+    Log.d("findMuligeEksternLagerstier: "+res.res);
+    ArrayList<File> liste = new ArrayList<File>(res.res.values());
+    return liste;
+  }
 
   public Collection<Udsendelse> getUdsendelser() {
     if (!virker()) return new ArrayList<Udsendelse>();
@@ -172,7 +239,8 @@ public class HentedeUdsendelser {
     } else if (status == DownloadManager.STATUS_PAUSED) {
       txt = "Hentning pauset ... hentet " + hentet + " MB af " + iAlt + " MB";
     } else { // RUNNING
-      txt = "Hentet " + hentet + " MB af " + iAlt + " MB";
+      if (hentet>0 || iAlt>0) txt = "Hentet " + hentet + " MB af " + iAlt + " MB";
+      else txt = "Henter...";
     }
     return txt;
   }
