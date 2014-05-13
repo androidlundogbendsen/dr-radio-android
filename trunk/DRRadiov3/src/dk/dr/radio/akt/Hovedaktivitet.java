@@ -123,22 +123,7 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
     if (venstremenuFrag.isDrawerOpen()) {
       venstremenuFrag.skjulMenu();
     } else {
-      AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-      int volumen = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-
-      //boolean lukAfspillerServiceVedAfslutning = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("lukAfspillerServiceVedAfslutning", false);
-
-      // Hvis der er skruet helt ned så stop afspilningen
-      if (volumen == 0 && DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET) {
-        DRData.instans.afspiller.stopAfspilning();
-        super.onBackPressed();
-      } else if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
-        super.onBackPressed();
-      } else {
-        // Spørg brugeren om afspilningen skal stoppes
-        showDialog(1);
-      }
-      MediabuttonReceiver.afregistrér();
+      super.onBackPressed();
     }
   }
 
@@ -191,26 +176,41 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
     }
   }
 
+  @Override
+  public void finish() {
+    AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+    int volumen = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+
+    // Hvis der er skruet helt ned så stop afspilningen
+    if (volumen == 0 && DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET) {
+      DRData.instans.afspiller.stopAfspilning();
+    }
+
+    if (DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET) {
+      // Spørg brugeren om afspilningen skal stoppes
+      showDialog(0);
+      return;
+    }
+    MediabuttonReceiver.afregistrér();
+    super.finish();
+  }
 
   @Override
   protected Dialog onCreateDialog(final int id) {
     AlertDialog.Builder ab = new AlertDialog.Builder(this);
-    if (id == 0) {
-    } else { // if (id == 1)
-      ab.setMessage("Stop afspilningen?");
-      ab.setPositiveButton("Stop\nradioen", new AlertDialog.OnClickListener() {
-        public void onClick(DialogInterface arg0, int arg1) {
-          DRData.instans.afspiller.stopAfspilning();
-          finish();
-        }
-      });
-      ab.setNeutralButton("Fortsæt i\nbaggrunden", new AlertDialog.OnClickListener() {
-        public void onClick(DialogInterface arg0, int arg1) {
-          finish();
-        }
-      });
-      //ab.setNegativeButton("Annullér", null);
-    }
+    ab.setMessage("Stop afspilningen?");
+    ab.setPositiveButton("Stop", new AlertDialog.OnClickListener() {
+      public void onClick(DialogInterface arg0, int arg1) {
+        DRData.instans.afspiller.stopAfspilning();
+        Hovedaktivitet.super.finish();
+      }
+    });
+    ab.setNeutralButton("Fortsæt i\nbaggrunden", new AlertDialog.OnClickListener() {
+      public void onClick(DialogInterface arg0, int arg1) {
+        Hovedaktivitet.super.finish();
+      }
+    });
+    //ab.setNegativeButton("Annullér", null);
     return ab.create();
   }
 /*
