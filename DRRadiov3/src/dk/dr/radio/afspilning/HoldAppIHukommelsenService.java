@@ -72,7 +72,9 @@ public class HoldAppIHukommelsenService extends Service implements Runnable {
   @Override
   public void run() {
     Log.d("AfspillerService run()");
-    Notification notification = AfspillerIkonOgNotifikation.lavNotification(this);
-    App.notificationManager.notify(NOTIFIKATION_ID, notification);
+    try {
+      Notification notification = AfspillerIkonOgNotifikation.lavNotification(this);
+      App.notificationManager.notify(NOTIFIKATION_ID, notification);
+    } catch (Exception e) { Log.rapporterFejl(e); } // fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/830228171
   }
 }
