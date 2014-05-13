@@ -21,6 +21,7 @@ public abstract class Lydkilde implements Serializable {
   public String slug;  // Bemærk - kan være tom!
   public transient ArrayList<Lydstream> streams;
   public transient Lydstream hentetStream;
+  public static final String INDST_lydformat = "lydformat";
 
   @Override
   public boolean equals(Object o) {
@@ -44,7 +45,7 @@ public abstract class Lydkilde implements Serializable {
   public List<Lydstream> findBedsteStreams(boolean tilHentning) {
     //Bedst bedst = new Bedst();
     String ønsketkvalitet = App.prefs.getString("lydkvalitet", "auto");
-    String ønsketformat = App.prefs.getString("lydformat", "auto");
+    String ønsketformat = App.prefs.getString(INDST_lydformat, "auto");
 
     ArrayList<Lydstream> kandidater = new ArrayList<Lydstream>();
     if (hentetStream != null) kandidater.add(hentetStream);

@@ -98,7 +98,7 @@ public class Log {
 
   public static void rapporterFejl(final Exception e) {
     Log.e(e);
-    if (fejlRapporteret++ > 10) return; // rapportér ikke mere end 10 fejl per kørsel
+    if (fejlRapporteret++ > 3) return; // rapportér ikke mere end 3 fejl per kørsel
     if (!App.EMULATOR) BugSenseHandler.sendException(e);
   }
 
@@ -151,7 +151,7 @@ public class Log {
     */
     ret += App.versionsnavn +
         "\nTelefonmodel: " + Build.MODEL + " " + Build.PRODUCT +
-        "\nAndroid v" + Build.VERSION.RELEASE + " (sdk: " + Build.VERSION.SDK + ")";
+        "\nAndroid v" + Build.VERSION.RELEASE + " (sdk: " + Build.VERSION.SDK_INT+ ")";
 
     return ret;
   }

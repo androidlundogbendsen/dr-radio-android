@@ -20,15 +20,23 @@ package dk.dr.radio.akt;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.os.StatFs;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
+import android.text.format.Formatter;
 import android.view.MenuItem;
 
+import java.io.File;
+import java.util.ArrayList;
+
 import dk.dr.radio.data.DRData;
+import dk.dr.radio.data.HentedeUdsendelser;
+import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
@@ -50,36 +58,32 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
     try {
 
       // Find lydformat
-      PreferenceScreen ps = this.getPreferenceScreen();
-      final int POS_lydformat = 2;
-
-      lydformatlp = (ListPreference) ps.getRootAdapter().getItem(POS_lydformat);
+      lydformatlp = (ListPreference) findPreference(Lydkilde.INDST_lydformat);
       lydformatlp.setEnabled(Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH);
-      /*
-      if (!DRData.NØGLE_lydformat.equals(lydformatlp.getKey())) {
-        if (App.fejlsøgning) throw new InternalError("lydformat har skiftet plads, ret i koden");
-        return; // drop resten af initialiseringen i produktion
-      }*/
-
-      // Udfyld med værdier der er passende for denne enhed
-      // Er det Android 2.2 eller derunder kan vi godt fjerne HLS og HLS2
-      /*
-      if (Build.VERSION.SDK_INT < 9) {
-        lydformatlp.setEntries(lavDelarray(lydformatlp.getEntries(), 2));
-        lydformatlp.setEntryValues(lavDelarray(lydformatlp.getEntryValues(), 2));
-      }
-      */
-
-      // Har brugeren trykket på "Format" på afspilleraktiviteten skal format åbnes direkte
-      if (getIntent().getBooleanExtra(åbn_formatindstilling, false)) try {
-        // Jeg synes toast alligevel er overflødig. Jacob
-        //Toast.makeText(this, lydformatlp.getSummary(), Toast.LENGTH_LONG).show();
-        ps.onItemClick(null, null, POS_lydformat, 0);
-      } catch (Exception ignored) {
-      } // Ignorer - se http://www.bugsense.com/dashboard/project/57c90f98/error/11696187
-
       lydformatlp.setOnPreferenceChangeListener(this);
       aktueltLydformat = lydformatlp.getValue();
+
+      ArrayList<File> l = HentedeUdsendelser.findMuligeEksternLagerstier();
+      String[] visVærdi = new String[l.size()];
+      String[] værdi = new String[l.size()];
+      for (int i=0; i<l.size(); i++) {
+        værdi[i] = l.get(i).toString();
+        StatFs stat = new StatFs(værdi[i]);
+        long blockSize = stat.getBlockSize();
+        long availableBlocks = stat.getAvailableBlocks();
+        visVærdi[i] = l.get(i).getParent() + " ("+ Formatter.formatFileSize(App.instans, availableBlocks * blockSize)+" ledig)";
+      }
+      ListPreference lp = (ListPreference) findPreference(HentedeUdsendelser.NØGLE_placeringAfHentedeFiler);
+      if (visVærdi.length>0) {
+        lp.setEntries(visVærdi);
+        lp.setEntryValues(værdi);
+        if (!App.prefs.contains(HentedeUdsendelser.NØGLE_placeringAfHentedeFiler)) {
+          lp.setValueIndex(0); // Værdi nummer 0 er forvalgt
+        }
+      } else {
+        lp.setEnabled(false);
+        lp.setTitle("Adgang til eksternt lager mangler");
+      }
     } catch (Exception ex) {
       Log.rapporterFejl(ex);
     }
