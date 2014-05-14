@@ -349,6 +349,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   // Kaldes af afspiller og hentning
   @Override
   public void run() {
+    if (udsendelse==null) return; // fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/834728045 ???
     tjekOmHentet(udsendelse);
     adapter.notifyDataSetChanged(); // Opdater knapper etc
     App.forgrundstråd.post(opdaterSeekBar);

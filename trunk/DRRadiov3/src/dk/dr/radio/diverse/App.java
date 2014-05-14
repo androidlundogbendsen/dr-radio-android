@@ -173,6 +173,10 @@ public class App extends Application {
       String grunddata = prefs.getString(DRData.GRUNDDATA_URL, null);
       if (grunddata==null) grunddata = Diverse.læsStreng(res.openRawResource(R.raw.grunddata));
       DRData.instans.grunddata.parseFællesGrunddata(grunddata);
+      String pn = App.instans.getPackageName();
+      for (final Kanal k : DRData.instans.grunddata.kanaler) {
+        k.kanallogo_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase().replace('ø', 'o').replace('å', 'a'), "drawable", pn);
+      }
 
       String kanalkode = prefs.getString(FORETRUKKEN_KANAL, null);
       Kanal aktuelKanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
@@ -200,10 +204,6 @@ public class App extends Application {
       DRData.instans.afspiller = new Afspiller();
       DRData.instans.afspiller.setLydkilde(aktuelKanal);
 
-      String pn = App.instans.getPackageName();
-      for (final Kanal k : DRData.instans.grunddata.kanaler) {
-        k.kanallogo_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase().replace('ø', 'o').replace('å', 'a'), "drawable", pn);
-      }
 
 
       IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -325,6 +325,10 @@ public class App extends Application {
           Log.d("Vi fik nye grunddata: fraCache="+fraCache+nyeGrunddata);
           if (!PRODUKTION || App.fejlsøgning) App.kortToast("Vi fik nye grunddata");
           DRData.instans.grunddata.parseFællesGrunddata(nyeGrunddata);
+          String pn = App.instans.getPackageName();
+          for (final Kanal k : DRData.instans.grunddata.kanaler) {
+            k.kanallogo_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase().replace('ø', 'o').replace('å', 'a'), "drawable", pn);
+          }
           // Er vi nået hertil så gik parsning godt - gem de nye stamdata i prefs, så de også bruges ved næste opstart
           prefs.edit().putString(DRData.GRUNDDATA_URL, nyeGrunddata).commit();
         }
