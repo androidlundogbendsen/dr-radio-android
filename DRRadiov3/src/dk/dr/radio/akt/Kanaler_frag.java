@@ -77,8 +77,10 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
 
   @Override
   public void onDestroyView() {
+    viewPager.setAdapter(null);
     viewPager = null;
     adapter = null;
+    kanalfaneblade = null;
     DRData.instans.grunddata.observatører.remove(this);
     super.onDestroyView();
   }

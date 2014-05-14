@@ -100,6 +100,7 @@ public class Log {
     Log.e(e);
     if (fejlRapporteret++ > 3) return; // rapportér ikke mere end 3 fejl per kørsel
     if (!App.EMULATOR) BugSenseHandler.sendException(e);
+    if (!App.PRODUKTION) App.langToast("Fejl: "+e);
   }
 
 

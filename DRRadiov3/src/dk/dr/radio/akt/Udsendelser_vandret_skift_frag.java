@@ -55,7 +55,11 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     kanal = DRData.instans.grunddata.kanalFraKode.get(getArguments().getString(Kanal_frag.P_kode));
     startudsendelse = DRData.instans.udsendelseFraSlug.get(getArguments().getString(DRJson.Slug.name()));
     if (startudsendelse==null) { // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/805598045
-      Log.rapporterFejl(new IllegalStateException("startudsendelse==null"));
+      if (!App.PRODUKTION) { // https://www.bugsense.com/dashboard/project/cd78aa05/errors/822628124
+        App.langToast("startudsendelse==null");
+        App.langToast("startudsendelse==null for "+kanal);
+      }
+      Log.e(new IllegalStateException("startudsendelse==null"));
       // Fjern backstak og hop ud
       FragmentManager fm = getActivity().getSupportFragmentManager();
       fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -157,8 +161,10 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
 
   @Override
   public void onDestroyView() {
+    if (viewPager!=null) viewPager.setAdapter(null);
     viewPager = null;
     adapter = null;
+    pager_title_strip = null;
     super.onDestroyView();
   }
 
