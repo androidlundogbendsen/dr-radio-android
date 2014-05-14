@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dk.dr.radio.data.DRData;
+import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.AfspillerIkonOgNotifikation;
@@ -352,7 +353,12 @@ public class Afspiller {
 
   public void setLydkilde(Lydkilde lydkilde) {
     if (lydkilde == null) {
-      Log.e(new IllegalStateException("setLydkilde(null"));
+      Log.rapporterFejl(new IllegalStateException("setLydkilde(null"));
+      return;
+    }
+    if (lydkilde instanceof Kanal && Kanal.P4kode.equals( ((Kanal) lydkilde).kode)) {
+      // Nærmere fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/820758400
+      Log.rapporterFejl(new IllegalStateException("setLydkilde(P4F"));
       return;
     }
     Log.d("setLydkilde(" + lydkilde);
