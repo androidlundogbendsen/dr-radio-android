@@ -33,6 +33,7 @@ import android.view.MenuItem;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.HentedeUdsendelser;
@@ -66,17 +67,27 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
       ArrayList<File> l = HentedeUdsendelser.findMuligeEksternLagerstier();
       String[] visVærdi = new String[l.size()];
       String[] værdi = new String[l.size()];
-      for (int i=0; i<l.size(); i++) {
-        værdi[i] = l.get(i).toString();
-        StatFs stat = new StatFs(værdi[i]);
+      for (int i=0; i<l.size(); i++) try {
+        File dir = l.get(i);
+        String dirs = dir.toString();
+        værdi[i] = dirs;
+        visVærdi[i] = dir.getParent() + " (ikke tilgængelig)";
+        // Find ledig plads
+        boolean fandtesFørMkdirs = dir.exists();
+        dir.mkdirs();
+        StatFs stat = new StatFs(dirs);
         long blockSize = stat.getBlockSize();
         long availableBlocks = stat.getAvailableBlocks();
-        visVærdi[i] = l.get(i).getParent() + " ("+ Formatter.formatFileSize(App.instans, availableBlocks * blockSize)+" ledig)";
+        if (!fandtesFørMkdirs) dir.delete(); // ryd op
+        visVærdi[i] = dir.getParent() + " ("+ Formatter.formatFileSize(App.instans, availableBlocks * blockSize)+" ledig)";
+      } catch (Exception e) {
+        Log.e(e);
       }
       ListPreference lp = (ListPreference) findPreference(HentedeUdsendelser.NØGLE_placeringAfHentedeFiler);
+      Log.d("Indstillinger_akt placeringAfHentedeFiler "+ Arrays.toString(værdi)+Arrays.toString(visVærdi));
+      lp.setEntries(visVærdi);
+      lp.setEntryValues(værdi);
       if (visVærdi.length>0) {
-        lp.setEntries(visVærdi);
-        lp.setEntryValues(værdi);
         if (!App.prefs.contains(HentedeUdsendelser.NØGLE_placeringAfHentedeFiler)) {
           lp.setValueIndex(0); // Værdi nummer 0 er forvalgt
         }
