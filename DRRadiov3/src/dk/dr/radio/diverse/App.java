@@ -179,6 +179,13 @@ public class App extends Application {
       }
 
       String kanalkode = prefs.getString(FORETRUKKEN_KANAL, null);
+      // Hvis brugeren foretrækker P4 er vi nødt til at finde underkanalen
+      if (Kanal.P4kode.equals(kanalkode)) {
+        kanalkode = App.prefs.getString(App.P4_FORETRUKKEN_AF_BRUGER, null);
+        if (kanalkode == null) kanalkode = App.prefs.getString(App.P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, "KH4");
+        Log.d("P4 underkanal=" + kanalkode);
+      }
+
       Kanal aktuelKanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
       if (aktuelKanal == null || aktuelKanal == Grunddata.ukendtKanal) {
         aktuelKanal = DRData.instans.grunddata.forvalgtKanal;

@@ -46,6 +46,18 @@
             "slug": "p4bornholm",
             "urn": "urn:dr:mu:bundle:4f3b892b860d9a33ccfdafd2"
         }, {
+            "title": "P4 Syd",
+            "logo": "channel-logo-p4-syd",
+            "scheduleIdent": "ÅB4",
+            "slug": "p4syd",
+            "urn": "urn:dr:mu:bundle:4f3b8934860d9a33ccfdafd9"
+        }, {
+            "title": "P4 Trekanten",
+            "logo": "channel-logo-p4-trekanten",
+            "scheduleIdent": "TR4",
+            "slug": "p4trekanten",
+            "urn": "urn:dr:mu:bundle:4f3b892f860d9a33ccfdafd7"
+        }, {
             "title": "P4 FynÆNDRET",
             "logo": "channel-logo-p4-fyn",
             "scheduleIdent": "OD4",
@@ -64,6 +76,12 @@
             "slug": "p4aarhus",
             "urn": "urn:dr:mu:bundle:4f3b893a860d9a33ccfdafdf"
         }]
+    }, {
+        "title": "Ramsjang/Ultra",
+        "logo": "channel-logo-ramasjang",
+        "scheduleIdent": "RAM",
+        "slug": "ramasjangradio",
+        "urn": "urn:dr:mu:bundle:4f3b8928860d9a33ccfdafcc"
     }, {
         "title": "P7 MISK",
         "logo": "channel-logo-p7",
