@@ -24,6 +24,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,16 +70,61 @@ public class DRData {
 //    i.grunddata.skrald_parseAlleKanaler(Diverse.læsStreng(new FileInputStream("res/raw/skrald__alle_kanaler.json")));
 //    i.grunddata = Stamdata.parseAndroidStamdata(Diverse.læsStreng(new FileInputStream("res/raw/stamdata1_android_v3_01.json")));
     i.grunddata = new Grunddata();
-    i.grunddata.parseFællesGrunddata(Diverse.læsStreng(new FileInputStream("../DRRadiov3/res/raw/grunddata.json")));
-    i.grunddata.hentSupplerendeDataBg_KUN_TIL_UDVIKLING();
+    //i.grunddata.parseFællesGrunddata(Diverse.læsStreng(new FileInputStream("../DRRadiov3/res/raw/grunddata.json")));
+    //i.grunddata.hentSupplerendeDataBg_KUN_TIL_UDVIKLING();
 
     i.grunddata.parseFællesGrunddata(Diverse.læsStreng(new FileInputStream("../DRRadiov3/res/raw/grunddata_testaendring.json")));
-    if (!i.grunddata.kanalFraKode.get("DRN").navn.equals("DR NyhederÆNDRET")) throw new InternalError("xx1");
-    if (i.grunddata.kanaler.size()>11) throw new InternalError("i.grunddata.kanaler.size()="+i.grunddata.kanaler.size());
+    //if (!i.grunddata.kanalFraKode.get("DRN").navn.equals("DR NyhederÆNDRET")) throw new InternalError("xx1");
+    //if (i.grunddata.kanaler.size()>11) throw new InternalError("i.grunddata.kanaler.size()="+i.grunddata.kanaler.size());
+    i.grunddata.hentSupplerendeDataBg_KUN_TIL_UDVIKLING();
 
     for (Kanal kanal : i.grunddata.kanaler) {
       Log.d("\n\n===========================================\n\nkanal = " + kanal);
       if (Kanal.P4kode.equals(kanal.kode)) continue;
+
+      for (Lydstream ls : kanal.streams) {
+        //Log.d("\nLydstream = " + ls);
+        if (!ls.url.endsWith("master.m3u8")) continue;
+        Log.d("Lydstream = " + ls);
+
+        String lokalM3U8indhold = main_hent(ls.url);
+        /*
+#EXTM3U
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=64000,CODECS="mp4a.40.2"
+http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_64_a-p.m3u8?sd=10&rebase=on
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=64000,CODECS="mp4a.40.2"
+http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_64_a-b.m3u8?sd=10&rebase=on
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=192000,CODECS="mp4a.40.2"
+http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-p.m3u8?sd=10&rebase=on
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=192000,CODECS="mp4a.40.2"
+http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-b.m3u8?sd=10&rebase=on
+         */
+        String[] lin = lokalM3U8indhold.split("[\r\n]");
+        ArrayList<String> rensetListe = new ArrayList<String>(lin.length);
+        for (int n=0; n<lin.length; n++) {
+          //Log.d("  "+n+" " + lin[n]);
+          if (lin[n].startsWith("http")) try {
+            URL u = new URL(lin[n]);
+            InputStream is = u.openStream();
+            is.read();
+            is.close();
+            // URL er OK, fortsæt
+          } catch (Exception e) {
+            Log.e(e);
+            // Død URL - fjern den fra listen
+            lin[n]=null;
+            // Fjern også foregående
+            lin[n-1]= null;
+          }
+          Log.d("  "+n+" " + lin[n]);
+        }
+
+//        String renset = M3U8parser.rensForDødeServere(indhold);
+      }
+
+      System.exit(0);
+
+
       kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(main_hent(kanal.getUdsendelserUrl())), kanal, DRData.instans), "0");
       for (Udsendelse u : kanal.udsendelser) {
         Log.d("\nudsendelse = " + u);

@@ -41,6 +41,7 @@ import java.util.List;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Lydkilde;
+import dk.dr.radio.data.Lydstream;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.AfspillerIkonOgNotifikation;
 import dk.dr.radio.diverse.App;
@@ -63,7 +64,7 @@ public class Afspiller {
   public List<Runnable> observatører = new ArrayList<Runnable>();
   public List<Runnable> forbindelseobservatører = new ArrayList<Runnable>();
 
-  private String lydUrl;
+  private Lydstream lydstream;
   private int forbinderProcent;
   private Lydkilde lydkilde;
 
@@ -121,15 +122,7 @@ public class Afspiller {
       App.kortToast("Kunne ikke oprette forbindelse");
       return;
     }
-    lydUrl = lydkilde.findBedsteStreamUrl(false);
-    if (lydUrl==null) {
-      Log.rapporterFejl(new IllegalStateException("Ingen lydUrl for "+lydkilde+": "+lydkilde.streams));
-      App.kortToast("Kunne ikke oprette forbindelse");
-      return;
-    }
-    DRData.instans.senestLyttede.registrérLytning(lydkilde);
-
-    Log.d("startAfspilning() " + lydUrl);
+    Log.d("startAfspilning() " + lydkilde);
 
     onErrorTæller = 0;
     onErrorTællerNultid = System.currentTimeMillis();
@@ -251,9 +244,7 @@ public class Afspiller {
   }
 
   synchronized private void startAfspilningIntern() {
-    Log.d("mediaPlayer.setDataSource( " + lydUrl);
     MediabuttonReceiver.registrér();
-
     afspillerstatus = Status.FORBINDER;
     afspilningPåPause=false;
     sendOnAfspilningForbinder(-1);
@@ -267,7 +258,17 @@ public class Afspiller {
         setDataSourceTid = System.currentTimeMillis();
         setDataSourceLyd = false;
         try {
-          mediaPlayer.setDataSource(lydUrl);
+          lydstream = lydkilde.findBedsteStreams(false).get(0);
+
+          if (lydstream ==null) {
+            Log.rapporterFejl(new IllegalStateException("Ingen lydUrl for "+lydkilde+": "+lydkilde.streams));
+            App.kortToast("Kunne ikke oprette forbindelse");
+            return;
+          }
+          DRData.instans.senestLyttede.registrérLytning(lydkilde);
+          Log.d("mediaPlayer.setDataSource( " + lydstream);
+
+          mediaPlayer.setDataSource(lydstream.url);
           Log.d("mediaPlayer.setDataSource() slut");
           mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
           Log.d("mediaPlayer.setDataSource() slut  " + mpTils());
@@ -356,7 +357,7 @@ public class Afspiller {
       Log.rapporterFejl(new IllegalStateException("setLydkilde(null"));
       return;
     }
-    if (lydkilde instanceof Kanal && Kanal.P4kode.equals( ((Kanal) lydkilde).kode)) {
+    if (lydkilde instanceof Kanal && Kanal.P4kode.equals( ((Kanal) lydkilde).kode)) { // TODO - fjern tjek
       // Nærmere fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/820758400
       Log.rapporterFejl(new IllegalStateException("setLydkilde(P4F"));
       return;
@@ -523,7 +524,7 @@ public class Afspiller {
       Log.d("onError(" + hvad + ") " + extra + " onErrorTæller=" + onErrorTæller);
 
 
-      if (Build.VERSION.SDK_INT >= 16 && hvad == MediaPlayer.MEDIA_ERROR_UNKNOWN) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && hvad == MediaPlayer.MEDIA_ERROR_UNKNOWN) {
         // Ignorer, da Samsung Galaxy SIII på Android 4.1 Jelly Bean
         // sender denne fejl (onError(1) -110) men i øvrigt spiller fint videre!
         return true;
