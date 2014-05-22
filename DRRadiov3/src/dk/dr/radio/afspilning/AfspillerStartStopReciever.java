@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import dk.dr.radio.data.DRData;
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
 /**
@@ -49,7 +50,21 @@ public class AfspillerStartStopReciever extends BroadcastReceiver {
       }
 
       if (DRData.instans.afspiller.afspillerstatus == Status.STOPPET) {
-        DRData.instans.afspiller.startAfspilning();
+        // DRData.instans.afspiller.startAfspilning();
+        // Fix for fejl: Levende ikon/widget starte afspilning fejler første gang, hvis app'en ikke er i hukommelsen
+        // Det skyldtes af kanalstreams ikke var færdigindlæst. Selv cacheded streams bliver først indlæst i en
+        // Runnable postet til forgrundsståden. Det er derfor vigtigt at afspilningen startes som det SIDSTE, efter
+        // at cachede streams er indlæst
+        App.forgrundstråd.postDelayed(new Runnable() {
+          @Override
+          public void run() {
+            try {
+              DRData.instans.afspiller.startAfspilning();
+            } catch (Exception ex) { // TODO fjern
+              Log.rapporterFejl(ex);
+            }
+          }
+        }, 1); // for en sikkerheds skyld. 1 millisekund skulle bringe den sidst i køen
       } else {
         if (PAUSE.equals(intent.getAction())) {
           DRData.instans.afspiller.pauseAfspilning();
