@@ -118,8 +118,13 @@ public class Afspiller {
   private long onErrorTællerNultid;
 
   public void startAfspilning() {
-    if (lydkilde.hentetStream == null && (!App.erOnline() || lydkilde.streams == null)) {
-      App.kortToast("Kunne ikke oprette forbindelse");
+    if (lydkilde.hentetStream == null && !App.erOnline()) {
+      App.kortToast("Internetforbindelse mangler");
+      return;
+    }
+    if (lydkilde.hentetStream == null && lydkilde.streams == null) {
+      Log.rapporterFejl(new IllegalStateException("Ingen lydUrl for "+lydkilde+": "+lydkilde.streams));
+      App.kortToast("Kunne ikke oprette forbindelse, prøv igen senere");
       return;
     }
     Log.d("startAfspilning() " + lydkilde);
