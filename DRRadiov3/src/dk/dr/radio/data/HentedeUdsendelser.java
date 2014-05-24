@@ -99,8 +99,12 @@ public class HentedeUdsendelser {
     tjekDataOprettet();
     try {
       String url = udsendelse.findBedsteStreamUrl(true);
-      if (url == null) throw new IllegalStateException("ingen streamurl for "+udsendelse.slug);
-      Uri uri = Uri.parse(udsendelse.findBedsteStreamUrl(true));
+      if (url == null) {
+        Log.rapporterFejl(new IllegalStateException("ingen streamurl for "+udsendelse.slug));
+        App.langToast("Beklager, udsendelsen kunne ikke hentes");
+        return;
+      }
+      Uri uri = Uri.parse(url);
       Log.d("uri=" + uri);
 
       String brugervalg = App.prefs.getString(NØGLE_placeringAfHentedeFiler, null);
