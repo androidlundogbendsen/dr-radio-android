@@ -50,6 +50,7 @@
                     android:layout_width="64dp"
                     android:layout_height="44dp"
                     android:scaleType="center"
+                    android:contentDescription="D R"
                     android:src="@drawable/dr_logo"
                     android:visibility="visible"/>
 
@@ -90,6 +91,7 @@
                     android:layout_height="44dp"
                     android:paddingLeft="20dp"
                     android:scaleType="center"
+                    android:contentDescription="start/stop"
                     android:src="@drawable/afspiller_spil"/>
         </LinearLayout>
     </LinearLayout>

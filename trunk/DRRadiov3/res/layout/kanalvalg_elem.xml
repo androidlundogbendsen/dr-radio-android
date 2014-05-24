@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:paddingLeft="16dp"
@@ -25,6 +26,7 @@
                 android:id="@+id/billede"
                 android:layout_width="wrap_content"
                 android:layout_marginTop="8dp"
+                android:contentDescription="P4"
                 android:layout_height="wrap_content"
                 android:src="@drawable/kanalappendix_p4f"/>
 
@@ -38,7 +40,7 @@
                     android:id="@+id/tekst"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="etetet"
+                    android:text="København"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="8dp"
                     android:textAppearance="?android:attr/textAppearance"
@@ -51,6 +53,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/ikon"
-                />
+                tools:ignore="ContentDescription"/>
     </LinearLayout>
 </LinearLayout>

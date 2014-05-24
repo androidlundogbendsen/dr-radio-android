@@ -8,8 +8,16 @@
         "kontakt_url": "http://www.dr.dk/tjenester/iphone/radio/about/android22.drxml",
         "kontakt_modtagere": ["nordfalk@lundogbendsen.dk", "mobil@dr.dk" ],
         "kontakt_titel": "Angående DR Radio BETA",
-        "kontakt_brugerspørgsmål": "Du bruger betudgaven\n",
-        "drift_statusmeddelelse": "Dette er en betaudgave - hent den officielle udgave <a href='https://play.google.com/store/apps/details?id=dk.dr.radio'>her</a>.<br/>Betaudgaven opdateres ude i venstremenuen nederst. Nyeste udgave har:<br/>- Valgfri placering af hentede udsendelser (internt lager eller SD-kort)<br/>- Diverse fejlrettelser<br/><br/><br/><br/>- Hvis Akamais backup-servere sættes ud af spillet virker HLS ikke - m3u8-filerne burde 'renses' for døde servere påbegyndt"
+        "kontakt_brugerspørgsmål": "Virkede direkte udsendelser HVER gang, eller kun hveranden?\n",
+        "drift_statusmeddelelse": "Dette er betaudgaven - hent officiel udgave <a href='https://play.google.com/store/apps/details?id=dk.dr.radio'>her</a>.<br/>
+        Betaudgaven opdateres ude i venstremenuen nederst. Nyeste udgave har:<br/>
+        * Valgfri placering af hentede udsendelser (internt lager eller SD-kort)<br/>
+        * Grunddata+driftmeddelelser kan fjernstyres<br/>
+        * Levende ikon-fix<br/>
+        * Hvis bruger trykker 'tilbage' og ville komme ud af appen mens den spiller skal han spørges om afspilning skal stoppe<br/>
+        * Hvis Akamais backup-servere sættes ud af spillet så 'renses' m3u8-filerne for døde servere (påbegyndt)<br/>
+        <br/>
+        I må <b><ul>meget gerne</ul></b> starte og stoppe LIVE afspilning nogle gange. Hver anden gang bruges 'rensede' m3u8-filer. Tjek at det virker hver gang (ikke hveranden) og indsend en rapport, tak! (i kontakt i venstremenuen)"
     },
     "ios": {
 

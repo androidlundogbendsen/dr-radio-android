@@ -162,6 +162,9 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
     public int getPageIconResId(int position) {
       return kanaler.get(position).kanallogo_resid;
     }
+
+    @Override
+    public String getPageContentDescription(int position) { return kanaler.get(position).navn; }
   }
 }
 

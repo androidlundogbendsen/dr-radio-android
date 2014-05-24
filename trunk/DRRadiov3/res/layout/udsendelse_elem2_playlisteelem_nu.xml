@@ -50,7 +50,8 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:id="@+id/senest_spillet_kunstnerbillede"
-                android:src="@drawable/eksempel_kunstner"/>
+                android:src="@drawable/eksempel_kunstner"
+                tools:ignore="ContentDescription"/>
 
     </LinearLayout>
 </LinearLayout>

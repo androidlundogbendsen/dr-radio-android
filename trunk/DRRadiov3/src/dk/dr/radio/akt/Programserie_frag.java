@@ -199,10 +199,12 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
           aq.width(br, false).height(hø, false).image(burl, true, true, br, AQuery.INVISIBLE, null, AQuery.FADE_IN, (float) højde9 / bredde16);
 
           if (kanal == null) aq.id(R.id.logo).gone();
-          else aq.id(R.id.logo).image(kanal.kanallogo_resid);
+          else aq.id(R.id.logo).image(kanal.kanallogo_resid).getView().setContentDescription(kanal.navn);
           aq.id(R.id.titel).typeface(App.skrift_gibson_fed).text(programserie.titel);
           String tekst = "ALLE UDSENDELSER";
-          aq.id(R.id.alle_udsendelser).typeface(App.skrift_gibson).text(lavFedSkriftTil(tekst + " (" + programserie.antalUdsendelser + ")", tekst.length()));
+          aq.id(R.id.alle_udsendelser).typeface(App.skrift_gibson)
+              .text(lavFedSkriftTil(tekst + " (" + programserie.antalUdsendelser + ")", tekst.length()))
+              .getView().setContentDescription(programserie.antalUdsendelser+" udsendelser");
           aq.id(R.id.beskrivelse).text(programserie.beskrivelse).typeface(App.skrift_georgia);
           Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS);
           favorit = aq.id(R.id.favorit).clicked(Programserie_frag.this).getCheckBox();
@@ -243,6 +245,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
         }
         //Log.d("txt=" + txt);
         vh.varighed.setText(txt);
+        vh.varighed.setContentDescription(txt.toLowerCase());
         vh.varighed.setVisibility(txt.length() > 0 ? View.VISIBLE : View.GONE);
       } else if (type == TIDLIGERE) {
         if (antalHentedeSendeplaner++ < 7) {

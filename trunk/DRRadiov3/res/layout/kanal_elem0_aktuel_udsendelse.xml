@@ -92,7 +92,8 @@
                 android:layout_height="60dp"
                 android:adjustViewBounds="true"
                 android:id="@+id/senest_spillet_kunstnerbillede"
-                android:src="@drawable/eksempel_kunstner"/>
+                android:src="@drawable/eksempel_kunstner"
+                tools:ignore="ContentDescription"/>
 
 
         <LinearLayout

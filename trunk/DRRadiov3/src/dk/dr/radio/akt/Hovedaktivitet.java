@@ -47,6 +47,7 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
     setContentView(R.layout.hoved_akt);
+    setTitle("D R Radio"); // til blinde, for at undgå at "DR Radio" bliver udtalt som "Doktor Radio"
 
     //ActionBar actionBar = getSupportActionBar();
     //actionBar.setDisplayShowTitleEnabled(false);
@@ -163,6 +164,7 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
       ab.setMessage(Html.fromHtml(vis_drift_statusmeddelelse));
       ab.setPositiveButton("OK", new AlertDialog.OnClickListener() {
         public void onClick(DialogInterface arg0, int arg1) {
+          if (vis_drift_statusmeddelelse==null) return;
           App.prefs.edit().putInt(drift_statusmeddelelse_NØGLE, vis_drift_statusmeddelelse.hashCode()).commit(); // ...og gem ny hashkode i prefs
           vis_drift_statusmeddelelse = null;
           viser_drift_statusmeddelelse = false;

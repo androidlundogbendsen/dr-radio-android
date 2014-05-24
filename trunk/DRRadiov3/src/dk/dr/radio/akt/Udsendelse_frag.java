@@ -140,6 +140,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     listView = aq.id(R.id.listView).adapter(adapter).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).getView());
     listView.setOnItemClickListener(this);
+    listView.setContentDescription(udsendelse.titel + " - " + (udsendelse.startTid==null?"":DRJson.datoformat.format(udsendelse.startTid)));
 
     tjekOmHentet(udsendelse);
     hentStreams.run();
@@ -432,6 +433,12 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       return liste.size();
     }
 
+    // Fix for https://code.google.com/p/eyes-free/issues/detail?id=318 ... men det hjælper ikke?
+    @Override
+    public boolean hasStableIds() { return true; }
+    @Override
+    public long getItemId(int position) { return position; }
+
     @Override
     public int getViewTypeCount() {
       return 7;
@@ -488,12 +495,14 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
           aq.id(R.id.titel_og_tid).typeface(App.skrift_gibson)
               .text(lavFedSkriftTil(udsendelse.titel + " - " + (udsendelse.startTid==null?"(ukendt)":DRJson.datoformat.format(udsendelse.startTid)), udsendelse.titel.length()));
+          aq.getView().setContentDescription("\u00A0"); // varetages af listviewet
 
           //aq.id(R.id.beskrivelse).text(udsendelse.beskrivelse).typeface(App.skrift_georgia);
           //Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS);
 
           vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
           vh.titel.setText(udsendelse.titel.toUpperCase());
+          vh.titel.setContentDescription("\u00A0");  // varetages af listviewet
           aq.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
           seekBarTekst = aq.id(R.id.seekBarTekst).typeface(App.skrift_gibson).getTextView();
           seekBarMaxTekst = aq.id(R.id.seekBarMaxTekst).typeface(App.skrift_gibson).getTextView();
@@ -520,6 +529,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
             aq.text(forkortInfoStr);
             Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS);
           }
+          aq.getView().setContentDescription(udsendelse.beskrivelse);
         } else if (type == PLAYLISTEELEM_NU || type == PLAYLISTEELEM) {
           vh.titel = aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
         } else if (type == VIS_HELE_PLAYLISTEN_KNAP) {
@@ -547,16 +557,16 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         if (udsendelse.hentetStream != null)         // Hentede udsendelser
         {
           if (lydkildeErDenneUds && (spiller||forbinder)) aq.gone();
-          else aq.text("HØR HENTET UDSENDELSE");
+          else aq.text("HØR HENTET UDSENDELSE").getView().setContentDescription("hør hentet udsendelse");
         }
         else                                        // On demand og direkte udsendelser
         {
           if (lydkildeErDenneUds && (spiller||forbinder)) aq.gone();
-          else if (udsendelse.streamsKlar() && erOnline) aq.text("HØR UDSENDELSE");
+          else if (udsendelse.streamsKlar() && erOnline) aq.text("HØR UDSENDELSE").getView().setContentDescription("hør udsendelse");
           else if (udsendelse.streamsKlar() && !erOnline) aq.text("Internetforbindelse mangler").enabled(false);
           else if (erAktuelUdsendelsePåKanalen) {
             if (lydkildeErDenneKanal&&(spiller||forbinder)) aq.enabled(false).text("SPILLER "+ kanal.navn.toUpperCase() + " LIVE");
-            else if (erOnline) aq.text("HØR "+ kanal.navn.toUpperCase() + " LIVE");
+            else if (erOnline) aq.text("HØR "+ kanal.navn.toUpperCase() + " LIVE").getView().setContentDescription("hør "+ kanal.navn.toUpperCase());
             else aq.enabled(false).text("Internetforbindelse mangler");
           }
           else aq.gone();
@@ -586,6 +596,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         Playlisteelement ple = (Playlisteelement) liste.get(position);
         vh.playlisteelement = ple;
         vh.titel.setText(lavFedSkriftTil(ple.titel + " | " + ple.kunstner, ple.titel.length()));
+        vh.titel.setContentDescription(ple.titel + " af " + ple.kunstner);
         vh.startid.setText(ple.startTidKl);
         if (type == PLAYLISTEELEM_NU) {
           ImageView im = aq.id(R.id.senest_spillet_kunstnerbillede).getImageView();
@@ -742,6 +753,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           }
         });
       }
+      if (seekBar==null) return; // det er set ske i abetest
       seekBar.setProgress(pl.offsetMs);
       Log.registrérTestet("Valg af playlisteelement", "ja");
     } else if (type == ALLE_UDSENDELSER) {

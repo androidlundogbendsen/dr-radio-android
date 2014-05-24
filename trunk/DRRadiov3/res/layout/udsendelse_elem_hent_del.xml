@@ -32,6 +32,7 @@
             android:drawableLeft="@drawable/dri_hent_blaa"
             android:gravity="center_vertical"
             android:text=" DOWNLOAD"
+            android:contentDescription="hent udsendelse"
             android:textColor="@color/blå"
             android:background="@drawable/knap_hvid_bg"/>
 

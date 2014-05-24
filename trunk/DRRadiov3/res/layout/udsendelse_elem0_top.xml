@@ -83,6 +83,9 @@
                 android:layout_marginRight="16dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="42:30"
+                android:focusable="false"
+                android:importantForAccessibility="no"
+                android:contentDescription="\u00A0"
                 android:singleLine="true"
                 android:id="@+id/seekBarMaxTekst"/>
 
@@ -92,6 +95,9 @@
                 android:layout_marginLeft="16dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="2:30"
+                android:focusable="false"
+                android:importantForAccessibility="no"
+                android:contentDescription="\u00A0"
                 android:singleLine="true"
                 android:background="@color/hvid"
                 android:id="@+id/seekBarTekst"/>
@@ -106,6 +112,7 @@
             android:id="@+id/seekBar"
             android:max="100"
             android:progress="60"
+            android:focusable="false"
             android:progressDrawable="@drawable/seekbar_progress"/>
 
     <include

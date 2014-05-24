@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -15,7 +16,8 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:id="@+id/billede"
-            android:src="@drawable/eksempel_udsendelse"/>
+            android:src="@drawable/eksempel_udsendelse"
+            tools:ignore="ContentDescription"/>
 
 
     <ImageView
@@ -25,7 +27,8 @@
             android:layout_marginLeft="16dp"
             android:src="@drawable/skrald__kanallogo_p3"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+            tools:ignore="ContentDescription"/>
 
     <LinearLayout
             android:layout_width="match_parent"
@@ -48,6 +51,7 @@
                 android:id="@+id/favorit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="vælg som favorit"
                 android:button="@drawable/dri_favorit"/>
     </LinearLayout>
 
