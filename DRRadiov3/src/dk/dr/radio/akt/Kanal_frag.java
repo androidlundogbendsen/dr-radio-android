@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.androidquery.AQuery;
@@ -446,7 +447,9 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       Playlisteelement elem = u.playliste.get(0);
 //      aq.id(R.id.titel_og_kunstner).text(Html.fromHtml("<b>" + elem.titel + "</b> &nbsp; | &nbsp;" + elem.kunstner));
 
-      aq.id(R.id.titel_og_kunstner).text(lavFedSkriftTil(elem.titel + "  |  " + elem.kunstner, elem.titel.length()));
+      aq.id(R.id.titel_og_kunstner)
+          .text(lavFedSkriftTil(elem.titel + "  |  " + elem.kunstner, elem.titel.length()))
+          .getView().setContentDescription(elem.titel + "  af  " + elem.kunstner);
 
       ImageView b = aq.id(R.id.senest_spillet_kunstnerbillede).getImageView();
       if (elem.billedeUrl.length() == 0) {
@@ -483,6 +486,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       vh.aq.id(R.id.hør_live).enabled(!spillerDenneKanal && online && kanal.streams != null)
           .text(!online ? "Internetforbindelse mangler" :
               (spillerDenneKanal ? " SPILLER " : " HØR ") + kanal.navn.toUpperCase() + " LIVE");
+      vh.aq.getView().setContentDescription(!online ? "Internetforbindelse mangler" :
+          (spillerDenneKanal ? "Spiller " : "Hør ") + kanal.navn.toUpperCase());
 
       if (u.playliste == null) {
         // optimering - brug kun final i enkelte tilfælde. Final forårsager at variabler lægges i heap i stedet for stakken) at garbage collectoren skal køre fordi final

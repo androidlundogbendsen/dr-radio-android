@@ -27,6 +27,7 @@
     <Button
             android:id="@+id/kontakt"
             android:text="Skriv meddelelse til DR"
+            android:contentDescription="Skriv meddelelse til D R"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:paddingLeft="8dp"

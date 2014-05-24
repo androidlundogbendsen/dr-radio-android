@@ -65,6 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/slet"
+                android:contentDescription="slet udsendelse"
                 android:src="@drawable/hentede_uds_skrald"/>
 /*
         android:layout_width="44dp"

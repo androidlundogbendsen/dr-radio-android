@@ -88,12 +88,14 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     switch (status) {
       case STOPPET:
         startStopKnap.setImageResource(R.drawable.afspiller_spil);
+        startStopKnap.setContentDescription("Start afspilning");
         progressbar.setVisibility(View.INVISIBLE);
         metainformation.setText(k.navn);
         metainformation.setTextColor(App.color.grå40);
         break;
       case FORBINDER:
         startStopKnap.setImageResource(R.drawable.afspiller_pause);
+        startStopKnap.setContentDescription("Stop afspilning");
         progressbar.setVisibility(View.VISIBLE);
         int fpct = DRData.instans.afspiller.getForbinderProcent();
         metainformation.setTextColor(App.color.blå);
@@ -101,6 +103,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         break;
       case SPILLER:
         startStopKnap.setImageResource(R.drawable.afspiller_pause);
+        startStopKnap.setContentDescription("Stop afspilning");
         progressbar.setVisibility(View.INVISIBLE);
         metainformation.setTextColor(App.color.blå);
         metainformation.setText(k.navn);

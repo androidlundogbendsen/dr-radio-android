@@ -125,6 +125,8 @@ public class Kanal_nyheder_frag extends Basisfragment implements View.OnClickLis
     aq.id(R.id.hør_live).enabled(!spillerDenneKanal && online && kanal.streams != null)
         .text(!online ? "Internetforbindelse mangler" :
             (spillerDenneKanal ? " SPILLER " : " HØR ") + kanal.navn.toUpperCase() + " LIVE");
+    aq.getView().setContentDescription(!online ? "Internetforbindelse mangler" :
+        (spillerDenneKanal ? "Spiller " : "Hør ") + kanal.navn.toUpperCase());
 
   }
 

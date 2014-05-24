@@ -5,6 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/grå70"
+        android:contentDescription="afspillerkontrol"
         android:gravity="center_vertical"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
@@ -17,6 +18,7 @@
             android:layout_width="60dp"
             android:layout_height="44dp"
             android:scaleType="center"
+            android:contentDescription="start/stop"
             android:id="@+id/startStopKnap"
             android:src="@drawable/afspiller_spil"
             />

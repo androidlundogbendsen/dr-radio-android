@@ -130,7 +130,7 @@ public class HentedeUdsendelser {
       for (Runnable obs : new ArrayList<Runnable>(observatører)) obs.run();
     } catch (Exception e) {
       Log.rapporterFejl(e);
-      App.langToast("Kunne ikke få addgang til eksternt lager.\nSe eventuelt indstillingen til placering af hentede udsendelser");
+      App.langToast("Kunne ikke få adgang til eksternt lager.\nSe eventuelt indstillingen til placering af hentede udsendelser");
     }
   }
 
