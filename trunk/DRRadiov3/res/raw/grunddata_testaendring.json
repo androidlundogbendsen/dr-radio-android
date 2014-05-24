@@ -14,6 +14,7 @@
         * Valgfri placering af hentede udsendelser (internt lager eller SD-kort)<br/>
         * Grunddata+driftmeddelelser kan fjernstyres<br/>
         * Levende ikon-fix<br/>
+        * Tilgængelighed påbegyndt<br/>
         * Hvis bruger trykker 'tilbage' og ville komme ud af appen mens den spiller skal han spørges om afspilning skal stoppe<br/>
         * Hvis Akamais backup-servere sættes ud af spillet så 'renses' m3u8-filerne for døde servere (påbegyndt)<br/>
         <br/>
@@ -54,6 +55,42 @@
             "slug": "p4bornholm",
             "urn": "urn:dr:mu:bundle:4f3b892b860d9a33ccfdafd2"
         }, {
+            "title": "P4 Esbjerg",
+            "logo": "channel-logo-p4-esbjerg",
+            "scheduleIdent": "ES4",
+            "slug": "p4esbjerg",
+            "urn": "urn:dr:mu:bundle:4f3b88fe860d9a33ccfdaf06"
+        }, {
+            "title": "P4 Fyn",
+            "logo": "channel-logo-p4-fyn",
+            "scheduleIdent": "OD4",
+            "slug": "p4fyn",
+            "urn": "urn:dr:mu:bundle:4f3b8911860d9a33ccfdaf41"
+        }, {
+            "title": "P4 København",
+            "logo": "channel-logo-p4-kbh",
+            "scheduleIdent": "KH4",
+            "slug": "p4kbh",
+            "urn": "urn:dr:mu:bundle:4f3b890a860d9a33ccfdaf39"
+        }, {
+            "title": "P4 Midt & Vest",
+            "logo": "channel-logo-p4-midtvest",
+            "scheduleIdent": "HO4",
+            "slug": "p4vest",
+            "urn": "urn:dr:mu:bundle:4f3b8907860d9a33ccfdaf34"
+        }, {
+            "title": "P4 Nordjylland",
+            "logo": "channel-logo-p4-nordjylland",
+            "scheduleIdent": "ÅL4",
+            "slug": "p4nord",
+            "urn": "urn:dr:mu:bundle:4f3b8937860d9a33ccfdafdc"
+        }, {
+            "title": "P4 Sjælland",
+            "logo": "channel-logo-p4-sjaelland",
+            "scheduleIdent": "NV4",
+            "slug": "p4sjaelland",
+            "urn": "urn:dr:mu:bundle:4f3b890d860d9a33ccfdaf3e"
+        }, {
             "title": "P4 Syd",
             "logo": "channel-logo-p4-syd",
             "scheduleIdent": "ÅB4",
@@ -66,18 +103,6 @@
             "slug": "p4trekanten",
             "urn": "urn:dr:mu:bundle:4f3b892f860d9a33ccfdafd7"
         }, {
-            "title": "P4 FynErFin",
-            "logo": "channel-logo-p4-fyn",
-            "scheduleIdent": "OD4",
-            "slug": "p4fyn",
-            "urn": "urn:dr:mu:bundle:4f3b8911860d9a33ccfdaf41"
-        }, {
-            "title": "P4 København",
-            "logo": "channel-logo-p4-kbh",
-            "scheduleIdent": "KH4",
-            "slug": "p4kbh",
-            "urn": "urn:dr:mu:bundle:4f3b890a860d9a33ccfdaf39"
-        }, {
             "title": "P4 Østjylland",
             "logo": "channel-logo-p4-oestjylland",
             "scheduleIdent": "ÅR4",
@@ -85,25 +110,43 @@
             "urn": "urn:dr:mu:bundle:4f3b893a860d9a33ccfdafdf"
         }]
     }, {
-        "title": "Ramsjang/Ultra",
-        "logo": "channel-logo-ramasjang",
-        "scheduleIdent": "RAM",
-        "slug": "ramasjangradio",
-        "urn": "urn:dr:mu:bundle:4f3b8928860d9a33ccfdafcc"
+        "title": "P5",
+        "logo": "channel-logo-p5",
+        "scheduleIdent": "P5D",
+        "slug": "p5",
+        "urn": "urn:dr:mu:bundle:4f3b8922860d9a33ccfdaf96"
     }, {
-        "title": "P7 MISK",
+        "title": "P6 BEAT",
+        "logo": "channel-logo-p6",
+        "scheduleIdent": "P6B",
+        "slug": "p6beat",
+        "urn": "urn:dr:mu:bundle:4f3b8922860d9a33ccfdaf9f"
+    }, {
+        "title": "P7 MIX",
         "logo": "channel-logo-p7",
         "scheduleIdent": "P7M",
         "slug": "p7mix",
         "urn": "urn:dr:mu:bundle:4f3b8924860d9a33ccfdafa9"
     }, {
-        "title": "MORMOR",
+        "title": "P8 JAZZ",
+        "logo": "channel-logo-p8",
+        "scheduleIdent": "P8J",
+        "slug": "p8jazz",
+        "urn": "urn:dr:mu:bundle:4f3b8926860d9a33ccfdafb9"
+    }, {
+        "title": "MAMA",
         "logo": "channel-logo-mama",
         "scheduleIdent": "DRM",
         "slug": "mama",
         "urn": "urn:dr:mu:bundle:4f3b88f8860d9a33ccfdaeca"
     }, {
-        "title": "DR NyhederÆNDRET",
+        "title": "Ramasjang/Ultra",
+        "logo": "channel-logo-ramasjang",
+        "scheduleIdent": "RAM",
+        "slug": "ramasjangradio",
+        "urn": "urn:dr:mu:bundle:4f3b8928860d9a33ccfdafcc"
+    }, {
+        "title": "DR Nyheder",
         "description": "Her kan du altid høre den seneste radioavis og sportsnyt",
         "hideEPG": true,
         "logo": "channel-logo-news",
