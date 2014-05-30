@@ -160,7 +160,7 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
   @Override
   public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
 
-    Fragment f = new Udsendelse_frag();
+    Fragment f;
     Lydkilde k = liste.get(position);
     if (k instanceof Kanal) {
       f = new Kanal_frag();

@@ -97,7 +97,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
                 if (!App.PRODUKTION){
                   App.langToast("Serveren har ombestemt sig, nu er streams ikke mere tom for " + udsendelse.slug);
                   App.langToast("Tidsforskel mellem de to svar: " + (System.currentTimeMillis() - t0) / 1000 + " sek");
-                  Log.rapporterFejl(new Exception("Server ombestemte sig, der var streams alligevel - for "+udsendelse.slug+"  dt="+(System.currentTimeMillis()-t0)));
+                  Log.rapporterFejl(new Exception("Server ombestemte sig, der var streams alligevel"), udsendelse.slug+"  dt="+(System.currentTimeMillis()-t0));
                 }
                 streamsVarTom.remove(udsendelse);
               }
@@ -125,6 +125,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     kanal = DRData.instans.grunddata.kanalFraKode.get(getArguments().getString(Kanal_frag.P_kode));
     udsendelse = DRData.instans.udsendelseFraSlug.get(getArguments().getString(DRJson.Slug.name()));
     if (udsendelse == null) {
+      if (!App.PRODUKTION) Log.rapporterFejl(new IllegalStateException("afbrydManglerData()"),getArguments().toString());
       afbrydManglerData();
       return rod;
     }

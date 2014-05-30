@@ -93,7 +93,7 @@ public class Grunddata {
 
       JSONArray underkanaler = j.optJSONArray("channels");
       if (underkanaler != null) {
-        if (!Kanal.P4kode.equals(k.kode)) Log.rapporterFejl(new IllegalStateException("Forkert P4-kode: " + k.kode));
+        if (!Kanal.P4kode.equals(k.kode)) Log.rapporterFejl(new IllegalStateException("Forkert P4-kode: "), k.kode);
         parseKanaler(underkanaler, true);
       }
     }

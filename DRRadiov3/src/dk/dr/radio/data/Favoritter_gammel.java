@@ -123,7 +123,7 @@ public class Favoritter_gammel {
         if (programserie != null) {
           int nye = programserie.antalUdsendelser - Integer.parseInt(startFraNummer);
           if (nye < 0) {
-            Log.rapporterFejl(new IllegalStateException("Antal nye favoritter=" + nye + " for " + programserieSlug));
+            Log.rapporterFejl(new IllegalStateException("Antal nye favoritter=" + nye), " for " + programserieSlug);
             e.setValue("" + programserie.antalUdsendelser);
             gem();
             continue;

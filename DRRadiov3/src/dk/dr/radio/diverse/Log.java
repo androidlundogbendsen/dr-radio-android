@@ -103,6 +103,13 @@ public class Log {
     if (!App.PRODUKTION) App.langToast("Fejl: "+e);
   }
 
+  public static void rapporterFejl(final Exception e, final String f) {
+    Log.e(f, e);
+    if (fejlRapporteret++ > 3) return; // rapportér ikke mere end 3 fejl per kørsel
+    if (!App.EMULATOR) BugSenseHandler.sendExceptionMessage("fejl", f, e);
+    if (!App.PRODUKTION) App.langToast("Fejl: "+f);
+  }
+
 
   public static void rapporterOgvisFejl(final Activity akt, final Exception e) {
     if (!App.EMULATOR) BugSenseHandler.sendException(e);

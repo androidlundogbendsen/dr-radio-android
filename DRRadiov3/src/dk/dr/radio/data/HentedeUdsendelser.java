@@ -100,7 +100,7 @@ public class HentedeUdsendelser {
     try {
       String url = udsendelse.findBedsteStreamUrl(true);
       if (url == null) {
-        Log.rapporterFejl(new IllegalStateException("ingen streamurl for "+udsendelse.slug));
+        Log.rapporterFejl(new IllegalStateException("ingen streamurl"), udsendelse.slug);
         App.langToast("Beklager, udsendelsen kunne ikke hentes");
         return;
       }

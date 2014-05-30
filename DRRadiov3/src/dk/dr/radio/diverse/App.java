@@ -106,7 +106,7 @@ public class App extends Application {
     instans = this;
     netværk = new Netvaerksstatus();
     EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator");
-    if (!EMULATOR) BugSenseHandler.initAndStartSession(this, getString(R.string.bugsense_nøgle));
+    if (!EMULATOR) BugSenseHandler.initAndStartSession(this, PRODUKTION?getString(R.string.bugsense_nøgle):"c0eec1ee");
     super.onCreate();
 
     forgrundstråd = new Handler();
