@@ -15,7 +15,7 @@ public class FangBrowseIntent_akt_skrald extends Activity {
     super.onCreate(savedInstanceState);
 
     // Tjek om vi er blevet startet med et Intent med en URL, f.eks. som
-    // new Intent(Intent.ACTION_VIEW, Uri.parse("http://javabog.dk/OOP/kapitel3.jsp"));
+    // new Intent(Intent.ACTION_VIEW, Uri.parse("http://android.lundogbendsen.dk/hej.txt"));
 
     Intent i = getIntent();
     String urlFraIntent = i.getDataString();

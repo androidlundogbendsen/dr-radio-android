@@ -6,7 +6,7 @@
     "language": {},
     "android" : {
         "kontakt_url": "http://www.dr.dk/tjenester/iphone/radio/about/android22.drxml",
-        "kontakt_modtagere": ["nordfalk@lundogbendsen.dk", "mobil@dr.dk" ],
+        "kontakt_modtagere": ["android@lundogbendsen.dk", "mobil@dr.dk" ],
         "kontakt_titel": "Angående DR Radio",
         "kontakt_brugerspørgsmål": "\nHvis du oplever problemer, så vil vi meget gerne kontaktes.\nSkriv herunder\n-------------\n\n\n\n\n\n\n\n----- teknisk info til udviklerne -----\n\n",
         "undgå_akamai_direkte_HLS" : "GT-I9100 GT-I9100/16",

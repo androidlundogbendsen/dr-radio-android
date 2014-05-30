@@ -71,8 +71,8 @@ public class Basisaktivitet extends ActionBarActivity {
         App.kortToast("Log.fejlsøgning = " + App.fejlsøgning);
         return true;
       case 644:
-        // scp /home/j/android/dr-radio-android/DRRadiov3/out/production/DRRadiov3/DRRadiov3.apk j:javabog.dk/privat/
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://javabog.dk/privat/DRRadiov3.apk")));
+        // scp /home/j/android/dr-radio-android/DRRadiov3/out/production/DRRadiov3/DRRadiov3.apk j:../lundogbendsen/hjemmeside/
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://android.lundogbendsen.dk/DRRadiov3.apk")));
         return true;
       case 1644:
         new AsyncTask() {
