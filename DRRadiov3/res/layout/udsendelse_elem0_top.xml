@@ -85,7 +85,7 @@
                 android:text="42:30"
                 android:focusable="false"
                 android:importantForAccessibility="no"
-                android:contentDescription="\u00A0"
+                android:contentDescription="@null"
                 android:singleLine="true"
                 android:id="@+id/seekBarMaxTekst"/>
 
@@ -97,7 +97,7 @@
                 android:text="2:30"
                 android:focusable="false"
                 android:importantForAccessibility="no"
-                android:contentDescription="\u00A0"
+                android:contentDescription="@null"
                 android:singleLine="true"
                 android:background="@color/hvid"
                 android:id="@+id/seekBarTekst"/>

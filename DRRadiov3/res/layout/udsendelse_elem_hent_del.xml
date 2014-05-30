@@ -16,6 +16,7 @@
             android:gravity="center_vertical"
             android:textAlignment="center"
             android:text="UDSENDELSEN KAN IKKE HENTES"
+            android:contentDescription="Udsendelsen kan ikke hentes"
             android:enabled="false"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/grå40"
