@@ -98,7 +98,7 @@ public abstract class Lydkilde implements Serializable {
         Log.d("findBedsteStreams " + s);
         kandidater.add(s);
       } catch (Exception e) {
-        Log.rapporterFejl(new Exception(this + " ls=" + sxxx, e));
+        Log.rapporterFejl(e, " ls=" + sxxx);
       }
 
     Collections.sort(kandidater);

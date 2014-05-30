@@ -156,7 +156,7 @@ http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-b.m3u8?sd=10&rebase=on
     }
 
     if (!rensetMasterM3U8.equals(masterM3U3)) {
-      Log.rapporterFejl(new Exception("Nogle servere fjernet, hurra, det virker! "+lydUrl));
+      Log.rapporterFejl(new Exception("Nogle servere fjernet, hurra, det virker!"), lydUrl);
     }
 
     // Det følgende opretter en 'mini-webserver'

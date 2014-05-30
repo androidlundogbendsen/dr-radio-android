@@ -123,7 +123,7 @@ public class Afspiller {
       return;
     }
     if (lydkilde.hentetStream == null && lydkilde.streams == null) {
-      Log.rapporterFejl(new IllegalStateException("Ingen lydUrl for "+lydkilde+": "+lydkilde.streams));
+      Log.rapporterFejl(new IllegalStateException("Ingen lydUrl"), lydkilde+": "+lydkilde.streams);
       App.kortToast("Kunne ikke oprette forbindelse, prøv igen senere");
       return;
     }

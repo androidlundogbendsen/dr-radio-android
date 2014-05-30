@@ -101,6 +101,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     //Log.d(this + " onCreateView 2 efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     if (rod == null) rod = inflater.inflate(R.layout.kanal_frag, container, false);
     if (kanal == null) {
+      if (!App.PRODUKTION) Log.rapporterFejl(new IllegalStateException("afbrydManglerData()"), "for kanal "+kanalkode);
       afbrydManglerData();
       return rod;
     }
