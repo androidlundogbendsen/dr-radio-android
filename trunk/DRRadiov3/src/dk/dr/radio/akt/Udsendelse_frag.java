@@ -1,10 +1,12 @@
 package dk.dr.radio.akt;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -223,6 +225,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     }
   };
 
+  @TargetApi(Build.VERSION_CODES.GINGERBREAD)
   private static void tjekOmHentet(Udsendelse udsendelse) {
     if (udsendelse.hentetStream == null) {
       if (!DRData.instans.hentedeUdsendelser.virker()) return;
@@ -495,14 +498,14 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
           aq.id(R.id.titel_og_tid).typeface(App.skrift_gibson)
               .text(lavFedSkriftTil(udsendelse.titel + " - " + (udsendelse.startTid==null?"(ukendt)":DRJson.datoformat.format(udsendelse.startTid)), udsendelse.titel.length()));
-          aq.getView().setContentDescription("\u00A0"); // varetages af listviewet
+          aq.getView().setContentDescription(null); // varetages af listviewet
 
           //aq.id(R.id.beskrivelse).text(udsendelse.beskrivelse).typeface(App.skrift_georgia);
           //Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS);
 
           vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
           vh.titel.setText(udsendelse.titel.toUpperCase());
-          vh.titel.setContentDescription("\u00A0");  // varetages af listviewet
+          vh.titel.setContentDescription(null);  // varetages af listviewet
           aq.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
           seekBarTekst = aq.id(R.id.seekBarTekst).typeface(App.skrift_gibson).getTextView();
           seekBarMaxTekst = aq.id(R.id.seekBarMaxTekst).typeface(App.skrift_gibson).getTextView();
