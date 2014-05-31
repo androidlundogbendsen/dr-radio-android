@@ -53,11 +53,11 @@ public class DrVolleyStringRequest extends StringRequest {
     App.forgrundstråd.post(new Runnable() {
       @Override
       public void run() {
-        try {
-          listener.fikSvar(listener.cachetVærdi, true, false);
-        } catch (Exception e) {
-          listener.onErrorResponse(new VolleyError(e));
-        }
+    try {
+      listener.fikSvar(listener.cachetVærdi, true, false);
+    } catch (Exception e) {
+      listener.onErrorResponse(new VolleyError(e));
+    }
       }
     });
   }

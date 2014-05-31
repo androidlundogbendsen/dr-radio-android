@@ -154,8 +154,8 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
       // Der er 1 ud af en millards chance for at hashkoden ikke er ændret, den risiko tør vi godt løbe
       int drift_statusmeddelelse_hash = drift_statusmeddelelse.hashCode();
       final int gammelHashkode = App.prefs.getInt(drift_statusmeddelelse_NØGLE, 0);
-      Log.d("drift_statusmeddelelse='" + drift_statusmeddelelse + "' nyHashkode=" + drift_statusmeddelelse_hash + " gammelHashkode=" + gammelHashkode);
       if (gammelHashkode != drift_statusmeddelelse_hash && !"".equals(drift_statusmeddelelse)) { // Driftmeddelelsen er ændret. Vis den...
+        Log.d("vis_drift_statusmeddelelse='" + drift_statusmeddelelse + "' nyHashkode=" + drift_statusmeddelelse_hash + " gammelHashkode=" + gammelHashkode);
         vis_drift_statusmeddelelse = drift_statusmeddelelse;
       }
     }

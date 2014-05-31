@@ -57,11 +57,10 @@ import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
 import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 import dk.dr.radio.v3.R;
 
-public class Udsendelse_frag extends Basisfragment implements View.OnClickListener, AdapterView.OnItemClickListener, SeekBar.OnSeekBarChangeListener, Runnable {
+public class Udsendelse_skrald_frag extends Basisfragment implements View.OnClickListener, AdapterView.OnItemClickListener, SeekBar.OnSeekBarChangeListener, Runnable {
 
   public static final String BLOKER_VIDERE_NAVIGERING = "BLOKER_VIDERE_NAVIGERING";
   public static final String AKTUEL_UDSENDELSE_SLUG = "AKTUEL_UDSENDELSE_SLUG";
-  private ListView listView;
   private Kanal kanal;
   protected View rod;
   private Udsendelse udsendelse;
@@ -140,33 +139,12 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
     rod = inflater.inflate(R.layout.kanal_frag, container, false);
     final AQuery aq = new AQuery(rod);
-    listView = aq.id(R.id.listView).adapter(adapter).getListView();
+    ListView listView = aq.id(R.id.listView).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).getView());
     listView.setOnItemClickListener(this);
     listView.setContentDescription(udsendelse.titel + " - " + (udsendelse.startTid==null?"":DRJson.datoformat.format(udsendelse.startTid)));
-    /*
-    listView.setAccessibilityDelegate(new View.AccessibilityDelegate() {
-      @Override
-      public boolean dispatchPopulateAccessibilityEvent(View host, AccessibilityEvent event) {
-        event.getText().add(0, "Hejsa1");
-        Log.d("xxxxxx1 " + event);
-        return true;
-      }
 
-      @Override
-      public void onPopulateAccessibilityEvent(View host, AccessibilityEvent event) {
-        event.getText().add(0, "Hejsa2");
-        Log.d("xxxxxx2 " + event);
-      }
-
-      @Override
-      public void onInitializeAccessibilityEvent(View host, AccessibilityEvent event) {
-        super.onInitializeAccessibilityEvent(host, event);
-        event.getText().add(0, "Hejsa3");
-        Log.d("xxxxxx3 "+event);
-      }
-    });
-    */
+    aq.id(R.id.tom).text("tom for "+udsendelse);
 
     tjekOmHentet(udsendelse);
     hentStreams.run();
@@ -241,7 +219,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         public Priority getPriority() {
           return Priority.LOW; // Det vigtigste er at hente streams, spillelisten er knapt så vigtig
         }
-      }.setTag(Udsendelse_frag.this);
+      }.setTag(Udsendelse_skrald_frag.this);
       App.volleyRequestQueue.add(req);
       if (aktuelUdsendelsePåKanalen()) {
         App.forgrundstråd.postDelayed(opdaterSpillelisteRunnable, 15000);
@@ -503,10 +481,6 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         v.setTag(vh);
         vh.startid = aq.id(R.id.startid).typeface(App.skrift_gibson).getTextView();
         if (type == TOP) {
-          int br = bestemBilledebredde(listView, (View) aq.id(R.id.billede).getView().getParent(), 100);
-          int hø = br * højde9 / bredde16;
-          String burl = skalérSlugBilledeUrl(udsendelse.slug, br, hø);
-          aq.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
 
           aq.id(R.id.lige_nu).gone();
           aq.id(R.id.info).typeface(App.skrift_gibson);
@@ -530,18 +504,18 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
           vh.titel.setText(udsendelse.titel.toUpperCase());
           vh.titel.setContentDescription(null);  // varetages af listviewet
-          aq.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
+          aq.id(R.id.hør).clicked(Udsendelse_skrald_frag.this).typeface(App.skrift_gibson);
           seekBarTekst = aq.id(R.id.seekBarTekst).typeface(App.skrift_gibson).getTextView();
           seekBarMaxTekst = aq.id(R.id.seekBarMaxTekst).typeface(App.skrift_gibson).getTextView();
           seekBar = aq.id(R.id.seekBar).getSeekBar();
-          seekBar.setOnSeekBarChangeListener(Udsendelse_frag.this);
-          aq.id(R.id.hent).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
+          seekBar.setOnSeekBarChangeListener(Udsendelse_skrald_frag.this);
+          aq.id(R.id.hent).clicked(Udsendelse_skrald_frag.this).typeface(App.skrift_gibson);
           aq.id(R.id.kan_endnu_ikke_hentes).typeface(App.skrift_gibson);
           if (!DRData.instans.hentedeUdsendelser.virker()) aq.gone(); // Understøttes ikke på Android 2.2
-          aq.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
+          aq.id(R.id.del).clicked(Udsendelse_skrald_frag.this).typeface(App.skrift_gibson);
         } else if (type == PLAYLISTE_OVERSKRIFT_PLAYLISTE_INFO) {
-          aq.id(R.id.playliste).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
-          aq.id(R.id.info).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
+          aq.id(R.id.playliste).clicked(Udsendelse_skrald_frag.this).typeface(App.skrift_gibson);
+          aq.id(R.id.info).clicked(Udsendelse_skrald_frag.this).typeface(App.skrift_gibson);
         } else if (type == INFOTEKST) {
           aq.id(R.id.titel).typeface(App.skrift_georgia);
           String forkortInfoStr = udsendelse.beskrivelse;
@@ -551,7 +525,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
             forkortInfoStr += "...(læs mere)";
             spannable = new SpannableString(forkortInfoStr);
             spannable.setSpan(new ForegroundColorSpan(App.color.blå), forkortInfoStr.length() - "(læs mere)".length(), forkortInfoStr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            aq.clicked(Udsendelse_frag.this).text(spannable/*forkortInfoStr*/);
+            aq.clicked(Udsendelse_skrald_frag.this).text(spannable/*forkortInfoStr*/);
           } else {
             aq.text(forkortInfoStr);
             Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS);
@@ -560,7 +534,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         } else if (type == PLAYLISTEELEM_NU || type == PLAYLISTEELEM) {
           vh.titel = aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
         } else if (type == VIS_HELE_PLAYLISTEN_KNAP) {
-          aq.id(R.id.vis_hele_playlisten).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
+          aq.id(R.id.vis_hele_playlisten).clicked(Udsendelse_skrald_frag.this).typeface(App.skrift_gibson);
         } else if (type == ALLE_UDSENDELSER) {
           aq.id(R.id.titel).typeface(App.skrift_gibson_fed);
         }
@@ -611,8 +585,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
           if (status != DownloadManager.STATUS_SUCCESSFUL && status != DownloadManager.STATUS_FAILED) {
             aq.id(R.id.hent).text(statustekst);
-            App.forgrundstråd.removeCallbacks(Udsendelse_frag.this);
-            App.forgrundstråd.postDelayed(Udsendelse_frag.this, 5000);
+            App.forgrundstråd.removeCallbacks(Udsendelse_skrald_frag.this);
+            App.forgrundstråd.postDelayed(Udsendelse_skrald_frag.this, 5000);
           }
           aq.textColorId(R.color.grå40);
         }
