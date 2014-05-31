@@ -77,7 +77,7 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
 
   @Override
   public void onDestroyView() {
-    viewPager.setAdapter(null);
+    //if (viewPager!=null) viewPager.setAdapter(null); - forårsager crash... har ikke kigget nærmere på hvorfor
     viewPager = null;
     adapter = null;
     kanalfaneblade = null;
