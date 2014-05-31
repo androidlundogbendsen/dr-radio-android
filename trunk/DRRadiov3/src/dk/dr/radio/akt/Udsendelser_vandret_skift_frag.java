@@ -163,7 +163,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
 
   @Override
   public void onDestroyView() {
-    if (viewPager!=null) viewPager.setAdapter(null);
+    //if (viewPager!=null) viewPager.setAdapter(null); - forårsager crash... har ikke kigget nærmere på hvorfor
     viewPager = null;
     adapter = null;
     pager_title_strip = null;
