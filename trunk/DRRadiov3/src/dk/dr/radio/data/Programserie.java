@@ -63,7 +63,7 @@ public class Programserie { //implements Serializable {
 
   }
 
-  public int findUdsendelseIndexFraSlug(String slug) {
+  public static int findUdsendelseIndexFraSlug(ArrayList<Udsendelse> udsendelserListe, String slug) {
     int n = -1;
     if (udsendelserListe != null) {
       for (int i = 0; i < udsendelserListe.size(); i++) {

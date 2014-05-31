@@ -138,6 +138,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
       if (programserie.getUdsendelser()!=null) {
         liste.addAll(programserie.getUdsendelser());
         if (programserie.getUdsendelser().size()<programserie.antalUdsendelser) {
+          Log.d("bygListe() viser TIDLIGERE: "+programserie.getUdsendelser().size()+" < "+programserie.antalUdsendelser);
           liste.add(TIDLIGERE);  // Vis 'tidligere'-listeelement
         }
       }
@@ -251,7 +252,13 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
         if (antalHentedeSendeplaner++ < 7) {
           vh.aq.id(R.id.progressBar).visible();   // De første 7 henter vi bare for brugeren
           vh.titel.setVisibility(View.VISIBLE);
-          hentUdsendelser(programserie.getUdsendelser().size());
+          // skal ske lidt senere, når viewet er færdigt opdateret
+          App.forgrundstråd.post(new Runnable() {
+            @Override
+            public void run() {
+              hentUdsendelser(programserie.getUdsendelser().size());
+            }
+          });
         } else {
           vh.aq.id(R.id.progressBar).invisible(); // Derefter må brugeren gøre det manuelt
           vh.titel.setVisibility(View.VISIBLE);

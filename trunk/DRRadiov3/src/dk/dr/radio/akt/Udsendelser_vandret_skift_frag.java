@@ -2,6 +2,7 @@ package dk.dr.radio.akt;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -88,7 +89,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
       viewPager.setAdapter(adapter);
       hentUdsendelser(0);
     } else {
-      int n = programserie.findUdsendelseIndexFraSlug(startudsendelse.slug);
+      int n = Programserie.findUdsendelseIndexFraSlug(liste, startudsendelse.slug);
       if (n<0) {
         liste.add(startudsendelse);
         viewPager.setAdapter(adapter);
@@ -133,7 +134,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     Udsendelse udsFør = liste.get(viewPager.getCurrentItem());
     liste.clear();
     liste.addAll(programserie.getUdsendelser());
-    if (programserie.findUdsendelseIndexFraSlug(startudsendelse.slug)<0) {
+    if (Programserie.findUdsendelseIndexFraSlug(liste, startudsendelse.slug)<0) {
       liste.add(startudsendelse);
       // hvis startudsendelse ikke er med i listen, så hent nogle flere, i håb om at komme hen til
       // startudsendelsen (hvis vi ikke allerede har forsøgt 7 gange)
@@ -141,10 +142,11 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
         hentUdsendelser(programserie.getUdsendelser().size());
       }
     }
-    int nEft = programserie.findUdsendelseIndexFraSlug(udsFør.slug);
+    int nEft = Programserie.findUdsendelseIndexFraSlug(liste, udsFør.slug);
     if (nEft<0) nEft = liste.size()-1; // startudsendelsen
     adapter.notifyDataSetChanged();
-    viewPager.setCurrentItem(nEft, false);
+    Log.d("xxx setCurrentItem "+viewPager.getCurrentItem()+"   nEft="+nEft);
+    viewPager.setCurrentItem(nEft, false); // - burde ikke være nødvendig, vi har defineret getItemPosition
     vispager_title_strip();
 /*
     if (programserie.getUdsendelser().size() < programserie.antalUdsendelser) {
@@ -220,9 +222,9 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     }
 
     @Override
-    public Udsendelse_frag getItem(int position) {
+    public Fragment getItem(int position) {
       Udsendelse u = liste.get(position);
-      Udsendelse_frag f = new Udsendelse_frag();
+      Fragment f = new Udsendelse_frag();
       f.setArguments(new Intent()
           .putExtra(Kanal_frag.P_kode, kanal.kode)
           .putExtra(Udsendelse_frag.AKTUEL_UDSENDELSE_SLUG, getArguments().getString(Udsendelse_frag.AKTUEL_UDSENDELSE_SLUG))
@@ -231,6 +233,33 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
       return f;
     }
 
+  /**
+   * Denne metode kaldes af systemet efter et kald til notifyDataSetChanged()
+   * Se http://developer.android.com/reference/android/support/v4/view/PagerAdapter.html :
+   * Data set changes must occur on the main thread and must end with a call to notifyDataSetChanged()
+   * similar to AdapterView adapters derived from BaseAdapter. A data set change may involve pages being
+   * added, removed, or changing position. The ViewPager will keep the current page active provided
+   * the adapter implements the method getItemPosition(Object).
+   * @param object fragmentet
+   * @return dets (nye) position
+   *
+    @Override
+    public int getItemPosition(Object object) {
+      if (!(object instanceof Fragment)) {
+        Log.rapporterFejl(new Exception("getItemPosition gav ikke et fragment!??!"), ""+object);
+        return POSITION_NONE;
+      }
+      Bundle arg = ((Fragment) object).getArguments();
+      String slug = arg.getString(DRJson.Slug.name());
+      if (slug==null) {
+        Log.rapporterFejl(new Exception("getItemPosition gav fragment uden slug!??!"), ""+arg);
+        return POSITION_NONE;
+      }
+      int nyPos = Programserie.findUdsendelseIndexFraSlug(liste, slug);
+      Log.d("xxx getItemPosition "+object+" "+arg +"   - nyPos="+nyPos);
+      return nyPos;
+    }
+*/
     @Override
     public int getCount() {
       return liste.size();

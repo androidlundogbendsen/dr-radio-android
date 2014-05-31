@@ -42,6 +42,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
 
 import com.android.volley.Network;
@@ -97,6 +98,7 @@ public class App extends Application {
   public static DRFarver color;
   public static Resources res;
   public static long opstartstidspunkt;
+  public static AccessibilityManager accessibilityManager;
 
 
   @SuppressLint("NewApi")
@@ -134,6 +136,7 @@ public class App extends Application {
       Log.rapporterFejl(e);
     }
 
+    accessibilityManager = (AccessibilityManager) getSystemService(Context.ACCESSIBILITY_SERVICE);
 
 
     // Initialisering af Volley
