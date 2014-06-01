@@ -319,6 +319,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     public TextView titel;
     public TextView startid;
     public Playlisteelement playlisteelement;
+    public int itemViewType;
   }
 
   static final int TOP = 0;
@@ -499,6 +500,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       if (v == null) {
         v = getLayoutInflater(null).inflate(layoutFraType[type], parent, false);
         vh = new Viewholder();
+        vh.itemViewType = type;
         aq = vh.aq = new AQuery(v);
         v.setTag(vh);
         vh.startid = aq.id(R.id.startid).typeface(App.skrift_gibson).getTextView();
@@ -567,6 +569,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       } else {
         vh = (Viewholder) v.getTag();
         aq = vh.aq;
+        if (!App.PRODUKTION && vh.itemViewType!=type) throw new IllegalStateException("Liste ej konsistent, der er nok sket ændringer i den fra f.eks. getView()");
       }
 
       // Opdatér viewholderens data
@@ -593,7 +596,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           else if (udsendelse.streamsKlar() && !erOnline) aq.text("Internetforbindelse mangler").enabled(false);
           else if (erAktuelUdsendelsePåKanalen) {
             if (lydkildeErDenneKanal&&(spiller||forbinder)) aq.enabled(false).text("SPILLER "+ kanal.navn.toUpperCase() + " LIVE");
-            else if (erOnline) aq.text("HØR "+ kanal.navn.toUpperCase() + " LIVE").getView().setContentDescription("hør "+ kanal.navn.toUpperCase());
+            else if (erOnline) aq.text("HØR "+ kanal.navn.toUpperCase() + " LIVE").getView().setContentDescription("hør " + kanal.navn.toUpperCase());
             else aq.enabled(false).text("Internetforbindelse mangler");
           }
           else aq.gone();

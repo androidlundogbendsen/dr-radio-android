@@ -128,13 +128,13 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
     switch (DRData.instans.afspiller.getAfspillerstatus()) {
       case STOPPET:
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.ic_action_play);
-        remoteViews.setContentDescription(R.id.startStopKnap, "Start afspilning");
+        if (Build.VERSION.SDK_INT>=15) remoteViews.setContentDescription(R.id.startStopKnap, "Start afspilning");
         remoteViews.setViewVisibility(R.id.progressBar, View.GONE);
         remoteViews.setTextColor(R.id.metainformation, App.color.grå60);
         break;
       case FORBINDER:
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.ic_action_pause);
-        remoteViews.setContentDescription(R.id.startStopKnap, "Stop afspilning");
+        if (Build.VERSION.SDK_INT>=15) remoteViews.setContentDescription(R.id.startStopKnap, "Stop afspilning");
         remoteViews.setViewVisibility(R.id.progressBar, View.VISIBLE);
         int fpct = DRData.instans.afspiller.getForbinderProcent();
         //remoteViews.setTextViewText(R.id.metainformation, "Forbinder " + (fpct > 0 ? fpct : ""));
@@ -143,7 +143,7 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
       case SPILLER:
         //  App.kortToast("SPILLER " + k.navn);
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.ic_action_pause);
-        remoteViews.setContentDescription(R.id.startStopKnap, "Stop afspilning");
+        if (Build.VERSION.SDK_INT>=15) remoteViews.setContentDescription(R.id.startStopKnap, "Stop afspilning");
         remoteViews.setViewVisibility(R.id.progressBar, View.GONE);
         remoteViews.setTextColor(R.id.metainformation, type == TYPE_hjemmeskærm ? App.color.grå60 : App.color.grå60);
         break;

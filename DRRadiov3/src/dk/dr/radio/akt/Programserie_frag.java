@@ -55,6 +55,8 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     programserieSlug = getArguments().getString(DRJson.SeriesSlug.name());
     Log.d("onCreateView " + this + " viser " + programserieSlug);
     kanal = DRData.instans.grunddata.kanalFraKode.get(getArguments().getString(Kanal_frag.P_kode));
+    rod = inflater.inflate(R.layout.kanal_frag, container, false);
+    aq = new AQuery(rod);
 
     programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
     if (programserie == null) {
@@ -62,8 +64,6 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     }
     bygListe();
 
-    rod = inflater.inflate(R.layout.kanal_frag, container, false);
-    aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).getView());
     listView.setOnItemClickListener(this);
@@ -129,6 +129,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     public View stiplet_linje;
     public TextView titel;
     public TextView varighed;
+    public int itemViewType;
   }
 
   void bygListe() {
@@ -191,6 +192,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
       if (v == null) {
         v = getLayoutInflater(null).inflate(layoutFraType[type], parent, false);
         vh = new Viewholder();
+        vh.itemViewType = type;
         AQuery aq = vh.aq = new AQuery(v);
         v.setTag(vh);
         if (type == TOP) {
@@ -218,6 +220,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
         }
       } else {
         vh = (Viewholder) v.getTag();
+        if (!App.PRODUKTION && vh.itemViewType!=type) throw new IllegalStateException("Liste ej konsistent, der er nok sket ændringer i den fra f.eks. getView()");
       }
 
       // Opdatér viewholderens data

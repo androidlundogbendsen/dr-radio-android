@@ -25,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.androidquery.AQuery;
@@ -188,8 +187,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     App.volleyRequestQueue.add(req);
   }
 
-  public void rulBlødtTilAktuelUdsendelseBlødt() {
-    Log.d(this + " rulBlødtTilAktuelUdsendelseBlødt()");
+  public void rulBlødtTilAktuelUdsendelse() {
+    Log.d(this + " rulBlødtTilAktuelUdsendelse()");
     if (aktuelUdsendelseIndex < 0) return;
     int topmargen = getResources().getDimensionPixelOffset(R.dimen.kanalvisning_aktuelUdsendelse_topmargen);
     if (Build.VERSION.SDK_INT >= 11) listView.smoothScrollToPositionFromTop(aktuelUdsendelseIndex, topmargen);
@@ -307,6 +306,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     public Udsendelse udsendelse;
     public View starttidbjælke;
     public View slutttidbjælke;
+    public int itemViewType;
   }
 
   private Viewholder aktuelUdsendelseViewholder;
@@ -317,6 +317,21 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       return liste.size();
     }
 
+    /*
+    public boolean hasStableIds() {
+      return true;
+    }
+
+    @Override
+    public Object getItem(int position) {
+      return liste.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+      return position+getItemViewType(position)*1000;
+    }
+    */
     @Override
     public int getViewTypeCount() {
       return 3;
@@ -347,6 +362,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
                 type == NORMAL ? R.layout.kanal_elem1_udsendelse   // De andre udsendelser
                     : R.layout.kanal_elem2_tidligere_senere, parent, false);
         vh = new Viewholder();
+        vh.itemViewType = type;
         a = vh.aq = new AQuery(v);
         vh.startid = a.id(R.id.startid).typeface(App.skrift_gibson).getTextView();
         vh.starttidbjælke = a.id(R.id.starttidbjælke).getView();
@@ -387,6 +403,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       } else {
         vh = (Viewholder) v.getTag();
         a = vh.aq;
+        if (!App.PRODUKTION && vh.itemViewType!=type) throw new IllegalStateException("Liste ej konsistent, der er nok sket ændringer i den fra f.eks. getView()");
       }
       udvikling_checkDrSkrifter(v, this.getClass() + " type=" + type);
 
@@ -417,7 +434,9 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           opdaterSenestSpillet2(a, udsendelse);
           break;
         case NORMAL:
-          vh.startid.setText(udsendelse.startTidKl); // TODO Her kommer NullPointerException en sjælden gang imellem - se https://www.bugsense.com/dashboard/project/cd78aa05/errors/836338028
+          // Her kom NullPointerException en sjælden gang imellem - se https://www.bugsense.com/dashboard/project/cd78aa05/errors/836338028
+          // det skyldtes at hentSendeplanForDag(), der ændrede i listen, mens ListView var ved at kalde fra getView()
+          vh.startid.setText(udsendelse.startTidKl);
           vh.titel.setText(udsendelse.titel);
           a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
           vh.titel.setTextColor(udsendelse.kanHøres ? Color.BLACK : App.color.grå60);
@@ -428,7 +447,13 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           if (antalHentedeSendeplaner++ < 7 && aktuelUdsendelseIndex>=0) {
             a.id(R.id.progressBar).visible();   // De første 7 henter vi bare for brugeren
             vh.titel.setVisibility(View.VISIBLE);
-            hentSendeplanForDag(udsendelse.startTid);
+            final Date dag = udsendelse.startTid; // da hentSendeplanForDag ændrer i listen må kaldet ikke udføres direkte i getView
+            App.forgrundstråd.post(new Runnable() {
+              @Override
+              public void run() {
+                hentSendeplanForDag(dag);
+              }
+            });
           } else {
             a.id(R.id.progressBar).invisible(); // Derefter må brugeren gøre det manuelt
             vh.titel.setVisibility(View.VISIBLE);
@@ -477,9 +502,17 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       lp = (LinearLayout.LayoutParams) vh.slutttidbjælke.getLayoutParams();
       lp.weight = 100 - passeretPct;
       vh.slutttidbjælke.setLayoutParams(lp);
-      if (passeretPct >= 100) { // Hop til næste udsendelse
-        opdaterListe();
-        if (vh.starttidbjælke.isShown()) rulBlødtTilAktuelUdsendelseBlødt();
+      if (passeretPct >= 100) {
+        // Hop til næste udsendelse - da det kan ske at denne metode kaldes via ListViews kald til getView()
+        // skal kaldet vente, sådan at vi er sikre på at det ikke sker mens listen er i gang med at rendere
+        final boolean starttidbjælkeVarSynlig = (vh.starttidbjælke.isShown());
+        App.forgrundstråd.post(new Runnable() {
+          @Override
+          public void run() {
+            opdaterListe();
+            if (starttidbjælkeVarSynlig) rulBlødtTilAktuelUdsendelse();
+          }
+        });
       }
 
       boolean spillerDenneKanal = DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET && DRData.instans.afspiller.getLydkilde() == kanal;
