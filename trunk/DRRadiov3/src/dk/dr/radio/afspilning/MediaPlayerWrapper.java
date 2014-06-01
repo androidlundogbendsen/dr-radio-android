@@ -101,13 +101,15 @@ public class MediaPlayerWrapper {
       return;
     }
 
-    if (!lydUrl.endsWith("master.m3u8") || App.PRODUKTION || tæller++%2==0) {
+    //if (!lydUrl.endsWith("master.m3u8") || App.PRODUKTION || tæller++%2==0) {
+    if (!lydUrl.endsWith("master.m3u8") || !App.prefs.getBoolean("Filtrér akamai", true)) {
+      Log.d("Bruger oprindelig lyd-URL: "+lydUrl);
       mediaPlayer.setDataSource(lydUrl);
       return;
     }
 
-    App.kortToast("Gemmer (hver anden gang) master.m3u8 lokalt og spiller den");
-    App.kortToast("Lav venligt en rapport hvis det ikke virker, tak!!!");
+    Log.d("Gemmer "+lydUrl+" lokalt og spiller den");
+    //App.kortToast("Lav venligt en rapport hvis det ikke virker, tak!!!");
 
     /* Følgende dur ikke, URLen skal starte med http:// og slutte med  .m3u8
        se http://androidxref.com/4.0.4/xref/frameworks/base/media/libmediaplayerservice/MediaPlayerService.cpp#583
@@ -203,6 +205,7 @@ http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-b.m3u8?sd=10&rebase=on
     //  Log.rapporterFejl(e);
     //}
     // ... og sæt i gang
+    Log.d("mediaPlayer.setDataSource(http://localhost:"+ss.getLocalPort()+"/master.m3u8");
     mediaPlayer.setDataSource("http://localhost:"+ss.getLocalPort()+"/master.m3u8");
 
   }

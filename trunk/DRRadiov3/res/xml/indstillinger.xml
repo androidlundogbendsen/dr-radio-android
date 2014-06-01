@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <CheckBoxPreference
+            android:key="Filtrér akamai"
+            android:title="Filtrér akamai"
+            android:defaultValue="true"
+            android:summaryOn="Filtrér akamai for døde servere (ny opførelse)"
+            android:summaryOff="Filtrér ikke akamai for døde servere (gammel opførelse)"
+            />
+
     <CheckBoxPreference
             android:key="startAfspilningMedDetSammme"
             android:title="Start automatisk"

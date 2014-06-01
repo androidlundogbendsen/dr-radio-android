@@ -27,8 +27,7 @@
             android:key="manuelStreamvalg"
             android:title="Manuelt streamvalg"
             android:defaultValue="false"
-            android:summary="Vælg manuelt mellem de tilgængelige streams, indtil API'et kan give korrekte streamtyper"/>
-
+            android:summary="Vælg manuelt mellem de tilgængelige streams"/>
 
     <CheckBoxPreference
             android:key="udsendelser_bladr"
