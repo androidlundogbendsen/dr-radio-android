@@ -19,11 +19,6 @@ import dk.dr.radio.diverse.Log;
 public class DrVolleyStringRequest extends StringRequest {
   private final DrVolleyResonseListener lytter;
 
-  /*
-      public DrVolleyStringRequest(String url, Response.Listener<String> listener, Response.ErrorListener errorListener) {
-        super(url, listener, errorListener);
-      }
-      */
   public DrVolleyStringRequest(String url, final DrVolleyResonseListener listener) {
     super(url, listener, listener);
     listener.url = url;
@@ -50,6 +45,7 @@ public class DrVolleyStringRequest extends StringRequest {
     // Kald først fikSvar når forgrundstråden er færdig med hvad den er i gang med
     // - i tilfælde af at en forespørgsel er startet midt under en listeopdatering giver det problemer
     // at opdatere listen omgående, da elementer så kan skifte position (og måske type) midt i det hele
+    /*
     App.forgrundstråd.post(new Runnable() {
       @Override
       public void run() {
@@ -60,6 +56,14 @@ public class DrVolleyStringRequest extends StringRequest {
     }
       }
     });
+    */
+    // Vi kalder fikSvar i forgrundstråden - og dermed må forespørgsler ikke foretages direkte
+    // fra en listeopdatering eller fra getView
+    try {
+      listener.fikSvar(listener.cachetVærdi, true, false);
+    } catch (Exception e) {
+      listener.onErrorResponse(new VolleyError(e));
+    }
   }
 
 

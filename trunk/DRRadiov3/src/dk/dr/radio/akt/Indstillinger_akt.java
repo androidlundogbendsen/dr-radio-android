@@ -93,7 +93,7 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
         }
       } else {
         lp.setEnabled(false);
-        lp.setTitle("Adgang til eksternt lager mangler");
+        lp.setSummary(lp.getSummary()+" Adgang til eksternt lager mangler - indsæt et SD-kort.");
       }
     } catch (Exception ex) {
       Log.rapporterFejl(ex);
