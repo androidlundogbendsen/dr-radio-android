@@ -13,13 +13,15 @@
         Betaudgaven opdateres ude i venstremenuen nederst. Nyeste udgave har:<br/>
         * Valgfri placering af hentede udsendelser (internt lager eller SD-kort)<br/>
         * Grunddata+driftmeddelelser kan fjernstyres<br/>
-        * Levende ikon-fix<br/>
+        * Levende ikon fungerer nu hvergang<br/>
         * Hvis bruger trykker 'tilbage' og ville komme ud af appen mens den spiller skal han spørges om afspilning skal stoppe<br/>
-        * Tilgængelighed påbegyndt<br/>
+        * Tilgængelighed (i gang)<br/>
         <br/>
-        * Hvis Akamais backup-servere sættes ud af spillet så 'renses' m3u8-filerne for døde servere (påbegyndt)<br/>
+        * Lydstream: Akamai HLS filtreres for døde servere (i gang)<br/>
         <br/>
-        I må <b><ul>meget gerne</ul></b> starte og stoppe LIVE afspilning nogle gange. Hver anden gang bruges 'rensede' m3u8-filer. Tjek at det virker hver gang (ikke hveranden) og indsend en rapport, tak! (i kontakt i venstremenuen)"
+        I må <b><ul>meget gerne</ul></b> starte og stoppe direkte afspilning nogle gange.
+        Hvis det ikke virker, så tjek om det virker hvis du slår 'Filtrér akamai' fra i indstillingerne,
+        og indsend derefter en rapport (i kontakt i venstremenuen), tak!"
     },
     "ios": {
 

@@ -45,7 +45,7 @@ public class Basisfragment extends Fragment {
 
   protected void afbrydManglerData() {
     Log.d("FRAGMENT AFBRYDES " + this + " " + getArguments());
-    if (!App.PRODUKTION) App.kortToast("FRAGMENT AFBRYDES " + this + " " + getArguments());
+    //if (!App.PRODUKTION) App.kortToast("FRAGMENT AFBRYDES " + this + " " + getArguments());
     getFragmentManager().popBackStack();
   }
 
