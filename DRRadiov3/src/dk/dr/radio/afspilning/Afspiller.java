@@ -280,7 +280,8 @@ public class Afspiller {
           mediaPlayer.prepare();
           Log.d("mediaPlayer.prepare() slut  " + mpTils());
         } catch (Exception ex) {
-          ex.printStackTrace();
+          if (!App.PRODUKTION) Log.rapporterFejl(ex);
+          else Log.e("Fejl for lyd-stream " + lydstream, ex);
           //ex = new Exception("spiller "+kanalNavn+" "+lydUrl, ex);
           //Log.kritiskFejlStille(ex);
           handler.post(new Runnable() {
