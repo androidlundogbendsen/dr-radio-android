@@ -6,8 +6,8 @@
             android:key="Filtrér akamai"
             android:title="Filtrér akamai"
             android:defaultValue="true"
-            android:summaryOn="Filtrér akamai for døde servere (ny opførelse)"
-            android:summaryOff="Filtrér ikke akamai for døde servere (gammel opførelse)"
+            android:summaryOn="Filtrér Akamai for døde servere (TEST AF NY KODE)"
+            android:summaryOff="Filtrér ikke Akamai for døde servere"
             />
 
     <CheckBoxPreference
