@@ -74,6 +74,11 @@ public class Kontakt_info_om_frag extends Basisfragment implements OnClickListen
     //brødtekst += "\nkanal: " + DRData.instans.afspiller.kanalNavn + " (" + DRData.instans.afspiller.kanalUrl + ")";
     brødtekst += "\n" + Log.lavKontaktinfo();
 
-    App.kontakt(getActivity(), DRData.instans.grunddata.android_json.optString("kontakt_titel", "Feedback på DR Radio Android App"), brødtekst, Log.getLog());
+    StringBuilder log = new StringBuilder();
+    Log.læsLogcat(log);
+    log.append(Log.getLog());
+    android.util.Log.d("Kontakt", log.toString());
+
+    App.kontakt(getActivity(), DRData.instans.grunddata.android_json.optString("kontakt_titel", "Feedback på DR Radio Android App"), brødtekst, log.toString());
   }
 }

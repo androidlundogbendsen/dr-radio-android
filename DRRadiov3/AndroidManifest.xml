@@ -3,7 +3,7 @@
           package="dk.dr.radio.v3"
           android:installLocation="auto"
           android:versionCode="1"
-          android:versionName="3.0.2 beta6 1.juni">
+          android:versionName="3.0.2 beta7 6.juni">
 
     <uses-sdk
             android:minSdkVersion="7"
@@ -14,12 +14,16 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <!-- For at kunne gemme podcasts -->
+
+    <!-- For at kunne gemme podcasts
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
-    <!-- akamai -->
+-->
+    <!-- akamai
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+-->
 
+    <uses-feature android:name="android.hardware.TOUCHSCREEN" android:required="false"/>
+    <uses-feature android:name="android.hardware.WIFI" android:required="false"/>
 
     <application
             android:allowBackup="true"
@@ -30,15 +34,21 @@
             android:theme="@style/Theme.Dr"
             >
 
-        <!--
-            android:theme="@style/Theme.AppCompat.Light"
-            android:theme="@style/Theme.Dr"
+<!--
+Version 3 har brug for
+android.permission.ACCESS_NETWORK_STATE
+android.permission.INTERNET
+android.permission.READ_PHONE_STATE
+android.permission.WAKE_LOCK
+android.permission.ACCESS_WIFI_STATE
+android.permission.READ_EXTERNAL_STORAGE
+android.permission.WRITE_EXTERNAL_STORAGE
 
-
-            android:theme="@style/Theme.Drxx_ab"
-            android:theme="@style/CustomActionBarTheme"
-            android:theme="@style/AppTheme"
-            android:logo="@drawable/dr_logo_stort"
+Version 2.8.0 havde
+android.permission.ACCESS_NETWORK_STATE
+android.permission.INTERNET
+android.permission.READ_PHONE_STATE
+android.permission.WAKE_LOCK
                     -->
         <activity
                 android:launchMode="singleTop"

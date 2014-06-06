@@ -26,6 +26,8 @@ import android.os.Build;
 
 import com.bugsense.trace.BugSenseHandler;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 
 /**
@@ -162,5 +164,25 @@ public class Log {
         "\nAndroid v" + Build.VERSION.RELEASE + " (sdk: " + Build.VERSION.SDK_INT+ ")";
 
     return ret;
+  }
+
+  /**
+   * Læser logcat, for Jelly Bean og senere kun fra *egen* proces, og behøver ikke nogen tilladelser.
+   * For tidligere udgaver af Android skulle tilladelsen READ_LOGS med i manifestet,
+   * og man fik log fra alle processer (hvilket var en sikkerhedsrisiko)
+   * @param log
+   */
+  public static void læsLogcat(StringBuilder log) {
+    try {
+      Process process = Runtime.getRuntime().exec("logcat -d");
+      BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+      String line = "";
+      while ((line = bufferedReader.readLine()) != null) {
+        log.append(line).append("\n");
+      }
+    } catch (Exception e) {
+      Log.e(e);
+    }
   }
 }
