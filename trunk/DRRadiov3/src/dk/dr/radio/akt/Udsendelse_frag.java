@@ -1,11 +1,14 @@
 package dk.dr.radio.akt;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -83,6 +86,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           @Override
           public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
             if (uændret) return;
+            Log.d("hentStreams fikSvar(" + fraCache + " " + url);
             if (json != null && !"null".equals(json)) {
               JSONObject o = new JSONObject(json);
               udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
@@ -697,6 +701,27 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   }
 
   private void hent() {
+    try {
+      int tilladelse = App.instans.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, App.instans.getPackageName());
+      if (tilladelse != PackageManager.PERMISSION_GRANTED) {
+        AlertDialog.Builder ab = new AlertDialog.Builder(getActivity());
+        ab.setTitle("Tilladelse mangler");
+        ab.setMessage("Du kan give tilladelse til eksternt lager ved at opgradere til den seneste version");
+        ab.setPositiveButton("OK, opgrader", new AlertDialog.OnClickListener() {
+          public void onClick(DialogInterface arg0, int arg1) {
+            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=dk.dr.radio"));
+            startActivity(i);
+          }
+        });
+        ab.setNegativeButton("Nej tak", null);
+        ab.show();
+
+        return;
+      }
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
+    }
+
     Cursor c = DRData.instans.hentedeUdsendelser.getStatusCursor(udsendelse);
     if (c != null) {
       c.close();
