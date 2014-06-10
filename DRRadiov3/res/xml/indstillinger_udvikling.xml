@@ -7,9 +7,10 @@
             android:summaryOn="Sæt app i fejlsøgningstilstand (også efter genstart)"/>
 
     <CheckBoxPreference
-            android:key="tving_lodret_visning" android:title="Tving lodret visning"
+            android:key="tving_lodret_visning" android:title="Blokér vandret visning"
             android:defaultValue="true"
-            android:summary="Tving folk til at rejse deres tablet/telefon op (kræver genstart)"/>
+            android:summaryOn="Tving folk til at rejse deres tablet/telefon op"
+            android:summaryOff="Tillad vandret visning (kræver genstart)"/>
 
 
     <!-- 	<EditTextPreference android:key="udviklerKontakt" android:title="Kontakt"

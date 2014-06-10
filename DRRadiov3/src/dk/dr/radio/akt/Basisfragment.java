@@ -111,7 +111,7 @@ Forhold 1:1 for playlistebilleder - og de skal være 1/3-del i højden af de sto
    */
   protected int bestemBilledebredde(View rod, View paddingView, int procent) {
     int br = rod.getWidth() * procent / 100;
-    if (rod.getHeight() < br / 2) br = br / 2; // Halvbreddebilleder ved liggende visning
+    if (rod.getHeight() < 2*br/3) br = br / 2; // Halvbreddebilleder ved liggende visning
     br = br - paddingView.getPaddingRight() - paddingView.getPaddingLeft();
     //Log.d("QQQQQ listView.getWidth()=" + rod.getWidth() + " getHeight()=" + rod.getHeight());
     //Log.d("QQQQQ billedeContainer.getPaddingRight()=" + paddingView.getPaddingRight() + "   .... så br=" + br);

@@ -248,7 +248,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       }.setTag(Udsendelse_frag.this);
       App.volleyRequestQueue.add(req);
       if (aktuelUdsendelsePåKanalen()) {
-        App.forgrundstråd.postDelayed(opdaterSpillelisteRunnable, 15000);
+        App.forgrundstråd.postDelayed(opdaterSpillelisteRunnable, DRData.instans.grunddata.opdaterPlaylisteEfterMs);
       }
     }
   };
@@ -444,23 +444,6 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     int x = (int) ((long) (seekBar.getWidth() - to * 2) * progress / seekBar.getMax());
     seekBarTekst.setPadding(x, 0, 0, 0);
   }
-/*
-79-1679/dk.dr.radio.v3 D/DRRadio﹕ pos 3726072   10680000
-06-10 10:43:13.057    1679-1679/dk.dr.radio.v3 D/DRRadio﹕ seekBarTekst_opdater to=16
-06-10 10:43:13.057    1679-1679/dk.dr.radio.v3 D/DRRadio﹕ seekBarTekst_opdater x=200
-06-10 10:43:14.068    1679-1679/dk.dr.radio.v3 D/DRRadio﹕ pos 3727117   10680000
-06-10 10:43:14.068    1679-1679/dk.dr.radio.v3 D/DRRadio﹕ seekBarTekst_opdater to=16
-06-10 10:43:14.068    1679-1679/dk.dr.radio.v3 D/DRRadio﹕ seekBarTekst_opdater x=201
-06-10 10:43:15.077    1679-1679/dk.dr.radio.v3 D/DRRadio﹕ pos 3728185   10680000
-06-10 10:43:15.077    1679-1679/dk.dr.radio.v3 D/DRRadio﹕ seekBarTekst_opdater to=16
-06-10 10:43:15.077    1679-1679/dk.dr.radio.v3 D/DRRadio﹕ seekBarTekst_opdater x=201
-06-10 10:43:16.087    1679-1679/dk.dr.radio.v3 D/DRRadio﹕ pos 3729229   10680000
-06-10 10:43:16.087    1679-1679/dk.dr.radio.v3 D/DRRadio﹕ seekBarTekst_opdater to=16
-06-10 10:43:16.087    1679-1679/dk.dr.radio.v3 D/DRRadio﹕ seekBarTekst_opdater x=-201
-06-10 10:43:17.098    1679-1679/dk.dr.radio.v3 D/DRRadio﹕ pos 3730135   10680000
-06-10 10:43:17.098    1679-1679/dk.dr.radio.v3 D/DRRadio﹕ seekBarTekst_opdater to=16
-06-10 10:43:17.098    1679-1679/dk.dr.radio.v3 D/DRRadio﹕ seekBarTekst_opdater x=-200
-   */
 
 
   @Override

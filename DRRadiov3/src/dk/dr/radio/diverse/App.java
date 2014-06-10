@@ -176,6 +176,8 @@ public class App extends Application {
       String grunddata = prefs.getString(DRData.GRUNDDATA_URL, null);
       if (grunddata==null) grunddata = Diverse.læsStreng(res.openRawResource(R.raw.grunddata));
       DRData.instans.grunddata.parseFællesGrunddata(grunddata);
+      if (App.fejlsøgning && DRData.instans.grunddata.udelukHLS) App.kortToast("HLS er udelukket");
+
       String pn = App.instans.getPackageName();
       for (final Kanal k : DRData.instans.grunddata.kanaler) {
         k.kanallogo_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase().replace('ø', 'o').replace('å', 'a'), "drawable", pn);
@@ -495,7 +497,7 @@ public class App extends Application {
 
   public static void sætServerCurrentTimeMillis(long servertid) {
     long serverkorrektionTilKlienttidMs2 = servertid - System.currentTimeMillis();
-    if (Math.abs(App.serverkorrektionTilKlienttidMs - serverkorrektionTilKlienttidMs2) > 30000) {
+    if (Math.abs(App.serverkorrektionTilKlienttidMs - serverkorrektionTilKlienttidMs2) > 120*1000) {
       Log.d("SERVERTID korrigerer tid - serverkorrektionTilKlienttidMs=" + serverkorrektionTilKlienttidMs2 + " klokken på serveren er " + new Date(servertid));
       App.serverkorrektionTilKlienttidMs = serverkorrektionTilKlienttidMs2;
       new Exception("SERVERTID korrigeret med "+serverkorrektionTilKlienttidMs2/1000/60+" min til " + new Date(servertid)).printStackTrace();

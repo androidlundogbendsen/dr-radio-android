@@ -60,7 +60,7 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
 
       // Find lydformat
       lydformatlp = (ListPreference) findPreference(Lydkilde.INDST_lydformat);
-      lydformatlp.setEnabled(Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH);
+      lydformatlp.setEnabled(!DRData.instans.grunddata.udelukHLS);
       lydformatlp.setOnPreferenceChangeListener(this);
       aktueltLydformat = lydformatlp.getValue();
 

@@ -76,6 +76,15 @@ public class DRData {
     i.grunddata.parseFællesGrunddata(Diverse.læsStreng(new FileInputStream("../DRRadiov3/res/raw/grunddata_testaendring.json")));
     //if (!i.grunddata.kanalFraKode.get("DRN").navn.equals("DR NyhederÆNDRET")) throw new InternalError("xx1");
     //if (i.grunddata.kanaler.size()>11) throw new InternalError("i.grunddata.kanaler.size()="+i.grunddata.kanaler.size());
+
+
+    if (i.grunddata.udelukHLS==true) throw new Exception();
+    i.grunddata.setUdelukHLS("C6603 C6603/18"); if (i.grunddata.udelukHLS!=true) throw new Exception();
+    i.grunddata.setUdelukHLS("C6603 C6603/17"); if (i.grunddata.udelukHLS==true) throw new Exception();
+    i.grunddata.setUdelukHLS("IdeaPadA10 A10/17"); if (i.grunddata.udelukHLS!=true) throw new Exception();
+    i.grunddata.setUdelukHLS("IdeaPadA10 A10/23"); if (i.grunddata.udelukHLS==true) throw new Exception();
+    i.grunddata.setUdelukHLS("IdeaPadA10 A11/17"); if (i.grunddata.udelukHLS==true) throw new Exception();
+
     i.grunddata.hentSupplerendeDataBg_KUN_TIL_UDVIKLING();
 
     for (Kanal kanal : i.grunddata.kanaler) {
