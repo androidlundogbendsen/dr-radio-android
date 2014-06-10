@@ -5,11 +5,11 @@
     },
     "language": {},
     "android" : {
+        "udeluk_HLS" : "C6603 C6603/18, IdeaPadA10 A10/17, LIFETAB_E7312 LIFETAB_E7310/17",
         "kontakt_url": "http://www.dr.dk/tjenester/iphone/radio/about/android22.drxml",
         "kontakt_modtagere": ["android@lundogbendsen.dk", "mobil@dr.dk" ],
         "kontakt_titel": "Angående DR Radio",
         "kontakt_brugerspørgsmål": "\nHvis du oplever problemer, så vil vi meget gerne kontaktes.\nSkriv herunder\n-------------\n\n\n\n\n\n\n\n----- teknisk info til udviklerne -----\n\n",
-        "undgå_akamai_direkte_HLS" : "GT-I9100 GT-I9100/16",
         "drift_statusmeddelelse": ""
     },
     "ios": {

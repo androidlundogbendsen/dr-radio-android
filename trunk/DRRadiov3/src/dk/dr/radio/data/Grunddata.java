@@ -18,6 +18,8 @@
 
 package dk.dr.radio.data;
 
+import android.os.Build;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,7 +50,10 @@ public class Grunddata {
   public HashMap<String, Kanal> kanalFraKode = new HashMap<String, Kanal>();
   public HashMap<String, Kanal> kanalFraSlug = new LinkedHashMap<String, Kanal>();
   public static final Kanal ukendtKanal = new Kanal();
+  public long opdaterPlaylisteEfterMs = 30*1000;
   public long opdaterGrunddataEfterMs = 30*60*1000;
+  /** Om Http Live Streaming skal udelukkes fra mulige lydformater. Gælder på Android 2 og visse Android 4-enheder */
+  public boolean udelukHLS;
 
   public Grunddata() {
     ukendtKanal.navn = "";
@@ -109,7 +114,8 @@ public class Grunddata {
     json = new JSONObject(str);
 
     try {
-      DRData.instans.grunddata.opdaterGrunddataEfterMs = json.getJSONObject("intervals").getInt("settings");
+      opdaterGrunddataEfterMs = json.getJSONObject("intervals").getInt("settings")*1000;
+      opdaterPlaylisteEfterMs = json.getJSONObject("intervals").getInt("playlist")*1000;
     } catch (Exception e) { Log.e(e); } // Ikke kritisk
 
     kanaler.clear();
@@ -117,8 +123,34 @@ public class Grunddata {
     parseKanaler(json.getJSONArray("channels"), false);
     Log.d("parseKanaler "+kanaler+" - P4:"+p4koder);
     android_json = json.getJSONObject("android");
+    setUdelukHLS(Build.MODEL + " " + Build.PRODUCT + "/" + Build.VERSION.SDK_INT);
     if (forvalgtKanal == null) forvalgtKanal = kanaler.get(2); // Det er nok P3 :-)
     for (Runnable r : new ArrayList<Runnable>(observatører)) r.run();
+  }
+
+  /**
+   * Sætter flaget udelukHLS, som slår HLS fra på Android-enheder, der ikke understøtter det
+   * @param model_og_version
+   */
+  public void setUdelukHLS(String model_og_version) {
+    Log.d("setUdelukHLS("+model_og_version);
+
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+      // Android 2 (og 3) understøtter det ikke
+      udelukHLS = true;
+      return;
+    }
+
+    udelukHLS = false;
+    try {
+      for (String lin : android_json.getString("udeluk_HLS").split(",")) {
+        if (model_og_version.matches(lin.trim())) {
+          Log.d("setUdelukHLS linjen "+lin+" matcher "+model_og_version+", så HLS slås fra");
+          udelukHLS = true;
+          break;
+        }
+      }
+    } catch (Exception e) { Log.e(e); } // Ikke kritisk
   }
 
 
@@ -135,7 +167,6 @@ public class Grunddata {
       } catch (Exception e) {
         Log.e(e);
       }
-    ;
     Log.d("DRData.instans.grunddata.kanalFraSlug=" + DRData.instans.grunddata.kanalFraSlug);
   }
 }
