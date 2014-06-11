@@ -235,10 +235,9 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           if (App.fejlsøgning) Log.d("fikSvar playliste(" + fraCache + " " + url + "   " + this);
           if (uændret) return;
           if (udsendelse.playliste!=null && fraCache) return; // så har vi allerede den nyeste liste i MEM
-          if (json != null && !"null".equals(json)) {
-            udsendelse.playliste = DRJson.parsePlayliste(new JSONArray(json));
-            bygListe();
-          }
+          if (json == null || "null".equals(json)) return; // fejl
+          udsendelse.playliste = DRJson.parsePlayliste(new JSONArray(json));
+          bygListe();
         }
       }) {
         @Override
@@ -788,7 +787,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     int type = adapter.getItemViewType(position);
 
     if (type == PLAYLISTEELEM || type == PLAYLISTEELEM_NU) {
-      if (!udsendelse.streamsKlar()) return;
+      if (seekBar==null || !udsendelse.streamsKlar()) return; // seekBar==null er set ske i abetest
       // Det må være et playlisteelement
       final Playlisteelement pl = (Playlisteelement) liste.get(position);
       if (udsendelse.equals(afspiller.getLydkilde()) && afspiller.getAfspillerstatus() == Status.SPILLER) {
@@ -809,7 +808,6 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           }
         });
       }
-      if (seekBar==null) return; // det er set ske i abetest
       seekBar.setProgress(pl.offsetMs);
       Log.registrérTestet("Valg af playlisteelement", "ja");
     } else if (type == ALLE_UDSENDELSER) {

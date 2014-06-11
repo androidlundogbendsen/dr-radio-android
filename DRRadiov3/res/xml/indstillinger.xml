@@ -21,7 +21,7 @@
             android:key="lydkvalitet"
             android:title="Lydkvalitet"
             android:defaultValue="auto"
-            android:summary="Standard er 96kbps og bruger ca. 45 MB data per time.\nHøj kvalitet bruger ca. 90 MB/time"
+            android:summary="Standard er 96kbps og bruger ca. 45 MB data per time, mens høj kvalitet bruger ca. 90 MB/time"
             android:entries="@array/lydkvalitet_tekst"
             android:entryValues="@array/lydkvalitet_kode"/>
 
