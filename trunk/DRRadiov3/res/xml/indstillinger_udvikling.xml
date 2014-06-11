@@ -2,11 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <CheckBoxPreference
-            android:key="fejlsøgning" android:title="Fejlsøgning"
-            android:defaultValue="false" android:summaryOff=""
-            android:summaryOn="Sæt app i fejlsøgningstilstand (også efter genstart)"/>
-
-    <CheckBoxPreference
             android:key="tving_lodret_visning" android:title="Blokér vandret visning"
             android:defaultValue="true"
             android:summaryOn="Tving folk til at rejse deres tablet/telefon op"
@@ -24,6 +19,12 @@
             android:defaultValue="false"
             android:summary="Kræver app-genstart"/>
 -->
+
+    <CheckBoxPreference
+            android:key="fejlsøgning" android:title="Fejlsøgning"
+            android:defaultValue="false" android:summaryOff=""
+            android:summaryOn="Sæt app i fejlsøgningstilstand (også efter genstart)"/>
+
     <CheckBoxPreference
             android:key="manuelStreamvalg"
             android:title="Manuelt streamvalg"

@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
+import com.android.volley.VolleyError;
 import com.androidquery.AQuery;
 
 import org.json.JSONArray;
@@ -174,8 +175,13 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
             int næstøversteSynligNytIndex = liste.indexOf(næstøversteSynlig);
             listView.setSelectionFromTop(næstøversteSynligNytIndex, næstøversteSynligOffset);
           }
-          return;
+        } else {
+          new AQuery(rod).id(R.id.tom).text("Netværksfejl, prøv igen senere");
         }
+      }
+
+      @Override
+      protected void fikFejl(VolleyError error) {
         new AQuery(rod).id(R.id.tom).text("Netværksfejl, prøv igen senere");
       }
     }) {
@@ -234,7 +240,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   public void run() {
     if (App.fejlsøgning) Log.d(this + " run() synlig=" + fragmentErSynligt);
     App.forgrundstråd.removeCallbacks(this);
-    App.forgrundstråd.postDelayed(this, 15000);
+    App.forgrundstråd.postDelayed(this, DRData.instans.grunddata.opdaterPlaylisteEfterMs);
 
     if (kanal.streams == null) { // ikke && App.erOnline(), det kan være vi har en cachet udgave
       Request<?> req = new DrVolleyStringRequest(kanal.getStreamsUrl(), new DrVolleyResonseListener() {
@@ -258,10 +264,12 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     if (aktuelUdsendelseViewholder == null) return;
     Viewholder vh = aktuelUdsendelseViewholder;
     if (!vh.starttidbjælke.isShown() || !fragmentErSynligt) {
-      if (App.fejlsøgning) Log.d(kanal + " opdaterAktuelUdsendelse starttidbjælke ikke synlig");
+      if (App.fejlsøgning) Log.d(kanal + " opdaterAktuelUdsendelseViews starttidbjælke ikke synlig");
       return;
     }
-    opdaterAktuelUdsendelse(vh);
+    opdaterAktuelUdsendelseViews(vh);
+    if (!getUserVisibleHint() || !isResumed()) return;
+    opdaterSenestSpillet(vh.aq, vh.udsendelse);
     //MediaPlayer mp = DRData.instans.afspiller.getMediaPlayer();
     //Log.d("mp pos="+mp.getCurrentPosition() + "  af "+mp.getDuration());
   }
@@ -269,18 +277,27 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   private void opdaterListe() {
     try {
+      Log.d("liste.toString() == "+liste.toString());
       Udsendelse tidligere = new Udsendelse("Tidligere");
       Udsendelse senere = new Udsendelse("Senere");
-      ArrayList<Udsendelse> nyuliste = kanal.udsendelser;
-      if (App.fejlsøgning) Log.d(kanal + " opdaterListe " + nyuliste.size());
-      tidligere.startTid = new Date(nyuliste.get(0).startTid.getTime() - 12 * 60 * 60 * 1000); // Døgnet starter kl 5, så vi er på den sikre side med 12 timer
-      senere.startTid = new Date(nyuliste.get(nyuliste.size() - 1).slutTid.getTime() + 12 * 60 * 60 * 1000); // Til tider rækker udsendelserne ikke ind i det næste døgn, så vi lægger 12 timer til
 
+//      ArrayList<Udsendelse> nyuliste = kanal.udsendelser;
+      if (App.fejlsøgning) Log.d(kanal + " opdaterListe " + kanal.udsendelser.size());
+      tidligere.startTid = new Date(kanal.udsendelser.get(0).startTid.getTime() - 12 * 60 * 60 * 1000); // Døgnet starter kl 5, så vi er på den sikre side med 12 timer
+      senere.startTid = new Date(kanal.udsendelser.get(kanal.udsendelser.size() - 1).slutTid.getTime() + 12 * 60 * 60 * 1000); // Til tider rækker udsendelserne ikke ind i det næste døgn, så vi lægger 12 timer til
+      ArrayList<Udsendelse> nyListe = new ArrayList<Udsendelse>();
+      nyListe.add(tidligere);
+      nyListe.addAll(kanal.udsendelser);
+      nyListe.add(senere);
+      int nyAktuelUdsendelseIndex = kanal.getAktuelUdsendelseIndex() + 1;
+
+      // Hvis listen er uændret så hop ud - forhindrer en uendelig løkke
+      // af opdateringer i tilfælde af, at sendeplanen for dags dato ikke kan hentes
+      if (nyListe.toString().equals(this.liste.toString()) && nyAktuelUdsendelseIndex==aktuelUdsendelseIndex) return;
+
+      aktuelUdsendelseIndex = nyAktuelUdsendelseIndex;
       liste.clear();
-      liste.add(tidligere);
-      liste.addAll(nyuliste);
-      liste.add(senere);
-      aktuelUdsendelseIndex = kanal.getAktuelUdsendelseIndex() + 1;
+      liste.addAll(nyListe);
       aktuelUdsendelseViewholder = null;
       if (App.fejlsøgning) Log.d("opdaterListe " + kanal.kode + "  aktuelUdsendelseIndex=" + aktuelUdsendelseIndex);
       adapter.notifyDataSetChanged();
@@ -430,8 +447,13 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
             vh.titel.setText(udsendelse.titel.toUpperCase());
           }
 
-          opdaterAktuelUdsendelse(aktuelUdsendelseViewholder);
-          opdaterSenestSpillet2(a, udsendelse);
+          opdaterAktuelUdsendelseViews(aktuelUdsendelseViewholder);
+          if (udsendelse.playliste == null) {
+            opdaterSenestSpillet(vh.aq, udsendelse);
+          } else {
+            opdaterSenestSpilletViews(vh.aq, udsendelse);
+          }
+
           break;
         case NORMAL:
           // Her kom NullPointerException en sjælden gang imellem - se https://www.bugsense.com/dashboard/project/cd78aa05/errors/836338028
@@ -466,8 +488,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   };
 
 
-  private void opdaterSenestSpillet2(AQuery aq, Udsendelse u) {
-    if (App.fejlsøgning) Log.d("DDDDD opdaterSenestSpillet2 " + u.playliste);
+  private void opdaterSenestSpilletViews(AQuery aq, Udsendelse u) {
+    if (App.fejlsøgning) Log.d("DDDDD opdaterSenestSpilletViews " + u.playliste);
     if (u.playliste != null && u.playliste.size() > 0) {
       aq.id(R.id.senest_spillet_container).visible();
       Playlisteelement elem = u.playliste.get(0);
@@ -488,7 +510,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     }
   }
 
-  private void opdaterAktuelUdsendelse(Viewholder vh) {
+  private void opdaterAktuelUdsendelseViews(Viewholder vh) {
     try {
       Udsendelse u = vh.udsendelse;
       long passeret = App.serverCurrentTimeMillis() - u.startTid.getTime();
@@ -523,35 +545,33 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       vh.aq.getView().setContentDescription(!online ? "Internetforbindelse mangler" :
           (spillerDenneKanal ? "Spiller " : "Hør ") + kanal.navn.toUpperCase());
 
-      if (u.playliste == null) {
-        // optimering - brug kun final i enkelte tilfælde. Final forårsager at variabler lægges i heap i stedet for stakken) at garbage collectoren skal køre fordi final
-        final Udsendelse u2 = u;
-        final AQuery aq2 = vh.aq;
-        final String url = u.getPlaylisteUrl(); // http://www.dr.dk/tjenester/mu-apps/playlist/monte-carlo-352/p3
-        //Log.d("Henter playliste " + url);
-        Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
-          @Override
-          public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
-            if (App.fejlsøgning) Log.d(kanal.kode + " opdaterSenestSpillet url " + url);
-            if (getActivity() == null || uændret) return;
-            if (json != null && !"null".equals(json)) {
-              u2.playliste = DRJson.parsePlayliste(new JSONArray(json));
-              //Log.d(kanal.kode + " parsePlayliste gav " + u2.playliste.size() + " elemener");
-            }
-            opdaterSenestSpillet2(aq2, u2);
-          }
-        }) {
-          public Priority getPriority() {
-            return fragmentErSynligt ? Priority.NORMAL : Priority.LOW;
-          }
-        }.setTag(this);
-        App.volleyRequestQueue.add(req);
-      }
-
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
   }
+
+  private void opdaterSenestSpillet(final AQuery aq2, final Udsendelse u2) {
+    Request<?> req = new DrVolleyStringRequest(u2.getPlaylisteUrl(), new DrVolleyResonseListener() {
+      @Override
+      public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+        //if (App.fejlsøgning) Log.d("fikSvar playliste(" + fraCache + " " + url + "   " + this);
+        Log.d("KAN fikSvar playliste(" + fraCache + uændret + " " + url);
+        if (getActivity() == null || uændret) return;
+        if (u2.playliste!=null && fraCache) return; // så har vi allerede den nyeste liste i MEM
+        if (json != null && !"null".equals(json)) {
+          u2.playliste = DRJson.parsePlayliste(new JSONArray(json));
+        }
+        if (aktuelUdsendelseViewholder==null) return;
+        opdaterSenestSpilletViews(aq2, u2);
+      }
+    }) {
+      public Priority getPriority() {
+        return fragmentErSynligt ? Priority.NORMAL : Priority.LOW;
+      }
+    }.setTag(this);
+    App.volleyRequestQueue.add(req);
+  }
+
 
   @Override
   public void onClick(View v) {

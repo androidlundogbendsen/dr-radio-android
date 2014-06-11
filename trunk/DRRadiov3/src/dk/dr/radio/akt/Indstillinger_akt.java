@@ -18,6 +18,8 @@
 
 package dk.dr.radio.akt;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -93,7 +95,12 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
         }
       } else {
         lp.setEnabled(false);
-        lp.setSummary(lp.getSummary()+" Adgang til eksternt lager mangler - indsæt et SD-kort.");
+        int tilladelse = App.instans.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, App.instans.getPackageName());
+        if (tilladelse != PackageManager.PERMISSION_GRANTED) {
+          lp.setSummary(lp.getSummary()+" Fejl - tilladelse til eksternt lager mangler (du skal opdatere app'en)");
+        } else {
+          lp.setSummary(lp.getSummary()+" Fejl - adgang til eksternt lager mangler (indsæt SD-kort)");
+        }
       }
     } catch (Exception ex) {
       Log.rapporterFejl(ex);
