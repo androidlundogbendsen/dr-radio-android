@@ -57,7 +57,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   private int aktuelUdsendelseIndex = -1;
   private Kanal kanal;
   protected View rod;
-  private boolean fragmentErSynligt; // TODO brug getUserVisibleHint()
   private boolean brugerHarNavigeret;
   private int antalHentedeSendeplaner;
   public static Kanal_frag senesteSynligeFragment;
@@ -186,7 +185,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       }
     }) {
       public Priority getPriority() {
-        return fragmentErSynligt ? Priority.NORMAL : Priority.LOW;
+        return getUserVisibleHint() ? Priority.NORMAL : Priority.LOW;
       }
     }.setTag(this);
     //Log.d("hentSendeplanForDag 2 " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
@@ -203,9 +202,9 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   @Override
   public void setUserVisibleHint(boolean isVisibleToUser) {
+    super.setUserVisibleHint(isVisibleToUser);
     //Log.d(kanal + " QQQ setUserVisibleHint " + isVisibleToUser + "  " + this);
-    fragmentErSynligt = isVisibleToUser;
-    if (fragmentErSynligt && kanal!=null) { // kanal==null afbryder onCreateView, men et tjek også her er nødvendigt - fixer https://www.bugsense.com/dashboard/project/cd78aa05/errors/833298030
+    if (isVisibleToUser && kanal!=null) { // kanal==null afbryder onCreateView, men et tjek også her er nødvendigt - fixer https://www.bugsense.com/dashboard/project/cd78aa05/errors/833298030
       senesteSynligeFragment = this;
       App.forgrundstråd.post(this); // Opdatér lidt senere, efter onCreateView helt sikkert har kørt
       App.forgrundstråd.post(new Runnable() {
@@ -220,7 +219,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       App.forgrundstråd.removeCallbacks(this);
       if (senesteSynligeFragment == this) senesteSynligeFragment = null;
     }
-    super.setUserVisibleHint(isVisibleToUser);
   }
 
   @Override
@@ -238,7 +236,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   @Override
   public void run() {
-    if (App.fejlsøgning) Log.d(this + " run() synlig=" + fragmentErSynligt);
+    if (App.fejlsøgning) Log.d(this + " run() synlig=" + getUserVisibleHint());
     App.forgrundstråd.removeCallbacks(this);
     App.forgrundstråd.postDelayed(this, DRData.instans.grunddata.opdaterPlaylisteEfterMs);
 
@@ -254,7 +252,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         }
       }) {
         public Priority getPriority() {
-          return fragmentErSynligt ? Priority.HIGH : Priority.NORMAL;
+          return getUserVisibleHint() ? Priority.HIGH : Priority.NORMAL;
         }
       };
       App.volleyRequestQueue.add(req);
@@ -263,7 +261,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
     if (aktuelUdsendelseViewholder == null) return;
     Viewholder vh = aktuelUdsendelseViewholder;
-    if (!vh.starttidbjælke.isShown() || !fragmentErSynligt) {
+    if (!vh.starttidbjælke.isShown() || !getUserVisibleHint()) {
       if (App.fejlsøgning) Log.d(kanal + " opdaterAktuelUdsendelseViews starttidbjælke ikke synlig");
       return;
     }
@@ -566,7 +564,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       }
     }) {
       public Priority getPriority() {
-        return fragmentErSynligt ? Priority.NORMAL : Priority.LOW;
+        return getUserVisibleHint() ? Priority.NORMAL : Priority.LOW;
       }
     }.setTag(this);
     App.volleyRequestQueue.add(req);
