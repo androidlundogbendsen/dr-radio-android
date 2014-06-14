@@ -36,6 +36,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import dk.dr.radio.data.DRData;
@@ -112,6 +113,7 @@ public class Afspiller {
       }
     }.start();
     */
+    if (App.fejlsøgning) tjekLydAktiv.run();
   }
 
   private int onErrorTæller;
@@ -530,7 +532,8 @@ public class Afspiller {
       Log.d("onError(" + hvad + ") " + extra + " onErrorTæller=" + onErrorTæller);
 
 
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && hvad == MediaPlayer.MEDIA_ERROR_UNKNOWN) {
+      if (Build.VERSION.SDK_INT==Build.VERSION_CODES.JELLY_BEAN && hvad==MediaPlayer.MEDIA_ERROR_UNKNOWN
+          && "GT-I9300".equals(Build.MODEL) && mediaPlayer.mediaPlayer.isPlaying()) {
         // Ignorer, da Samsung Galaxy SIII på Android 4.1 Jelly Bean
         // sender denne fejl (onError(1) -110) men i øvrigt spiller fint videre!
         return true;
@@ -588,4 +591,14 @@ public class Afspiller {
       //opdaterObservatører();
     }
   }
+
+  Runnable tjekLydAktiv = new Runnable() {
+    @Override
+    public void run() {
+      App.forgrundstråd.removeCallbacks(this);
+      AudioManager ar = (AudioManager) App.instans.getSystemService(App.AUDIO_SERVICE);
+      Log.d("tjekLydAktiv " + ar.isMusicActive() + " " + mediaPlayer.mediaPlayer.isPlaying() + " " + mediaPlayer.getCurrentPosition() + " " + mediaPlayer.getDuration() + " " + new Date());
+      App.forgrundstråd.postDelayed(this, 10000);
+    }
+  };
 }
