@@ -245,7 +245,7 @@ Jeg bruger selv følgende macro'er i C til generering af URIs:
       if (tf == App.skrift_georgia) return;
 
       String resId = tv.getId() > 0 ? App.instans.getResources().getResourceEntryName(tv.getId()) : "(MANGLER ID)";
-      Log.e("udvikling_checkDrSkrifter: TextView " + resId + " har forkert skrift: " + tf + " for " + beskrivelse, null);
+      Log.e(new Exception("udvikling_checkDrSkrifter: TextView " + resId + " har forkert skrift: " + tf + " for " + beskrivelse));
       //tv.setTypeface(App.skrift_gibson);
     }
   }

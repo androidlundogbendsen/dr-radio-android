@@ -84,13 +84,14 @@ public class Log {
   }
 
   public static void e(String tekst, Exception e) {
+    if (e==null) e=new Exception(tekst);
     if (App.instans == null) {
       System.err.println(tekst);
       e.printStackTrace();
       return; // Hop ud hvis vi ikke kører i en Android VM
     }
     android.util.Log.e(TAG, tekst, e);
-    //e.printStackTrace();
+    e.printStackTrace();
     logappend(tekst);
     logappend(android.util.Log.getStackTraceString(e));
   }

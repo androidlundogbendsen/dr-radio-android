@@ -272,13 +272,11 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     //Log.d("mp pos="+mp.getCurrentPosition() + "  af "+mp.getDuration());
   }
 
+  private static final Udsendelse tidligere = new Udsendelse("Tidligere");
+  private static final Udsendelse senere = new Udsendelse("Senere");
 
   private void opdaterListe() {
     try {
-      Log.d("liste.toString() == "+liste.toString());
-      Udsendelse tidligere = new Udsendelse("Tidligere");
-      Udsendelse senere = new Udsendelse("Senere");
-
 //      ArrayList<Udsendelse> nyuliste = kanal.udsendelser;
       if (App.fejlsøgning) Log.d(kanal + " opdaterListe " + kanal.udsendelser.size());
       tidligere.startTid = new Date(kanal.udsendelser.get(0).startTid.getTime() - 12 * 60 * 60 * 1000); // Døgnet starter kl 5, så vi er på den sikre side med 12 timer
@@ -291,7 +289,13 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
       // Hvis listen er uændret så hop ud - forhindrer en uendelig løkke
       // af opdateringer i tilfælde af, at sendeplanen for dags dato ikke kan hentes
-      if (nyListe.toString().equals(this.liste.toString()) && nyAktuelUdsendelseIndex==aktuelUdsendelseIndex) return;
+      if (nyListe.equals(liste) && nyAktuelUdsendelseIndex==aktuelUdsendelseIndex) {
+        Log.d("opdaterListe: listen er uændret: "+liste);
+        return;
+      } else {
+        Log.d("opdaterListe: ændring fra "+aktuelUdsendelseIndex + liste);
+        Log.d("opdaterListe: ændring til "+nyAktuelUdsendelseIndex + nyListe);
+      }
 
       aktuelUdsendelseIndex = nyAktuelUdsendelseIndex;
       liste.clear();

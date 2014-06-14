@@ -233,6 +233,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         @Override
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
           if (App.fejlsøgning) Log.d("fikSvar playliste(" + fraCache + " " + url + "   " + this);
+          Log.d("UDS fikSvar playliste(" + fraCache + uændret + " " + url);
           if (uændret) return;
           if (udsendelse.playliste!=null && fraCache) return; // så har vi allerede den nyeste liste i MEM
           if (json == null || "null".equals(json)) return; // fejl
