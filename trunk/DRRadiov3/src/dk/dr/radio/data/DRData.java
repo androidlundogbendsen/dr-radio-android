@@ -141,8 +141,8 @@ http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-b.m3u8?sd=10&rebase=on
         //Log.d(obj.toString(2));
         u.streams = DRJson.parsStreams(obj.getJSONArray(DRJson.Streams.name()));
         if (u.streams.size() == 0) Log.d("Ingen lydstreams");
-        //if (u.streams.size() == 0 && u.kanHøres) throw new IllegalStateException("u.streams.size() == 0 && u.kanHøres");
-        //if (u.streams.size() > 0 && !u.kanHøres) throw new IllegalStateException("u.streams.size() > 0 && !u.kanHøres");
+        //if (u.streams.size() == 0 && u.kanNokHøres) throw new IllegalStateException("u.streams.size() == 0 && u.kanNokHøres");
+        //if (u.streams.size() > 0 && !u.kanNokHøres) throw new IllegalStateException("u.streams.size() > 0 && !u.kanNokHøres");
 
         try {
           u.playliste = DRJson.parsePlayliste(new JSONArray(main_hent(u.getPlaylisteUrl())));

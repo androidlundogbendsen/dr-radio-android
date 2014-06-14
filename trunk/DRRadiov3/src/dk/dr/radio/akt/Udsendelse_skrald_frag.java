@@ -85,7 +85,7 @@ public class Udsendelse_skrald_frag extends Basisfragment implements View.OnClic
             if (json != null && !"null".equals(json)) {
               JSONObject o = new JSONObject(json);
               udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
-              udsendelse.kanHøres = udsendelse.streamsKlar();
+                udsendelse.kanNokHøres = udsendelse.streamsKlar();
               if (udsendelse.streams.size()==0) {
                 Log.d("SSSSS TOMME STREAMS ... men det passer måske ikke! for "+udsendelse.slug+" " +udsendelse.getStreamsUrl());
                 streamsVarTom.put(udsendelse, System.currentTimeMillis());
@@ -185,7 +185,7 @@ public class Udsendelse_skrald_frag extends Basisfragment implements View.OnClic
       if (!getUserVisibleHint() || !isResumed()) return; // Ekstra tjek
       Log.d("Udsendelse_frag tjekFragmentSynligt ");
       if (aktuelUdsendelsePåKanalen() || udsendelse.playliste == null) opdaterSpillelisteRunnable.run();
-      if (udsendelse.kanHøres && afspiller.getAfspillerstatus() == Status.STOPPET) {
+      if (udsendelse.kanNokHøres && afspiller.getAfspillerstatus() == Status.STOPPET) {
         afspiller.setLydkilde(udsendelse);
       }
     }
@@ -249,7 +249,7 @@ public class Udsendelse_skrald_frag extends Basisfragment implements View.OnClic
           udsendelse.hentetStream = new Lydstream();
           udsendelse.hentetStream.url = uri;
           udsendelse.hentetStream.score = 500; // Rigtig god!
-          udsendelse.kanHøres = true;
+          udsendelse.kanNokHøres = true;
           Log.registrérTestet("Afspille hentet udsendelse", udsendelse.slug);
         } else {
 //          Log.rapporterFejl(new IllegalStateException("Fil " + file + "  fandtes ikke alligevel??! for " + udsendelse));
@@ -273,8 +273,8 @@ public class Udsendelse_skrald_frag extends Basisfragment implements View.OnClic
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.udsendelse, menu);
-    //menu.findItem(R.id.hør).setVisible(udsendelse.kanHøres).setEnabled(streamsKlar());
-    //menu.findItem(R.id.hent).setVisible(DRData.instans.hentedeUdsendelser.virker() && udsendelse.kanHøres && udsendelse.hentetStream==null);
+    //menu.findItem(R.id.hør).setVisible(udsendelse.kanNokHøres).setEnabled(streamsKlar());
+    //menu.findItem(R.id.hent).setVisible(DRData.instans.hentedeUdsendelser.virker() && udsendelse.kanNokHøres && udsendelse.hentetStream==null);
   }
 
   @Override
@@ -606,7 +606,7 @@ public class Udsendelse_skrald_frag extends Basisfragment implements View.OnClic
           //v.setBackgroundResource(R.drawable.knap_hvid_bg);
           v.setBackgroundResource(R.drawable.elem_hvid_bg);
         }
-        aq.id(R.id.hør).visibility(udsendelse.kanHøres && ple.offsetMs >= 0 ? View.VISIBLE : View.GONE);
+        aq.id(R.id.hør).visibility(udsendelse.kanNokHøres && ple.offsetMs >= 0 ? View.VISIBLE : View.GONE);
       } else if (type == PLAYLISTE_OVERSKRIFT_PLAYLISTE_INFO) {
         aq.id(R.id.playliste).background(visInfo ? R.drawable.knap_graa40_bg : R.drawable.knap_sort_bg);
         aq.id(R.id.info).background(visInfo ? R.drawable.knap_sort_bg : R.drawable.knap_graa40_bg);

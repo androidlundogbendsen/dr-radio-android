@@ -90,7 +90,9 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
             if (json != null && !"null".equals(json)) {
               JSONObject o = new JSONObject(json);
               udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
-              udsendelse.kanHøres = udsendelse.streamsKlar();
+              udsendelse.kanStreames = udsendelse.findBedsteStreams(false).size()>0;
+              udsendelse.kanHentes = udsendelse.findBedsteStreams(true).size()>0;
+              udsendelse.kanNokHøres = udsendelse.kanStreames;
               if (udsendelse.streams.size()==0) {
                 Log.d("SSSSS TOMME STREAMS ... men det passer måske ikke! for "+udsendelse.slug+" " +udsendelse.getStreamsUrl());
                 streamsVarTom.put(udsendelse, System.currentTimeMillis());
@@ -211,7 +213,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       if (!getUserVisibleHint() || !isResumed()) return; // Ekstra tjek
       Log.d("Udsendelse_frag tjekFragmentSynligt ");
       if (aktuelUdsendelsePåKanalen() || udsendelse.playliste == null) opdaterSpillelisteRunnable.run();
-      if (udsendelse.kanHøres && afspiller.getAfspillerstatus() == Status.STOPPET) {
+      if (udsendelse.kanStreames && afspiller.getAfspillerstatus() == Status.STOPPET) {
         afspiller.setLydkilde(udsendelse);
       }
     }
@@ -275,7 +277,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           udsendelse.hentetStream = new Lydstream();
           udsendelse.hentetStream.url = uri;
           udsendelse.hentetStream.score = 500; // Rigtig god!
-          udsendelse.kanHøres = true;
+          udsendelse.kanNokHøres = udsendelse.kanStreames = true;
           Log.registrérTestet("Afspille hentet udsendelse", udsendelse.slug);
         } else {
 //          Log.rapporterFejl(new IllegalStateException("Fil " + file + "  fandtes ikke alligevel??! for " + udsendelse));
@@ -299,8 +301,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.udsendelse, menu);
-    //menu.findItem(R.id.hør).setVisible(udsendelse.kanHøres).setEnabled(streamsKlar());
-    //menu.findItem(R.id.hent).setVisible(DRData.instans.hentedeUdsendelser.virker() && udsendelse.kanHøres && udsendelse.hentetStream==null);
+    //menu.findItem(R.id.hør).setVisible(udsendelse.kanNokHøres).setEnabled(streamsKlar());
+    //menu.findItem(R.id.hent).setVisible(DRData.instans.hentedeUdsendelser.virker() && udsendelse.kanNokHøres && udsendelse.hentetStream==null);
   }
 
   @Override
@@ -597,9 +599,11 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         else                                        // On demand og direkte udsendelser
         {
           if (lydkildeErDenneUds && (spiller||forbinder)) aq.gone();
-          else if (udsendelse.streamsKlar() && erOnline) aq.text("HØR UDSENDELSE").getView().setContentDescription("hør udsendelse");
-          else if (udsendelse.streamsKlar() && !erOnline) aq.text("Internetforbindelse mangler").enabled(false);
-          else if (erAktuelUdsendelsePåKanalen) {
+          //else if (udsendelse.streamsKlar()) {
+          else if (udsendelse.kanStreames) {
+            if (erOnline) aq.text("HØR UDSENDELSE").getView().setContentDescription("hør udsendelse");
+            else aq.text("Internetforbindelse mangler").enabled(false);
+          } else if (erAktuelUdsendelsePåKanalen) {
             if (lydkildeErDenneKanal&&(spiller||forbinder)) aq.enabled(false).text("SPILLER "+ kanal.navn.toUpperCase() + " LIVE");
             else if (erOnline) aq.text("HØR "+ kanal.navn.toUpperCase() + " LIVE").getView().setContentDescription("hør " + kanal.navn.toUpperCase());
             else aq.enabled(false).text("Internetforbindelse mangler");
@@ -609,7 +613,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
 
         aq.id(R.id.hent).visibility(
-            DRData.instans.hentedeUdsendelser.virker() && udsendelse.hentetStream==null && udsendelse.streamsKlar() ? View.VISIBLE : View.GONE);
+            DRData.instans.hentedeUdsendelser.virker() && udsendelse.hentetStream==null && udsendelse.kanHentes ? View.VISIBLE : View.GONE);
         aq.textColorId(udsendelse.streamsKlar() ? R.color.blå : R.color.grå40);
         Cursor c = DRData.instans.hentedeUdsendelser.getStatusCursor(udsendelse);
         if (c != null) {
@@ -626,7 +630,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         }
 
         aq.id(R.id.kan_endnu_ikke_hentes).visibility(
-          DRData.instans.hentedeUdsendelser.virker() && !udsendelse.streamsKlar()  ? View.VISIBLE : View.GONE);
+          DRData.instans.hentedeUdsendelser.virker() && !udsendelse.kanHentes  ? View.VISIBLE : View.GONE);
       } else if (type == PLAYLISTEELEM_NU || type == PLAYLISTEELEM) {
         Playlisteelement ple = (Playlisteelement) liste.get(position);
         vh.playlisteelement = ple;
@@ -640,7 +644,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           //v.setBackgroundResource(R.drawable.knap_hvid_bg);
           v.setBackgroundResource(R.drawable.elem_hvid_bg);
         }
-        aq.id(R.id.hør).visibility(udsendelse.kanHøres && ple.offsetMs >= 0 ? View.VISIBLE : View.GONE);
+        aq.id(R.id.hør).visibility(udsendelse.kanNokHøres && ple.offsetMs >= 0 ? View.VISIBLE : View.GONE);
       } else if (type == PLAYLISTE_OVERSKRIFT_PLAYLISTE_INFO) {
         aq.id(R.id.playliste).background(visInfo ? R.drawable.knap_graa40_bg : R.drawable.knap_sort_bg);
         aq.id(R.id.info).background(visInfo ? R.drawable.knap_sort_bg : R.drawable.knap_graa40_bg);
@@ -741,13 +745,13 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
       return;
     }
-    if (!udsendelse.streamsKlar()) return;
+    if (!udsendelse.kanHentes) return;
     DRData.instans.hentedeUdsendelser.hent(udsendelse);
   }
 
   private void hør() {
     try {
-      if (!udsendelse.streamsKlar()) {
+      if (!udsendelse.kanStreames) {
         if (aktuelUdsendelsePåKanalen()) {
           // Så skal man lytte til livestreamet
           Kanal_frag.hør(kanal, getActivity());
