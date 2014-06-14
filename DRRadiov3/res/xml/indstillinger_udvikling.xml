@@ -49,4 +49,11 @@
             android:defaultValue="false"
             android:summary="Bladr mellem udsendelser med lodret swipe"/>
 
+    <CheckBoxPreference
+            android:title="Rapportér statistik"
+            android:key="Rapportér statistik"
+            android:defaultValue="true"
+            android:summaryOn="Send statistik til DR, om hvad du lytter til. Mener du at app'en tager for meget strøm kan du slå det fra og rapportere om det gør en forskel"
+            android:summaryOff="Indsamler ikke statisik. Rapportér venligst om det gør en forskel for dig. Du skal genstarte app'en (evt telefonen) og se meddelelse ved opstart før det er trådt i kraft."
+            />
 </PreferenceScreen>
