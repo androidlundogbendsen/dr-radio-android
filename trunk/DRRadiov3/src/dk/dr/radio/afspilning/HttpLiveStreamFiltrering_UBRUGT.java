@@ -15,8 +15,8 @@ import dk.dr.radio.diverse.Log;
 /**
  * Created by j on 06-06-14.
  */
-public class HttpLiveStreamFiltrering {
-  public static final HttpLiveStreamFiltrering instans = new HttpLiveStreamFiltrering();
+public class HttpLiveStreamFiltrering_UBRUGT {
+  public static final HttpLiveStreamFiltrering_UBRUGT instans = new HttpLiveStreamFiltrering_UBRUGT();
   private String rensetMasterM3U8;
   private ServerSocket ss;
   private boolean fjernetNogen;
@@ -159,3 +159,33 @@ http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-p.m3u8?sd=10&rebase=on
 #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=192000,CODECS="mp4a.40.2"
 http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-b.m3u8?sd=10&rebase=on
      */
+
+    /*
+    //if (!lydUrl.endsWith("master.m3u8") || App.PRODUKTION || tæller++%2==0) {
+    if (!lydUrl.endsWith("master.m3u8") || !App.prefs.getBoolean("Filtrér akamai", true)) {
+      Log.d("Bruger oprindelig lyd-URL: "+lydUrl);
+      mediaPlayer.setDataSource(lydUrl);
+      return;
+    }
+
+    Log.d("Gemmer "+lydUrl+" lokalt og spiller den");
+
+    HttpLiveStreamFiltrering filter = HttpLiveStreamFiltrering.instans;
+    filter.setMasterM3U8Url(lydUrl);
+
+    String rensetMasterM3U8 = filter.getRensetMasterM3U8();
+
+    if (App.PRODUKTION && !filter.fjernedeNogen()) {
+      mediaPlayer.setDataSource(lydUrl); // Alle servere er opppe, ingen grund til ikke at bruge den oprindelige URL
+      return;
+    }
+
+    if (filter.fjernedeNogen()) {
+      Log.rapporterFejl(new Exception("Nogle servere fjernet, hurra, det virker!"), lydUrl);
+    }
+
+    String rensetMasterM3U8Url = filter.getRensetMasterM3U8Url();
+
+    Log.d("mediaPlayer.setDataSource("+rensetMasterM3U8Url);
+    mediaPlayer.setDataSource(rensetMasterM3U8Url);
+    */
