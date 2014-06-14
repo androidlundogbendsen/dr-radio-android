@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-
+<!--
     <CheckBoxPreference
             android:key="Filtrér akamai"
             android:title="Filtrér akamai"
@@ -9,7 +9,7 @@
             android:summaryOn="Filtrér Akamai for døde servere (TEST AF NY KODE)"
             android:summaryOff="Filtrér ikke Akamai for døde servere"
             />
-
+-->
     <CheckBoxPreference
             android:key="startAfspilningMedDetSammme"
             android:title="Start automatisk"
