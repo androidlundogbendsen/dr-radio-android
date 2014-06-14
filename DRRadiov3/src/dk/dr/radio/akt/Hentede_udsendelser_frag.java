@@ -4,18 +4,15 @@ import android.app.DownloadManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.androidquery.AQuery;
@@ -132,7 +129,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
         }
       }
       aq.id(R.id.linje1).text(udsendelse.titel)
-          .textColor(udsendelse.kanHøres ? Color.BLACK : App.color.grå60);
+          .textColor(udsendelse.kanNokHøres ? Color.BLACK : App.color.grå60);
       // Skjul stiplet linje over øverste listeelement
       aq.id(R.id.stiplet_linje).background(position == 0 ? R.drawable.linje : R.drawable.stiplet_linje);
 

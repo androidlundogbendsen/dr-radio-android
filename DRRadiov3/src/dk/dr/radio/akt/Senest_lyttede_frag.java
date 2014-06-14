@@ -149,7 +149,7 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
 
       //vh.titel.setText(lydkilde.titel);
       //a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
-      //a.id(R.id.hør).visibility(lydkilde.kanHøres ? View.VISIBLE : View.GONE);
+      //a.id(R.id.hør).visibility(lydkilde.kanNokHøres ? View.VISIBLE : View.GONE);
 
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
 
