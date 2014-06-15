@@ -50,6 +50,7 @@ import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.HentedeUdsendelser;
+import dk.dr.radio.data.Indslaglisteelement;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Lydstream;
 import dk.dr.radio.data.Playlisteelement;
@@ -90,6 +91,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
             if (json != null && !"null".equals(json)) {
               JSONObject o = new JSONObject(json);
               udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
+              udsendelse.indslag = DRJson.parsIndslag(o.optJSONArray(DRJson.Chapters.name()));
               udsendelse.kanStreames = udsendelse.findBedsteStreams(false).size()>0;
               udsendelse.kanHentes = udsendelse.findBedsteStreams(true).size()>0;
               udsendelse.kanNokHøres = udsendelse.kanStreames;
@@ -324,26 +326,30 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     public AQuery aq;
     public TextView titel;
     public TextView startid;
-    public Playlisteelement playlisteelement;
     public int itemViewType;
   }
 
   static final int TOP = 0;
-  static final int PLAYLISTE_OVERSKRIFT_PLAYLISTE_INFO = 1;
+  static final int OVERSKRIFT_PLAYLISTE_INFO = 1;
   static final int PLAYLISTEELEM_NU = 2;
   static final int PLAYLISTEELEM = 3;
-  static final int INFOTEKST = 4;
-  static final int VIS_HELE_PLAYLISTEN_KNAP = 5;
-  static final int ALLE_UDSENDELSER = 6;
+  static final int OVERSKRIFT_INDSLAG_INFO = 4;
+  static final int INDSLAGLISTEELEM = 5;
+  static final int INFOTEKST = 6;
+  static final int VIS_HELE_PLAYLISTEN_KNAP = 7;
+  static final int ALLE_UDSENDELSER = 8;
 
   static final int[] layoutFraType = {
       R.layout.udsendelse_elem0_top,
       R.layout.udsendelse_elem1_overskrift_playliste_info,
       R.layout.udsendelse_elem2_playlisteelem_nu,
       R.layout.udsendelse_elem3_playlisteelem,
-      R.layout.udsendelse_elem4_infotekst,
-      R.layout.udsendelse_elem5_vis_hele_playlisten_knap,
-      R.layout.udsendelse_elem6_alle_udsendelser};
+      R.layout.udsendelse_elem4_overskrift_indslag_info,
+      R.layout.udsendelse_elem5_indslaglisteelem,
+      R.layout.udsendelse_elem6_infotekst,
+      R.layout.udsendelse_elem7_vis_hele_playlisten_knap,
+      R.layout.udsendelse_elem8_alle_udsendelser,
+  };
 
   boolean visInfo = false;
   boolean visHelePlaylisten = false;
@@ -353,11 +359,14 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     liste.clear();
     liste.add(TOP);
     if (visInfo) {
-      liste.add(PLAYLISTE_OVERSKRIFT_PLAYLISTE_INFO);
+      liste.add(OVERSKRIFT_PLAYLISTE_INFO);
       liste.add(INFOTEKST);
     } else {
-      if (udsendelse.playliste != null && udsendelse.playliste.size() > 0) {
-        liste.add(PLAYLISTE_OVERSKRIFT_PLAYLISTE_INFO);
+      if (udsendelse.indslag.size() > 0) {
+        liste.add(OVERSKRIFT_INDSLAG_INFO);
+        liste.addAll(udsendelse.indslag);
+      } else if (udsendelse.playliste != null && udsendelse.playliste.size() > 0) {
+        liste.add(OVERSKRIFT_PLAYLISTE_INFO);
         boolean aktuelUdsendelsePåKanalen = aktuelUdsendelsePåKanalen();
         if (visHelePlaylisten) {
           if (aktuelUdsendelsePåKanalen) udsendelse.playliste.get(0).spillerNu = true;
@@ -476,13 +485,14 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
     @Override
     public int getViewTypeCount() {
-      return 7;
+      return layoutFraType.length;
     }
 
     @Override
     public int getItemViewType(int position) {
       Object obj = liste.get(position);
       if (obj instanceof Integer) return (Integer) obj;
+      if (obj instanceof Indslaglisteelement) return INDSLAGLISTEELEM;
       // Så må det være et playlisteelement
       Playlisteelement pl = (Playlisteelement) obj;
       return pl.spillerNu ? PLAYLISTEELEM_NU : PLAYLISTEELEM;
@@ -491,7 +501,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     @Override
     public boolean isEnabled(int position) {
       int type = getItemViewType(position);
-      return type == PLAYLISTEELEM_NU || type == PLAYLISTEELEM || type == ALLE_UDSENDELSER;
+      return type == PLAYLISTEELEM_NU || type == PLAYLISTEELEM || type == ALLE_UDSENDELSER || type == INDSLAGLISTEELEM;
     }
 
     @Override
@@ -548,7 +558,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           aq.id(R.id.kan_endnu_ikke_hentes).typeface(App.skrift_gibson);
           if (!DRData.instans.hentedeUdsendelser.virker()) aq.gone(); // Understøttes ikke på Android 2.2
           aq.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
-        } else if (type == PLAYLISTE_OVERSKRIFT_PLAYLISTE_INFO) {
+        } else if (type == OVERSKRIFT_PLAYLISTE_INFO || type == OVERSKRIFT_INDSLAG_INFO) {
           aq.id(R.id.playliste).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
           aq.id(R.id.info).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         } else if (type == INFOTEKST) {
@@ -568,6 +578,9 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           aq.getView().setContentDescription(udsendelse.beskrivelse);
         } else if (type == PLAYLISTEELEM_NU || type == PLAYLISTEELEM) {
           vh.titel = aq.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson).getTextView();
+        } else if (type == INDSLAGLISTEELEM) {
+          vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
+          aq.id(R.id.beskrivelse).typeface(App.skrift_gibson).getTextView();
         } else if (type == VIS_HELE_PLAYLISTEN_KNAP) {
           aq.id(R.id.vis_hele_playlisten).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         } else if (type == ALLE_UDSENDELSER) {
@@ -633,7 +646,6 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           DRData.instans.hentedeUdsendelser.virker() && !udsendelse.kanHentes  ? View.VISIBLE : View.GONE);
       } else if (type == PLAYLISTEELEM_NU || type == PLAYLISTEELEM) {
         Playlisteelement ple = (Playlisteelement) liste.get(position);
-        vh.playlisteelement = ple;
         vh.titel.setText(lavFedSkriftTil(ple.titel + " | " + ple.kunstner, ple.titel.length()));
         vh.titel.setContentDescription(ple.titel + " af " + ple.kunstner);
         vh.startid.setText(ple.startTidKl);
@@ -645,7 +657,13 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           v.setBackgroundResource(R.drawable.elem_hvid_bg);
         }
         aq.id(R.id.hør).visibility(udsendelse.kanNokHøres && ple.offsetMs >= 0 ? View.VISIBLE : View.GONE);
-      } else if (type == PLAYLISTE_OVERSKRIFT_PLAYLISTE_INFO) {
+      } else if (type == INDSLAGLISTEELEM) {
+        Indslaglisteelement ple = (Indslaglisteelement) liste.get(position);
+        vh.titel.setText(ple.titel);
+        aq.id(R.id.beskrivelse).text(ple.beskrivelse);
+        // v.setBackgroundResource(R.drawable.elem_hvid_bg);
+        aq.id(R.id.hør).visibility(udsendelse.kanNokHøres && ple.offsetMs >= 0 ? View.VISIBLE : View.GONE);
+      } else if (type == OVERSKRIFT_PLAYLISTE_INFO || type == OVERSKRIFT_INDSLAG_INFO) {
         aq.id(R.id.playliste).background(visInfo ? R.drawable.knap_graa40_bg : R.drawable.knap_sort_bg);
         aq.id(R.id.info).background(visInfo ? R.drawable.knap_sort_bg : R.drawable.knap_graa40_bg);
       }
@@ -792,7 +810,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     int type = adapter.getItemViewType(position);
 
     if (type == PLAYLISTEELEM || type == PLAYLISTEELEM_NU) {
-      if (seekBar==null || !udsendelse.streamsKlar()) return; // seekBar==null er set ske i abetest
+      if (seekBar == null || !udsendelse.streamsKlar()) return; // seekBar==null er set ske i abetest
       // Det må være et playlisteelement
       final Playlisteelement pl = (Playlisteelement) liste.get(position);
       if (udsendelse.equals(afspiller.getLydkilde()) && afspiller.getAfspillerstatus() == Status.SPILLER) {
@@ -815,6 +833,29 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       }
       seekBar.setProgress(pl.offsetMs);
       Log.registrérTestet("Valg af playlisteelement", "ja");
+    } else if (type == INDSLAGLISTEELEM) {
+      if (seekBar==null || !udsendelse.streamsKlar()) return; // seekBar==null er set ske i abetest
+      final Indslaglisteelement pl = (Indslaglisteelement) liste.get(position);
+      if (udsendelse.equals(afspiller.getLydkilde()) && afspiller.getAfspillerstatus() == Status.SPILLER) {
+        afspiller.seekTo(pl.offsetMs);
+      } else {
+        afspiller.setLydkilde(udsendelse);
+        afspiller.startAfspilning();
+        afspiller.observatører.add(new Runnable() {
+          @Override
+          public void run() {
+            if (afspiller.getLydkilde() == udsendelse) {
+              if (afspiller.getAfspillerstatus() != Status.SPILLER) return;
+              afspiller.seekTo(pl.offsetMs);
+              seekBar.setProgress(pl.offsetMs);
+              seekBarTekst_opdater(pl.offsetMs);
+            }
+            afspiller.observatører.remove(this); // afregistrér
+          }
+        });
+      }
+      seekBar.setProgress(pl.offsetMs);
+      Log.registrérTestet("Valg af indslag", "ja");
     } else if (type == ALLE_UDSENDELSER) {
 
       Fragment f = new Programserie_frag();

@@ -15,8 +15,8 @@
             android:layout_weight="1"
             android:layout_marginRight="1dp"
             android:layout_marginLeft="16dp"
-            android:text="PLAYLISTE"
-            android:contentDescription="playliste"
+            android:text="INDSLAG"
+            android:contentDescription="indslag"
             android:textColor="@color/hvid"
             android:background="@drawable/knap_sort_bg"/>
 
