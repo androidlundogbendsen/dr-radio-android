@@ -462,11 +462,13 @@ public class Afspiller {
   }
 
   public int getDuration() {
-    return mediaPlayer.getDuration();
+    if (afspillerstatus == Status.SPILLER) return mediaPlayer.getDuration();
+    return 0;
   }
 
   public int getCurrentPosition() {
-    return mediaPlayer.getCurrentPosition();
+    if (afspillerstatus == Status.SPILLER) return mediaPlayer.getCurrentPosition();
+    return 0;
   }
 
   //
@@ -597,7 +599,7 @@ public class Afspiller {
     public void run() {
       App.forgrundstråd.removeCallbacks(this);
       AudioManager ar = (AudioManager) App.instans.getSystemService(App.AUDIO_SERVICE);
-      Log.d("tjekLydAktiv " + ar.isMusicActive() + " " + mediaPlayer.mediaPlayer.isPlaying() + " " + mediaPlayer.getCurrentPosition() + " " + mediaPlayer.getDuration() + " " + new Date());
+      Log.d("tjekLydAktiv " + ar.isMusicActive() + " " + mediaPlayer.mediaPlayer.isPlaying() + " " + getCurrentPosition() + " " + getDuration() + " " + new Date());
       App.forgrundstråd.postDelayed(this, 10000);
     }
   };

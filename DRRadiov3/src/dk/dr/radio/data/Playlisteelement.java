@@ -3,7 +3,7 @@ package dk.dr.radio.data;
 import java.util.Date;
 
 /**
- * Repræsenterer en udsendelse
+ * Repræsenterer et element i en spilleliste
  * Created by j on 28-01-14.
  */
 public class Playlisteelement {

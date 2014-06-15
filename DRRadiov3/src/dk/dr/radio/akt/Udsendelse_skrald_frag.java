@@ -312,9 +312,9 @@ public class Udsendelse_skrald_frag extends Basisfragment implements View.OnClic
       R.layout.udsendelse_elem1_overskrift_playliste_info,
       R.layout.udsendelse_elem2_playlisteelem_nu,
       R.layout.udsendelse_elem3_playlisteelem,
-      R.layout.udsendelse_elem4_infotekst,
-      R.layout.udsendelse_elem5_vis_hele_playlisten_knap,
-      R.layout.udsendelse_elem6_alle_udsendelser};
+      R.layout.udsendelse_elem6_infotekst,
+      R.layout.udsendelse_elem7_vis_hele_playlisten_knap,
+      R.layout.udsendelse_elem8_alle_udsendelser};
 
   boolean visInfo = false;
   boolean visHelePlaylisten = false;
