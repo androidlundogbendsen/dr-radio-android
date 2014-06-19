@@ -22,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -109,5 +110,22 @@ public class Diverse {
     tjekOmdirigering(u, urlConnection);
 
     return læsStreng(is);
+  }
+
+  public static int sletFilerÆldreEnd(File mappe, long tidsstempel) {
+    int antalByteDerBlevSlettet = 0;
+    int antalFilerDerBlevSlettet = 0;
+    File[] files = mappe.listFiles();
+    if (files != null) {
+      for (File file : files) {
+        if (file.lastModified()<tidsstempel) {
+          antalByteDerBlevSlettet += file.length();
+          antalFilerDerBlevSlettet++;
+          file.delete();
+        }
+      }
+    }
+    Log.d("sletFilerÆldreEnd: " +mappe.getName()+": "  + antalFilerDerBlevSlettet + " filer blev slettet, og " + antalByteDerBlevSlettet / 1000 + " kb frigivet");
+    return antalByteDerBlevSlettet;
   }
 }

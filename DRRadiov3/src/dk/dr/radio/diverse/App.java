@@ -42,6 +42,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
 
@@ -62,7 +63,6 @@ import java.io.FileOutputStream;
 import java.util.Date;
 
 import dk.dr.radio.afspilning.Afspiller;
-import dk.dr.radio.akt.Basisaktivitet;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Diverse;
@@ -94,17 +94,19 @@ public class App extends Application {
 
   public static Netvaerksstatus netværk;
   public static RequestQueue volleyRequestQueue;
+  private DrDiskBasedCache volleyCache;
   public static EgenTypefaceSpan skrift_gibson_fed_span;
   public static DRFarver color;
   public static Resources res;
-  public static long opstartstidspunkt;
+  /** Tidsstempel der kan bruges til at afgøre hvilke filer der faktisk er brugt efter denne opstart */
+  private static long TIDSSTEMPEL_VED_OPSTART;
   public static AccessibilityManager accessibilityManager;
 
 
   @SuppressLint("NewApi")
   @Override
   public void onCreate() {
-    opstartstidspunkt = System.currentTimeMillis();
+    TIDSSTEMPEL_VED_OPSTART = System.currentTimeMillis();
     instans = this;
     netværk = new Netvaerksstatus();
     EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator");
@@ -159,7 +161,8 @@ public class App extends Application {
     // Vi bruger vores egen DrDiskBasedCache, da den indbyggede i Volley
     // har en opstartstid på flere sekunder
     File cacheDir = new File(getCacheDir(), "volley");
-    volleyRequestQueue = new RequestQueue(new DrDiskBasedCache(cacheDir), network);
+    volleyCache = new DrDiskBasedCache(cacheDir);
+    volleyRequestQueue = new RequestQueue(volleyCache, network);
     volleyRequestQueue.start();
 
     // P4 stedplacering skal ske så tidligt som muligt - ellers
@@ -241,7 +244,7 @@ public class App extends Application {
     }
     skrift_gibson_fed_span = new EgenTypefaceSpan("Gibson fed", App.skrift_gibson_fed);
 
-    Log.d("onCreate tog " + (System.currentTimeMillis() - opstartstidspunkt) + " ms");
+    Log.d("onCreate tog " + (System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
   }
 
 
@@ -272,12 +275,12 @@ public class App extends Application {
     if (!erOnline()) return;
     boolean færdig = true;
     // Tidligere hentSupplerendeDataBg
-    Log.d("Onlineinitialisering starter efter "+(System.currentTimeMillis() - opstartstidspunkt) + " ms");
+    Log.d("Onlineinitialisering starter efter "+(System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
 
     if (App.netværk.status == Netvaerksstatus.Status.WIFI) { // Tjek at alle kanaler har deres streamsurler
       for (final Kanal k : DRData.instans.grunddata.kanaler) {
         if (k.streams != null) continue;
-//        Log.d("run()1 " + (System.currentTimeMillis() - opstartstidspunkt) + " ms");
+//        Log.d("run()1 " + (System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
         Request<?> req = new DrVolleyStringRequest(k.getStreamsUrl(), new DrVolleyResonseListener() {
           @Override
           public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
@@ -291,9 +294,9 @@ public class App extends Application {
             return Priority.LOW;
           }
         };
-//        Log.d("run()2 " + (System.currentTimeMillis() - opstartstidspunkt) + " ms");
+//        Log.d("run()2 " + (System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
         App.volleyRequestQueue.add(req);
-//        Log.d("run()3 " + (System.currentTimeMillis() - opstartstidspunkt) + " ms");
+//        Log.d("run()3 " + (System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
       }
     }
 
@@ -327,7 +330,7 @@ public class App extends Application {
       if (!App.erOnline()) return;
       if (sidstTjekket + (App.EMULATOR?1000:DRData.instans.grunddata.opdaterGrunddataEfterMs) > System.currentTimeMillis()) return;
       sidstTjekket = System.currentTimeMillis();
-      Log.d("hentEvtNyeGrunddata "+(sidstTjekket-App.opstartstidspunkt));
+      Log.d("hentEvtNyeGrunddata "+(sidstTjekket-App.TIDSSTEMPEL_VED_OPSTART));
       Request<?> req = new DrVolleyStringRequest(DRData.GRUNDDATA_URL, new DrVolleyResonseListener() {
         @Override
         public void fikSvar(String nyeGrunddata, boolean fraCache, boolean uændret) throws Exception {
@@ -360,8 +363,8 @@ public class App extends Application {
   }
 
 
-  public static Basisaktivitet aktivitetIForgrunden = null;
-  public static Basisaktivitet senesteAktivitetIForgrunden = null;
+  public static Activity aktivitetIForgrunden = null;
+  public static Activity senesteAktivitetIForgrunden = null;
   private static int erIGang = 0;
 
   /**
@@ -385,23 +388,45 @@ public class App extends Application {
 
   private static Runnable setProgressBarIndeterminateVisibility = new Runnable() {
     public void run() {
-      Basisaktivitet a = aktivitetIForgrunden; // trådsikkerhed
-      if (a != null) {
-        a.setSupportProgressBarIndeterminateVisibility(erIGang > 0);
+      if (aktivitetIForgrunden instanceof ActionBarActivity) {
+        ((ActionBarActivity) aktivitetIForgrunden).setSupportProgressBarIndeterminateVisibility(erIGang > 0);
       }
     }
   };
 
-  public void onResume(Basisaktivitet akt) {
+  public void aktivitetStartet(Activity akt) {
     //((NotificationManager) getSystemService("notification")).cancelAll();
     setProgressBarIndeterminateVisibility.run();
     senesteAktivitetIForgrunden = aktivitetIForgrunden = akt;
+    forgrundstråd.removeCallbacks(appIkkeMereSynlig);
   }
 
-  public void onPause() {
+  public void aktivitetStoppet(Activity akt) {
+    if (akt != aktivitetIForgrunden) return; // en anden aktivitet er allerede startet
     aktivitetIForgrunden = null;
+    forgrundstråd.postDelayed(appIkkeMereSynlig, 1000);
   }
 
+  /**
+   * Køres et sekund efter at app'en ikke mere er synlig.
+   * Her rydder vi op i filer
+   */
+  Runnable appIkkeMereSynlig = new Runnable() {
+    @Override
+    public void run() {
+      if (aktivitetIForgrunden != null) return;
+      if (!App.PRODUKTION) App.kortToast("appIkkeMereSynlig");
+      long alder = TIDSSTEMPEL_VED_OPSTART - 24 * 60 * 60 * 1000;
+      int volleySlettet = volleyCache.sletFilerÆldreEnd(alder);
+      int aqSlettet = Diverse.sletFilerÆldreEnd(new File(getCacheDir(), "aquery"), alder);
+
+      if (fejlsøgning) {
+        App.kortToast("volleyCache: " +volleySlettet/1000+" kb frigivet");
+        App.kortToast("AQ: " +aqSlettet/1000+" kb kunne frigivet");
+      }
+
+    }
+  };
 
   public static void langToast(String txt) {
     Log.d("langToast(" + txt);

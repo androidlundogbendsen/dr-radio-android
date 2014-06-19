@@ -147,7 +147,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     }
 
     final String url = kanal.getUdsendelserUrl() + "/date/" + dato;
-    if (App.fejlsøgning) Log.d("hentSendeplanForDag url=" + url + " efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
+    if (App.fejlsøgning) Log.d("hentSendeplanForDag url=" + url);
 
     Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
 

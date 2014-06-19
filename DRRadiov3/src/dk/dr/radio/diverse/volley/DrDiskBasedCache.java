@@ -36,6 +36,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import dk.dr.radio.data.Diverse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
@@ -45,9 +46,6 @@ import dk.dr.radio.diverse.Log;
  * Vi kunne have arvet fra DiskBasedCache hvis mEntries havde været protected
  */
 public class DrDiskBasedCache implements Cache {
-
-    /** Tidsstempel der kan bruges til at afgøre hvilke filer der faktisk er brugt efter denne opstart */
-  private final long TIDSSTEMPEL_VED_OPSTART;
 
     /** Map of the Key, CacheHeader pairs */
   private final Map<String, CacheHeader> mEntries =
@@ -80,7 +78,6 @@ public class DrDiskBasedCache implements Cache {
     mRootDirectory = rootDirectory;
     mMaxCacheSizeInBytes = maxCacheSizeInBytes;
     //mRootDirectory.mkdirs();
-    TIDSSTEMPEL_VED_OPSTART = System.currentTimeMillis();
   }
 
   /**
@@ -98,15 +95,19 @@ public class DrDiskBasedCache implements Cache {
    */
   @Override
   public synchronized void clear() {
-    File[] files = mRootDirectory.listFiles();
-    if (files != null) {
-      for (File file : files) {
-        file.delete();
-      }
-    }
+    sletFilerÆldreEnd(0);
+  }
+
+  /**
+   * Fjerner gamle filer. DrVolleyDiskBasedCache opdaterer løbende tidsstempel på de filer, der bruges,
+   * så det er kun gamle UBRUGTE filer, der fjernes.
+   * @param tidsstempel filer ændret før dette tidspunkt slettes.
+   * @return antal byte der blev slettet
+   */
+  public int sletFilerÆldreEnd(long tidsstempel) {
     mEntries.clear();
     mTotalSize = 0;
-    VolleyLog.d("Cache cleared.");
+    return Diverse.sletFilerÆldreEnd(mRootDirectory, tidsstempel);
   }
 
   /**

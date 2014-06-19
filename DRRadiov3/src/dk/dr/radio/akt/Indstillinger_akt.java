@@ -22,14 +22,12 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.StatFs;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceScreen;
 import android.text.format.Formatter;
 import android.view.MenuItem;
 
@@ -109,6 +107,20 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) try {
       getActionBar().setDisplayHomeAsUpEnabled(true);
     } catch (Exception e) { Log.rapporterFejl(e); } // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/824608029
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    if (App.fejlsøgning) Log.d(this + " onStart()");
+    App.instans.aktivitetStartet(this);
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    if (App.fejlsøgning) Log.d(this + " onStop()");
+    App.instans.aktivitetStoppet(this);
   }
 
   @Override

@@ -130,16 +130,16 @@ public class Basisaktivitet extends ActionBarActivity {
 
 
   @Override
-  protected void onResume() {
-    super.onResume();
-    if (App.fejlsøgning) Log.d(this + " onResume()");
-    App.instans.onResume(this);
+  protected void onStart() {
+    super.onStart();
+    if (App.fejlsøgning) Log.d(this + " onStart()");
+    App.instans.aktivitetStartet(this);
   }
 
   @Override
-  protected void onPause() {
-    super.onPause();
-    if (App.fejlsøgning) Log.d(this + " onPause()");
-    App.instans.onPause();
+  protected void onStop() {
+    super.onStop();
+    if (App.fejlsøgning) Log.d(this + " onStop()");
+    App.instans.aktivitetStoppet(this);
   }
 }
