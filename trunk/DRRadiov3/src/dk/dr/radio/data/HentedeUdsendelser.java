@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
@@ -292,10 +293,10 @@ public class HentedeUdsendelser {
       else if (DownloadManager.ACTION_NOTIFICATION_CLICKED.equals(action)) {
         // Åbn app'en, under hentninger
 
-        if (App.aktivitetIForgrunden != null) {
+        if (App.aktivitetIForgrunden instanceof FragmentActivity) {
           // Skift til Hentede_frag
           try {
-            FragmentManager fm = App.aktivitetIForgrunden.getSupportFragmentManager();
+            FragmentManager fm = ((FragmentActivity) App.aktivitetIForgrunden).getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
             ft.replace(R.id.indhold_frag, new Hentede_udsendelser_frag());
             ft.addToBackStack("Hentning");

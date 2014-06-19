@@ -362,7 +362,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       liste.add(OVERSKRIFT_PLAYLISTE_INFO);
       liste.add(INFOTEKST);
     } else {
-      if (udsendelse.indslag.size() > 0) {
+      if (udsendelse.indslag !=null && udsendelse.indslag.size() > 0) {
         liste.add(OVERSKRIFT_INDSLAG_INFO);
         liste.addAll(udsendelse.indslag);
       } else if (udsendelse.playliste != null && udsendelse.playliste.size() > 0) {

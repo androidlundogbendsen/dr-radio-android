@@ -6,7 +6,7 @@
     "language": {},
     "android" : {
         "udeluk_HLS" : "C6603 .*/18, IdeaPadA10 A10/17, LIFETAB_E7312 LIFETAB_E7310/17",
-        "x_udeluk_HLS" : ".*",
+        "udeluk_HLS__ALLE" : ".*",
 
         "x_kontakt_url": "http://www.dr.dk/tjenester/iphone/radio/about/android22.drxml",
 
@@ -14,34 +14,18 @@
 
         "kontakt_modtagere": ["android@lundogbendsen.dk", "mobil@dr.dk" ],
         "kontakt_titel": "Angående DR Radio BETA",
-        "drift_statusmeddelelse": "Dette er betaudgaven - hent officiel udgave <a href='https://play.google.com/store/apps/details?id=dk.dr.radio'>her</a>.<br/>
-        Betaudgaven opdateres ude i venstremenuen nederst. Nyeste udgave har:<br/>
-        * Valgfri placering af hentede udsendelser (internt lager eller SD-kort)<br/>
-        * Grunddata+driftmeddelelser kan fjernstyres<br/>
-        * Levende ikon fungerer nu hvergang<br/>
-        * Hvis bruger trykker 'tilbage' og ville komme ud af appen mens den spiller skal han spørges om afspilning skal stoppe<br/>
-        * Tilgængelighed (i gang)<br/>
-        <br/>
-        * Lydstream: Akamai HLS filtreres for døde servere (i gang)<br/>
-        <br/>
-        I må <b><ul>meget gerne</ul></b> starte og stoppe direkte afspilning nogle gange.
-        Hvis det ikke virker, så tjek om det virker hvis du slår 'Filtrér akamai' fra i indstillingerne,
-        og indsend derefter en rapport (i kontakt i venstremenuen), tak!",
-
-
         "kontakt_brugerspørgsmål": "\n",
-
         "drift_statusmeddelelse": "DR Radio BETA - hent officiel udgave <a href='https://play.google.com/store/apps/details?id=dk.dr.radio'>her</a>.<br/>
-        Nyeste beta kan hentes i venstremenuen nederst.<br/>
-        * Tester reducerede tilladelser - for at få folk til at opgradere fra 2011 version - derfor kan man p.t. ikke hente udsendelser i betaudgave 7<br/>
-        * Lydstream: Akamai HLS filtreres for døde servere (i gang)<br/>
-        Øvrige ændringer kan ses i kontakt/info/om i venstremenuen
+        <small>Nyeste beta (19.juni) kan hentes i venstremenuen nederst:<br/>
+        * Lydstream: Akamai HLS filtreres ikke mere for døde servere (det viste sig at være overflødigt arbejde)<br/>
+        * Senest spillet på kanalsiden bliver nu opdateret hvert 30. sekund<br/>
+        * Indslag, f.eks. for P2 Koncerten vises i stedet for playliste<br/>
+        * Korrekt håndtering af, at visse udsendelser ikke kan hentes (og dermed heller ikke kan spilles på Android 2)<br/>
+        * Oprydning i cachede filer<br/>
         <br/>
-        I må <b><ul>meget gerne</ul></b> starte og stoppe direkte afspilning nogle gange.
-        Hvis det ikke virker, så tjek om det virker hvis du slår 'Filtrér akamai' fra i indstillingerne,
-        og indsend derefter en rapport (i kontakt i venstremenuen), tak!"
-
-
+        Øvrige ændringer kan ses i kontakt/info/om i venstremenuen<br/>
+        <br/>
+        Efter afprøvning af nyeste beta må I meget gerne en rapport (i kontakt i venstremenuen), og fortælle om alt ser OK ud, tak!</small>"
     },
     "ios": {
 
