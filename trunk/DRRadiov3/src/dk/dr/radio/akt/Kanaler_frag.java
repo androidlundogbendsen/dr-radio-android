@@ -25,9 +25,8 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
 
 
   private Venstremenu_frag venstremenuFrag;
-  private int mForgåendePosition = -1;
-  private int mNuværendePosition = -1;
   private PagerSlidingTabStrip kanalfaneblade;
+  private int viewPagerScrollState;
 
 
   @Override
@@ -86,39 +85,26 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
   }
 
   @Override
-  public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    Log.d("onPageScrolled( " + position + " " + positionOffset);
-    mNuværendePosition = position;
-  }
-
-
-  @Override
   public void onPageSelected(int position) {
+    Log.d("onPageSelected( " + position);
     // Husk foretrukken getKanal
     App.prefs.edit().putString(App.FORETRUKKEN_KANAL, kanaler.get(position).kode).commit();
-//    DRData.instans.aktuelKanal = kanaler.get(position);
-    Log.d("onPageSelected( " + position);
-
-    mForgåendePosition = position;
   }
 
   @Override
   public void onPageScrollStateChanged(int state) {
-    Log.d("onPageScrollStateChanged( " + state + " mNuværendePosition " + mNuværendePosition + ", mForgåendePosition " + mForgåendePosition);
-
-    if (state == ViewPager.SCROLL_STATE_DRAGGING && mForgåendePosition == 0 && mNuværendePosition == 0) {
-      mForgåendePosition = -1;
-      mNuværendePosition = -1;
-    }
-
-    if (state == ViewPager.SCROLL_STATE_IDLE && mForgåendePosition == -1 && mNuværendePosition == 0) {
-      //visSlideMenu = (mForgåendePosition == -1 && mNuværendePosition == 0 ) ;
-      venstremenuFrag.visMenu();
-    }
-
-
+    Log.d("onPageScrollStateChanged( " + state);
+    viewPagerScrollState = state;
   }
 
+  @Override
+  public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    if (App.fejlsøgning) Log.d("onPageScrolled( " + position + " " + positionOffset+" "+positionOffsetPixels);
+    // Hvis vi er på 0'te side og der trækkes mod højre kan viewpageren ikke komme længere og offsetPixels vil være 0,
+    if (position==0 && positionOffsetPixels==0 && viewPagerScrollState==ViewPager.SCROLL_STATE_DRAGGING) {
+        venstremenuFrag.visMenu();
+    }
+  }
 
   public class KanalAdapter extends FragmentPagerAdapter implements PagerSlidingTabStrip.IconTabProvider {
     //public class KanalAdapter extends FragmentStatePagerAdapter implements PagerSlidingTabStrip.IconTabProvider {
