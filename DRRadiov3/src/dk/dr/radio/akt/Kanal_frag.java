@@ -628,9 +628,10 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       //    .putExtra(VisFragment_akt.KLASSE, Udsendelse_frag.class.getName()).putExtra(DRJson.Slug.name(), u.slug)); // Udsenselses-ID
       String aktuelUdsendelseSlug = aktuelUdsendelseIndex > 0 ? liste.get(aktuelUdsendelseIndex).slug : "";
 
-
+      // Vis normalt et Udsendelser_vandret_skift_frag med flere udsendelser
+      // Hvis tilgængelighed er slået til (eller bladring slået fra) vises blot ét Udsendelse_frag
       Fragment f =
-          !App.prefs.getBoolean("udsendelser_bladr", true) ? new Udsendelse_frag() :
+          App.accessibilityManager.isEnabled() || !App.prefs.getBoolean("udsendelser_bladr", true) ? new Udsendelse_frag() :
               App.prefs.getBoolean("udsendelser_lodret_skift", false) ? new Udsendelser_lodret_skift_frag() :
                   new Udsendelser_vandret_skift_frag(); // standard
       f.setArguments(new Intent()
