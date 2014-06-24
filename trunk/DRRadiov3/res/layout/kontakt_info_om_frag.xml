@@ -12,6 +12,7 @@
             android:textSize="18sp"
             android:padding="16dp"
             android:textStyle="bold"
+            android:contentDescription="Om D R Radio"
             android:text="Om DR Radio">
     </TextView>
 
@@ -41,6 +42,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/grå40"
             android:textSize="10sp"
+            android:importantForAccessibility="no"
             android:text="Version 232323">
     </TextView>
 

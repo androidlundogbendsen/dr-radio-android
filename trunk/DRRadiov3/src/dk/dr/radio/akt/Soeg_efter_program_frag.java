@@ -2,6 +2,7 @@ package dk.dr.radio.akt;
 
 //import android.R;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -121,6 +123,18 @@ public class Soeg_efter_program_frag extends Basisfragment implements
             return true;
           }
       });
+    // Skjul softkeyboard når man hopper ud af indtastningsfeltet
+    // se http://stackoverflow.com/questions/1109022/close-hide-the-android-soft-keyboard
+    final InputMethodManager imm = (InputMethodManager)(getActivity().getSystemService(Context.INPUT_METHOD_SERVICE));
+    søgFelt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+      @Override
+      public void onFocusChange(View v, boolean hasFocus) {
+        Log.d("onFocusChange "+hasFocus);
+        if (!hasFocus) {
+          imm.hideSoftInputFromWindow(søgFelt.getWindowToken(), 0);
+        }
+      }
+    });
 
     udvikling_checkDrSkrifter(rod, this + " rod");
     /*

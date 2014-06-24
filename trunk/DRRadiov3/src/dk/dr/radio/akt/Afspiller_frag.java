@@ -3,10 +3,14 @@ package dk.dr.radio.akt;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +67,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     DRData.instans.afspiller.forbindelseobservatører.add(this);
     run(); // opdatér views
 
+    if (App.accessibilityManager.isEnabled()) setHasOptionsMenu(true);
     return rod;
   }
 
@@ -109,6 +114,36 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         metainformation.setText(k.navn);
         break;
     }
+    if (App.accessibilityManager.isEnabled() && getActivity()!=null) ActivityCompat.invalidateOptionsMenu(getActivity());
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    if (App.accessibilityManager.isEnabled()) {
+
+      inflater.inflate(R.menu.tilg_afspiller, menu);
+      MenuItem menuItem = menu.findItem(R.id.startStopKnap);
+
+      if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
+        menuItem.setTitle("Start " + titel.getText());
+      } else {
+        menuItem.setTitle("Stop afspilning");
+        menuItem.setIcon(R.drawable.dri_radio_stop_graa40);
+      }
+    }
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId()==R.id.startStopKnap) {
+      if (DRData.instans.afspiller.afspillerstatus == Status.STOPPET) {
+        DRData.instans.afspiller.startAfspilning();
+      } else {
+        DRData.instans.afspiller.stopAfspilning();
+      }
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   @Override

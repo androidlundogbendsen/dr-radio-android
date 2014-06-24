@@ -117,13 +117,12 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
     //boolean live =  && status != Status.STOPPET;
     if (lydkilde.erDirekte()) {
       remoteViews.setTextViewText(R.id.titel, kanal.navn + " Live");
-      //  App.kortToast(" Live "  + k.navn);
     } else {
       Udsendelse udsendelse = lydkilde.getUdsendelse();
       remoteViews.setTextViewText(R.id.titel, udsendelse == null ? kanal.navn : udsendelse.titel);
-      //App.kortToast(" Udsendelse "  + udsendelse == null ? k.navn : udsendelse.titel);
     }
     remoteViews.setTextViewText(R.id.metainformation, kanal.navn);
+    remoteViews.setContentDescription(R.id.metainformation, "D R Radio "+kanal.navn);
 
     switch (DRData.instans.afspiller.getAfspillerstatus()) {
       case STOPPET:

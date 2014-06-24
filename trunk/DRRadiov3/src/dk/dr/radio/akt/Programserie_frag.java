@@ -279,8 +279,12 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     if (position == 0) return;
     if (position <= programserie.getUdsendelser().size()) {
       Udsendelse udsendelse = programserie.getUdsendelser().get(position - 1);
-//      Fragment f = new Udsendelse_frag();
-      Fragment f = new Udsendelser_vandret_skift_frag();
+      // Vis normalt et Udsendelser_vandret_skift_frag med flere udsendelser
+      // Hvis tilgængelighed er slået til (eller bladring slået fra) vises blot ét Udsendelse_frag
+      Fragment f =
+          App.accessibilityManager.isEnabled() || !App.prefs.getBoolean("udsendelser_bladr", true) ? new Udsendelse_frag() :
+              App.prefs.getBoolean("udsendelser_lodret_skift", false) ? new Udsendelser_lodret_skift_frag() :
+                  new Udsendelser_vandret_skift_frag(); // standard
       f.setArguments(new Intent()
           .putExtra(Udsendelse_frag.BLOKER_VIDERE_NAVIGERING, true)
           .putExtra(P_kode, kanal == null ? null : kanal.kode)

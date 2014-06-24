@@ -405,7 +405,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       App.forgrundstråd.removeCallbacks(this);
       if (seekBar==null) return; // det er set ske i abetest
       boolean denneUdsSpiller = udsendelse.equals(afspiller.getLydkilde()) && afspiller.getAfspillerstatus() != Status.STOPPET;
-      if (!denneUdsSpiller) {
+      if (!denneUdsSpiller || App.accessibilityManager.isEnabled()) {
         seekBar.setVisibility(View.GONE);
         seekBarTekst.setVisibility(View.GONE);
         seekBarMaxTekst.setVisibility(View.GONE);
@@ -548,7 +548,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
           vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
           vh.titel.setText(udsendelse.titel.toUpperCase());
-          vh.titel.setContentDescription(null);  // varetages af listviewet
+          vh.titel.setContentDescription("\u00A0");  // SLUK for højtlæsning, det varetages af listviewet
           aq.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
           seekBarTekst = aq.id(R.id.seekBarTekst).typeface(App.skrift_gibson).getTextView();
           seekBarMaxTekst = aq.id(R.id.seekBarMaxTekst).typeface(App.skrift_gibson).getTextView();

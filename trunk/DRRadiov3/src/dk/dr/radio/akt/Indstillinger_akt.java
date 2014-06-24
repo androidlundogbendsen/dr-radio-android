@@ -138,12 +138,6 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
     return super.onOptionsItemSelected(item);
   }
 
-  private CharSequence[] lavDelarray(CharSequence[] entries, int antal) {
-    CharSequence[] res = new CharSequence[antal];
-    for (int i = 0; i < antal; i++) res[i] = entries[i];
-    return res;
-  }
-
   public boolean onPreferenceChange(Preference preference, Object newValue) {
     // På dette tidspunkt er indstillingen ikke gemt endnu, det bliver den
     // først når metoden har returneret true.
