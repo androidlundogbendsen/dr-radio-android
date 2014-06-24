@@ -60,6 +60,7 @@ public class Kanal_nyheder_frag extends Basisfragment implements View.OnClickLis
         ((View) hør.getParent()).setTouchDelegate(new TouchDelegate(r, hør));
       }
     });
+    aq.id(R.id.titel).typeface(App.skrift_gibson);
 
 
     udvikling_checkDrSkrifter(rod, this + " rod");
