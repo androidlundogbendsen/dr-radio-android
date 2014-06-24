@@ -226,6 +226,8 @@ public class App extends Application {
       netværk.onReceive(this, null); // Få opdateret netværksstatus
       //langToast("xxxx "+App.fejlsøgning);
 
+      // udeståendeInitialisering kaldes når aktivitet bliver synlig første gang
+      // - muligvis aldrig hvis app'en kun betjenes via levende ikon
 
     } catch (Exception ex) {
       // TODO popop-advarsel til bruger om intern fejl og rapporter til udvikler-dialog
@@ -267,14 +269,13 @@ public class App extends Application {
 
   /**
    * Initialisering af resterende data.
-   * Dette sker når app'en er kommet op og køre, og også når telefonen kommer online
+   * Dette sker når app'en er synlig og telefonen er online
    */
-  public Runnable onlineinitialisering = new Runnable() {
+  private Runnable udeståendeInitialisering = new Runnable() {
    @Override
    public void run() {
     if (!erOnline()) return;
     boolean færdig = true;
-    // Tidligere hentSupplerendeDataBg
     Log.d("Onlineinitialisering starter efter "+(System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
 
     if (App.netværk.status == Netvaerksstatus.Status.WIFI) { // Tjek at alle kanaler har deres streamsurler
@@ -294,9 +295,7 @@ public class App extends Application {
             return Priority.LOW;
           }
         };
-//        Log.d("run()2 " + (System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
         App.volleyRequestQueue.add(req);
-//        Log.d("run()3 " + (System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
       }
     }
 
@@ -310,13 +309,12 @@ public class App extends Application {
     }
 
     if (prefs.getString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, null) == null) {
-      {
-        færdig = false;
-        startP4stedplacering();
-      }
+      færdig = false;
+      startP4stedplacering();
     }
     if (færdig) {
       netværk.observatører.remove(this); // Hold ikke mere øje med om vi kommer online
+      udeståendeInitialisering = null;
     }
     Log.d("Onlineinitialisering færdig="+færdig);
    }
@@ -398,25 +396,32 @@ public class App extends Application {
     //((NotificationManager) getSystemService("notification")).cancelAll();
     setProgressBarIndeterminateVisibility.run();
     senesteAktivitetIForgrunden = aktivitetIForgrunden = akt;
-    forgrundstråd.removeCallbacks(appIkkeMereSynlig);
+    if (udeståendeInitialisering!=null) {
+      if (App.erOnline()) {
+        App.forgrundstråd.postDelayed(udeståendeInitialisering, 250); // Initialisér onlinedata
+      } else {
+        App.netværk.observatører.add(udeståendeInitialisering); // Vent på at vi kommer online og lav så et tjek
+      }
+    }
+    if (kørFørsteGangAppIkkeMereErSynlig != null) forgrundstråd.removeCallbacks(kørFørsteGangAppIkkeMereErSynlig);
   }
 
   public void aktivitetStoppet(Activity akt) {
     if (akt != aktivitetIForgrunden) return; // en anden aktivitet er allerede startet
     aktivitetIForgrunden = null;
-    forgrundstråd.postDelayed(appIkkeMereSynlig, 1000);
+    if (kørFørsteGangAppIkkeMereErSynlig !=null) forgrundstråd.postDelayed(kørFørsteGangAppIkkeMereErSynlig, 1000);
   }
 
   /**
    * Køres et sekund efter at app'en ikke mere er synlig.
    * Her rydder vi op i filer
    */
-  Runnable appIkkeMereSynlig = new Runnable() {
+  Runnable kørFørsteGangAppIkkeMereErSynlig = new Runnable() {
     @Override
     public void run() {
       if (aktivitetIForgrunden != null) return;
-      if (!App.PRODUKTION) App.kortToast("appIkkeMereSynlig");
-      long alder = TIDSSTEMPEL_VED_OPSTART - 24 * 60 * 60 * 1000;
+      if (!App.PRODUKTION) App.kortToast("kørFørsteGangAppIkkeMereErSynlig");
+      long alder = TIDSSTEMPEL_VED_OPSTART - 7 * 24 * 60 * 60 * 1000;
       int volleySlettet = volleyCache.sletFilerÆldreEnd(alder);
       int aqSlettet = Diverse.sletFilerÆldreEnd(new File(getCacheDir(), "aquery"), alder);
 
@@ -424,7 +429,7 @@ public class App extends Application {
         App.kortToast("volleyCache: " +volleySlettet/1000+" kb frigivet");
         App.kortToast("AQ: " +aqSlettet/1000+" kb kunne frigivet");
       }
-
+      kørFørsteGangAppIkkeMereErSynlig =null;
     }
   };
 
