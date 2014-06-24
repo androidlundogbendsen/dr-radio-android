@@ -87,7 +87,7 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
 
   @Override
   public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    //Log.d("onPageScrolled( " + position + " " + positionOffset);
+    Log.d("onPageScrolled( " + position + " " + positionOffset);
     mNuværendePosition = position;
   }
 
@@ -104,25 +104,17 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
 
   @Override
   public void onPageScrollStateChanged(int state) {
-    //Log.d("onPageScrollStateChanged( " + state);
+    Log.d("onPageScrollStateChanged( " + state + " mNuværendePosition " + mNuværendePosition + ", mForgåendePosition " + mForgåendePosition);
 
-    //Log.d("mNuværendePosition " + mNuværendePosition + ", mForgåendePosition " + mForgåendePosition);
-
-    if (state == 1 && mForgåendePosition == 0 && mNuværendePosition == 0) {
-      //visSlideMenu = (mForgåendePosition == 0 && mNuværendePosition == 0) ;
-      venstremenuFrag.visMenu();
+    if (state == ViewPager.SCROLL_STATE_DRAGGING && mForgåendePosition == 0 && mNuværendePosition == 0) {
       mForgåendePosition = -1;
       mNuværendePosition = -1;
     }
-    if (state == 0 && (mForgåendePosition == -1 && mNuværendePosition == 0)) {
+
+    if (state == ViewPager.SCROLL_STATE_IDLE && mForgåendePosition == -1 && mNuværendePosition == 0) {
       //visSlideMenu = (mForgåendePosition == -1 && mNuværendePosition == 0 ) ;
       venstremenuFrag.visMenu();
     }
-    
-    /*if (visSlideMenu){
-      venstremenuFrag.visMenu();
-    	visSlideMenu = false;
-    }*/
 
 
   }
