@@ -78,7 +78,7 @@ public class App extends Application {
   public static final String P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING = "P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING";
   public static final String P4_FORETRUKKEN_AF_BRUGER = "P4_FORETRUKKEN_AF_BRUGER";
   public static final String FORETRUKKEN_KANAL = "FORETRUKKEN_kanal";
-  public static final boolean PRODUKTION = false;
+  public static final boolean PRODUKTION = true;
   public static boolean EMULATOR = true; // Sæt i onCreate(), ellers virker det ikke i std Java
   public static App instans;
   public static SharedPreferences prefs;
