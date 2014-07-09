@@ -16,12 +16,13 @@
         "kontakt_titel": "Angående DR Radio BETA",
         "kontakt_brugerspørgsmål": "\n",
         "drift_statusmeddelelse": "DR Radio BETA - hent officiel udgave <a href='https://play.google.com/store/apps/details?id=dk.dr.radio'>her</a>.<br/>
-        <small>Nyeste beta (19.juni) kan hentes i venstremenuen nederst:<br/>
+        <small>Nyeste beta (24.juni) kan hentes i venstremenuen nederst:<br/>
         * Lydstream: Akamai HLS filtreres ikke mere for døde servere (det viste sig at være overflødigt arbejde)<br/>
         * Senest spillet på kanalsiden bliver nu opdateret hvert 30. sekund<br/>
         * Indslag, f.eks. for P2 Koncerten vises i stedet for playliste<br/>
         * Korrekt håndtering af, at visse udsendelser ikke kan hentes (og dermed heller ikke kan spilles på Android 2)<br/>
         * Oprydning i cachede filer<br/>
+        * Tilgængelighed for blinde og svagsseende<br/>
         <br/>
         Øvrige ændringer kan ses i kontakt/info/om i venstremenuen<br/>
         <br/>
