@@ -69,8 +69,8 @@ public class MediaPlayerWrapper {
     mediaPlayer.release();
   }
 
-  public void seekTo(int progress) {
-    mediaPlayer.seekTo(progress);
+  public void seekTo(int offsetMs) {
+    mediaPlayer.seekTo(offsetMs);
   }
 
   public int getDuration() {
@@ -112,6 +112,7 @@ public class MediaPlayerWrapper {
           mediaPlayerWrapperKlasse = (Class<? extends MediaPlayerWrapper>) Class.forName("dk.dr.radio.afspilning.AkamaiMediaPlayerWrapper");
         } catch (ClassNotFoundException e) {
           mediaPlayerWrapperKlasse = MediaPlayerWrapper.class;
+          Log.e("Mangler Akamai-wrapper til statistik", e);
         }
       }
     }

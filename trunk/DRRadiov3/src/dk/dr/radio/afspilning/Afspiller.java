@@ -55,6 +55,7 @@ import dk.dr.radio.diverse.Opkaldshaandtering;
  */
 public class Afspiller {
 
+  private final GemiusStatistik gemiusStatistik;
   public Status afspillerstatus = Status.STOPPET;
   // Burde være en del af afspillerstatus
   private boolean afspilningPåPause;
@@ -114,6 +115,7 @@ public class Afspiller {
     }.start();
     */
     if (App.fejlsøgning) tjekLydAktiv.run();
+    gemiusStatistik = new GemiusStatistik();
   }
 
   private int onErrorTæller;
@@ -164,6 +166,7 @@ public class Afspiller {
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 1 * max / 5, AudioManager.FLAG_SHOW_UI);
       }
 
+      gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Play, 0);
     } else Log.d(" forkert status=" + afspillerstatus);
   }
 
@@ -328,16 +331,16 @@ public class Afspiller {
   }
 
   synchronized public void pauseAfspilning() {
-    gemPosition();
+    int pos = gemPosition();
     pauseAfspilningIntern();
     if (wifilock != null) wifilock.release();
-    // Informer evt aktivitet der lytter
+    gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Pause, pos/1000);
   }
 
   /**
    * Gem position - og spol herhen næste gang udsendelsen spiller
    */
-  private void gemPosition() {
+  private int gemPosition() {
     if (!lydkilde.erDirekte() && afspillerstatus==Status.SPILLER)
       try {
       int pos = mediaPlayer.getCurrentPosition();
@@ -346,9 +349,11 @@ public class Afspiller {
         if (App.fejlsøgning) App.kortToast("GEMT POSITION\n"+ lydkilde.getUdsendelse().startposition);
         Log.d("GEMT POSITION for "+lydkilde +" : "+ lydkilde.getUdsendelse().startposition);
       }
+      return pos;
     } catch (Exception e) {
       Log.rapporterFejl(e); // TODO fjern hvis der aldrig kommer fejl her
     }
+    return 0;
   }
 
 
@@ -357,6 +362,7 @@ public class Afspiller {
     pauseAfspilning();
     // Stop afspillerservicen
     App.instans.stopService(new Intent(App.instans, HoldAppIHukommelsenService.class));
+    gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Stopped, 0);
   }
 
 
@@ -376,6 +382,7 @@ public class Afspiller {
     if ((afspillerstatus == Status.SPILLER) || (afspillerstatus == Status.FORBINDER)) {
       stopAfspilning(); // gemmer lydkildens position
       this.lydkilde = lydkilde;
+      gemiusStatistik.setLydkilde(lydkilde);
       try {
         startAfspilning(); // sætter afspilleren til den nye lydkildes position
       } catch (Exception e) {
@@ -383,6 +390,7 @@ public class Afspiller {
       }
     } else {
       this.lydkilde = lydkilde;
+      gemiusStatistik.setLydkilde(lydkilde);
     }
     opdaterObservatører();
   }
@@ -457,8 +465,9 @@ public class Afspiller {
     }
   }
 
-  public void seekTo(int progress) {
-    mediaPlayer.seekTo(progress);
+  public void seekTo(int offsetMs) {
+    mediaPlayer.seekTo(offsetMs);
+    gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Seeking, offsetMs /1000);
   }
 
   public int getDuration() {
@@ -490,9 +499,11 @@ public class Afspiller {
           if (startposition > 0) {
             Log.d("mediaPlayer genoptager afspilning ved " + startposition);
             mediaPlayer.seekTo(startposition);
+            gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Seeking, startposition /1000);
           }
           mediaPlayer.start();
           Log.d("mediaPlayer.start() slut " + mpTils());
+          gemiusStatistik.startSendData();
          } catch (Exception e) { Log.rapporterFejl(e); }
         }
       }.start();
@@ -502,6 +513,7 @@ public class Afspiller {
       Log.d("AfspillerService onCompletion!");
       // Hvis forbindelsen mistes kommer der en onCompletion() og vi er derfor
       // nødt til at genstarte, medmindre brugeren trykkede stop
+      gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Completed, 0);
       if (afspillerstatus == Status.SPILLER) {
         mediaPlayer.stop();
         // mediaPlayer.reset();

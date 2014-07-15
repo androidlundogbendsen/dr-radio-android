@@ -20,12 +20,14 @@ package dk.dr.radio.data;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -110,6 +112,28 @@ public class Diverse {
     tjekOmdirigering(u, urlConnection);
 
     return læsStreng(is);
+  }
+
+
+  public static JSONObject postJson(String url, String data) throws IOException, JSONException {
+    Log.d("postJson " + url+" med data="+data);
+    URL u = new URL(url);
+    HttpURLConnection urlConnection = (HttpURLConnection) u.openConnection();
+    urlConnection.setConnectTimeout(15000);
+    urlConnection.setReadTimeout(90 * 1000);   // 1 1/2 minut
+    urlConnection.setRequestProperty("Content-Type", "application/json");
+    urlConnection.setDoOutput(true);
+    urlConnection.connect(); // http://stackoverflow.com/questions/8179658/urlconnection-getcontent-return-null
+    OutputStream os = urlConnection.getOutputStream();
+    os.write(data.getBytes());
+    os.close();
+    InputStream is = urlConnection.getInputStream();
+    if (urlConnection.getResponseCode() != 200)
+      throw new IOException("HTTP-svar var " + urlConnection.getResponseCode() + " " + urlConnection.getResponseMessage() + " for " + u);
+
+    tjekOmdirigering(u, urlConnection);
+
+    return new JSONObject(læsStreng(is));
   }
 
   public static int sletFilerÆldreEnd(File mappe, long tidsstempel) {

@@ -122,7 +122,9 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
       remoteViews.setTextViewText(R.id.titel, udsendelse == null ? kanal.navn : udsendelse.titel);
     }
     remoteViews.setTextViewText(R.id.metainformation, kanal.navn);
-    remoteViews.setContentDescription(R.id.metainformation, "D R Radio "+kanal.navn);
+    if (Build.VERSION.SDK_INT>=15) {
+      remoteViews.setContentDescription(R.id.metainformation, "D R Radio " + kanal.navn);
+    }
 
     switch (DRData.instans.afspiller.getAfspillerstatus()) {
       case STOPPET:
