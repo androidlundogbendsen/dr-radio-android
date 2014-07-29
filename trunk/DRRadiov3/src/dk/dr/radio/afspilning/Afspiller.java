@@ -166,7 +166,6 @@ public class Afspiller {
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 1 * max / 5, AudioManager.FLAG_SHOW_UI);
       }
 
-      gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Play, 0);
     } else Log.d(" forkert status=" + afspillerstatus);
   }
 
@@ -275,6 +274,7 @@ public class Afspiller {
             App.kortToast("Kunne ikke oprette forbindelse");
             return;
           }
+          gemiusStatistik.setLydkilde(lydkilde);
           DRData.instans.senestLyttede.registrérLytning(lydkilde);
           Log.d("mediaPlayer.setDataSource( " + lydstream);
 
@@ -359,10 +359,10 @@ public class Afspiller {
 
   synchronized public void stopAfspilning() {
     Log.d("Afspiller stopAfspilning");
+    gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Stopped, getCurrentPosition()/1000);
     pauseAfspilning();
     // Stop afspillerservicen
     App.instans.stopService(new Intent(App.instans, HoldAppIHukommelsenService.class));
-    gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Stopped, 0);
   }
 
 
@@ -382,7 +382,6 @@ public class Afspiller {
     if ((afspillerstatus == Status.SPILLER) || (afspillerstatus == Status.FORBINDER)) {
       stopAfspilning(); // gemmer lydkildens position
       this.lydkilde = lydkilde;
-      gemiusStatistik.setLydkilde(lydkilde);
       try {
         startAfspilning(); // sætter afspilleren til den nye lydkildes position
       } catch (Exception e) {
@@ -390,7 +389,6 @@ public class Afspiller {
       }
     } else {
       this.lydkilde = lydkilde;
-      gemiusStatistik.setLydkilde(lydkilde);
     }
     opdaterObservatører();
   }
@@ -496,14 +494,17 @@ public class Afspiller {
           Log.d("mediaPlayer.start() " + mpTils());
           Udsendelse u = lydkilde.getUdsendelse();
           int startposition = u == null ? 0 : u.startposition;
+          gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Play, startposition /1000);
           if (startposition > 0) {
             Log.d("mediaPlayer genoptager afspilning ved " + startposition);
             mediaPlayer.seekTo(startposition);
-            gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Seeking, startposition /1000);
           }
           mediaPlayer.start();
           Log.d("mediaPlayer.start() slut " + mpTils());
-          gemiusStatistik.startSendData();
+          Thread.sleep(5000); // Vent lidt før data sendes
+          if (App.netværk.erOnline()) {
+            gemiusStatistik.startSendData();
+          } // Ellers venter vi, det kan være vi er heldige at brugeren er online ved næste hændelse
          } catch (Exception e) { Log.rapporterFejl(e); }
         }
       }.start();
@@ -513,7 +514,6 @@ public class Afspiller {
       Log.d("AfspillerService onCompletion!");
       // Hvis forbindelsen mistes kommer der en onCompletion() og vi er derfor
       // nødt til at genstarte, medmindre brugeren trykkede stop
-      gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Completed, 0);
       if (afspillerstatus == Status.SPILLER) {
         mediaPlayer.stop();
         // mediaPlayer.reset();
@@ -536,6 +536,7 @@ public class Afspiller {
           startAfspilningIntern();
         } else {
           lydkilde.getUdsendelse().startposition = 0;
+          gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Completed, getCurrentPosition()/1000);
           stopAfspilning();
         }
       }
