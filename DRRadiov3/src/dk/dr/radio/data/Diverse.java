@@ -116,7 +116,7 @@ public class Diverse {
 
 
   public static JSONObject postJson(String url, String data) throws IOException, JSONException {
-    Log.d("postJson " + url+" med data="+data);
+    //Log.d("postJson " + url+" med data="+data);
     URL u = new URL(url);
     HttpURLConnection urlConnection = (HttpURLConnection) u.openConnection();
     urlConnection.setConnectTimeout(15000);

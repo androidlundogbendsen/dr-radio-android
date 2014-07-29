@@ -46,9 +46,11 @@ class GemiusStatistik {
     try {
       json = new JSONObject(påkrævedeFelter);
       json.put("AutoStarted", false);
-      json.put("Platform", "dr.android." + App.versionsnavn);
-      json.put("Telefonmodel", Build.MODEL + " " + Build.PRODUCT);
-      json.put("Android_v", Build.VERSION.RELEASE);
+      //json.put("Platform", "dr.android." + App.versionsnavn);
+//      json.put("Platform", "dr.android.KAN_MAN_SE_DETTE_ekstrafelter_vaek");
+      json.put("Platform", "dr.android.test_fra_main");
+//      json.put("Telefonmodel", Build.MODEL + " " + Build.PRODUCT);
+//      json.put("Android_v", Build.VERSION.RELEASE);
 /* Behøves, men har ingen meningsfulde værdier
     json.put("ScreenResolution", );
     json.put("ScreenResolution = new Resolution(1024, 768),
@@ -84,8 +86,8 @@ class GemiusStatistik {
       Log.d("Gemius setLydkilde, hov, havde ikke sendt disse hændelser: "+ hændelser);
       startSendData();
     }
-    lydkilde = nyLydkilde;
-    if (lydkilde != null) {
+    if (nyLydkilde != null && lydkilde != nyLydkilde) {
+      lydkilde = nyLydkilde;
       registérHændelse(PlayerAction.FirstPlay, 0);
     }
   }
@@ -93,26 +95,31 @@ class GemiusStatistik {
 
 
   void startSendData() {
-    Log.d("Gemius startSendData json="+ json);
+    if (hændelser.isEmpty()) return;
     try {
       // json.put("Url", "http://test.com");  // behøves ikke?
       // json.put("InitialLoadTime", 0);  // behøves ikke?
       // json.put("TimezoneOffsetInMinutes", -120);  // behøves ikke?
       if (lydkilde!=null) {
+        json.put("IsLiveStream", lydkilde.erDirekte());
         json.put("Id", lydkilde.getUdsendelse().slug);
         json.put("Channel", lydkilde.getKanal().slug);
-        json.put("IsLiveStream", lydkilde.erDirekte());
       } else {
+        if (App.instans!=null) { // Hvis dette er en kørende app, så rapporter en fejl med dette
+          Log.rapporterFejl(new IllegalStateException("Gemius lydkilde er null"));
+        }
+        json.put("IsLiveStream", false);
         json.put("Id", "matador-24-24");// kan ikke være "ukendt"
         json.put("Channel", "ukendt");
-        json.put("IsLiveStream", false);
       }
       json.put("PlayerEvents", new JSONArray(hændelser));
-    } catch (JSONException e) {
+    } catch (Exception e) {
       Log.rapporterFejl(e);
     }
     hændelser.clear();
     final String data = json.toString();
+    Log.d("Gemius startSendData json="+ data);
+    //new Exception().printStackTrace();
 
     new Thread(new Runnable() {
       @Override
@@ -164,10 +171,15 @@ class GemiusStatistik {
    * Til afprøvning
    */
   public static void main(String[] a) throws Exception {
-    GemiusStatistik i = new GemiusStatistik();
-    i.testSetlydkilde();
-    i.registérHændelse(PlayerAction.Play, 0);
-    i.startSendData();
+    GemiusStatistik g = new GemiusStatistik();
+    for (int n=0; n<100; n++) {
+      g.testSetlydkilde();
+      g.registérHændelse(PlayerAction.Play, 0);
+      Thread.sleep(1000);
+      g.registérHændelse(PlayerAction.Completed, 2);
+      g.startSendData();
+      Thread.sleep(1000);
+    }
 
   }
 
