@@ -130,7 +130,7 @@ public class App extends Application {
     try {
       //noinspection ConstantConditions
       App.versionsnavn = packageName + "/" + getPackageManager().getPackageInfo(packageName, 0).versionName;
-      if (EMULATOR) App.versionsnavn += " UDV";
+      if (EMULATOR) App.versionsnavn += " EMU";
       Log.d("App.versionsnavn=" + App.versionsnavn);
       Class.forName("android.os.AsyncTask"); // Fix for http://code.google.com/p/android/issues/detail?id=20915
       FilCache.init(getCacheDir()); // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/867898048
