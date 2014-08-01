@@ -15,7 +15,10 @@ import dk.dr.radio.diverse.Netvaerksstatus;
  * En lydkilde der kan spilles af afspilleren
  */
 public abstract class Lydkilde implements Serializable {
-  private static final long serialVersionUID = 1L;
+  // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/1415558087
+  // - at proguard obfuskering havde
+  // Se også http://stackoverflow.com/questions/16210831/serialization-deserialization-proguard
+  private static final long serialVersionUID = 6061992240626233386L;
 
   public String urn;   // Bemærk - kan være tom!
   public String slug;  // Bemærk - kan være tom!
