@@ -44,7 +44,10 @@ public class HentedeUdsendelser {
   private DownloadManager downloadService = null;
 
   public static class Data implements Serializable {
-    private static final long serialVersionUID = 1L;
+    // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/1415558087
+    // - at proguard obfuskering havde
+    // Se også http://stackoverflow.com/questions/16210831/serialization-deserialization-proguard
+    private static final long serialVersionUID =-3292059648694915445L;
 
     private Map<String, Long> downloadIdFraSlug = new LinkedHashMap<String, Long>();
     private Map<Long, Udsendelse> udsendelseFraDownloadId = new LinkedHashMap<Long, Udsendelse>();
@@ -236,7 +239,7 @@ public class HentedeUdsendelser {
     long hentet = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)) / 1000000;
     String txt;
     if (status == DownloadManager.STATUS_SUCCESSFUL) {
-      txt = "Klar";
+      txt = "Klar ("+ iAlt + " MB)";
     } else if (status == DownloadManager.STATUS_FAILED) {
       txt = "Mislykkedes";
     } else if (status == DownloadManager.STATUS_PENDING) {

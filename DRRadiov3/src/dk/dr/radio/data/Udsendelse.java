@@ -10,7 +10,11 @@ import dk.dr.radio.diverse.Log;
  * Created by j on 28-01-14.
  */
 public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
-  private static final long serialVersionUID = 1L;
+  // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/1415558087
+  // - at proguard obfuskering havde
+  // Se også http://stackoverflow.com/questions/16210831/serialization-deserialization-proguard
+  private static final long serialVersionUID = -9161602458987716481L;
+
   public String titel;
   public String beskrivelse;
   public String kanalSlug;  // Bemærk - kan være tom!
