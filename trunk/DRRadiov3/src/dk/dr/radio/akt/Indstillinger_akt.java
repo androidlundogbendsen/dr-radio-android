@@ -52,9 +52,10 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     App.prefs.edit().putBoolean("fejlsøgning", App.fejlsøgning);
-    addPreferencesFromResource(R.xml.indstillinger);
-    if (App.prefs.getBoolean("udviklerEkstra", false))
+    if (App.prefs.getBoolean("udviklerEkstra", false)) {
       addPreferencesFromResource(R.xml.indstillinger_udvikling);
+    }
+    addPreferencesFromResource(R.xml.indstillinger);
 
     try {
 

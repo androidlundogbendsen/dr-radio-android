@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+        android:title="Til udvikling og fejlfinding">
+
+    <CheckBoxPreference
+            android:key="startStopKnapAnim" android:title="startStopKnap anim"
+            android:summaryOn="Rotér"
+            android:summaryOff="Hop"/>
+
+
 
     <CheckBoxPreference
             android:key="tving_lodret_visning" android:title="Blokér vandret visning"
@@ -56,4 +65,5 @@
             android:summaryOn="Send statistik til DR, om hvad du lytter til. Mener du at app'en tager for meget strøm kan du slå det fra og rapportere om det gør en forskel"
             android:summaryOff="Indsamler ikke statisik. Rapportér venligst om det gør en forskel for dig. Du skal genstarte app'en (evt telefonen) og se meddelelse ved opstart før det er trådt i kraft."
             />
+</PreferenceScreen>
 </PreferenceScreen>
