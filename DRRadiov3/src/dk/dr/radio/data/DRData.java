@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import dk.dr.radio.afspilning.Afspiller;
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.FilCache;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.Rapportering;
@@ -41,10 +42,13 @@ import dk.dr.radio.diverse.Rapportering;
 public class DRData {
 
   public static DRData instans;
-  // scp /home/j/android/dr-radio-android/DRRadiov3/res/raw/grunddata_testaendring.json j:javabog.dk/privat/drradiov3_grunddata.json
-  //public static final String GRUNDDATA_URL = "http://android.lundogbendsen.dk/drradiov3_grunddata.json";
+
+  // scp /home/j/android/dr-radio-android/DRRadiov3/res/raw/grunddata_udvikling.json j:../lundogbendsen/hjemmeside/drradiov3_grunddata.json
+
+  public static final String GRUNDDATA_URL =  App.PRODUKTION
+      ? "http://www.dr.dk/tjenester/iphone/radio/settings/iphone200d.drxml"
+      : "http://android.lundogbendsen.dk/drradiov3_grunddata.json";
   //public static final String GRUNDDATA_URL = "http://www.dr.dk/tjenester/iphone/radio/settings/iphone200d.json";
-  public static final String GRUNDDATA_URL = "http://www.dr.dk/tjenester/iphone/radio/settings/iphone200d.drxml";
 
   public Grunddata grunddata;
   public Afspiller afspiller;

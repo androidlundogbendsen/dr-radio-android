@@ -1,16 +1,29 @@
 {
+"noter": "
+
+scp /home/j/android/dr-radio-android/DRRadiov3/res/raw/grunddata_udvikling.json j:../lundogbendsen/hjemmeside/drradiov3_grunddata.json
+
+",
     "intervals": {
         "playlist": 30,
         "settings": 1800
     },
     "language": {},
     "android" : {
+        "xx_udeluk_HLS" : "C6603 .*/18, IdeaPadA10 A10/17, LIFETAB_E7312 LIFETAB_E7310/17",
+        "xx_udeluk_HLS__ALLE" : ".*",
         "udeluk_HLS" : "C6603 C6603/18,A1010 A1010/16, IdeaPadA10 A10/17, LIFETAB_E7312 LIFETAB_E7310/17",
-        "kontakt_url": "http://www.dr.dk/tjenester/iphone/radio/about/android30.drxml",
-        "kontakt_modtagere": ["android@lundogbendsen.dk", "mobil@dr.dk" ],
-        "kontakt_titel": "Angående DR Radio",
-        "kontakt_brugerspørgsmål": "\nHvis du oplever problemer, så vil vi meget gerne kontaktes.\nSkriv herunder\n-------------\n\n\n\n\n\n\n\n----- teknisk info til udviklerne -----\n\n",
-        "drift_statusmeddelelse": ""
+        "kontakt_url": "https://docs.google.com/document/d/1PzaeVuaH0OOuIYWFELlDTVDaxR_TAr4f_aA2YhNZse8/pub",
+        "kontakt_modtagere": ["android@lundogbendsen.dk" ],
+        "kontakt_titel": "Angående DR Radio BETA",
+        "kontakt_brugerspørgsmål": "\n",
+        "drift_statusmeddelelse": "DR Radio BETA - hent officiel udgave <a href='https://play.google.com/store/apps/details?id=dk.dr.radio'>her</a>.<br/>
+        <small>Nyeste beta (17.sept) kan hentes i venstremenuen nederst.<br/>
+        * Forsøgsvise animationer af spil/pauseknap<br/>
+        <br/>
+        Øvrige ændringer kan ses i kontakt/info/om i venstremenuen<br/>
+        <br/>
+        Send gerne en rapport (i kontakt i venstremenuen), og fortæl om alt ser OK ud, tak!</small>"
     },
     "ios": {
 

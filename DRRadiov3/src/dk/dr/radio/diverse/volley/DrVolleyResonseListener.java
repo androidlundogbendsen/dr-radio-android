@@ -28,10 +28,10 @@ public abstract class DrVolleyResonseListener implements Response.Listener<Strin
 
   @Override
   public final void onResponse(String response) {
-    App.sætErIGang(false);
     try {
       boolean uændret = response != null && response.equals(cachetVærdi);
       fikSvar(response, false, uændret);
+      App.sætErIGang(false);
     } catch (Exception e) {
       Log.e(e);
       onErrorResponse(new VolleyError(e));
