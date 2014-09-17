@@ -42,6 +42,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -110,7 +112,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
                 streamsVarTom.remove(udsendelse);
               }
               udsendelse.produktionsnummer = o.optString(DRJson.ProductionNumber.name());
-                udsendelse.shareLink = o.optString(DRJson.ShareLink.name());
+              udsendelse.shareLink = o.optString(DRJson.ShareLink.name());
               if (getUserVisibleHint() && udsendelse.streamsKlar() && afspiller.getAfspillerstatus() == Status.STOPPET) {
                 afspiller.setLydkilde(udsendelse);
               }
@@ -242,6 +244,10 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           if (udsendelse.playliste!=null && fraCache) return; // så har vi allerede den nyeste liste i MEM
           if (json == null || "null".equals(json)) return; // fejl
           udsendelse.playliste = DRJson.parsePlayliste(new JSONArray(json));
+          if (!aktuelUdsendelsePåKanalen()) { // Aktuel udsendelse skal have senest spillet nummer øverst
+            Collections.reverse(udsendelse.playliste); // andre udsendelser skal have stigende tid nedad
+          }
+
           bygListe();
         }
       }) {
@@ -400,6 +406,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   }
 
   Runnable opdaterSeekBar = new Runnable() {
+    int spillerNuIndexFør = 0;
     @Override
     public void run() {
       App.forgrundstråd.removeCallbacks(this);
@@ -425,6 +432,16 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
             Log.d("   pos " + pos + "   " + afspiller.getDuration());
             seekBarTekst_opdater(pos);
             seekBar.setProgress(pos);
+            // Forsøgsvist fremhævet nummeret der spilles lige nu (fremhævet nummer passer ikke altid - UDESTÅR)
+            if (udsendelse.playliste!=null && udsendelse.playliste.size()>0) {
+              int spillerNuIndex = udsendelse.playliste.size() * pos / længdeMs; // TODO rigtig logik
+              if (spillerNuIndexFør != spillerNuIndex) {
+                udsendelse.playliste.get(spillerNuIndexFør).spillerNu = false;
+                udsendelse.playliste.get(spillerNuIndex).spillerNu = true;
+                spillerNuIndexFør = spillerNuIndex;
+                bygListe();
+              }
+            }
           } else {
             seekBar.setVisibility(View.VISIBLE);
             seekBar.setEnabled(false);
@@ -810,7 +827,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     int type = adapter.getItemViewType(position);
 
     if (type == PLAYLISTEELEM || type == PLAYLISTEELEM_NU) {
-      if (seekBar == null || !udsendelse.streamsKlar()) return; // seekBar==null er set ske i abetest
+      if (seekBar == null || !udsendelse.streamsKlar() || !udsendelse.kanStreames) return; // seekBar==null er set ske i abetest
       // Det må være et playlisteelement
       final Playlisteelement pl = (Playlisteelement) liste.get(position);
       if (udsendelse.equals(afspiller.getLydkilde()) && afspiller.getAfspillerstatus() == Status.SPILLER) {
