@@ -14,6 +14,11 @@ import android.view.MenuItem;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.RotateAnimation;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -78,6 +83,10 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     super.onDestroyView();
   }
 
+
+  int startStopKnapImageResource;
+  int startStopKnapNyImageResource;
+
   @Override
   public void run() {
     Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
@@ -92,14 +101,14 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     }
     switch (status) {
       case STOPPET:
-        startStopKnap.setImageResource(R.drawable.afspiller_spil);
+        startStopKnapNyImageResource = R.drawable.afspiller_spil;
         startStopKnap.setContentDescription("Start afspilning");
         progressbar.setVisibility(View.INVISIBLE);
         metainformation.setText(k.navn);
         metainformation.setTextColor(App.color.grå40);
         break;
       case FORBINDER:
-        startStopKnap.setImageResource(R.drawable.afspiller_pause);
+        startStopKnapNyImageResource = R.drawable.afspiller_pause;
         startStopKnap.setContentDescription("Stop afspilning");
         progressbar.setVisibility(View.VISIBLE);
         int fpct = DRData.instans.afspiller.getForbinderProcent();
@@ -107,12 +116,46 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         metainformation.setText("Forbinder " + (fpct > 0 ? fpct : ""));
         break;
       case SPILLER:
-        startStopKnap.setImageResource(R.drawable.afspiller_pause);
+        startStopKnapNyImageResource = R.drawable.afspiller_pause;
         startStopKnap.setContentDescription("Stop afspilning");
         progressbar.setVisibility(View.INVISIBLE);
         metainformation.setTextColor(App.color.blå);
         metainformation.setText(k.navn);
         break;
+    }
+    if (startStopKnapImageResource != startStopKnapNyImageResource) {
+      startStopKnapImageResource = startStopKnapNyImageResource;
+
+      Animation anim;
+      if (App.prefs.getBoolean("startStopKnapAnim",false)) {
+        anim = new RotateAnimation(0f, 360f, 0.5f, 0.5f);
+        //r.setStartOffset(1000);
+        anim.setDuration(00);
+        //anim.setRepeatCount(-1);
+        anim.setRepeatMode(RotateAnimation.REVERSE);
+        anim.setInterpolator(new AccelerateInterpolator());
+      } else {
+        anim = new ScaleAnimation(1, 1.2f, 1, 1.2f, startStopKnap.getWidth() / 2, startStopKnap.getHeight() / 2);
+        anim.setDuration(100);
+        anim.setRepeatCount(1); // skalér ind og ud igen
+        anim.setRepeatMode(Animation.REVERSE);
+        anim.setInterpolator(new DecelerateInterpolator());
+      }
+      anim.setAnimationListener(new Animation.AnimationListener() {
+        @Override
+        public void onAnimationStart(Animation animation) {
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+          startStopKnap.setImageResource(startStopKnapNyImageResource);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+        }
+      });
+      startStopKnap.startAnimation(anim);
     }
     if (App.accessibilityManager.isEnabled() && getActivity()!=null) ActivityCompat.invalidateOptionsMenu(getActivity());
   }

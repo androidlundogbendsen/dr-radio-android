@@ -135,6 +135,7 @@ class GemiusStatistik {
           }
           if (App.fejlsøgning) Log.d("Gemius res=" + res);
         } catch (IOException ioe) {
+          if (!App.fejlsøgning) Log.d("data json="+ data);
           Log.e(ioe);
         } catch (Exception e) {
           Log.rapporterFejl(e);
