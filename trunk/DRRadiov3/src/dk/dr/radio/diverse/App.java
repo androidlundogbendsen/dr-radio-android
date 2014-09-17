@@ -78,7 +78,7 @@ public class App extends Application {
   public static final String P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING = "P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING";
   public static final String P4_FORETRUKKEN_AF_BRUGER = "P4_FORETRUKKEN_AF_BRUGER";
   public static final String FORETRUKKEN_KANAL = "FORETRUKKEN_kanal";
-  public static final boolean PRODUKTION = true;
+  public static final boolean PRODUKTION = false;
   public static boolean EMULATOR = true; // Sæt i onCreate(), ellers virker det ikke i std Java
   public static App instans;
   public static SharedPreferences prefs;
@@ -110,7 +110,7 @@ public class App extends Application {
     instans = this;
     netværk = new Netvaerksstatus();
     EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator");
-    if (!EMULATOR) BugSenseHandler.initAndStartSession(this, PRODUKTION?getString(R.string.bugsense_nøgle):"c0eec1ee");
+    if (!EMULATOR) BugSenseHandler.initAndStartSession(this, getString(PRODUKTION?R.string.bugsense_nøgle:R.string.bugsense_testnøgle));
     super.onCreate();
 
     forgrundstråd = new Handler();

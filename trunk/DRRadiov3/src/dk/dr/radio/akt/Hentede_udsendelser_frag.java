@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.androidquery.AQuery;
 
@@ -40,11 +41,11 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
 
     AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
-      listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).text
-              (Html.fromHtml("<b>Du har ingen downloads</b><br><br>Du kan downloade udsendelser og lytte til dem her uden internetforbindelse.")
+    View emptyView = aq.id(R.id.tom).typeface(App.skrift_gibson)
+        .text(Html.fromHtml("<b>Du har ingen downloads</b><br><br>Du kan downloade udsendelser og lytte til dem her uden internetforbindelse."))
+        .getView();
 
-
-    ).getView());
+    listView.setEmptyView(emptyView);
     listView.setCacheColorHint(Color.WHITE);
 
     aq.id(R.id.overskrift).typeface(App.skrift_gibson_fed).text("DOWNLOADEDE UDSENDELSER").getTextView();
@@ -101,35 +102,42 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
         v.setBackgroundResource(0);
         aq = new AQuery(v);
         aq.id(R.id.slet).clicked(Hentede_udsendelser_frag.this);
+        aq.id(R.id.startStopKnap).clicked(Hentede_udsendelser_frag.this);
 //            .getView().setOnTouchListener(farvKnapNårDenErTrykketNed);
         aq.id(R.id.linje1).typeface(App.skrift_gibson_fed);
         aq.id(R.id.linje2).typeface(App.skrift_gibson);
       } else {
         aq = new AQuery(v);
       }
-      if (udsendelse == null) {
-        udsendelse = new Udsendelse("Indlæser...");
-        // TODO baggrundsindlæsning
-        aq.id(R.id.linje1).text("");
+
+      Cursor c = hentedeUdsendelser.getStatusCursor(udsendelse);
+      if (c == null) {
+        aq.id(R.id.linje1).text("Ikke tilgængelig");
+        Log.rapporterFejl(new IllegalStateException("Hentede_udsendelser_frag Ikke tilgængelig"), udsendelse);
+        return v;
+      }
+
+      int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+      String statustekst = HentedeUdsendelser.getStatustekst(c);
+      int iAlt = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)) / 1000000;
+      int hentet = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)) / 1000000;
+      c.close();
+      aq.id(R.id.linje2).text(DRJson.datoformat.format(udsendelse.startTid) + " - " + statustekst);
+
+      if (status != DownloadManager.STATUS_SUCCESSFUL && status != DownloadManager.STATUS_FAILED) {
+        // Genopfrisk hele listen om 1 sekund
+        App.forgrundstråd.removeCallbacks(Hentede_udsendelser_frag.this);
+        App.forgrundstråd.postDelayed(Hentede_udsendelser_frag.this, 1000);
+        ProgressBar progressBar = aq.id(R.id.progressBar).visible().getProgressBar();
+        progressBar.setMax(iAlt);
+        progressBar.setProgress(hentet);
+        aq.id(R.id.startStopKnap).visible();//.image(status==DownloadManager.STATUS_PAUSED? R.drawable.dri_radio_pause_graa40:R.drawable.dri_radio_spil_graa40);
       } else {
-        Cursor c = hentedeUdsendelser.getStatusCursor(udsendelse);
-        if (c == null) {
-          aq.id(R.id.linje2).text("Ikke tilgængelig");
-        } else {
-          int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-          String statustekst = HentedeUdsendelser.getStatustekst(c);
-          c.close();
-
-          aq.id(R.id.linje2).text(DRJson.datoformat.format(udsendelse.startTid) + " - " + statustekst);
-
-          if (status != DownloadManager.STATUS_SUCCESSFUL && status != DownloadManager.STATUS_FAILED) {
-            App.forgrundstråd.removeCallbacks(Hentede_udsendelser_frag.this);
-            App.forgrundstråd.postDelayed(Hentede_udsendelser_frag.this, 1000);
-          }
-        }
+        aq.id(R.id.progressBar).gone();
+        aq.id(R.id.startStopKnap).gone();
       }
       aq.id(R.id.linje1).text(udsendelse.titel)
-          .textColor(udsendelse.kanNokHøres ? Color.BLACK : App.color.grå60);
+          .textColor(status==DownloadManager.STATUS_SUCCESSFUL ? Color.BLACK : App.color.grå60);
       // Skjul stiplet linje over øverste listeelement
       aq.id(R.id.stiplet_linje).background(position == 0 ? R.drawable.linje : R.drawable.stiplet_linje);
 
@@ -168,7 +176,11 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
   public void onClick(View v) {
     try {
       Udsendelse u = (Udsendelse) v.getTag();
-      hentedeUdsendelser.annullér(u);
+      if (v.getId()==R.id.slet) {
+        hentedeUdsendelser.annullér(u);
+      } else {
+        App.langToast("Ikke understøttet - ny downloadfunktion skal implementeres");
+      }
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
