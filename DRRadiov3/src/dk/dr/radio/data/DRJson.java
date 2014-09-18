@@ -169,14 +169,19 @@ public enum DRJson {
     ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
     for (int n = 0; n < jsonArray.length(); n++) {
       JSONObject o = jsonArray.getJSONObject(n);
-      Udsendelse u = opretUdsendelse(drData, o);
-      if (kanal!=null) u.kanalSlug = kanal.slug;
-      else u.kanalSlug = o.optString(DRJson.ChannelSlug.name());  // Bemærk - kan være tom.
-      u.startTid = servertidsformat.parse(o.getString(DRJson.FirstBroadcast.name()));
-      u.slutTid = new Date(u.startTid.getTime() + o.getInt(DRJson.DurationInSeconds.name()) * 1000);
+      Udsendelse u = parseUdsendelseForProgramseriexx(kanal, drData, o);
       uliste.add(u);
     }
     return uliste;
+  }
+
+  public static Udsendelse parseUdsendelseForProgramseriexx(Kanal kanal, DRData drData, JSONObject o) throws JSONException, ParseException {
+    Udsendelse u = opretUdsendelse(drData, o);
+    if (kanal!=null) u.kanalSlug = kanal.slug;
+    else u.kanalSlug = o.optString(DRJson.ChannelSlug.name());  // Bemærk - kan være tom.
+    u.startTid = servertidsformat.parse(o.getString(DRJson.FirstBroadcast.name()));
+    u.slutTid = new Date(u.startTid.getTime() + o.getInt(DRJson.DurationInSeconds.name()) * 1000);
+    return u;
   }
 
   /*

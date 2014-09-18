@@ -70,7 +70,7 @@ public class MediabuttonReceiver extends BroadcastReceiver {
   @TargetApi(Build.VERSION_CODES.FROYO)
   public static void registrér() {
     if (Build.VERSION.SDK_INT < 8) return;
-    if (!App.prefs.getBoolean("MediabuttonReceiver", false)) return;
+//    if (!App.prefs.getBoolean("MediabuttonReceiver", true)) return;
 
     ComponentName eventReceiver = new ComponentName(App.instans.getPackageName(), MediabuttonReceiver.class.getName());
     AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
