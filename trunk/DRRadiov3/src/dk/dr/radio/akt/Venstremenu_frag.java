@@ -27,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.deskclock.AlarmClock_akt;
 import com.androidquery.AQuery;
 
 import java.util.ArrayList;
@@ -450,6 +451,16 @@ public class Venstremenu_frag extends Fragment implements Runnable {
         }
       });
       aq.id(R.id.tekst).text("Indstillinger");
+      aq.typeface(App.skrift_gibson_fed);
+
+      tilføj(R.layout.venstremenu_elem_adskiller_tynd);
+      tilføj(R.layout.venstremenu_elem_overskrift, new Runnable() {
+        @Override
+        public void run() {
+          startActivity(new Intent(getActivity(), AlarmClock_akt.class));
+        }
+      });
+      aq.id(R.id.tekst).text("Vækning");
       aq.typeface(App.skrift_gibson_fed);
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);

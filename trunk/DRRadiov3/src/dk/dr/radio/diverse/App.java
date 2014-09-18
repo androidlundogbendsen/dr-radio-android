@@ -177,7 +177,7 @@ public class App extends Application {
       // Først tjekkes om vi har en udgave i prefs, og ellers bruges den i raw-mappen
       // På et senere tidspunkt henter vi nye grunddata
       String grunddata = prefs.getString(DRData.GRUNDDATA_URL, null);
-      if (grunddata==null) grunddata = Diverse.læsStreng(res.openRawResource(R.raw.grunddata));
+      if (grunddata==null) grunddata = Diverse.læsStreng(res.openRawResource(App.PRODUKTION?R.raw.grunddata:R.raw.grunddata_udvikling));
       DRData.instans.grunddata.parseFællesGrunddata(grunddata);
       if (App.fejlsøgning && DRData.instans.grunddata.udelukHLS) App.kortToast("HLS er udelukket");
 
