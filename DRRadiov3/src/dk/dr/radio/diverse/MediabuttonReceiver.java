@@ -51,15 +51,23 @@ public class MediabuttonReceiver extends BroadcastReceiver {
     switch (event.getKeyCode()) {
       case KeyEvent.KEYCODE_HEADSETHOOK:
       case KeyEvent.KEYCODE_MEDIA_STOP:
+      case KeyEvent.KEYCODE_MEDIA_PAUSE:
         if (DRData.instans.afspiller.getAfspillerstatus()!= Status.STOPPET) {
           DRData.instans.afspiller.stopAfspilning();
         }
         break;
-      case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+      case KeyEvent.KEYCODE_MEDIA_PLAY:
       case KeyEvent.KEYCODE_MEDIA_NEXT:
       case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+      case KeyEvent.KEYCODE_MEDIA_REWIND:
+      case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
+        if (DRData.instans.afspiller.getAfspillerstatus()== Status.STOPPET) {
+          DRData.instans.afspiller.startAfspilning();
+        }
+        break;
+      case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
       default:
-        if (DRData.instans.afspiller.getAfspillerstatus()!= Status.STOPPET) {
+        if (DRData.instans.afspiller.getAfspillerstatus()== Status.STOPPET) {
           DRData.instans.afspiller.stopAfspilning();
         } else {
           DRData.instans.afspiller.startAfspilning();
