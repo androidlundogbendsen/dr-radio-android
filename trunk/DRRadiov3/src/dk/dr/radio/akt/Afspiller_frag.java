@@ -128,10 +128,10 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
 
       Animation anim;
       if (App.prefs.getBoolean("startStopKnapAnim",false)) {
-        anim = new RotateAnimation(0f, 360f, 0.5f, 0.5f);
+        anim = new RotateAnimation(0f, 180f, 0, 0);
         //r.setStartOffset(1000);
-        anim.setDuration(00);
-        //anim.setRepeatCount(-1);
+        anim.setDuration(200);
+        anim.setRepeatCount(1);
         anim.setRepeatMode(RotateAnimation.REVERSE);
         anim.setInterpolator(new AccelerateInterpolator());
       } else {
@@ -148,11 +148,11 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
 
         @Override
         public void onAnimationEnd(Animation animation) {
-          startStopKnap.setImageResource(startStopKnapNyImageResource);
         }
 
         @Override
         public void onAnimationRepeat(Animation animation) {
+          startStopKnap.setImageResource(startStopKnapNyImageResource);
         }
       });
       startStopKnap.startAnimation(anim);

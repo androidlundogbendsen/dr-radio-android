@@ -12,9 +12,9 @@
 -->
     <CheckBoxPreference
             android:key="startAfspilningMedDetSammme"
-            android:title="Start automatisk"
+            android:title="Spil når app'en åbnes"
             android:defaultValue="false"
-            android:summaryOff="Start afspilning automatisk, når appen åbnes"
+            android:summaryOff="Start ikke afspilning automatisk, når appen åbnes"
             android:summaryOn="Afspilning starter automatisk, når appen åbnes"/>
 
     <ListPreference
@@ -43,13 +43,13 @@
             android:title="Hold skærmen tændt"
             android:defaultValue="false"
             android:summary="Hakker afspilningen når skærmen er slukket så prøv at krydse af her (bruger mere batteri)."/>
-
+<!-- indstilling fjernes -
     <CheckBoxPreference
             android:key="MediabuttonReceiver"
             android:title="Fjernbetjening"
             android:defaultValue="true"
             android:summary="Reagér på knapper på fjernbetjening (f.eks. på Bluetooth headset)"/>
-
+-->
     <ListPreference
             android:key="placeringAfHentedeFiler"
             android:title="Hentede udsendelser"
@@ -61,7 +61,7 @@
             android:key="udviklerEkstra" android:title="Udvikler"
             android:defaultValue="false"
             android:summaryOff="Vis ekstra muligheder til udviklere og fejlfinding."
-            android:summaryOn="Ekstra muligheder til udviklere og fejlfinding vises herunder (kræver at du åbner indstillingerne igen)"
+            android:summaryOn="Luk og åbner indstillingerne igen. Øverst er en skærm til udvikling og fejlfinding"
             />
 
 </PreferenceScreen>

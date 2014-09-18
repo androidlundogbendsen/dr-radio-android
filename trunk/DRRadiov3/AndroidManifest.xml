@@ -78,14 +78,14 @@ android.permission.WAKE_LOCK
             </intent-filter>
         </activity>
 
-
-        <!--
         <receiver android:name="dk.dr.radio.data.HentedeUdsendelser$DownloadServiceReciever">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
                 <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED"/>
             </intent-filter>
         </receiver>
+
+        <!--
          * Tidligere AfspillerService - service-del der sørger for at app'en
          * bliver i hukommelsen mens der spilles lyd
         -->
@@ -128,13 +128,21 @@ android.permission.WAKE_LOCK
                 <category android:name="android.intent.category.BROWSABLE"/>
 
                 <data
-                        android:scheme="xxhttp"
+                        android:scheme="http"
                         android:host="dr.dk"
                         android:pathPrefix="/radio/ondemand/"/>
                 <data
-                        android:scheme="xxhttp"
+                        android:scheme="http"
                         android:host="www.dr.dk"
                         android:pathPrefix="/radio/ondemand/"/>
+                <data
+                        android:scheme="http"
+                        android:host="dr.dk"
+                        android:pathPrefix="/radio/live/"/>
+                <data
+                        android:scheme="http"
+                        android:host="www.dr.dk"
+                        android:pathPrefix="/radio/live/"/>
             </intent-filter>
         </activity>
 
