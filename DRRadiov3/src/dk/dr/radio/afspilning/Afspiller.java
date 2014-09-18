@@ -69,6 +69,8 @@ public class Afspiller {
   private Lydstream lydstream;
   private int forbinderProcent;
   private Lydkilde lydkilde;
+  public boolean eraroSignifasBrui;
+  public PowerManager.WakeLock wakeLock;
 
   private static void sætMediaPlayerLytter(MediaPlayerWrapper mediaPlayer, MediaPlayerLytter lytter) {
     mediaPlayer.setMediaPlayerLytter(lytter);
@@ -160,13 +162,18 @@ public class Afspiller {
 
 
       // Skru op til 1/5 styrke hvis volumen er lavere end det
-      int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-      int nu = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-      if (nu < 1 * max / 5) {
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 1 * max / 5, AudioManager.FLAG_SHOW_UI);
-      }
+      tjekVolumennMindst(1);
 
     } else Log.d(" forkert status=" + afspillerstatus);
+  }
+
+  public void tjekVolumennMindst(int min5) {
+    AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
+    int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+    int nu = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+    if (nu < min5 * max / 5) {
+      audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, min5 * max / 5, AudioManager.FLAG_SHOW_UI);
+    }
   }
 
 
