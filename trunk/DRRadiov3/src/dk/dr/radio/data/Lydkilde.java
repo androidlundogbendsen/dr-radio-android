@@ -108,6 +108,8 @@ public abstract class Lydkilde implements Serializable {
     return kandidater;
   }
 
+  public abstract String getStreamsUrl();
+
   public abstract Kanal getKanal();
 
   public abstract boolean erDirekte();

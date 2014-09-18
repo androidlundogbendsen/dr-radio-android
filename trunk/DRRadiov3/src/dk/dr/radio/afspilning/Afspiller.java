@@ -20,6 +20,7 @@ package dk.dr.radio.afspilning;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -27,19 +28,29 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
 import android.os.Build;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.os.Vibrator;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+
+import com.android.deskclock.AlarmAlertWakeLock;
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import dk.dr.radio.data.DRData;
+import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.data.Lydstream;
@@ -49,6 +60,8 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.MediabuttonReceiver;
 import dk.dr.radio.diverse.Opkaldshaandtering;
+import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
+import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 
 /**
  * @author j
@@ -124,13 +137,34 @@ public class Afspiller {
   private long onErrorTællerNultid;
 
   public void startAfspilning() {
+    eraroSignifasBrui = false;
     if (lydkilde.hentetStream == null && !App.erOnline()) {
       App.kortToast("Internetforbindelse mangler");
       return;
     }
     if (lydkilde.hentetStream == null && lydkilde.streams == null) {
-      Log.rapporterFejl(new IllegalStateException("Ingen lydUrl"), lydkilde+": "+lydkilde.streams);
-      App.kortToast("Kunne ikke oprette forbindelse, prøv igen senere");
+      Request<?> req = new DrVolleyStringRequest(lydkilde.getStreamsUrl(), new DrVolleyResonseListener() {
+        @Override
+        public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+          if (uændret) return; // ingen grund til at parse det igen
+          JSONObject o = new JSONObject(json);
+          lydkilde.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
+          Log.d("Afspiller hentStreams " + lydkilde + " fraCache=" + fraCache + " k.lydUrl=" + lydkilde.streams);
+          startAfspilning(); // Opdatér igen
+        }
+
+        @Override
+        protected void fikFejl(VolleyError error) {
+          App.kortToast("Internetforbindelse mangler");
+          if (eraroSignifasBrui) ringDenAlarm();
+          super.fikFejl(error);
+        }
+      }) {
+        public Priority getPriority() {
+          return Priority.IMMEDIATE;
+        }
+      };
+      App.volleyRequestQueue.add(req);
       return;
     }
     Log.d("startAfspilning() " + lydkilde);
@@ -370,10 +404,15 @@ public class Afspiller {
     pauseAfspilning();
     // Stop afspillerservicen
     App.instans.stopService(new Intent(App.instans, HoldAppIHukommelsenService.class));
+    if (wakeLock != null) {
+      wakeLock.release();
+      wakeLock = null;
+    }
   }
 
 
   public void setLydkilde(Lydkilde lydkilde) {
+    if (lydkilde==this.lydkilde) return;
     if (lydkilde == null) {
       Log.rapporterFejl(new IllegalStateException("setLydkilde(null"));
       return;
@@ -584,10 +623,18 @@ public class Afspiller {
             int ventetid = 10 + 5 * (1 << n); // fra n=0:10 msek til n=10:5 sek   til max n=11:10 sek
             Log.d("Ventetid før vi prøver igen: " + ventetid + "  n=" + n + " " + onErrorTæller);
             handler.postDelayed(startAfspilningIntern, ventetid);
+
+            if (eraroSignifasBrui) {
+              vibru(1000);
+            }
+
           } else {
             Log.d("Vent på at vi kommer online igen");
             onErrorTællerNultid = System.currentTimeMillis();
             App.netværk.observatører.add(venterPåAtKommeOnline);
+            if (eraroSignifasBrui) {
+              ringDenAlarm();
+            }
           }
         } else {
           pauseAfspilning(); // Vi giver op efter 10. forsøg
@@ -623,4 +670,32 @@ public class Afspiller {
       App.forgrundstråd.postDelayed(this, 10000);
     }
   };
+
+  void ringDenAlarm() {
+    Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+    if (alert == null) {
+      // alert is null, using backup
+      alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+      if (alert == null) {  // I can't see this ever being null (as always have a default notification) but just incase
+        // alert backup is null, using 2nd backup
+        alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+      }
+    }
+    lydkilde = new AlarmLydkilde(alert.toString(), lydkilde);
+    handler.postDelayed(startAfspilningIntern, 100);
+    vibru(4000);
+  }
+
+  private void vibru(int ms) {
+    Log.d("vibru " + ms);
+    try {
+      Vibrator vibrator = (Vibrator) App.instans.getSystemService(Activity.VIBRATOR_SERVICE);
+      vibrator.vibrate(ms);
+      // Tenu telefonon veka por 1/2a sekundo
+      AlarmAlertWakeLock.createPartialWakeLock(App.instans).acquire(500);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
 }
