@@ -37,7 +37,6 @@ import dk.dr.radio.v3.R;
 /**
  * Created by j on 01-03-14.
  */
-@SuppressLint("NewApi")
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 public class HentedeUdsendelser {
   public static final String NØGLE_placeringAfHentedeFiler = "placeringAfHentedeFiler";
