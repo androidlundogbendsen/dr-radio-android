@@ -57,7 +57,8 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
     }
     addPreferencesFromResource(R.xml.indstillinger);
 
-    try {
+    // Fix for crash på Android 2.1 - se https://www.bugsense.com/dashboard/project/cd78aa05/errors/1474018028
+    if (DRData.instans.hentedeUdsendelser.virker()) try {
 
       // Find lydformat
       lydformatlp = (ListPreference) findPreference(Lydkilde.INDST_lydformat);
