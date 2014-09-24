@@ -39,7 +39,7 @@ public class Basisaktivitet extends ActionBarActivity {
   public boolean onCreateOptionsMenu(Menu menu) {
     if (App.udviklerEkstra) {
       menu.add(0, 644, 0, "Hent nyeste udvikler-version");
-      menu.add(0, 1644, 0, "Tjek P4-region ud fra IP-adresse");
+      menu.add(0, 1644, 0, "Tjek P4-område ud fra IP-adresse");
       menu.add(0, 642, 0, "Fejlsøgning");
       menu.add(0, 643, 0, "Vis log");
       menu.add(0, 1643, 0, "Del lyd 2");
