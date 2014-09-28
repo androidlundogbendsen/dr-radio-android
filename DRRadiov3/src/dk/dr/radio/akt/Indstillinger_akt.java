@@ -28,6 +28,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 import android.text.format.Formatter;
 import android.view.MenuItem;
 
@@ -52,10 +53,8 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     App.prefs.edit().putBoolean("fejlsøgning", App.fejlsøgning);
-    if (App.prefs.getBoolean("udviklerEkstra", false)) {
-      addPreferencesFromResource(R.xml.indstillinger_udvikling);
-    }
     addPreferencesFromResource(R.xml.indstillinger);
+    addPreferencesFromResource(R.xml.indstillinger_udvikling);
 
     // Fix for crash på Android 2.1 - se https://www.bugsense.com/dashboard/project/cd78aa05/errors/1474018028
     if (DRData.instans.hentedeUdsendelser.virker()) try {
@@ -128,7 +127,6 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    App.udviklerEkstra = App.prefs.getBoolean("udviklerEkstra", false);
     App.fejlsøgning = App.prefs.getBoolean("fejlsøgning", false);
   }
 
