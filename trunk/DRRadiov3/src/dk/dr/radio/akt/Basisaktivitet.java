@@ -37,7 +37,7 @@ public class Basisaktivitet extends ActionBarActivity {
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    if (App.udviklerEkstra) {
+    if (App.fejlsøgning) {
       menu.add(0, 644, 0, "Hent nyeste udvikler-version");
       menu.add(0, 1644, 0, "Tjek P4-område ud fra IP-adresse");
       menu.add(0, 642, 0, "Fejlsøgning");

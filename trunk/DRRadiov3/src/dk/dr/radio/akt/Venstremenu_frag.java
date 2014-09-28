@@ -468,7 +468,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       aq.id(R.id.tekst).text("Kontakt / info / om");
       aq.typeface(App.skrift_gibson_fed);
 
-      if (!App.PRODUKTION) { // || App.udviklerEkstra) {
+      if (!App.PRODUKTION) {
         tilføj(R.layout.venstremenu_elem_adskiller_tynd);
         tilføj(R.layout.venstremenu_elem_overskrift, new Runnable() {
           @Override

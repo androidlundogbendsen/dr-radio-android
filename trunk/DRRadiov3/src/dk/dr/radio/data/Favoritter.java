@@ -137,7 +137,9 @@ public class Favoritter {
     return antalNyeUdsendelser;
   }
 
-
+  /*
+<string name="favorit til startdato">,p1-radioavis 2014-09-25,p3-nyheder 2014-09-25,pressen 2014-09-25</string>
+   */
   public static HashMap<String, String> strengTilMap(String str) {
     HashMap<String, String> map = new HashMap<String, String>();
     for (String linje : str.split(",")) {

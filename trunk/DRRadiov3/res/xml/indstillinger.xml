@@ -14,8 +14,10 @@
             android:key="startAfspilningMedDetSammme"
             android:title="Spil når app'en åbnes"
             android:defaultValue="false"
-            android:summaryOff="Start ikke afspilning automatisk, når appen åbnes"
+            android:summaryOff="Start afspilning automatisk, når appen åbnes"
             android:summaryOn="Afspilning starter automatisk, når appen åbnes"/>
+
+    <PreferenceCategory android:title="Lyd">
 
     <ListPreference
             android:key="lydkvalitet"
@@ -24,7 +26,6 @@
             android:summary="Standard er 96kbps og bruger ca. 45 MB data per time, mens høj kvalitet bruger ca. 90 MB/time"
             android:entries="@array/lydkvalitet_tekst"
             android:entryValues="@array/lydkvalitet_kode"/>
-
     <ListPreference
             android:key="lydformat"
             android:title="Format"
@@ -32,17 +33,22 @@
             android:defaultValue="auto"
             android:entries="@array/lydformat_tekst"
             android:entryValues="@array/lydformat_kode"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Strømforbrug - tjek også telefonens indstillinger"
+                        android:summary="Afspilning kan påvirkes af strømbesparende funktioner. Udover nedenstående, så tjek også de strømbesparelse i telefonens generelle indstillinger.">
 
     <CheckBoxPreference
             android:key="wifilås" android:title="Hold wifi tændt"
-            android:defaultValue="true" android:summaryOn="Undlad at skrue ned for wifi (bruger mere batteri)"
+            android:defaultValue="true"
+            android:summaryOn="Undlad at skrue ned for wifi (bruger mere batteri)"
             android:summaryOff="Tillad enheden at skrue ned for wifi. Kan forårsage at afspilningen hakker."/>
 
     <CheckBoxPreference
             android:key="holdSkærmTændt"
             android:title="Hold skærmen tændt"
             android:defaultValue="false"
-            android:summary="Hakker afspilningen når skærmen er slukket så prøv at krydse af her (bruger mere batteri)."/>
+            android:summary="Hakker afspilningen efter at skærmen slukker så prøv at krydse af her (bruger mere batteri)."/>
 <!-- indstilling fjernes -
     <CheckBoxPreference
             android:key="MediabuttonReceiver"
@@ -50,18 +56,23 @@
             android:defaultValue="true"
             android:summary="Reagér på knapper på fjernbetjening (f.eks. på Bluetooth headset)"/>
 -->
-    <ListPreference
-            android:key="placeringAfHentedeFiler"
-            android:title="Hentede udsendelser"
-            android:dialogTitle="Gem udsendelser på"
-            android:summary="Vælg hvor på telefonen du vil gemme udsendelser, du henter ned til offline brug."
-            />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Hentede udsendelser">
 
     <CheckBoxPreference
-            android:key="udviklerEkstra" android:title="Udvikler"
+            android:key="hentKunOverWifi"
+            android:title="Hent kun på wifi"
             android:defaultValue="false"
-            android:summaryOff="Vis ekstra muligheder til udviklere og fejlfinding."
-            android:summaryOn="Luk og åbner indstillingerne igen. Øverst er en skærm til udvikling og fejlfinding"
+            android:summaryOn="Udsendelser hentes fremover kun over wifi"/>
+
+    <ListPreference
+            android:key="placeringAfHentedeFiler"
+            android:title="Placering"
+            android:dialogTitle="Gem udsendelser på"
+            android:summary="Vælg hvor på telefonen du vil gemme udsendelser til offline brug."
             />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

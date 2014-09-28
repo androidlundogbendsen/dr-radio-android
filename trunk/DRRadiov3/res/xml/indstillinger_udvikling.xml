@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-<PreferenceScreen
+    <PreferenceCategory android:title="Andet">
+
+    <CheckBoxPreference
+            android:key="udviklerEkstra" android:title="Udvikler"
+            android:defaultValue="false"
+            android:summary="Vis ekstra muligheder til udvikling og fejlfinding"
+            />
+
+<PreferenceScreen android:dependency="udviklerEkstra"
         android:title="Til udvikling og fejlfinding">
 
     <CheckBoxPreference
@@ -66,4 +74,5 @@
             android:summaryOff="Indsamler ikke statisik. Rapportér venligst om det gør en forskel for dig. Du skal genstarte app'en (evt telefonen) og se meddelelse ved opstart før det er trådt i kraft."
             />
 </PreferenceScreen>
+    </PreferenceCategory>
 </PreferenceScreen>

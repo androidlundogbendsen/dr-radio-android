@@ -85,8 +85,7 @@ public class App extends Application {
   public static ConnectivityManager connectivityManager;
   public static String versionsnavn = "(ukendt)";
   public static NotificationManager notificationManager;
-  public static boolean fejlsøgning = false; // TODO - omdøb til fejlsøgning
-  public static boolean udviklerEkstra = false; // Vis ekstra muligheder til udviklere og fejlfinding
+  public static boolean fejlsøgning = false;
   public static Handler forgrundstråd;
   public static Typeface skrift_gibson;
   public static Typeface skrift_gibson_fed;
@@ -118,7 +117,6 @@ public class App extends Application {
     notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     prefs = PreferenceManager.getDefaultSharedPreferences(this);
     fejlsøgning = prefs.getBoolean("fejlsøgning", false);
-    udviklerEkstra = prefs.getBoolean("udviklerEkstra", false);
     res = App.instans.getResources();
     App.color = new DRFarver();
 
