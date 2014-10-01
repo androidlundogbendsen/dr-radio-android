@@ -2,7 +2,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-    <ListView
+    <dk.dr.radio.diverse.PinnedSectionListView
             android:id="@+id/listView"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"/>

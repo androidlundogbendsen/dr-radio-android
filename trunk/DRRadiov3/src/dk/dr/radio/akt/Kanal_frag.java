@@ -53,7 +53,7 @@ import dk.dr.radio.v3.R;
 public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClickListener, View.OnClickListener, Runnable {
 
   private ListView listView;
-  private ArrayList<Udsendelse> liste = new ArrayList<Udsendelse>();
+  private ArrayList<Object> liste = new ArrayList<Object>();
   private int aktuelUdsendelseIndex = -1;
   private Kanal kanal;
   protected View rod;
@@ -163,7 +163,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
             opdaterListe();
           } else {
             // Nu ændres der i listen for at vise en dag før eller efter - sørg for at det synlige indhold ikke rykker sig
-            Udsendelse næstøversteSynlig = liste.get(næstøversteSynligPos);
+            Object næstøversteSynlig = liste.get(næstøversteSynligPos);
             //Log.d("næstøversteSynlig = " + næstøversteSynlig);
             View v = listView.getChildAt(1);
             int næstøversteSynligOffset = (v == null) ? 0 : v.getTop();
@@ -281,11 +281,22 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       if (App.fejlsøgning) Log.d(kanal + " opdaterListe " + kanal.udsendelser.size());
       tidligere.startTid = new Date(kanal.udsendelser.get(0).startTid.getTime() - 12 * 60 * 60 * 1000); // Døgnet starter kl 5, så vi er på den sikre side med 12 timer
       senere.startTid = new Date(kanal.udsendelser.get(kanal.udsendelser.size() - 1).slutTid.getTime() + 12 * 60 * 60 * 1000); // Til tider rækker udsendelserne ikke ind i det næste døgn, så vi lægger 12 timer til
-      ArrayList<Udsendelse> nyListe = new ArrayList<Udsendelse>();
+      ArrayList<Object> nyListe = new ArrayList<Object>(kanal.udsendelser.size()+5);
       nyListe.add(tidligere);
-      nyListe.addAll(kanal.udsendelser);
+      String forrigeDagsbeskrivelse = null;
+      for (Udsendelse u : kanal.udsendelser) {
+        // Tilføj dagsoverskrifter hvis dagen er skiftet
+        if (!u.dagsbeskrivelse.equals(forrigeDagsbeskrivelse)) {
+          forrigeDagsbeskrivelse=u.dagsbeskrivelse;
+          nyListe.add(u.dagsbeskrivelse);
+          // Overskriften I DAG skal ikke 'blive hængende' øverst,
+          // det løses ved at tilføje en tom overskrift lige under den
+          if (u.dagsbeskrivelse == DRJson.I_DAG) nyListe.add("");
+        }
+        nyListe.add(u);
+      }
       nyListe.add(senere);
-      int nyAktuelUdsendelseIndex = kanal.getAktuelUdsendelseIndex() + 1;
+      int nyAktuelUdsendelseIndex = nyListe.indexOf(kanal.getUdsendelse());
 
       // Hvis listen er uændret så hop ud - forhindrer en uendelig løkke
       // af opdateringer i tilfælde af, at sendeplanen for dags dato ikke kan hentes
@@ -353,19 +364,27 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     */
     @Override
     public int getViewTypeCount() {
-      return 3;
+      return 4;
     }
 
     @Override
     public int getItemViewType(int position) {
       if (position == 0 || position == liste.size() - 1) return TIDLIGERE_SENERE;
       if (position == aktuelUdsendelseIndex) return AKTUEL;
-      return NORMAL;
+      if (liste.get(position) instanceof Udsendelse) return NORMAL;
+      return DAGSOVERSKRIFT;
     }
+
+    public boolean isEnabled(int position) { return liste.get(position) instanceof Udsendelse; }
+
+    @Override
+    public boolean isItemViewTypePinned(int viewType) { return viewType==DAGSOVERSKRIFT; }
+//    public boolean isItemViewTypePinned(int viewType) { return false; }
 
     static final int NORMAL = 0;
     static final int AKTUEL = 1;
     static final int TIDLIGERE_SENERE = 2;
+    static final int DAGSOVERSKRIFT = 3;
 
     boolean TITELTEKST_KUN_SORT_LIGE_BAG_TEKST = App.prefs.getBoolean("kunSortLigeBagTekst", false);
 
@@ -374,11 +393,11 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       Viewholder vh;
       AQuery a;
       int type = getItemViewType(position);
-      Udsendelse udsendelse = liste.get(position);
       if (v == null) {
         v = getLayoutInflater(null).inflate(
             type == AKTUEL ? R.layout.kanal_elem0_aktuel_udsendelse :  // Visning af den aktuelle udsendelse
-                type == NORMAL ? R.layout.kanal_elem1_udsendelse   // De andre udsendelser
+            type == NORMAL ? R.layout.kanal_elem1_udsendelse :  // De andre udsendelser
+            type == DAGSOVERSKRIFT ? R.layout.kanal_elem3_i_dag_i_morgen  // Dagens overskrift
                     : R.layout.kanal_elem2_tidligere_senere, parent, false);
         vh = new Viewholder();
         vh.itemViewType = type;
@@ -390,6 +409,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         a.id(R.id.slutttid).typeface(App.skrift_gibson);
         if (type == TIDLIGERE_SENERE) {
           vh.titel = a.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
+        } else if (type == DAGSOVERSKRIFT) {
+          vh.titel = a.id(R.id.titel).typeface(App.skrift_gibson).getTextView();
         } else if (type == AKTUEL) {
           vh.titel = a.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
           a.id(R.id.senest_spillet_overskrift).typeface(App.skrift_gibson);
@@ -427,6 +448,21 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       udvikling_checkDrSkrifter(v, this.getClass() + " type=" + type);
 
       // Opdatér viewholderens data
+      Object elem = liste.get(position);
+      if (elem instanceof String) {  // Overskrifter
+        String tekst = (String) elem;
+        vh.titel.setText(tekst);
+        a.id(R.id.stiplet_linje);
+        if (tekst.length()==0) {
+          a.visibility(View.GONE);
+          vh.titel.setVisibility(View.GONE);
+        } else {
+          a.visibility(View.VISIBLE);
+          vh.titel.setVisibility(View.VISIBLE);
+        }
+        return v;
+      }
+      Udsendelse udsendelse = (Udsendelse) elem; // Resten er 'udsendelser'
       vh.udsendelse = udsendelse;
       switch (type) {
         case AKTUEL:
@@ -462,7 +498,12 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           // det skyldtes at hentSendeplanForDag(), der ændrede i listen, mens ListView var ved at kalde fra getView()
           vh.startid.setText(udsendelse.startTidKl);
           vh.titel.setText(udsendelse.titel);
-          a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
+          // Stiplet linje skal vises mellem udsendelser - men ikke over aktuel udsendelse
+          // Hvis det er en overskrift der er nedenunder skal linjen være fuldt optrukken
+          a.id(R.id.stiplet_linje).background(R.drawable.stiplet_linje);
+          if (position == aktuelUdsendelseIndex + 1) a.visibility(View.INVISIBLE);
+          else if (position>0 && liste.get(position-1) instanceof String) a.visibility(View.VISIBLE).background(R.drawable.linje);
+          else a.visibility(View.VISIBLE);
           vh.titel.setTextColor(udsendelse.kanNokHøres ? Color.BLACK : App.color.grå60);
           break;
         case TIDLIGERE_SENERE:
@@ -617,7 +658,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   @Override
   public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
-    Udsendelse u = liste.get(position);
+    Udsendelse u = (Udsendelse) liste.get(position);
     if (position == 0 || position == liste.size() - 1) {
       hentSendeplanForDag(u.startTid);
       v.findViewById(R.id.titel).setVisibility(View.GONE);
@@ -626,7 +667,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       //startActivity(new Intent(getActivity(), VisFragment_akt.class)
       //    .putExtra(P_kode, getKanal.kode)
       //    .putExtra(VisFragment_akt.KLASSE, Udsendelse_frag.class.getName()).putExtra(DRJson.Slug.name(), u.slug)); // Udsenselses-ID
-      String aktuelUdsendelseSlug = aktuelUdsendelseIndex > 0 ? liste.get(aktuelUdsendelseIndex).slug : "";
+      String aktuelUdsendelseSlug = aktuelUdsendelseIndex > 0 ? ((Udsendelse) liste.get(aktuelUdsendelseIndex)).slug : "";
 
       // Vis normalt et Udsendelser_vandret_skift_frag med flere udsendelser
       // Hvis tilgængelighed er slået til (eller bladring slået fra) vises blot ét Udsendelse_frag

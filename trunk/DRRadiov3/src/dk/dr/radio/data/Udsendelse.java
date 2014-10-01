@@ -24,6 +24,7 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
   public String startTidKl;
   public Date slutTid;
   public String slutTidKl;
+  public String dagsbeskrivelse;
 
   public transient ArrayList<Playlisteelement> playliste;
   public transient ArrayList<Indslaglisteelement> indslag; // 'Chapters' i API'et, undgå undersættelsen 'kapitler'
