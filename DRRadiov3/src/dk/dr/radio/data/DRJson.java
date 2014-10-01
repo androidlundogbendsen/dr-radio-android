@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 import dk.dr.radio.diverse.App;
@@ -102,15 +103,21 @@ public enum DRJson {
   public static final Locale dansk = new Locale("da", "DA");
   public static final DateFormat klokkenformat = new SimpleDateFormat("HH:mm", dansk);
   public static final DateFormat datoformat = new SimpleDateFormat("d. MMM yyyy", dansk);
-
-  public static String iDagDatoStr;
-  public static String iMorgenDatoStr;
-  public static String iGårDatoStr;
+  public static final DateFormat ugedagformat = new SimpleDateFormat("EEEE d. MMM yyyy", dansk);
+  public static String iDagDatoStr, iMorgenDatoStr, iGårDatoStr, iOvermorgenDatoStr, iForgårsDatoStr;
+  public static final String I_DAG = "I DAG";
+  private static HashMap<String,String> datoTilBeskrivelse = new HashMap<String, String>();
 
   public static void opdateriDagIMorgenIGårDatoStr(long nu) {
+    String nyIDagDatoStr = datoformat.format(new Date(nu));
+    if (nyIDagDatoStr.equals(iDagDatoStr)) return;
+
     iDagDatoStr = datoformat.format(new Date(nu));
     iMorgenDatoStr = datoformat.format(new Date(nu + 24 * 60 * 60 * 1000));
+    iOvermorgenDatoStr = datoformat.format(new Date(nu + 2* 24 * 60 * 60 * 1000));
     iGårDatoStr = datoformat.format(new Date(nu - 24 * 60 * 60 * 1000));
+    iForgårsDatoStr = datoformat.format(new Date(nu - 2*24 * 60 * 60 * 1000));
+    datoTilBeskrivelse.clear();
   }
 
   static {
@@ -149,16 +156,33 @@ public enum DRJson {
       u.startTidKl = klokkenformat.format(u.startTid);
       u.slutTid = servertidsformat.parse(o.getString(DRJson.EndTime.name()));
       u.slutTidKl = klokkenformat.format(u.slutTid);
-      String datoStr = datoformat.format(u.startTid);
-
+      u.dagsbeskrivelse = getDagsbeskrivelse(u.startTid);
+/*
       if (datoStr.equals(iDagDatoStr)) ; // ingen ting
       else if (datoStr.equals(iMorgenDatoStr)) u.startTidKl += " - i morgen";
       else if (datoStr.equals(iGårDatoStr)) u.startTidKl += " - i går";
       else u.startTidKl += " - " + datoStr;
-
+*/
       uliste.add(u);
     }
     return uliste;
+  }
+
+  private static String getDagsbeskrivelse(Date tid) {
+    String datoStr0 = datoformat.format(tid);
+    // Vi har brug for at tjekke for ens datoer hurtigt, så vi laver datoen med objekt-lighed ==
+    // Se også String.intern()
+    String dagsbeskrivelse = datoTilBeskrivelse.get(datoStr0);
+    if (dagsbeskrivelse==null) {
+      dagsbeskrivelse = ugedagformat.format(tid);
+      if (datoStr0.equals(iDagDatoStr)) dagsbeskrivelse = I_DAG; // ingenting
+      else if (datoStr0.equals(iMorgenDatoStr)) dagsbeskrivelse = "I MORGEN - "+dagsbeskrivelse;
+      else if (datoStr0.equals(iOvermorgenDatoStr)) dagsbeskrivelse = "I OVERMORGEN - "+dagsbeskrivelse;
+      else if (datoStr0.equals(iGårDatoStr)) dagsbeskrivelse = "I GÅR"; // "I GÅR - "+dagsbeskrivelse;
+      else if (datoStr0.equals(iForgårsDatoStr)) dagsbeskrivelse = "I FORGÅRS - "+dagsbeskrivelse;
+      datoTilBeskrivelse.put(datoStr0, dagsbeskrivelse);
+    }
+    return dagsbeskrivelse;
   }
 
   /**

@@ -178,7 +178,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     });
     */
 
-    tjekOmHentet(udsendelse);
+    DRData.instans.hentedeUdsendelser.tjekOmHentet(udsendelse);
     hentStreams.run();
 
 //    if (streamsKlar() && DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
@@ -263,39 +263,6 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     }
   };
 
-  @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-  private static void tjekOmHentet(Udsendelse udsendelse) {
-    if (udsendelse.hentetStream == null) {
-      if (!DRData.instans.hentedeUdsendelser.virker()) return;
-      Cursor c = DRData.instans.hentedeUdsendelser.getStatusCursor(udsendelse);
-      if (c == null) return;
-      try {
-        Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)));
-        Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)));
-        Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_LAST_MODIFIED_TIMESTAMP)));
-        Log.d(c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
-        Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS)));
-        Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_REASON)));
-
-        if (c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS)) != DownloadManager.STATUS_SUCCESSFUL)
-          return;
-        String uri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-        File file = new File(URI.create(uri).getPath());
-        if (file.exists()) {
-          udsendelse.hentetStream = new Lydstream();
-          udsendelse.hentetStream.url = uri;
-          udsendelse.hentetStream.score = 500; // Rigtig god!
-          udsendelse.kanNokHøres = udsendelse.kanStreames = true;
-          Log.registrérTestet("Afspille hentet udsendelse", udsendelse.slug);
-        } else {
-//          Log.rapporterFejl(new IllegalStateException("Fil " + file + "  fandtes ikke alligevel??! for " + udsendelse));
-          Log.rapporterFejl(new IllegalStateException("Fil " + file + "  fandtes ikke alligevel??!"));
-        }
-      } finally {
-        c.close();
-      }
-    }
-  }
 
   @Override
   public void onDestroyView() {
@@ -400,7 +367,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   @Override
   public void run() {
     if (udsendelse==null) return; // fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/834728045 ???
-    tjekOmHentet(udsendelse);
+    DRData.instans.hentedeUdsendelser.tjekOmHentet(udsendelse);
     adapter.notifyDataSetChanged(); // Opdater knapper etc
     App.forgrundstråd.post(opdaterSeekBar);
   }
