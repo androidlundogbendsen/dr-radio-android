@@ -5,10 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.util.Linkify;
 import android.webkit.WebView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
+import com.android.volley.VolleyError;
 
 import org.json.JSONObject;
 
@@ -38,39 +39,63 @@ public class FangBrowseIntent_akt_skrald extends Activity {
       tv.setText("Dette eksempel viser hvordan man fanger et browserintent. ");
       Linkify.addLinks(tv, Linkify.WEB_URLS);
       setContentView(tv);
-    } else {
+    } else try {
       // Ok, der var en URL med i intentet
       Log.d(" viser " + urlFraIntent);
       Log.d("Intent var " + i);
-      WebView webView = new WebView(this);
-      webView.loadUrl(urlFraIntent);
-      setContentView(webView);
+      ProgressBar progressBar = new ProgressBar(this);
+      setContentView(progressBar);
 
-      String[] bidder = urlFraIntent.split("/");
+      // undgå at starte ny aktivitet ved skærmvending
+      if (savedInstanceState!=null) return;
 
-      if (urlFraIntent.contains("/radio/ondemand")) hentOgVisUdsendelse(bidder);
-      if (urlFraIntent.contains("/radio/live")) {
+      String UDSENDELSER_præfix="/radio/ondemand/";
+
+      int pos = urlFraIntent.indexOf(UDSENDELSER_præfix);
+      if (pos>0) {
+        hentOgVisUdsendelse(urlFraIntent.substring(pos + UDSENDELSER_præfix.length()));
+      } else if (urlFraIntent.contains("/radio/live")) {
+        String[] bidder = urlFraIntent.split("/");
         final String kanalSlug = bidder[bidder.length - 1];
         Kanal kanal = DRData.instans.grunddata.kanalFraSlug.get(kanalSlug);
-        Intent intent = new Intent(this, VisFragment_akt.class)
-            .putExtra(Kanal_frag.P_kode, kanal.kode)
-            .putExtra(VisFragment_akt.KLASSE, Kanal_frag.class.getName());
+        if (kanal!=null) {
+          DRData.instans.afspiller.setLydkilde(kanal);
+          DRData.instans.afspiller.startAfspilning();
+        }
+        Intent intent = new Intent(this, Hovedaktivitet.class)
+            .putExtra(Hovedaktivitet.VIS_FRAGMENT_KLASSE, Kanaler_frag.class.getName())
+            .putExtra(Hovedaktivitet.SPØRG_OM_STOP, false);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
-
+      } else {
+        throw new IllegalStateException("ingen match??!?");
       }
-    }
+    } catch (Exception e) { Log.rapporterFejl(e, urlFraIntent); finish(); }
   }
 
-  private void hentOgVisUdsendelse(String[] bidder) {
-    final String kanalSlug = bidder[bidder.length - 2];
-    final String udsendelseSlug = bidder[bidder.length - 1];
+  private void hentOgVisUdsendelse(String urlFraIntent) {
+    // http://www.dr.dk/radio/ondemand/p4syd/p4-hjemad-481/#!/02:45:15
+    // http://www.dr.dk/radio/ondemand/p4syd/p4-hjemad-481
+    // p4syd/p4-hjemad-481/#!/02:45:15
+    // p4syd/p4-hjemad-481
+    String[] bidder = urlFraIntent.split("/");
+    final String kanalSlug = bidder[0];
+    final String udsendelseSlug = bidder[1];
+
+    int tidsangivelse0 = 0;
+    if (bidder.length>3) try { // 02:45:15
+      String[] b = bidder[3].split(":");
+      tidsangivelse0 = Integer.parseInt(b[0])*60000 + Integer.parseInt(b[1])*1000 + Integer.parseInt(b[2])*10;
+      Log.d("tidsangivelse "+tidsangivelse0+ " fra "+urlFraIntent);
+    } catch (Exception e) { Log.rapporterFejl(e, urlFraIntent + " parsning af " + bidder[3]); }
+
+    final int tidsangivelse = tidsangivelse0;
 
 
     final Udsendelse udsendelse = DRData.instans.udsendelseFraSlug.get(udsendelseSlug);
     if (udsendelse != null) {
-      visUdsendelseFrag(kanalSlug, udsendelseSlug);
+      visUdsendelseFrag(kanalSlug, udsendelse, tidsangivelse);
     } else {
       Request<?> req = new DrVolleyStringRequest("http://www.dr.dk/tjenester/mu-apps/program/" + udsendelseSlug + "?type=radio&includeStreams=true", new DrVolleyResonseListener() {
         @Override
@@ -88,22 +113,49 @@ public class FangBrowseIntent_akt_skrald extends Activity {
             udsendelse2.produktionsnummer = o.optString(DRJson.ProductionNumber.name());
             udsendelse2.shareLink = o.optString(DRJson.ShareLink.name());
 
-            visUdsendelseFrag(kanalSlug, udsendelseSlug);
-
+            visUdsendelseFrag(kanalSlug, udsendelse2, tidsangivelse);
           }
+          luk();
+        }
+
+        @Override
+        protected void fikFejl(VolleyError error) {
+          super.fikFejl(error);
+          luk();
         }
       }).setTag(this);
       App.volleyRequestQueue.add(req);
     }
   }
 
-  private void visUdsendelseFrag(String kanalSlug, String udsendelseSlug) {
-    Intent intent = new Intent(this, VisFragment_akt.class)
+  private void visUdsendelseFrag(String kanalSlug, Udsendelse udsendelse, int tidsangivelse) {
+    DRData.instans.senestLyttede.registrérLytning(udsendelse);
+    DRData.instans.senestLyttede.sætStartposition(udsendelse, tidsangivelse);
+    DRData.instans.afspiller.setLydkilde(udsendelse);
+    DRData.instans.afspiller.startAfspilning();
+    Intent intent = new Intent(this, Hovedaktivitet.class)
         .putExtra(Kanal_frag.P_kode, kanalSlug)
-        .putExtra(DRJson.Slug.name(), udsendelseSlug)
-        .putExtra(VisFragment_akt.KLASSE, Udsendelse_frag.class.getName());
+        .putExtra(DRJson.Slug.name(), udsendelse.slug)
+        .putExtra(Hovedaktivitet.VIS_FRAGMENT_KLASSE, Udsendelse_frag.class.getName())
+        .putExtra(Hovedaktivitet.SPØRG_OM_STOP, false);
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     startActivity(intent);
-    finish();
+    luk();
+  }
+
+  boolean lukket=false;
+  private void luk() {
+    if (!lukket) finish();
+    lukket=true;
   }
 }
+
+
+/*
+123
+http://www.dr.dk/tjenester/mu-apps/program/filmland-124?type=radio&includeStreams=true
+
+124
+
+
+ */

@@ -186,11 +186,7 @@ public class App extends Application {
 
       String kanalkode = prefs.getString(FORETRUKKEN_KANAL, null);
       // Hvis brugeren foretrækker P4 er vi nødt til at finde underkanalen
-      if (Kanal.P4kode.equals(kanalkode)) {
-        kanalkode = App.prefs.getString(App.P4_FORETRUKKEN_AF_BRUGER, null);
-        if (kanalkode == null) kanalkode = App.prefs.getString(App.P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, "KH4");
-        Log.d("P4 underkanal=" + kanalkode);
-      }
+      kanalkode = tjekP4OgVælgUnderkanal(kanalkode);
 
       Kanal aktuelKanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
       if (aktuelKanal == null || aktuelKanal == Grunddata.ukendtKanal) {
@@ -245,6 +241,15 @@ public class App extends Application {
     skrift_gibson_fed_span = new EgenTypefaceSpan("Gibson fed", App.skrift_gibson_fed);
 
     Log.d("onCreate tog " + (System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
+  }
+
+  public static String tjekP4OgVælgUnderkanal(String kanalkode) {
+    if (Kanal.P4kode.equals(kanalkode)) {
+      kanalkode = App.prefs.getString(App.P4_FORETRUKKEN_AF_BRUGER, null);
+      if (kanalkode == null) kanalkode = App.prefs.getString(App.P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, "KH4");
+      Log.d("P4 underkanal=" + kanalkode);
+    }
+    return kanalkode;
   }
 
 

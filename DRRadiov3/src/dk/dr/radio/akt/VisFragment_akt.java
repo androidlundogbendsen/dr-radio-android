@@ -13,7 +13,6 @@ import dk.dr.radio.diverse.Log;
  * Aktivitet der instantierer og viser ét fragment.
  */
 public class VisFragment_akt extends Basisaktivitet {
-  public static final String KLASSE = "klasse";
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -29,7 +28,7 @@ public class VisFragment_akt extends Basisaktivitet {
         return;
       }
 
-      String klasse = getIntent().getStringExtra(KLASSE);
+      String klasse = getIntent().getStringExtra(Hovedaktivitet.VIS_FRAGMENT_KLASSE);
       Fragment f = (Fragment) Class.forName(klasse).newInstance();
       Bundle b = getIntent().getExtras();
       f.setArguments(b);
