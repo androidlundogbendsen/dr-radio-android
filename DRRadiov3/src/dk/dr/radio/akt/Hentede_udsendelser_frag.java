@@ -109,11 +109,17 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
       } else {
         aq = new AQuery(v);
       }
+      // Skjul stiplet linje over øverste listeelement
+      aq.id(R.id.stiplet_linje).background(position == 0 ? R.drawable.linje : R.drawable.stiplet_linje);
+      aq.id(R.id.startStopKnap).tag(udsendelse); // sæt udsendelsen ind som tag, så vi kan se dem i onClick()
+      aq.id(R.id.slet).tag(udsendelse);
 
       Cursor c = hentedeUdsendelser.getStatusCursor(udsendelse);
       if (c == null) {
-        aq.id(R.id.linje1).text("Ikke tilgængelig");
-        Log.rapporterFejl(new IllegalStateException("Hentede_udsendelser_frag Ikke tilgængelig"), udsendelse);
+        aq.id(R.id.startStopKnap).visible().image(R.drawable.dri_radio_spil_graa40);
+        aq.id(R.id.progressBar).gone();
+        aq.id(R.id.linje1).text(udsendelse.titel).textColor(App.color.grå40);
+        aq.id(R.id.linje2).text(DRJson.datoformat.format(udsendelse.startTid) + " - Ikke hentet");
         return v;
       }
 
@@ -131,19 +137,16 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
         ProgressBar progressBar = aq.id(R.id.progressBar).visible().getProgressBar();
         progressBar.setMax(iAlt);
         progressBar.setProgress(hentet);
-        aq.id(R.id.startStopKnap).visible();//.image(status==DownloadManager.STATUS_PAUSED? R.drawable.dri_radio_pause_graa40:R.drawable.dri_radio_spil_graa40);
+        aq.id(R.id.startStopKnap).visible().image(R.drawable.dri_radio_stop_graa40);
       } else {
         aq.id(R.id.progressBar).gone();
         aq.id(R.id.startStopKnap).gone();
       }
       aq.id(R.id.linje1).text(udsendelse.titel)
           .textColor(status==DownloadManager.STATUS_SUCCESSFUL ? Color.BLACK : App.color.grå60);
-      // Skjul stiplet linje over øverste listeelement
-      aq.id(R.id.stiplet_linje).background(position == 0 ? R.drawable.linje : R.drawable.stiplet_linje);
 
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
 
-      aq.id(R.id.slet).tag(udsendelse);
 
       return v;
     }
@@ -152,6 +155,10 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
   @Override
   public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
     Udsendelse udsendelse = liste.get(position);
+    visUdsendelse_frag(udsendelse);
+  }
+
+  private void visUdsendelse_frag(Udsendelse udsendelse) {
     if (udsendelse == null) return;
     // Tjek om udsendelsen er i RAM, og put den ind hvis den ikke er
     if (!DRData.instans.udsendelseFraSlug.containsKey(udsendelse.slug)) {
@@ -177,9 +184,17 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
     try {
       Udsendelse u = (Udsendelse) v.getTag();
       if (v.getId()==R.id.slet) {
-        hentedeUdsendelser.annullér(u);
+        hentedeUdsendelser.slet(u);
       } else {
-        App.langToast("Ikke understøttet - ny downloadfunktion skal implementeres");
+        App.langToast("Eksperiment - tjek hvordan det virker");
+        Cursor c = hentedeUdsendelser.getStatusCursor(u);
+        if (c != null) {
+          hentedeUdsendelser.stop(u);
+          c.close();
+        } else {
+          if (u.streamsKlar()) hentedeUdsendelser.hent(u); // vi har streams, hent dem
+          else visUdsendelse_frag(u); // hack - vis udsendelsessiden, den indlæser streamsne
+        }
       }
     } catch (Exception e) {
       Log.rapporterFejl(e);
