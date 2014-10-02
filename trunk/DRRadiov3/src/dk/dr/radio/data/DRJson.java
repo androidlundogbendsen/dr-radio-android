@@ -168,7 +168,7 @@ public enum DRJson {
     return uliste;
   }
 
-  private static String getDagsbeskrivelse(Date tid) {
+  public static String getDagsbeskrivelse(Date tid) {
     String datoStr0 = datoformat.format(tid);
     // Vi har brug for at tjekke for ens datoer hurtigt, så vi laver datoen med objekt-lighed ==
     // Se også String.intern()
@@ -180,6 +180,7 @@ public enum DRJson {
       else if (datoStr0.equals(iOvermorgenDatoStr)) dagsbeskrivelse = "I OVERMORGEN - "+dagsbeskrivelse;
       else if (datoStr0.equals(iGårDatoStr)) dagsbeskrivelse = "I GÅR"; // "I GÅR - "+dagsbeskrivelse;
       else if (datoStr0.equals(iForgårsDatoStr)) dagsbeskrivelse = "I FORGÅRS - "+dagsbeskrivelse;
+      else dagsbeskrivelse = dagsbeskrivelse.toUpperCase();
       datoTilBeskrivelse.put(datoStr0, dagsbeskrivelse);
     }
     return dagsbeskrivelse;
@@ -204,6 +205,7 @@ public enum DRJson {
     if (kanal!=null) u.kanalSlug = kanal.slug;
     else u.kanalSlug = o.optString(DRJson.ChannelSlug.name());  // Bemærk - kan være tom.
     u.startTid = servertidsformat.parse(o.getString(DRJson.FirstBroadcast.name()));
+    u.startTidKl = klokkenformat.format(u.startTid);
     u.slutTid = new Date(u.startTid.getTime() + o.getInt(DRJson.DurationInSeconds.name()) * 1000);
     return u;
   }

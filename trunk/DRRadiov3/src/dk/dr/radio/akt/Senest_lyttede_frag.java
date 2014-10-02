@@ -22,6 +22,7 @@ import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Lydkilde;
+import dk.dr.radio.data.SenestLyttede;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
@@ -30,7 +31,7 @@ import dk.dr.radio.v3.R;
 public class Senest_lyttede_frag extends Basisfragment implements AdapterView.OnItemClickListener, Runnable {
 
   private ListView listView;
-  private ArrayList<Lydkilde> liste = new ArrayList<Lydkilde>();
+  private ArrayList<SenestLyttede.SenestLyttet> liste = new ArrayList<SenestLyttede.SenestLyttet>();
   protected View rod;
 
   @Override
@@ -84,9 +85,8 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
 
   private static class Viewholder {
     public AQuery aq;
-    public TextView metainformation;
-    public TextView titel;
-    public Lydkilde lydkilde;
+    public TextView linje1;
+    public TextView linje2;
   }
 
 
@@ -101,7 +101,7 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
 
       Viewholder vh;
       AQuery a;
-      Lydkilde lydkilde = liste.get(position);
+      SenestLyttede.SenestLyttet sl = liste.get(position);
 
       if (v == null) {
         v = getLayoutInflater(null).inflate(R.layout.listeelem_2linjer, parent, false);
@@ -109,8 +109,8 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
 
         vh = new Viewholder();
         a = vh.aq = new AQuery(v);
-        vh.metainformation = a.id(R.id.linje1).typeface(App.skrift_gibson_fed).textColor(Color.BLACK).getTextView();
-        vh.titel = a.id(R.id.linje2).typeface(App.skrift_gibson).getTextView();
+        vh.linje1 = a.id(R.id.linje1).typeface(App.skrift_gibson_fed).textColor(Color.BLACK).getTextView();
+        vh.linje2 = a.id(R.id.linje2).typeface(App.skrift_gibson).getTextView();
 
 
         v.setTag(vh);
@@ -120,36 +120,23 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
         a = vh.aq;
       }
 
-      vh.lydkilde = lydkilde;
       // Skjul stiplet linje over øverste listeelement
       vh.aq.id(R.id.stiplet_linje).background(position == 0 ? R.drawable.linje : R.drawable.stiplet_linje);
 
 
-//      TextView titel = (TextView) v.findViewById(R.id.linje1);
-//      TextView titel = (TextView) v.findViewById(R.id.linje2);
 
-      Lydkilde k = liste.get(position);
-      //titel.setText(k.titel().navn);
-      //Spannable spannable = new SpannableString(k.getKanal().navn);
-      //spannable.setSpan(App.skrift_gibson_fed_span, 0, k.getKanal().navn.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-      vh.titel.setText(k.getKanal().navn);
-
-      String titelStr = "";// u.titel;
-      if (k instanceof Kanal) {
-        titelStr = ((Kanal) k).navn + " (Direkte)";
+      if (sl.lydkilde instanceof Kanal) {
+        Kanal k = (Kanal) sl.lydkilde;
+        vh.linje1.setText(k.navn + " (Direkte)");
+        vh.linje2.setText(k.navn);
+      } else if (sl.lydkilde instanceof Udsendelse) {
+        Udsendelse u = (Udsendelse) sl.lydkilde;
+        vh.linje1.setText(u.titel);
+        Kanal k = u.getKanal();
+        vh.linje2.setText((k==null?"":k.navn+" - ")+DRJson.getDagsbeskrivelse(u.startTid).toLowerCase()+" kl "+u.startTidKl);
       } else {
-        titelStr = ((Udsendelse) k).titel;
-        //titel.setText(u.titel + " (" + DRJson.datoformat.format(u.linje1) + ")");
+        Log.rapporterFejl(new Exception("forkert type"), sl.lydkilde);
       }
-
-      //spannable = new SpannableString(titelStr);
-      //spannable.setSpan(App.skrift_gibson, 0, titelStr.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-      vh.metainformation.setText(titelStr);
-
-      //vh.titel.setText(lydkilde.titel);
-      //a.id(R.id.stiplet_linje).visibility(position == aktuelUdsendelseIndex + 1 ? View.INVISIBLE : View.VISIBLE);
-      //a.id(R.id.hør).visibility(lydkilde.kanNokHøres ? View.VISIBLE : View.GONE);
 
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
 
@@ -161,7 +148,7 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
   public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
 
     Fragment f;
-    Lydkilde k = liste.get(position);
+    Lydkilde k = liste.get(position).lydkilde;
     if (k instanceof Kanal) {
       f = new Kanal_frag();
       f.setArguments(new Intent()
