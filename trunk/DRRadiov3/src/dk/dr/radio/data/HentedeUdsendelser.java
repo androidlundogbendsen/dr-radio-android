@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -41,6 +42,7 @@ import dk.dr.radio.v3.R;
 public class HentedeUdsendelser {
   public static final String NØGLE_placeringAfHentedeFiler = "placeringAfHentedeFiler";
   private DownloadManager downloadService = null;
+  private ArrayList<Udsendelse> udsendelser;
 
   public static class Data implements Serializable {
     // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/1415558087
@@ -50,6 +52,7 @@ public class HentedeUdsendelser {
 
     private Map<String, Long> downloadIdFraSlug = new LinkedHashMap<String, Long>();
     private Map<Long, Udsendelse> udsendelseFraDownloadId = new LinkedHashMap<Long, Udsendelse>();
+    private ArrayList<Udsendelse> udsendelser = new ArrayList<Udsendelse>();
   }
 
   private Data data;
@@ -76,6 +79,9 @@ public class HentedeUdsendelser {
     if (data != null) return;
     if (new File(FILNAVN).exists()) try {
       data = (Data) Serialisering.hent(FILNAVN);
+      if (data.udsendelser==null) { // Feltet data.udsendelser kom med 2. okt 2014 - tjek kan slettes efter sommer 2015
+        data.udsendelser = new ArrayList<Udsendelse>(data.udsendelseFraDownloadId.values());
+      }
       return;
     } catch (Exception e) {
       Log.rapporterFejl(e);
@@ -83,19 +89,15 @@ public class HentedeUdsendelser {
     data = new Data();
   }
 
-  private Runnable gemListe = new Runnable() {
-    @Override
-    public void run() {
-      App.forgrundstråd.removeCallbacks(gemListe);
-      try {
-        long tid = System.currentTimeMillis();
-        Serialisering.gem(data, FILNAVN);
-        Log.d("Hentning: Gemning tog " + (System.currentTimeMillis() - tid) + " ms - filstr:" + new File(FILNAVN).length());
-      } catch (IOException e) {
-        Log.rapporterFejl(e);
-      }
+  private void gemListe() {
+    try {
+      long tid = System.currentTimeMillis();
+      Serialisering.gem(data, FILNAVN);
+      Log.d("Hentning: Gemning tog " + (System.currentTimeMillis() - tid) + " ms - filstr:" + new File(FILNAVN).length());
+    } catch (IOException e) {
+      Log.rapporterFejl(e);
     }
-  };
+  }
 
 
   public void hent(Udsendelse udsendelse) {
@@ -118,8 +120,12 @@ public class HentedeUdsendelser {
       dir.mkdirs();
       if (!dir.exists()) throw new IOException("kunne ikke oprette "+dir);
 
+      int typer = App.prefs.getBoolean("hentKunOverWifi",false)?
+          DownloadManager.Request.NETWORK_WIFI :
+          DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE;
+
       DownloadManager.Request req = new DownloadManager.Request(uri)
-          .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+          .setAllowedNetworkTypes(typer)
           .setAllowedOverRoaming(false)
           .setTitle(udsendelse.titel)
           .setDescription(udsendelse.beskrivelse);
@@ -133,7 +139,10 @@ public class HentedeUdsendelser {
       long downloadId = downloadService.enqueue(req);
       data.downloadIdFraSlug.put(udsendelse.slug, downloadId);
       data.udsendelseFraDownloadId.put(downloadId, udsendelse);
-      gemListe.run();
+      if (!data.udsendelser.contains(udsendelse)) data.udsendelser.add(udsendelse);
+      Log.d("Hentning: hent() data.udsendelseFraDownloadId= " + data.udsendelseFraDownloadId);
+      Log.d("Hentning: hent() data.downloadIdFraSlug=" + data.downloadIdFraSlug);
+      gemListe();
       for (Runnable obs : new ArrayList<Runnable>(observatører)) obs.run();
     } catch (Exception e) {
       Log.rapporterFejl(e);
@@ -201,9 +210,8 @@ public class HentedeUdsendelser {
   }
 
   public Collection<Udsendelse> getUdsendelser() {
-    if (!virker()) return new ArrayList<Udsendelse>();
     tjekDataOprettet();
-    return data.udsendelseFraDownloadId.values();
+    return data.udsendelser;
   }
 
   /**
@@ -216,8 +224,8 @@ public class HentedeUdsendelser {
     if (!virker()) return null;
     tjekDataOprettet();
     Long downloadId = data.downloadIdFraSlug.get(udsendelse.slug);
+    //Log.d("HentedeUdsendelser getStatus gav downloadId = " + downloadId + " for u=" + udsendelse);
     if (downloadId == null) return null;
-    Log.d("HentedeUdsendelser getStatus gav downloadId = " + downloadId + " for u=" + udsendelse);
     DownloadManager.Query query = new DownloadManager.Query();
     query.setFilterById(downloadId);
     Cursor c = downloadService.query(query);
@@ -252,15 +260,37 @@ public class HentedeUdsendelser {
     return txt;
   }
 
-  public void annullér(Udsendelse u) {
+  /** Sletter udsendelsen fuldstændigt fra listen */
+  public void slet(Udsendelse u) {
+    data.udsendelser.remove(u);
+    stop(u);
+  }
+
+  /** Sletter udsendelsen, men viser den stadig på listen, hvis brugern vil hente den igen senere */
+  public void stop(Udsendelse u) {
     tjekDataOprettet();
+    sletLokalFil(u);
     Long id = data.downloadIdFraSlug.remove(u.slug);
-    data.udsendelseFraDownloadId.remove(id);
-    Log.d("Hentning: data.udsendelseFraDownloadId= " + data.udsendelseFraDownloadId);
-    Log.d("Hentning: data.downloadIdFraSlug=" + data.downloadIdFraSlug);
-    downloadService.remove(id);
-    gemListe.run();
+    if (id==null) {
+      Log.d("stop() udsendelse "+u+" ikke i data.downloadIdFraSlug - den er nok allerede stoppet");
+    } else {
+      data.udsendelseFraDownloadId.remove(id);
+      downloadService.remove(id);
+    }
+    gemListe();
     for (Runnable obs : new ArrayList<Runnable>(observatører)) obs.run();
+  }
+
+  private void sletLokalFil(Udsendelse u) {
+    Cursor c = getStatusCursor(u);
+    String uri = null;
+    if (c != null) {
+      uri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+      c.close();
+    }
+    if (uri != null) {
+      new File(URI.create(uri).getPath()).delete();
+    }
   }
 
 
@@ -271,8 +301,12 @@ public class HentedeUdsendelser {
       Log.d("DLS " + intent);
       if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) try {
         long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
+        DRData.instans.hentedeUdsendelser.tjekDataOprettet(); // Fix for https://mint.splunk.com/dashboard/project/cd78aa05/errors/803968027
         Udsendelse u = DRData.instans.hentedeUdsendelser.data.udsendelseFraDownloadId.get(downloadId);
-        if (u == null) throw new IllegalStateException("Ingen udsendelse for hentning for " + downloadId);
+        if (u == null) {
+          Log.d("Ingen udsendelse for hentning for " + downloadId+" den er nok blevet slettet");
+          return;
+        }
 
         DownloadManager.Query query = new DownloadManager.Query();
         query.setFilterById(downloadId);
@@ -287,7 +321,7 @@ public class HentedeUdsendelser {
           }
         }
         c.close();
-        DRData.instans.hentedeUdsendelser.gemListe.run();
+        DRData.instans.hentedeUdsendelser.gemListe();
         for (Runnable obs : new ArrayList<Runnable>(DRData.instans.hentedeUdsendelser.observatører)) obs.run();
       } catch (Exception e) {
         Log.rapporterFejl(e);
@@ -339,4 +373,43 @@ public class HentedeUdsendelser {
     }
     c.close();
   }
+
+  public void tjekOmHentet(Udsendelse udsendelse) {
+    if (!virker()) return;
+    if (udsendelse.hentetStream == null) {
+      Cursor c = getStatusCursor(udsendelse);
+      if (c == null) return;
+      try {
+        Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)));
+        Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)));
+        Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_LAST_MODIFIED_TIMESTAMP)));
+        Log.d(c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
+        Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS)));
+        Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_REASON)));
+
+        if (c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS)) != DownloadManager.STATUS_SUCCESSFUL)
+          return;
+        String uri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+        File file = new File(URI.create(uri).getPath());
+        if (file.exists()) {
+          udsendelse.hentetStream = new Lydstream();
+          udsendelse.hentetStream.url = uri;
+          udsendelse.hentetStream.score = 500; // Rigtig god!
+          udsendelse.kanNokHøres = udsendelse.kanStreames = true;
+          Log.registrérTestet("Afspille hentet udsendelse", udsendelse.slug);
+        } else {
+//          Log.rapporterFejl(new IllegalStateException("Fil " + file + "  fandtes ikke alligevel??! for " + udsendelse));
+          Log.rapporterFejl(new IllegalStateException("Fil " + file + " hentet, men fandtes ikke alligevel??!"));
+        }
+      } finally {
+        c.close();
+      }
+    } else {
+      if (!new File(URI.create(udsendelse.hentetStream.url).getPath()).exists()) {
+        Log.d("Fil findes pt ikke" + udsendelse.hentetStream);
+        udsendelse.hentetStream = null;
+      }
+    }
+  }
+
 }
