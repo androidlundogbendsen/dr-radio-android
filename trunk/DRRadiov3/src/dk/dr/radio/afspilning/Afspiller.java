@@ -419,8 +419,12 @@ public class Afspiller {
     }
     if (lydkilde instanceof Kanal && Kanal.P4kode.equals( ((Kanal) lydkilde).kode)) { // TODO - fjern tjek
       // Nærmere fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/820758400
-      Log.rapporterFejl(new IllegalStateException("setLydkilde(P4F"));
-      return;
+      // Log.rapporterFejl(new IllegalStateException("setLydkilde(P4F"));
+      // return;
+
+      // Nyt fix - vi vælger bare en underkanal.
+      String kanalkode = App.tjekP4OgVælgUnderkanal(((Kanal) lydkilde).kode);
+      lydkilde = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
     }
     Log.d("setLydkilde(" + lydkilde);
 

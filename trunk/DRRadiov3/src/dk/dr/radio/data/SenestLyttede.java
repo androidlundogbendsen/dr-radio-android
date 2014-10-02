@@ -73,7 +73,7 @@ public class SenestLyttede {
     liste.put(lydkilde.slug, senestLyttet);
     if (liste.size() > 50) liste.remove(0); // Husk kun de seneste 50
     App.forgrundstråd.removeCallbacks(gemListe);
-    App.forgrundstråd.postDelayed(gemListe, 300); // Gem listen om 30 sekunder
+    App.forgrundstråd.postDelayed(gemListe, 10000); // Gem listen om 10 sekunder
   }
 
   public void sætStartposition(Lydkilde lydkilde, int pos) {
@@ -81,7 +81,7 @@ public class SenestLyttede {
       liste.get(lydkilde.slug).positionMs = pos;
     } catch (Exception e) { Log.rapporterFejl(e, lydkilde); }
     App.forgrundstråd.removeCallbacks(gemListe);
-    App.forgrundstråd.postDelayed(gemListe, 300); // Gem listen om 30 sekunder
+    App.forgrundstråd.postDelayed(gemListe, 10000); // Gem listen om 10 sekunder
   }
 
   public int getStartposition(Lydkilde lydkilde) {

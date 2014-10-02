@@ -12,10 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.widget.TextView;
 
 import dk.dr.radio.afspilning.Status;
@@ -30,6 +27,8 @@ import dk.dr.radio.v3.R;
 
 public class Hovedaktivitet extends Basisaktivitet implements Runnable {
 
+  public static final String VIS_FRAGMENT_KLASSE = "klasse";
+  public static final String SPØRG_OM_STOP = "SPØRG_OM_STOP";
   /**
    * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
    */
@@ -59,7 +58,7 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
 
     if (savedInstanceState == null) try {
 
-      String visFragment = getIntent().getStringExtra(VisFragment_akt.KLASSE);
+      String visFragment = getIntent().getStringExtra(VIS_FRAGMENT_KLASSE);
       if (visFragment != null) {
         Fragment f = (Fragment) Class.forName(visFragment).newInstance();
         Bundle b = getIntent().getExtras();
@@ -182,7 +181,7 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
       DRData.instans.afspiller.stopAfspilning();
     }
 
-    if (DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET) {
+    if (DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET && getIntent().getBooleanExtra(SPØRG_OM_STOP, true)) {
       // Spørg brugeren om afspilningen skal stoppes
       showDialog(0);
       return;

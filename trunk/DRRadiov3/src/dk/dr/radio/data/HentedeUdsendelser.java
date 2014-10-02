@@ -343,7 +343,7 @@ public class HentedeUdsendelser {
         } else {
           // Åbn hovedaktivitet
           Intent i = new Intent(context, Hovedaktivitet.class)
-              .putExtra(VisFragment_akt.KLASSE, Hentede_udsendelser_frag.class.getName());
+              .putExtra(Hovedaktivitet.VIS_FRAGMENT_KLASSE, Hentede_udsendelser_frag.class.getName());
           i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
           context.startActivity(i);
         }
