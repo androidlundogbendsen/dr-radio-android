@@ -33,7 +33,7 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
   public boolean kanHentes;   // Efter at streams er hentet, om der er mulighed for at hente udsendelsen ned til offline brug
   public String produktionsnummer;
   public String shareLink;
-  public transient int startposition;// hvis der allerede er lyttet til denne lydkilde så notér det her så afspilning kan fortsætte herfra
+  //public transient int startposition;// hvis der allerede er lyttet til denne senestLyttet så notér det her så afspilning kan fortsætte herfra
   public int episodeIProgramserie;
 
   public Udsendelse(String s) {

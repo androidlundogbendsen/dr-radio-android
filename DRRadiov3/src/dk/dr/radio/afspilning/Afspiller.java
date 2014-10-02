@@ -387,9 +387,8 @@ public class Afspiller {
       try {
       int pos = mediaPlayer.getCurrentPosition();
       if (pos>0) {
-        lydkilde.getUdsendelse().startposition = pos;
-        if (App.fejlsøgning) App.kortToast("GEMT POSITION\n"+ lydkilde.getUdsendelse().startposition);
-        Log.d("GEMT POSITION for "+lydkilde +" : "+ lydkilde.getUdsendelse().startposition);
+        //senestLyttet.getUdsendelse().startposition = pos;
+        DRData.instans.senestLyttede.sætStartposition(lydkilde, pos);
       }
       return pos;
     } catch (Exception e) {
@@ -510,16 +509,19 @@ public class Afspiller {
     }
   }
 
+  /** Flyt til position (i millisekunder) */
   public void seekTo(int offsetMs) {
     mediaPlayer.seekTo(offsetMs);
     gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Seeking, offsetMs /1000);
   }
 
+  /** Længde i millisekunder */
   public int getDuration() {
     if (afspillerstatus == Status.SPILLER) return mediaPlayer.getDuration();
     return 0;
   }
 
+  /** Position i millisekunder */
   public int getCurrentPosition() {
     if (afspillerstatus == Status.SPILLER) return mediaPlayer.getCurrentPosition();
     return 0;
@@ -539,11 +541,10 @@ public class Afspiller {
         public void run() {
          try { // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/825188032
           Log.d("mediaPlayer.start() " + mpTils());
-          Udsendelse u = lydkilde.getUdsendelse();
-          int startposition = u == null ? 0 : u.startposition;
+          int startposition = DRData.instans.senestLyttede.getStartposition(lydkilde);
+           Log.d("mediaPlayer genoptager afspilning ved " + startposition);
           gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Play, startposition /1000);
           if (startposition > 0) {
-            Log.d("mediaPlayer genoptager afspilning ved " + startposition);
             mediaPlayer.seekTo(startposition);
           }
           mediaPlayer.start();
@@ -582,7 +583,7 @@ public class Afspiller {
           sætMediaPlayerLytter(mediaPlayer, this); // registrér lyttere på den nye instans
           startAfspilningIntern();
         } else {
-          lydkilde.getUdsendelse().startposition = 0;
+          DRData.instans.senestLyttede.sætStartposition(lydkilde, 0);
           gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Completed, getCurrentPosition()/1000);
           stopAfspilning();
         }

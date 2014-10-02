@@ -11,6 +11,7 @@ import dk.dr.radio.data.Udsendelse;
  * Created by j on 18-09-14.
  */
 public class AlarmLydkilde extends Lydkilde {
+  private static final long serialVersionUID = 1L;
   private final Lydkilde orgLydkilde;
 
   public AlarmLydkilde(String alarmUri, Lydkilde orgLydkilde) {
