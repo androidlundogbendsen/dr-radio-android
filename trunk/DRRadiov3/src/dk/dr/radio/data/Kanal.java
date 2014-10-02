@@ -77,15 +77,10 @@ public class Kanal extends Lydkilde {
     return true;
   }
 
+  /** Finder den aktuelle udsendelse på kanalen */
   @Override
   public Udsendelse getUdsendelse() {
-    int n = getAktuelUdsendelseIndex();
-    if (n >= 0) return udsendelser.get(n);
-    return null;
-  }
-
-  public int getAktuelUdsendelseIndex() {
-    if (udsendelser.size()==0) return -2;
+    if (udsendelser.size()==0) return null;
     Date nu = new Date(App.serverCurrentTimeMillis()); // Kompenseret for forskelle mellem telefonens ur og serverens ur
     // Nicolai: "jeg løber listen igennem fra bunden og op,
     // og så finder jeg den første der har starttid >= nuværende tid + sluttid <= nuværende tid."
@@ -93,7 +88,7 @@ public class Kanal extends Lydkilde {
       Udsendelse u = udsendelser.get(n);
       //Log.d(n + " " + nu.after(u.startTid) + u.slutTid.before(nu) + "  " + u);
       if (u.startTid.before(nu)) { // && nu.before(u.slutTid)) {
-        return n;
+        return u;
       }
     }
     Log.e(new IllegalStateException("Ingen aktuel udsendelse fundet!"));
@@ -102,7 +97,7 @@ public class Kanal extends Lydkilde {
       Udsendelse u = udsendelser.get(n);
       Log.d(n + " " + u.startTid.before(nu) + nu.before(u.slutTid) + "  " + u+" "+DRJson.servertidsformat.format(u.startTid)+" - "+DRJson.servertidsformat.format(u.slutTid));
     }
-    if (nu.before(udsendelser.get(0).slutTid)) return 0;
-    return -2;
+    if (nu.before(udsendelser.get(0).slutTid)) return udsendelser.get(0);
+    return null;
   }
 }

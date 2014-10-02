@@ -150,7 +150,8 @@ public class Afspiller {
           JSONObject o = new JSONObject(json);
           lydkilde.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
           Log.d("Afspiller hentStreams " + lydkilde + " fraCache=" + fraCache + " k.lydUrl=" + lydkilde.streams);
-          startAfspilning(); // Opdatér igen
+          if (onErrorTæller++>10) Log.rapporterFejl(new Exception("onErrorTæller++>10, uendelig løkke afværget"), lydkilde);
+          else startAfspilning(); // Opdatér igen
         }
 
         @Override
