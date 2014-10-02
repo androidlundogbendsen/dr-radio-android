@@ -48,6 +48,12 @@ public class Favoritter {
     tjekDataOprettet();
     if (checked) {
       long iMorgen = 24 * 60 * 60 * 1000 + App.serverCurrentTimeMillis();
+      /*
+      if (!App.PRODUKTION) {
+        App.kortToast("Udvikler: Favoritter sættes sådan at de starter for en uge siden, for at lette afprøvning");
+        iMorgen -= 24 * 60 * 60 * 1000 * 7;
+      }
+      */
       favoritTilStartdato.put(programserieSlug, DRJson.apiDatoFormat.format(new Date(iMorgen)));
       favoritTilAntalDagsdato.put(programserieSlug, 0);
     } else {
@@ -81,11 +87,10 @@ public class Favoritter {
     @Override
     public void run() {
       tjekDataOprettet();
-      String dd = DRJson.apiDatoFormat.format(new Date(App.serverCurrentTimeMillis()));
       //if (dd.equals(dato) && favoritTilAntalDagsdato.keySet().equals(favoritTilStartdato.keySet())) return;
       Log.d("Favoritter: Opdaterer favoritTilStartdato=" + favoritTilStartdato + "  favoritTilAntalDagsdato=" + favoritTilAntalDagsdato);
-      dato = dd;
       for (final String programserieSlug : favoritTilStartdato.keySet()) {
+        String dato = favoritTilStartdato.get(programserieSlug);
         String url = "http://www.dr.dk/tjenester/mu-apps/new-programs-since/" + programserieSlug + "/" + dato;
         Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
           @Override

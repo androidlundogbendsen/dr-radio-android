@@ -3,14 +3,14 @@
           package="dk.dr.radio.v3"
           android:installLocation="auto"
           android:versionCode="1"
-          android:versionName="3.1.1 1. okt adapterfix">
+          android:versionName="3.1.2 2. okt pause hentede udsendelser + fav">
 
     <uses-sdk
             android:minSdkVersion="7"
             android:targetSdkVersion="19"/>
 
 
-    <!-- Por subteni vekhorloĝon -->
+    <!-- Nødvendigt til vækkeur -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE"/>
 
@@ -19,13 +19,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
-    <!-- For at kunne gemme podcasts
+    <!-- For at kunne gemme podcasts -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
--->
-    <!-- akamai
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
--->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- akamai -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
     <uses-feature android:name="android.hardware.TOUCHSCREEN" android:required="false"/>
