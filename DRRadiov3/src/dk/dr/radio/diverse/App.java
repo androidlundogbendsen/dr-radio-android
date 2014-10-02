@@ -418,7 +418,7 @@ public class App extends Application {
     @Override
     public void run() {
       if (aktivitetIForgrunden != null) return;
-      if (!App.PRODUKTION) App.kortToast("kørFørsteGangAppIkkeMereErSynlig");
+      if (App.fejlsøgning) App.kortToast("kørFørsteGangAppIkkeMereErSynlig");
       long alder = TIDSSTEMPEL_VED_OPSTART - 7 * 24 * 60 * 60 * 1000;
       int volleySlettet = volleyCache.sletFilerÆldreEnd(alder);
       int aqSlettet = Diverse.sletFilerÆldreEnd(new File(getCacheDir(), "aquery"), alder);
