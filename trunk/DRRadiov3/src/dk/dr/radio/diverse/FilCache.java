@@ -81,7 +81,7 @@ public class FilCache {
       int prøvIgen = 3;
       while (prøvIgen > 0) {
         prøvIgen = prøvIgen - 1;
-        log("Kontakter " + url);
+        if (App.fejlsøgning) log("Kontakter " + url);
         HttpURLConnection httpForb = (HttpURLConnection) new URL(url).openConnection();
 
         if (cacheFil.exists()) {
@@ -143,7 +143,7 @@ public class FilCache {
         InputStream is = httpForb.getInputStream();
         FileOutputStream fos = new FileOutputStream(cacheFilnavn + "_tmp");
         String indkodning = httpForb.getHeaderField("Content-Encoding");
-        Log.d("indkodning: " + indkodning);
+        if (App.fejlsøgning) Log.d("indkodning: " + indkodning);
         if ("gzip".equals(indkodning)) {
           is = new GZIPInputStream(is); // Pak data ud
         }

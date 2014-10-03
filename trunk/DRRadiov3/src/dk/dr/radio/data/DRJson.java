@@ -303,6 +303,7 @@ OffsetMs: 1096360
   }
 
   /*
+  Programserie
   {
   Channel: "dr.dk/mas/whatson/channel/P3",
   Webpage: "http://www.dr.dk/p3/programmer/monte-carlo",
@@ -315,6 +316,22 @@ OffsetMs: 1096360
   Title: "Monte Carlo på P3",
   Subtitle: "",
   Description: "Nu kan du dagligt fra 14-16 komme en tur til Monte Carlo, hvor Peter Falktoft og Esben Bjerre vil guide dig rundt. Du kan læne dig tilbage og nyde turen og være på en lytter, når Peter og Esben vender ugens store og små kulturelle begivenheder, kigger på ugens bedste tv og spørger hvad du har #HørtOverHækken. "
+
+Radio-drama
+{
+Channel: "dr.dk/mas/whatson/channel/P1D",
+Webpage: "",
+Explicit: true,
+TotalPrograms: 3,
+ChannelType: 0,
+Programs: [ ],
+Slug: "efter-fyringerne",
+Urn: "urn:dr:mu:bundle:542aa1556187a20ff0bf2709",
+Title: "Efter fyringerne",
+Subtitle: "",
+Description: "I 'Efter fyringerne' lykkes det, gennem private optagelser og interviews med de efterladte, journalist Louise Witt Hansen at skrue historierne bag tre tragiske selvmord sammen."
+}
+
   }*/
 
   /**
@@ -335,4 +352,11 @@ OffsetMs: 1096360
     return ps;
   }
 
+  public static void parseRadioDrama(JSONArray jsonArray, DRData instans) throws JSONException {
+    ArrayList<Programserie> res = new ArrayList<Programserie>();
+    for (int n=0; n<jsonArray.length(); n++) {
+      res.add(parsProgramserie(jsonArray.getJSONObject(n), new Programserie()));
+    }
+    Log.d("parseRadioDrama res="+res);
+  }
 }
