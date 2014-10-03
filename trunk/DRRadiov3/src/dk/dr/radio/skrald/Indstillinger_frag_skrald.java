@@ -16,7 +16,7 @@
 
  */
 
-package dk.dr.radio.akt;
+package dk.dr.radio.skrald;
 
 import android.annotation.TargetApi;
 import android.os.Build;
