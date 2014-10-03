@@ -61,11 +61,14 @@ public class DRData {
   public Favoritter favoritter = new Favoritter();
   public HentedeUdsendelser hentedeUdsendelser = new HentedeUdsendelser();  // Understøttes ikke på Android 2.2
 
-
   /**
    * Til afprøvning
    */
-  public static void main(String[] a) throws Exception {
+
+  // VM Options
+  // -classpath $PROJECT_DIR$/../../dr-netradio/trunk/JSONParsning/lib/json-1.0.jar:$PROJECT_DIR$/out/production/DRRadiov3:$APPLICATION_HOME_DIR$/lib/idea_rt.jar:$PROJECT_DIR$/../../android-sdk-linux_86/platforms/android-18/android.jar:$PROJECT_DIR$/libs/android-support-v7-appcompat.jar:$PROJECT_DIR$/libs/android-support-v4.jar:$PROJECT_DIR$/libs/bugsense-3.6.jar:$PROJECT_DIR$/libs/volley.jar
+
+  public static void main_x(String[] a) throws Exception {
     DRData i = DRData.instans = new DRData();
     FilCache.init(new File("/tmp/drradio-cache"));
     DRJson.servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // +01:00 springes over da kolon i +01:00 er ikke-standard Java
@@ -137,7 +140,7 @@ http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-b.m3u8?sd=10&rebase=on
 
       System.exit(0);
 
-
+      if ("DRN".equals(kanal.kode)) continue; // ikke DR Nyheder
       kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(main_hent(kanal.getUdsendelserUrl())), kanal, DRData.instans), "0");
       for (Udsendelse u : kanal.udsendelser) {
         Log.d("\nudsendelse = " + u);
@@ -182,6 +185,59 @@ http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-b.m3u8?sd=10&rebase=on
     Log.d(data);
     return data;
 
+  }
+
+
+  public static void main(String[] a) throws Exception {
+    DRData i = DRData.instans = new DRData();
+    FilCache.init(new File("/tmp/drradio-cache"));
+    DRJson.servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // +01:00 springes over da kolon i +01:00 er ikke-standard Java
+    i.grunddata = new Grunddata();
+    i.grunddata.parseFællesGrunddata(Diverse.læsStreng(new FileInputStream("../DRRadiov3/res/raw/grunddata.json")));
+    i.grunddata.hentSupplerendeDataBg_KUN_TIL_UDVIKLING();
+
+    //JSONArray jsonArray = new JSONArray(main_hent("http://www.dr.dk/tjenester/mu-apps/radio-drama?type=radio&includePrograms=true"));
+    JSONArray jsonArray = new JSONArray(main_hent("http://www.dr.dk/tjenester/mu-apps/radio-drama"));
+    ArrayList<Programserie> res = new ArrayList<Programserie>();
+    for (int n=0; n<jsonArray.length(); n++) {
+      JSONObject programserieJson = jsonArray.getJSONObject(n);
+      String programserieSlug = programserieJson.getString(DRJson.Slug.name());
+      Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
+      if (programserie==null) {
+        programserie = new Programserie();
+        DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
+      }
+      res.add(DRJson.parsProgramserie(programserieJson, programserie));
+      JSONArray udsJson = programserieJson.getJSONArray(DRJson.Programs.name());
+      ArrayList<Udsendelse> uds = DRJson.parseUdsendelserForProgramserie(udsJson, null, DRData.instans);
+      programserie.tilføjUdsendelser(0, uds);
+    }
+    Log.d("parseRadioDrama res="+res);
+    System.exit(0);
+
+
+    for (Kanal kanal : i.grunddata.kanaler) {
+      if (Kanal.P4kode.equals(kanal.kode)) continue;
+      if ("DRN".equals(kanal.kode)) continue;
+      Log.d("\n=========================================== kanal = " + kanal);
+      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(main_hent(kanal.getUdsendelserUrl())), kanal, DRData.instans), "0");
+      for (Udsendelse u : kanal.udsendelser) {
+        Log.d("\nudsendelse = " + u);
+        Programserie ps = i.programserieFraSlug.get(u.programserieSlug);
+        if (ps == null) {
+          String str = main_hent(u.getProgramserieUrl());
+          if ("null".equals(str)) continue;
+          JSONObject data = new JSONObject(str);
+          ps = DRJson.parsProgramserie(data, null);
+          JSONArray prg = data.getJSONArray(DRJson.Programs.name());
+          ArrayList<Udsendelse> udsendelser = DRJson.parseUdsendelserForProgramserie(prg, kanal, DRData.instans);
+          ps.tilføjUdsendelser(0, udsendelser);
+          i.programserieFraSlug.put(u.programserieSlug, ps);
+        }
+        Log.d(ps.slug + " " + ps);
+        System.exit(0);
+      }
+    }
   }
 
 }
