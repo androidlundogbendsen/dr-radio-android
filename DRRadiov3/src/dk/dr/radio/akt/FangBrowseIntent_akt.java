@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.util.Linkify;
-import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -22,7 +21,7 @@ import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
 import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 
-public class FangBrowseIntent_akt_skrald extends Activity {
+public class FangBrowseIntent_akt extends Activity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

@@ -61,7 +61,7 @@ android.permission.WAKE_LOCK
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="dk.dr.radio.akt.VisFragment_akt">
+        <activity android:name="dk.dr.radio.skrald.VisFragment_akt">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="dk.dr.radio.akt.Hovedaktivitet"/>
@@ -120,7 +120,7 @@ android.permission.WAKE_LOCK
 
 
         <!-- Denne aktivitet fanger browsning af URLer der starter med http://dr.dk/radio/ondemand/ -->
-        <activity android:name="dk.dr.radio.akt.FangBrowseIntent_akt_skrald">
+        <activity android:name="dk.dr.radio.akt.FangBrowseIntent_akt">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 

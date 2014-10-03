@@ -1,4 +1,4 @@
-package dk.dr.radio.akt;
+package dk.dr.radio.skrald;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,6 +6,8 @@ import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import dk.dr.radio.akt.Basisaktivitet;
+import dk.dr.radio.akt.Hovedaktivitet;
 import dk.dr.radio.diverse.Log;
 
 

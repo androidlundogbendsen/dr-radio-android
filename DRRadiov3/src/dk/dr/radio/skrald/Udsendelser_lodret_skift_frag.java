@@ -1,4 +1,4 @@
-package dk.dr.radio.akt;
+package dk.dr.radio.skrald;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import dk.dr.radio.akt.Basisfragment;
+import dk.dr.radio.akt.Kanal_frag;
+import dk.dr.radio.akt.Udsendelse_frag;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Kanal;
