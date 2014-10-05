@@ -35,8 +35,10 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
     for (Kanal k : DRData.instans.grunddata.kanaler) {
       if (!k.p4underkanal) kanaler.add(k);
     }
-    if (adapter!=null) {
-      if (viewPager.getCurrentItem()>=kanaler.size()) { viewPager.setCurrentItem(0); }
+    if (adapter != null) {
+      if (viewPager.getCurrentItem() >= kanaler.size()) {
+        viewPager.setCurrentItem(0);
+      }
       kanalfaneblade.notifyDataSetChanged();
       adapter.notifyDataSetChanged();
     }
@@ -99,10 +101,10 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
 
   @Override
   public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    if (App.fejlsøgning) Log.d("onPageScrolled( " + position + " " + positionOffset+" "+positionOffsetPixels);
+    if (App.fejlsøgning) Log.d("onPageScrolled( " + position + " " + positionOffset + " " + positionOffsetPixels);
     // Hvis vi er på 0'te side og der trækkes mod højre kan viewpageren ikke komme længere og offsetPixels vil være 0,
-    if (position==0 && positionOffsetPixels==0 && viewPagerScrollState==ViewPager.SCROLL_STATE_DRAGGING) {
-        venstremenuFrag.visMenu();
+    if (position == 0 && positionOffsetPixels == 0 && viewPagerScrollState == ViewPager.SCROLL_STATE_DRAGGING) {
+      venstremenuFrag.visMenu();
     }
   }
 
@@ -142,7 +144,9 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
     }
 
     @Override
-    public String getPageContentDescription(int position) { return kanaler.get(position).navn; }
+    public String getPageContentDescription(int position) {
+      return kanaler.get(position).navn;
+    }
   }
 }
 

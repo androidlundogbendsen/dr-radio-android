@@ -44,7 +44,7 @@ public class HentedeUdsendelser {
     // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/1415558087
     // - at proguard obfuskering havde
     // Se også http://stackoverflow.com/questions/16210831/serialization-deserialization-proguard
-    private static final long serialVersionUID =-3292059648694915445L;
+    private static final long serialVersionUID = -3292059648694915445L;
 
     private Map<String, Long> downloadIdFraSlug = new LinkedHashMap<String, Long>();
     private Map<Long, Udsendelse> udsendelseFraDownloadId = new LinkedHashMap<Long, Udsendelse>();
@@ -75,7 +75,7 @@ public class HentedeUdsendelser {
     if (data != null) return;
     if (new File(FILNAVN).exists()) try {
       data = (Data) Serialisering.hent(FILNAVN);
-      if (data.udsendelser==null) { // Feltet data.udsendelser kom med 2. okt 2014 - tjek kan slettes efter sommer 2015
+      if (data.udsendelser == null) { // Feltet data.udsendelser kom med 2. okt 2014 - tjek kan slettes efter sommer 2015
         data.udsendelser = new ArrayList<Udsendelse>(data.udsendelseFraDownloadId.values());
       }
       return;
@@ -110,13 +110,13 @@ public class HentedeUdsendelser {
 
       String brugervalg = App.prefs.getString(NØGLE_placeringAfHentedeFiler, null);
       File dir;
-      if (brugervalg!=null && new File(brugervalg).exists()) dir = new File(brugervalg);
+      if (brugervalg != null && new File(brugervalg).exists()) dir = new File(brugervalg);
       else dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
       dir = new File(dir, "DR_Radio");
       dir.mkdirs();
-      if (!dir.exists()) throw new IOException("kunne ikke oprette "+dir);
+      if (!dir.exists()) throw new IOException("kunne ikke oprette " + dir);
 
-      int typer = App.prefs.getBoolean("hentKunOverWifi",false)?
+      int typer = App.prefs.getBoolean("hentKunOverWifi", false) ?
           DownloadManager.Request.NETWORK_WIFI :
           DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE;
 
@@ -200,7 +200,7 @@ public class HentedeUdsendelser {
       }
     }
 
-    Log.d("findMuligeEksternLagerstier: "+res.res);
+    Log.d("findMuligeEksternLagerstier: " + res.res);
     ArrayList<File> liste = new ArrayList<File>(res.res.values());
     return liste;
   }
@@ -212,7 +212,6 @@ public class HentedeUdsendelser {
 
   /**
    * Giver status
-   *
    * @param udsendelse
    * @return
    */
@@ -242,7 +241,7 @@ public class HentedeUdsendelser {
     long hentet = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)) / 1000000;
     String txt;
     if (status == DownloadManager.STATUS_SUCCESSFUL) {
-      txt = "Klar ("+ iAlt + " MB)";
+      txt = "Klar (" + iAlt + " MB)";
     } else if (status == DownloadManager.STATUS_FAILED) {
       txt = "Mislykkedes";
     } else if (status == DownloadManager.STATUS_PENDING) {
@@ -250,7 +249,7 @@ public class HentedeUdsendelser {
     } else if (status == DownloadManager.STATUS_PAUSED) {
       txt = "Hentning pauset ... hentet " + hentet + " MB af " + iAlt + " MB";
     } else { // RUNNING
-      if (hentet>0 || iAlt>0) txt = "Hentet " + hentet + " MB af " + iAlt + " MB";
+      if (hentet > 0 || iAlt > 0) txt = "Hentet " + hentet + " MB af " + iAlt + " MB";
       else txt = "Henter...";
     }
     return txt;
@@ -267,8 +266,8 @@ public class HentedeUdsendelser {
     tjekDataOprettet();
     sletLokalFil(u);
     Long id = data.downloadIdFraSlug.remove(u.slug);
-    if (id==null) {
-      Log.d("stop() udsendelse "+u+" ikke i data.downloadIdFraSlug - den er nok allerede stoppet");
+    if (id == null) {
+      Log.d("stop() udsendelse " + u + " ikke i data.downloadIdFraSlug - den er nok allerede stoppet");
     } else {
       data.udsendelseFraDownloadId.remove(id);
       downloadService.remove(id);
@@ -300,7 +299,7 @@ public class HentedeUdsendelser {
         DRData.instans.hentedeUdsendelser.tjekDataOprettet(); // Fix for https://mint.splunk.com/dashboard/project/cd78aa05/errors/803968027
         Udsendelse u = DRData.instans.hentedeUdsendelser.data.udsendelseFraDownloadId.get(downloadId);
         if (u == null) {
-          Log.d("Ingen udsendelse for hentning for " + downloadId+" den er nok blevet slettet");
+          Log.d("Ingen udsendelse for hentning for " + downloadId + " den er nok blevet slettet");
           return;
         }
 

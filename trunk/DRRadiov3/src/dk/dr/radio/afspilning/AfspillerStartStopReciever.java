@@ -31,7 +31,6 @@ import dk.dr.radio.diverse.Log;
  * I tilfælde af at processen har været smidt ud af hukommelsen er dette
  * her faktisk den første kode der køres, derfor er et fuldt
  * initialiseringstjek nødvendigt
- *
  * @author j
  */
 public class AfspillerStartStopReciever extends BroadcastReceiver {

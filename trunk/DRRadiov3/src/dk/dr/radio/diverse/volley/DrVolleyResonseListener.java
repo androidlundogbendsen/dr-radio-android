@@ -46,7 +46,6 @@ public abstract class DrVolleyResonseListener implements Response.Listener<Strin
 
   /**
    * Kaldes med svaret fra cachen (hvis der er et) og igen når svaret fra serveren ankommer
-   *
    * @param response Svaret
    * @param fraCache Normalt true første gang hvis svaret kommer fra cachen (og eventuelt er forældet).
    *                 Normalt false anden gang hvor svaret kommer fra serveren.
@@ -57,11 +56,10 @@ public abstract class DrVolleyResonseListener implements Response.Listener<Strin
 
   /**
    * Kaldes af Volley hvis der skete en netværksfejl. Kaldes også hvis behandlingen i #fikSvar gik galt.
-   *
    * @param error Fejlen
    */
   protected void fikFejl(VolleyError error) {
-    Log.e("fikFejl '" + error.networkResponse+"' for "+url, error);
+    Log.e("fikFejl '" + error.networkResponse + "' for " + url, error);
     //error.printStackTrace();
     Log.e("fikFejl startet herfra:", startetHerfra);
   }

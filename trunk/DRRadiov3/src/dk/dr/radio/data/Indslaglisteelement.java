@@ -1,7 +1,5 @@
 package dk.dr.radio.data;
 
-import java.util.Date;
-
 /**
  * Repræsenterer et insdlag (element i en liste over indslag)
  * I API'et er det undersat til 'chapter'

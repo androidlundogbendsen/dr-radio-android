@@ -1,6 +1,5 @@
 package dk.dr.radio.afspilning;
 
-import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.data.Lydstream;

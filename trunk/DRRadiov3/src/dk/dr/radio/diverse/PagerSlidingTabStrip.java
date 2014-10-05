@@ -53,6 +53,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
   public interface IconTabProvider {
     public int getPageIconResId(int position);
+
     public String getPageContentDescription(int position);
   }
 

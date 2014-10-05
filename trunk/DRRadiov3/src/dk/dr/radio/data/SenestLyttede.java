@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InvalidClassException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import dk.dr.radio.diverse.App;
@@ -23,7 +21,9 @@ public class SenestLyttede {
     public Date tidpunkt;
     public int positionMs;
 
-    public String toString() { return tidpunkt+" / "+positionMs; }
+    public String toString() {
+      return tidpunkt + " / " + positionMs;
+    }
   }
 
   private LinkedHashMap<String, SenestLyttet> liste;
@@ -36,7 +36,7 @@ public class SenestLyttede {
       liste = (LinkedHashMap<String, SenestLyttet>) Serialisering.hent(FILNAVN);
       return;
     } catch (InvalidClassException e) {
-      Log.d("SenestLyttede: "+ e);
+      Log.d("SenestLyttede: " + e);
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
@@ -50,7 +50,7 @@ public class SenestLyttede {
       try {
         long tid = System.currentTimeMillis();
         Serialisering.gem(liste, FILNAVN);
-        if (!App.PRODUKTION) Log.d("SenestLyttede: " + liste );
+        if (!App.PRODUKTION) Log.d("SenestLyttede: " + liste);
         Log.d("SenestLyttede: Gemning tog " + (System.currentTimeMillis() - tid) + " ms - filstr:" + new File(FILNAVN).length());
       } catch (IOException e) {
         Log.rapporterFejl(e);
@@ -67,7 +67,7 @@ public class SenestLyttede {
   public void registrérLytning(Lydkilde lydkilde) {
     tjekDataOprettet();
     SenestLyttet senestLyttet = liste.remove(lydkilde.slug);
-    if (senestLyttet==null) senestLyttet = new SenestLyttet();
+    if (senestLyttet == null) senestLyttet = new SenestLyttet();
     senestLyttet.lydkilde = lydkilde;
     senestLyttet.tidpunkt = new Date(App.serverCurrentTimeMillis());
     liste.put(lydkilde.slug, senestLyttet);
@@ -79,7 +79,9 @@ public class SenestLyttede {
   public void sætStartposition(Lydkilde lydkilde, int pos) {
     try {
       liste.get(lydkilde.slug).positionMs = pos;
-    } catch (Exception e) { Log.rapporterFejl(e, lydkilde); }
+    } catch (Exception e) {
+      Log.rapporterFejl(e, lydkilde);
+    }
     App.forgrundstråd.removeCallbacks(gemListe);
     App.forgrundstråd.postDelayed(gemListe, 10000); // Gem listen om 10 sekunder
   }
@@ -87,7 +89,9 @@ public class SenestLyttede {
   public int getStartposition(Lydkilde lydkilde) {
     try {
       return liste.get(lydkilde.slug).positionMs;
-    } catch (Exception e) { Log.rapporterFejl(e, lydkilde); }
+    } catch (Exception e) {
+      Log.rapporterFejl(e, lydkilde);
+    }
     return 0;
   }
 

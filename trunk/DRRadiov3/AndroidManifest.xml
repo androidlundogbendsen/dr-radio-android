@@ -5,186 +5,186 @@
           android:versionCode="1"
           android:versionName="3.1.3 2. okt pause hentede uds + fav + webplayer">
 
-    <uses-sdk
-            android:minSdkVersion="7"
-            android:targetSdkVersion="19"/>
+  <uses-sdk
+      android:minSdkVersion="7"
+      android:targetSdkVersion="19"/>
 
 
-    <!-- Nødvendigt til vækkeur -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+  <!-- Nødvendigt til vækkeur -->
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+  <uses-permission android:name="android.permission.VIBRATE"/>
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
-    <!-- For at kunne gemme podcasts -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <!-- akamai -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+  <!-- For at kunne gemme podcasts -->
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <!-- akamai -->
+  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
-    <uses-feature android:name="android.hardware.TOUCHSCREEN" android:required="false"/>
-    <uses-feature android:name="android.hardware.WIFI" android:required="false"/>
+  <uses-feature android:name="android.hardware.TOUCHSCREEN" android:required="false"/>
+  <uses-feature android:name="android.hardware.WIFI" android:required="false"/>
 
-    <application
-            android:allowBackup="true"
-            android:name="dk.dr.radio.diverse.App"
-            android:icon="@drawable/ic_launcher"
-            android:logo="@drawable/dr_logo"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Dr"
-            >
+  <application
+      android:allowBackup="true"
+      android:name="dk.dr.radio.diverse.App"
+      android:icon="@drawable/ic_launcher"
+      android:logo="@drawable/dr_logo"
+      android:label="@string/app_name"
+      android:theme="@style/Theme.Dr"
+      >
 
-<!--
-Version 3 har brug for
-android.permission.ACCESS_NETWORK_STATE
-android.permission.INTERNET
-android.permission.READ_PHONE_STATE
-android.permission.WAKE_LOCK
-android.permission.ACCESS_WIFI_STATE
-android.permission.READ_EXTERNAL_STORAGE
-android.permission.WRITE_EXTERNAL_STORAGE
+    <!--
+    Version 3 har brug for
+    android.permission.ACCESS_NETWORK_STATE
+    android.permission.INTERNET
+    android.permission.READ_PHONE_STATE
+    android.permission.WAKE_LOCK
+    android.permission.ACCESS_WIFI_STATE
+    android.permission.READ_EXTERNAL_STORAGE
+    android.permission.WRITE_EXTERNAL_STORAGE
 
-Version 2.8.0 havde
-android.permission.ACCESS_NETWORK_STATE
-android.permission.INTERNET
-android.permission.READ_PHONE_STATE
-android.permission.WAKE_LOCK
-                    -->
-        <activity
-                android:launchMode="singleTop"
-                android:name="dk.dr.radio.akt.Hovedaktivitet"
-                android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <activity android:name="dk.dr.radio.skrald.VisFragment_akt">
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="dk.dr.radio.akt.Hovedaktivitet"/>
-        </activity>
-
-
-        <activity
-                android:name="dk.dr.radio.akt.Indstillinger_akt"
-                android:label="DR Radio Indstillinger">
-            <!-- Gør aktivitet synlig i forbindelse med at brugeren gennemser sit dataforbrug -->
-            <intent-filter>
-                <action android:name="android.intent.action.MANAGE_NETWORK_USAGE"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
-
-        <receiver android:name="dk.dr.radio.data.HentedeUdsendelser$DownloadServiceReciever">
-            <intent-filter>
-                <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
-                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED"/>
-            </intent-filter>
-        </receiver>
-
-        <!--
-         * Tidligere AfspillerService - service-del der sørger for at app'en
-         * bliver i hukommelsen mens der spilles lyd
-        -->
-        <service android:name="dk.dr.radio.afspilning.HoldAppIHukommelsenService"/>
+    Version 2.8.0 havde
+    android.permission.ACCESS_NETWORK_STATE
+    android.permission.INTERNET
+    android.permission.READ_PHONE_STATE
+    android.permission.WAKE_LOCK
+                        -->
+    <activity
+        android:launchMode="singleTop"
+        android:name="dk.dr.radio.akt.Hovedaktivitet"
+        android:label="@string/app_name">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
+    <activity android:name="dk.dr.radio.skrald.VisFragment_akt">
+      <meta-data
+          android:name="android.support.PARENT_ACTIVITY"
+          android:value="dk.dr.radio.akt.Hovedaktivitet"/>
+    </activity>
 
 
-        <!--
-     * BroadcastReceiver som aktiverer afspilleren og evt instantierer den.
-     * I tilfælde af at processen har været smidt ud af hukommelsen er dette
-     * her faktisk den første kode der køres, derfor er et fuldt
-        -->
-        <receiver android:name="dk.dr.radio.afspilning.AfspillerStartStopReciever"/>
+    <activity
+        android:name="dk.dr.radio.akt.Indstillinger_akt"
+        android:label="DR Radio Indstillinger">
+      <!-- Gør aktivitet synlig i forbindelse med at brugeren gennemser sit dataforbrug -->
+      <intent-filter>
+        <action android:name="android.intent.action.MANAGE_NETWORK_USAGE"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+      </intent-filter>
+    </activity>
+
+    <receiver android:name="dk.dr.radio.data.HentedeUdsendelser$DownloadServiceReciever">
+      <intent-filter>
+        <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+        <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED"/>
+      </intent-filter>
+    </receiver>
+
+    <!--
+     * Tidligere AfspillerService - service-del der sørger for at app'en
+     * bliver i hukommelsen mens der spilles lyd
+    -->
+    <service android:name="dk.dr.radio.afspilning.HoldAppIHukommelsenService"/>
 
 
-        <!-- Til håndtering af knapper på fjernbetjening (f.eks. på Bluetooth headset.) -->
-        <receiver android:name="dk.dr.radio.diverse.MediabuttonReceiver">
-            <intent-filter android:priority="1">
-                <action android:name="android.intent.action.MEDIA_BUTTON"/>
-            </intent-filter>
-        </receiver>
-
-        <receiver
-                android:name="dk.dr.radio.diverse.AfspillerIkonOgNotifikation"
-                android:label="DR Radio">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-            </intent-filter>
-            <meta-data
-                    android:name="android.appwidget.provider"
-                    android:resource="@xml/afspiller_widgetinfo"/>
-        </receiver>
+    <!--
+ * BroadcastReceiver som aktiverer afspilleren og evt instantierer den.
+ * I tilfælde af at processen har været smidt ud af hukommelsen er dette
+ * her faktisk den første kode der køres, derfor er et fuldt
+    -->
+    <receiver android:name="dk.dr.radio.afspilning.AfspillerStartStopReciever"/>
 
 
-        <!-- Denne aktivitet fanger browsning af URLer der starter med http://dr.dk/radio/ondemand/ -->
-        <activity android:name="dk.dr.radio.akt.FangBrowseIntent_akt">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+    <!-- Til håndtering af knapper på fjernbetjening (f.eks. på Bluetooth headset.) -->
+    <receiver android:name="dk.dr.radio.diverse.MediabuttonReceiver">
+      <intent-filter android:priority="1">
+        <action android:name="android.intent.action.MEDIA_BUTTON"/>
+      </intent-filter>
+    </receiver>
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <!-- direkte udsendelser -->
-                <data
-                        android:scheme="http"
-                        android:host="dr.dk"
-                        android:pathPrefix="/radio/live/"/>
-                <data
-                        android:scheme="http"
-                        android:host="www.dr.dk"
-                        android:pathPrefix="/radio/live/"/>
+    <receiver
+        android:name="dk.dr.radio.diverse.AfspillerIkonOgNotifikation"
+        android:label="DR Radio">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+      </intent-filter>
+      <meta-data
+          android:name="android.appwidget.provider"
+          android:resource="@xml/afspiller_widgetinfo"/>
+    </receiver>
 
-                <!-- arkiverede udsendelser-->
-                <data
-                        android:scheme="http"
-                        android:host="dr.dk"
-                        android:pathPrefix="/radio/ondemand/"/>
-                <data
-                        android:scheme="http"
-                        android:host="www.dr.dk"
-                        android:pathPrefix="/radio/ondemand/"/>
-            </intent-filter>
-        </activity>
 
-        <activity android:name="com.android.deskclock.AlarmClock_akt"
-                  android:icon="@drawable/deskclock_ic_menu_alarms"
-                  android:label="@string/alarm_list_title"
-                  android:theme="@style/AlarmClockTheme"
-                  android:configChanges="orientation|keyboardHidden|keyboard|navigation"
-                >
-            <!--
+    <!-- Denne aktivitet fanger browsning af URLer der starter med http://dr.dk/radio/ondemand/ -->
+    <activity android:name="dk.dr.radio.akt.FangBrowseIntent_akt">
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <!-- direkte udsendelser -->
+        <data
+            android:scheme="http"
+            android:host="dr.dk"
+            android:pathPrefix="/radio/live/"/>
+        <data
+            android:scheme="http"
+            android:host="www.dr.dk"
+            android:pathPrefix="/radio/live/"/>
+
+        <!-- arkiverede udsendelser-->
+        <data
+            android:scheme="http"
+            android:host="dr.dk"
+            android:pathPrefix="/radio/ondemand/"/>
+        <data
+            android:scheme="http"
+            android:host="www.dr.dk"
+            android:pathPrefix="/radio/ondemand/"/>
+      </intent-filter>
+    </activity>
+
+    <activity android:name="com.android.deskclock.AlarmClock_akt"
+              android:icon="@drawable/deskclock_ic_menu_alarms"
+              android:label="@string/alarm_list_title"
+              android:theme="@style/AlarmClockTheme"
+              android:configChanges="orientation|keyboardHidden|keyboard|navigation"
+        >
+      <!--
 <intent-filter>
 <action android:name="android.intent.action.MAIN"/>
 <category android:name="android.intent.category.LAUNCHER"/>
 </intent-filter>
 -->
-        </activity>
+    </activity>
 
 
-        <activity android:name="com.android.deskclock.SetAlarm_akt"
-                  android:label="@string/set_alarm"
-                  android:theme="@style/SetAlarmTheme"
-                  android:configChanges="orientation|keyboardHidden|keyboard|navigation" />
+    <activity android:name="com.android.deskclock.SetAlarm_akt"
+              android:label="@string/set_alarm"
+              android:theme="@style/SetAlarmTheme"
+              android:configChanges="orientation|keyboardHidden|keyboard|navigation"/>
 
 
-        <receiver android:name="com.android.deskclock.AlarmReceiver"
-                  android:exported="false">
-            <intent-filter><!-- XXXX -->
-                <action android:name="comx.android.deskclock.ALARM_ALERT" />
-            </intent-filter>
-        </receiver>
+    <receiver android:name="com.android.deskclock.AlarmReceiver"
+              android:exported="false">
+      <intent-filter><!-- XXXX -->
+        <action android:name="comx.android.deskclock.ALARM_ALERT"/>
+      </intent-filter>
+    </receiver>
 
 
-        <receiver android:name="com.android.deskclock.AlarmInitReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.TIME_SET" />
-                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
-                <action android:name="android.intent.action.LOCALE_CHANGED" />
-            </intent-filter>
-        </receiver>
-    </application>
+    <receiver android:name="com.android.deskclock.AlarmInitReceiver">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+        <action android:name="android.intent.action.TIME_SET"/>
+        <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+        <action android:name="android.intent.action.LOCALE_CHANGED"/>
+      </intent-filter>
+    </receiver>
+  </application>
 
 </manifest>

@@ -15,20 +15,20 @@
 -->
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-        android:title="@string/set_alarm">
-    <CheckBoxPreference android:key="enabled"
-        android:persistent="false"
-        android:title="@string/enable_alarm" />
-    <Preference android:key="time"
-        android:persistent="false"
-        android:title="@string/time"/>
-    <com.android.deskclock.RepeatPreference
-        android:persistent="false"
-        android:key="setRepeat"
-        android:title="@string/alarm_repeat" />
-    <ListPreference
-        android:key="kanalo"
-        android:title="Kanalo"
-        android:persistent="false"
-        android:showDefault="false" />
+                  android:title="@string/set_alarm">
+  <CheckBoxPreference android:key="enabled"
+                      android:persistent="false"
+                      android:title="@string/enable_alarm"/>
+  <Preference android:key="time"
+              android:persistent="false"
+              android:title="@string/time"/>
+  <com.android.deskclock.RepeatPreference
+      android:persistent="false"
+      android:key="setRepeat"
+      android:title="@string/alarm_repeat"/>
+  <ListPreference
+      android:key="kanalo"
+      android:title="Kanalo"
+      android:persistent="false"
+      android:showDefault="false"/>
 </PreferenceScreen>

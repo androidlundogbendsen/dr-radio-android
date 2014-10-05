@@ -39,7 +39,7 @@ import dk.dr.radio.diverse.Log;
 
 /**
  * Created by j on 28-03-14.
- *
+ * <p/>
  * A network performing Volley requests over an {@link HttpStack}.
  * DRs (Varnish-?)servere svarer ofte med HTTP-kode 500 eller 533,
  * der bliver håndteret som et timeout så der prøves igen
@@ -163,7 +163,7 @@ public class DrBasicNetwork implements Network {
                                byte[] responseContents, StatusLine statusLine) {
     if (DEBUG || requestLifetime > SLOW_REQUEST_THRESHOLD_MS) {
       VolleyLog.d("HTTP response for request=<%s> [lifetime=%d], [size=%s], " +
-          "[rc=%d], [retryCount=%s]", request, requestLifetime,
+              "[rc=%d], [retryCount=%s]", request, requestLifetime,
           responseContents != null ? responseContents.length : "null",
           statusLine.getStatusCode(), request.getRetryPolicy().getCurrentRetryCount());
     }
@@ -172,7 +172,6 @@ public class DrBasicNetwork implements Network {
   /**
    * Attempts to prepare the request for a retry. If there are no more attempts remaining in the
    * request's retry policy, a timeout exception is thrown.
-   *
    * @param request The request to use.
    */
   private static void attemptRetryOnException(String logPrefix, Request<?> request,

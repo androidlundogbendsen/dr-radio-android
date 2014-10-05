@@ -178,7 +178,8 @@ public class App extends Application {
       // Først tjekkes om vi har en udgave i prefs, og ellers bruges den i raw-mappen
       // På et senere tidspunkt henter vi nye grunddata
       String grunddata = prefs.getString(DRData.GRUNDDATA_URL, null);
-      if (grunddata==null) grunddata = Diverse.læsStreng(res.openRawResource(App.PRODUKTION?R.raw.grunddata:R.raw.grunddata_udvikling));
+      if (grunddata == null)
+        grunddata = Diverse.læsStreng(res.openRawResource(App.PRODUKTION ? R.raw.grunddata : R.raw.grunddata_udvikling));
       DRData.instans.grunddata.parseFællesGrunddata(grunddata);
       if (App.fejlsøgning && DRData.instans.grunddata.udelukHLS) App.kortToast("HLS er udelukket");
 
@@ -215,7 +216,6 @@ public class App extends Application {
 
       DRData.instans.afspiller = new Afspiller();
       DRData.instans.afspiller.setLydkilde(aktuelKanal);
-
 
 
       IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -282,12 +282,12 @@ public class App extends Application {
     public void run() {
       if (!erOnline()) return;
       boolean færdig = true;
-      Log.d("Onlineinitialisering starter efter "+(System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
+      Log.d("Onlineinitialisering starter efter " + (System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
 
       if (App.netværk.status == Netvaerksstatus.Status.WIFI) { // Tjek at alle kanaler har deres streamsurler
         for (final Kanal k : DRData.instans.grunddata.kanaler) {
           if (k.streams != null) continue;
-  //        Log.d("run()1 " + (System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
+          //        Log.d("run()1 " + (System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
           Request<?> req = new DrVolleyStringRequest(k.getStreamsUrl(), new DrVolleyResonseListener() {
             @Override
             public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
@@ -320,18 +320,18 @@ public class App extends Application {
             JSONArray jsonArray = new JSONArray(json);
             // http://www.dr.dk/tjenester/mu-apps/series?type=radio&includePrograms=true&urn=urn:dr:mu:bundle:50d2ab93860d9a09809ca4f2
             ArrayList<Programserie> res = new ArrayList<Programserie>();
-            for (int n=0; n<jsonArray.length(); n++) {
+            for (int n = 0; n < jsonArray.length(); n++) {
               JSONObject programserieJson = jsonArray.getJSONObject(n);
               String programserieSlug = programserieJson.getString(DRJson.Slug.name());
               Log.d("\n=========================================== programserieSlug = " + programserieSlug);
               Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
-              if (programserie==null) {
+              if (programserie == null) {
                 programserie = new Programserie();
                 DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
               }
               res.add(DRJson.parsProgramserie(programserieJson, programserie));
             }
-            Log.d("parseRadioDrama res="+res);
+            Log.d("parseRadioDrama res=" + res);
             DRData.instans.programserierAtilÅ.liste = res;
           }
         }) {
@@ -355,26 +355,28 @@ public class App extends Application {
         netværk.observatører.remove(this); // Hold ikke mere øje med om vi kommer online
         udeståendeInitialisering = null;
       }
-      Log.d("Onlineinitialisering færdig="+færdig);
+      Log.d("Onlineinitialisering færdig=" + færdig);
     }
   };
 
 
   public static Runnable hentEvtNyeGrunddata = new Runnable() {
     long sidstTjekket = 0;
+
     @Override
     public void run() {
       if (!App.erOnline()) return;
-      if (sidstTjekket + (App.EMULATOR?1000:DRData.instans.grunddata.opdaterGrunddataEfterMs) > System.currentTimeMillis()) return;
+      if (sidstTjekket + (App.EMULATOR ? 1000 : DRData.instans.grunddata.opdaterGrunddataEfterMs) > System.currentTimeMillis())
+        return;
       sidstTjekket = System.currentTimeMillis();
-      Log.d("hentEvtNyeGrunddata "+(sidstTjekket-App.TIDSSTEMPEL_VED_OPSTART));
+      Log.d("hentEvtNyeGrunddata " + (sidstTjekket - App.TIDSSTEMPEL_VED_OPSTART));
       Request<?> req = new DrVolleyStringRequest(DRData.GRUNDDATA_URL, new DrVolleyResonseListener() {
         @Override
         public void fikSvar(String nyeGrunddata, boolean fraCache, boolean uændret) throws Exception {
           if (uændret || fraCache) return; // ingen grund til at parse det igen
           String gamleGrunddata = prefs.getString(DRData.GRUNDDATA_URL, null);
           if (nyeGrunddata.equals(gamleGrunddata)) return; // Det samme som var i prefs
-          Log.d("Vi fik nye grunddata: fraCache="+fraCache+nyeGrunddata);
+          Log.d("Vi fik nye grunddata: fraCache=" + fraCache + nyeGrunddata);
           if (!PRODUKTION || App.fejlsøgning) App.kortToast("Vi fik nye grunddata");
           DRData.instans.grunddata.parseFællesGrunddata(nyeGrunddata);
           String pn = App.instans.getPackageName();
@@ -385,7 +387,9 @@ public class App extends Application {
           prefs.edit().putString(DRData.GRUNDDATA_URL, nyeGrunddata).commit();
         }
       }) {
-        public Priority getPriority() { return Priority.LOW;}
+        public Priority getPriority() {
+          return Priority.LOW;
+        }
       };
       App.volleyRequestQueue.add(req);
     }
@@ -407,7 +411,6 @@ public class App extends Application {
   /**
    * Signalerer over for brugeren at netværskommunikation er påbegyndt eller afsluttet.
    * Forårsager at det 'drejende hjul' (ProgressBar) vises på den aktivitet der er synlig p.t.
-   *
    * @param netværkErIGang true for påbegyndt og false for afsluttet.
    */
   public static synchronized void sætErIGang(boolean netværkErIGang) {
@@ -435,7 +438,7 @@ public class App extends Application {
     //((NotificationManager) getSystemService("notification")).cancelAll();
     setProgressBarIndeterminateVisibility.run();
     senesteAktivitetIForgrunden = aktivitetIForgrunden = akt;
-    if (udeståendeInitialisering!=null) {
+    if (udeståendeInitialisering != null) {
       if (App.erOnline()) {
         App.forgrundstråd.postDelayed(udeståendeInitialisering, 250); // Initialisér onlinedata
       } else {
@@ -448,7 +451,7 @@ public class App extends Application {
   public void aktivitetStoppet(Activity akt) {
     if (akt != aktivitetIForgrunden) return; // en anden aktivitet er allerede startet
     aktivitetIForgrunden = null;
-    if (kørFørsteGangAppIkkeMereErSynlig !=null) forgrundstråd.postDelayed(kørFørsteGangAppIkkeMereErSynlig, 1000);
+    if (kørFørsteGangAppIkkeMereErSynlig != null) forgrundstråd.postDelayed(kørFørsteGangAppIkkeMereErSynlig, 1000);
   }
 
   /**
@@ -465,10 +468,10 @@ public class App extends Application {
       int aqSlettet = Diverse.sletFilerÆldreEnd(new File(getCacheDir(), "aquery"), alder);
 
       if (fejlsøgning) {
-        App.kortToast("volleyCache: " +volleySlettet/1000+" kb frigivet");
-        App.kortToast("AQ: " +aqSlettet/1000+" kb kunne frigivet");
+        App.kortToast("volleyCache: " + volleySlettet / 1000 + " kb frigivet");
+        App.kortToast("AQ: " + aqSlettet / 1000 + " kb kunne frigivet");
       }
-      kørFørsteGangAppIkkeMereErSynlig =null;
+      kørFørsteGangAppIkkeMereErSynlig = null;
     }
   };
 
@@ -557,7 +560,6 @@ public class App extends Application {
 
   /**
    * Giver et aktuelt tidsstempel på hvad serverens ur viser
-   *
    * @return tiden, i  millisekunder siden 1. Januar 1970 00:00:00.0 UTC.
    */
   public static long serverCurrentTimeMillis() {
@@ -566,10 +568,10 @@ public class App extends Application {
 
   public static void sætServerCurrentTimeMillis(long servertid) {
     long serverkorrektionTilKlienttidMs2 = servertid - System.currentTimeMillis();
-    if (Math.abs(App.serverkorrektionTilKlienttidMs - serverkorrektionTilKlienttidMs2) > 120*1000) {
+    if (Math.abs(App.serverkorrektionTilKlienttidMs - serverkorrektionTilKlienttidMs2) > 120 * 1000) {
       Log.d("SERVERTID korrigerer tid - serverkorrektionTilKlienttidMs=" + serverkorrektionTilKlienttidMs2 + " klokken på serveren er " + new Date(servertid));
       App.serverkorrektionTilKlienttidMs = serverkorrektionTilKlienttidMs2;
-      new Exception("SERVERTID korrigeret med "+serverkorrektionTilKlienttidMs2/1000/60+" min til " + new Date(servertid)).printStackTrace();
+      new Exception("SERVERTID korrigeret med " + serverkorrektionTilKlienttidMs2 / 1000 / 60 + " min til " + new Date(servertid)).printStackTrace();
     }
   }
 

@@ -135,12 +135,12 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
 
   void bygListe() {
     liste.clear();
-    if (programserie!=null) {
+    if (programserie != null) {
       liste.add(TOP);
-      if (programserie.getUdsendelser()!=null) {
+      if (programserie.getUdsendelser() != null) {
         liste.addAll(programserie.getUdsendelser());
-        if (programserie.getUdsendelser().size()<programserie.antalUdsendelser) {
-          Log.d("bygListe() viser TIDLIGERE: "+programserie.getUdsendelser().size()+" < "+programserie.antalUdsendelser);
+        if (programserie.getUdsendelser().size() < programserie.antalUdsendelser) {
+          Log.d("bygListe() viser TIDLIGERE: " + programserie.getUdsendelser().size() + " < " + programserie.antalUdsendelser);
           liste.add(TIDLIGERE);  // Vis 'tidligere'-listeelement
         }
       }
@@ -208,7 +208,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
           String tekst = "ALLE UDSENDELSER";
           aq.id(R.id.alle_udsendelser).typeface(App.skrift_gibson)
               .text(lavFedSkriftTil(tekst + " (" + programserie.antalUdsendelser + ")", tekst.length()))
-              .getView().setContentDescription(programserie.antalUdsendelser+" udsendelser");
+              .getView().setContentDescription(programserie.antalUdsendelser + " udsendelser");
           aq.id(R.id.beskrivelse).text(programserie.beskrivelse).typeface(App.skrift_georgia);
           Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS);
           favorit = aq.id(R.id.favorit).clicked(Programserie_frag.this).getCheckBox();
@@ -221,7 +221,8 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
         }
       } else {
         vh = (Viewholder) v.getTag();
-        if (!App.PRODUKTION && vh.itemViewType!=type) throw new IllegalStateException("Liste ej konsistent, der er nok sket ændringer i den fra f.eks. getView()");
+        if (!App.PRODUKTION && vh.itemViewType != type)
+          throw new IllegalStateException("Liste ej konsistent, der er nok sket ændringer i den fra f.eks. getView()");
       }
 
       // Opdatér viewholderens data

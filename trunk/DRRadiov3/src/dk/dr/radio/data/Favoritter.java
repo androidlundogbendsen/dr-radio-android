@@ -71,7 +71,6 @@ public class Favoritter {
 
   /**
    * Giver antallet af nye udsendelser
-   *
    * @param programserieSlug
    * @return antallet, eller -1 hvis det ikke er en favorit, -2 hvis data for aktuelle antal udsendelser mangler
    */

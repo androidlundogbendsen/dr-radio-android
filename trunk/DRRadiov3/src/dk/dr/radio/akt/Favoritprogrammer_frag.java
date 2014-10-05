@@ -25,7 +25,6 @@ import java.util.Collections;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Favoritter;
-import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Programserie;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
@@ -50,9 +49,9 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).text(
 //        "Ingen favoritter\nGå ind på en programserie og tryk på hjertet for at gøre det til en favorit"
-                    Html.fromHtml("<b>Saml dine favoritter her</b><br><br>Klik på hjertet på dine yndlingsprogrammer. Du får nem adgang til dine favoritter – og du kan hurtigt se, når der er kommet nye udsendelser.")
+            Html.fromHtml("<b>Saml dine favoritter her</b><br><br>Klik på hjertet på dine yndlingsprogrammer. Du får nem adgang til dine favoritter – og du kan hurtigt se, når der er kommet nye udsendelser.")
 
-            ).getView()
+        ).getView()
     );
     listView.setCacheColorHint(Color.WHITE);
 
@@ -66,7 +65,7 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
       sidstOpdateretAntalNyeUdsendelser = System.currentTimeMillis();
     }
 
-      udvikling_checkDrSkrifter(rod, this + " rod");
+    udvikling_checkDrSkrifter(rod, this + " rod");
     return rod;
   }
 

@@ -40,8 +40,8 @@ import java.util.ArrayList;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Kanal;
-import dk.dr.radio.v3.R;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.v3.R;
 
 /**
  * Manages each alarm
@@ -185,6 +185,7 @@ public class SetAlarm_akt extends PreferenceActivity implements Preference.OnPre
       mTimePickerDialog.onRestoreInstanceState(b);
     }
   }
+
   // Used to post runnables asynchronously.
   private static final Handler sHandler = new Handler();
 
@@ -228,7 +229,7 @@ public class SetAlarm_akt extends PreferenceActivity implements Preference.OnPre
 
   @Override
   public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
-      Preference preference) {
+                                       Preference preference) {
     if (preference == mTimePref) {
       showTimePicker();
     }
@@ -314,12 +315,12 @@ public class SetAlarm_akt extends PreferenceActivity implements Preference.OnPre
         .setTitle(getString(R.string.delete_alarm))
         .setMessage(getString(R.string.delete_alarm_confirm))
         .setPositiveButton(android.R.string.ok,
-        new DialogInterface.OnClickListener() {
-      public void onClick(DialogInterface d, int w) {
-        Alarms.deleteAlarm(SetAlarm_akt.this, mId);
-        finish();
-      }
-    })
+            new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface d, int w) {
+                Alarms.deleteAlarm(SetAlarm_akt.this, mId);
+                finish();
+              }
+            })
         .setNegativeButton(android.R.string.cancel, null)
         .show();
   }
@@ -339,10 +340,10 @@ public class SetAlarm_akt extends PreferenceActivity implements Preference.OnPre
    * goes off.  This helps prevent "am/pm" mistakes.
    */
   static void popAlarmSetToast(Context context, int hour, int minute,
-      Alarm.DaysOfWeek daysOfWeek) {
+                               Alarm.DaysOfWeek daysOfWeek) {
     popAlarmSetToast(context,
         Alarms.calculateAlarm(hour, minute, daysOfWeek)
-        .getTimeInMillis());
+            .getTimeInMillis());
   }
 
   static void popAlarmSetToast(Context context, long timeInMillis) {

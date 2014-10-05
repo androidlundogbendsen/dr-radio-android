@@ -45,7 +45,7 @@ public class DRData {
 
   // scp /home/j/android/dr-radio-android/DRRadiov3/res/raw/grunddata_udvikling.json j:../lundogbendsen/hjemmeside/drradiov3_grunddata.json
 
-  public static final String GRUNDDATA_URL =  App.PRODUKTION
+  public static final String GRUNDDATA_URL = App.PRODUKTION
       ? "http://www.dr.dk/tjenester/iphone/radio/settings/iphone200d.drxml"
       : "http://android.lundogbendsen.dk/drradiov3_grunddata.json";
   //public static final String GRUNDDATA_URL = "http://www.dr.dk/tjenester/iphone/radio/settings/iphone200d.json";
@@ -68,7 +68,6 @@ public class DRData {
 
   // VM Options
   // -classpath $PROJECT_DIR$/../../dr-netradio/trunk/JSONParsning/lib/json-1.0.jar:$PROJECT_DIR$/out/production/DRRadiov3:$APPLICATION_HOME_DIR$/lib/idea_rt.jar:$PROJECT_DIR$/../../android-sdk-linux_86/platforms/android-18/android.jar:$PROJECT_DIR$/libs/android-support-v7-appcompat.jar:$PROJECT_DIR$/libs/android-support-v4.jar:$PROJECT_DIR$/libs/bugsense-3.6.jar:$PROJECT_DIR$/libs/volley.jar
-
   public static void main_x(String[] a) throws Exception {
     DRData i = DRData.instans = new DRData();
     FilCache.init(new File("/tmp/drradio-cache"));
@@ -118,7 +117,7 @@ http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-b.m3u8?sd=10&rebase=on
          */
         String[] lin = lokalM3U8indhold.split("[\r\n]");
         ArrayList<String> rensetListe = new ArrayList<String>(lin.length);
-        for (int n=0; n<lin.length; n++) {
+        for (int n = 0; n < lin.length; n++) {
           //Log.d("  "+n+" " + lin[n]);
           if (lin[n].startsWith("http")) try {
             URL u = new URL(lin[n]);
@@ -129,11 +128,11 @@ http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-b.m3u8?sd=10&rebase=on
           } catch (Exception e) {
             Log.e(e);
             // Død URL - fjern den fra listen
-            lin[n]=null;
+            lin[n] = null;
             // Fjern også foregående
-            lin[n-1]= null;
+            lin[n - 1] = null;
           }
-          Log.d("  "+n+" " + lin[n]);
+          Log.d("  " + n + " " + lin[n]);
         }
 
 //        String renset = M3U8parser.rensForDødeServere(indhold);
@@ -205,13 +204,13 @@ http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-b.m3u8?sd=10&rebase=on
 
       // http://www.dr.dk/tjenester/mu-apps/series?type=radio&includePrograms=true&urn=urn:dr:mu:bundle:50d2ab93860d9a09809ca4f2
       ArrayList<Programserie> res = new ArrayList<Programserie>();
-      for (int n=0; n<jsonArray.length(); n++) {
+      for (int n = 0; n < jsonArray.length(); n++) {
         JSONObject programserieJson = jsonArray.getJSONObject(n);
         String programserieSlug = programserieJson.getString(DRJson.Slug.name());
         Log.d("\n=========================================== programserieSlug = " + programserieSlug);
 
         Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
-        if (programserie==null) {
+        if (programserie == null) {
           programserie = new Programserie();
           DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
         }
@@ -230,7 +229,7 @@ http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-b.m3u8?sd=10&rebase=on
         Log.d(programserie.slug + " = " + programserie.getUdsendelser());
 */
       }
-      Log.d("parseRadioDrama res="+res);
+      Log.d("parseRadioDrama res=" + res);
 
     }
 
@@ -241,13 +240,13 @@ http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-b.m3u8?sd=10&rebase=on
     //JSONArray jsonArray = new JSONArray(main_hent("http://www.dr.dk/tjenester/mu-apps/radio-drama?type=radio&includePrograms=true"));
     JSONArray jsonArray = new JSONArray(main_hent("http://www.dr.dk/tjenester/mu-apps/radio-drama"));
     ArrayList<Programserie> res = new ArrayList<Programserie>();
-    for (int n=0; n<jsonArray.length(); n++) {
+    for (int n = 0; n < jsonArray.length(); n++) {
       JSONObject programserieJson = jsonArray.getJSONObject(n);
       String programserieSlug = programserieJson.getString(DRJson.Slug.name());
       Log.d("\n=========================================== programserieSlug = " + programserieSlug);
 
       Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
-      if (programserie==null) {
+      if (programserie == null) {
         programserie = new Programserie();
         DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
       }
@@ -265,7 +264,7 @@ http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-b.m3u8?sd=10&rebase=on
       programserie.tilføjUdsendelser(offset, DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), null, DRData.instans));
       Log.d(programserie.slug + " = " + programserie.getUdsendelser());
     }
-    Log.d("parseRadioDrama res="+res);
+    Log.d("parseRadioDrama res=" + res);
 
 
     System.exit(0);

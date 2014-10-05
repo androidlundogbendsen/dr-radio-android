@@ -28,7 +28,7 @@ public class HttpLiveStreamFiltrering_UBRUGT {
     String[] lin = masterM3U3.split("[\r\n]");
     fjernetNogen = false;
     fjernetAlle = true;
-    for (int n=1; n<lin.length; n++) {
+    for (int n = 1; n < lin.length; n++) {
       //Log.d("  "+n+" " + lin[n]);
       if (lin[n].startsWith("http")) try {
         URL u = new URL(lin[n]);
@@ -38,14 +38,14 @@ public class HttpLiveStreamFiltrering_UBRUGT {
         // URL er OK, fortsæt
         fjernetAlle = false;
       } catch (Exception e) {
-        Log.e("Fjerner DØD URL: "+lin[n], e);
+        Log.e("Fjerner DØD URL: " + lin[n], e);
         // Død URL - fjern den fra listen
-        lin[n]=null;
+        lin[n] = null;
         // Fjern også foregående
-        lin[n-1]= null;
+        lin[n - 1] = null;
         fjernetNogen = true;
       }
-      Log.d("  "+n+" " + lin[n]);
+      Log.d("  " + n + " " + lin[n]);
     }
 
     if (fjernetAlle) throw new IOException("Alle servere var døde");
@@ -56,7 +56,7 @@ public class HttpLiveStreamFiltrering_UBRUGT {
     } else {
       // Styk ny m3u8-fil sammen med servere der var oppe
       StringBuilder sb = new StringBuilder(masterM3U3.length());
-      for (String l : lin) if (l!=null) sb.append(l).append("\n");
+      for (String l : lin) if (l != null) sb.append(l).append("\n");
       rensetMasterM3U8 = sb.toString();
     }
   }
@@ -64,12 +64,12 @@ public class HttpLiveStreamFiltrering_UBRUGT {
 
   public String getRensetMasterM3U8Url() throws IOException {
     // Det følgende opretter en 'mini-webserver'
-    if (ss==null) {
+    if (ss == null) {
       ss = new ServerSocket(0);
       startTråd();
     }
 
-    return "http://localhost:"+ss.getLocalPort()+"/master.m3u8";
+    return "http://localhost:" + ss.getLocalPort() + "/master.m3u8";
   }
 
   private void startTråd() throws IOException {
@@ -77,34 +77,34 @@ public class HttpLiveStreamFiltrering_UBRUGT {
       @Override
       public void run() {
         while (true)
-        try {
-          Log.d("Venter på socket " + ss);
-          //startSignal.countDown(); // og.... NU må MediaPlayer godt spørge på URLen
-          Socket s = ss.accept();
-          Log.d("VI FIK EN socket "+s);
-          //int n = s.getInputStream().read(new byte[100]);
-          //Log.d("Læste " + n + " byte. Sender " + bos);
-          BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-          String l = br.readLine();
-          while (l!=null && l.length()>0) {
-            Log.d("Socket: "+l);
-            l = br.readLine();
+          try {
+            Log.d("Venter på socket " + ss);
+            //startSignal.countDown(); // og.... NU må MediaPlayer godt spørge på URLen
+            Socket s = ss.accept();
+            Log.d("VI FIK EN socket " + s);
+            //int n = s.getInputStream().read(new byte[100]);
+            //Log.d("Læste " + n + " byte. Sender " + bos);
+            BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+            String l = br.readLine();
+            while (l != null && l.length() > 0) {
+              Log.d("Socket: " + l);
+              l = br.readLine();
+            }
+            //Log.d("Sender " + rensetMasterM3U8.replace('\n', '/'));
+            Log.d("Sender rensetMasterM3U8");
+            byte[] ba = rensetMasterM3U8.getBytes();
+            OutputStream os = s.getOutputStream();
+            os.write(("HTTP/1.1 200 OK\n" +
+                "Content-Type: application/vnd.apple.mpegurl\n" +
+                "Content-Length: " + ba.length + "\n" +
+                "Connection: close\n" +
+                "Cache-Control: max-age=0, no-cache, no-store\n" +
+                "Pragma: no-cache\n" +
+                "\n").getBytes());
+            os.write(ba);
+          } catch (Exception e) {
+            Log.rapporterFejl(e);
           }
-          //Log.d("Sender " + rensetMasterM3U8.replace('\n', '/'));
-          Log.d("Sender rensetMasterM3U8");
-          byte[] ba = rensetMasterM3U8.getBytes();
-          OutputStream os = s.getOutputStream();
-          os.write(("HTTP/1.1 200 OK\n" +
-              "Content-Type: application/vnd.apple.mpegurl\n" +
-              "Content-Length: "+ba.length+"\n" +
-              "Connection: close\n" +
-              "Cache-Control: max-age=0, no-cache, no-store\n" +
-              "Pragma: no-cache\n" +
-              "\n").getBytes());
-          os.write(ba);
-        } catch (Exception e) {
-          Log.rapporterFejl(e);
-        }
         // Skal aldrig lukkes:
         // ss.close();
       }

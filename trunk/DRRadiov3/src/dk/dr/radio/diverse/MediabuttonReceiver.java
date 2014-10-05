@@ -23,13 +23,10 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 
-import dk.dr.radio.afspilning.AfspillerStartStopReciever;
 import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.data.DRData;
 
@@ -42,9 +39,9 @@ public class MediabuttonReceiver extends BroadcastReceiver {
   @Override
   public void onReceive(Context context, Intent intent) {
     KeyEvent event = (KeyEvent) intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
-    Log.d("MediabuttonReciever " + intent+" "+event);
+    Log.d("MediabuttonReciever " + intent + " " + event);
 
-    if (!Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction()) || event==null || event.getAction()!=KeyEvent.ACTION_DOWN) {
+    if (!Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction()) || event == null || event.getAction() != KeyEvent.ACTION_DOWN) {
       return;
     }
 
@@ -52,7 +49,7 @@ public class MediabuttonReceiver extends BroadcastReceiver {
       case KeyEvent.KEYCODE_HEADSETHOOK:
       case KeyEvent.KEYCODE_MEDIA_STOP:
       case KeyEvent.KEYCODE_MEDIA_PAUSE:
-        if (DRData.instans.afspiller.getAfspillerstatus()!= Status.STOPPET) {
+        if (DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET) {
           DRData.instans.afspiller.stopAfspilning();
         }
         break;
@@ -61,13 +58,13 @@ public class MediabuttonReceiver extends BroadcastReceiver {
       case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
       case KeyEvent.KEYCODE_MEDIA_REWIND:
       case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
-        if (DRData.instans.afspiller.getAfspillerstatus()== Status.STOPPET) {
+        if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
           DRData.instans.afspiller.startAfspilning();
         }
         break;
       case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
       default:
-        if (DRData.instans.afspiller.getAfspillerstatus()== Status.STOPPET) {
+        if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
           DRData.instans.afspiller.stopAfspilning();
         } else {
           DRData.instans.afspiller.startAfspilning();

@@ -29,7 +29,6 @@ import android.widget.ImageView;
  * for at få tekst læst højt.
  * TODO: Se om vi kan erstatte ImageView med en ImageButton i kanalvalgs
  * layout så vi kan droppe klassen her igen
- *
  * @author j
  */
 public class ImageViewTilBlinde extends ImageView {

@@ -19,5 +19,7 @@ public abstract class Basisadapter extends BaseAdapter implements PinnedSectionL
   }
 
   @Override
-  public boolean isItemViewTypePinned(int viewType) { return false; }
+  public boolean isItemViewTypePinned(int viewType) {
+    return false;
+  }
 }

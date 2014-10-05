@@ -1,89 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/knap_graa10_bg"
+    >
+
+  <ImageView
+      android:paddingTop="16dp"
+      android:paddingLeft="16dp"
+      android:paddingRight="16dp"
+      android:layout_width="200dp"
+      android:layout_height="wrap_content"
+      android:adjustViewBounds="true"
+      android:id="@+id/billede"
+      android:src="@drawable/eksempel_udsendelse"
+      tools:ignore="ContentDescription"/>
+
+
+  <ImageView
+      android:id="@+id/logo"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="16dp"
+      android:src="@drawable/skrald__kanallogo_p3"
+      android:layout_marginTop="8dp"
+      android:layout_marginBottom="8dp"
+      tools:ignore="ContentDescription"/>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="16dp"
+      android:layout_marginRight="16dp"
+      android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/titel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/knap_graa10_bg"
-        >
-
-    <ImageView
-            android:paddingTop="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:id="@+id/billede"
-            android:src="@drawable/eksempel_udsendelse"
-            tools:ignore="ContentDescription"/>
+        android:text="P3 Sporten"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        android:layout_weight="1"/>
 
 
-    <ImageView
-            android:id="@+id/logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:src="@drawable/skrald__kanallogo_p3"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            tools:ignore="ContentDescription"/>
-
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:orientation="horizontal">
-
-        <TextView
-                android:id="@+id/titel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="P3 Sporten"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textStyle="bold"
-                android:layout_weight="1"/>
+    <CheckBox
+        android:id="@+id/favorit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="vælg som favorit"
+        android:button="@drawable/dri_favorit"/>
+  </LinearLayout>
 
 
-        <CheckBox
-                android:id="@+id/favorit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="vælg som favorit"
-                android:button="@drawable/dri_favorit"/>
-    </LinearLayout>
+  <TextView
+      android:id="@+id/beskrivelse"
+      android:layout_marginLeft="16dp"
+      android:layout_marginRight="16dp"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textAppearance="?android:attr/textAppearance"
+      android:text="For lige om lidt bliver fremdriftsreformen implementeret."
+      />
+
+  <View
+      android:background="@color/sort"
+      android:layerType="software"
+      android:layout_width="match_parent"
+      android:layout_margin="16dp"
+      android:layout_height="3dp"/>
 
 
-    <TextView
-            android:id="@+id/beskrivelse"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearance"
-            android:text="For lige om lidt bliver fremdriftsreformen implementeret."
-            />
-
-    <View
-            android:background="@color/sort"
-            android:layerType="software"
-            android:layout_width="match_parent"
-            android:layout_margin="16dp"
-            android:layout_height="3dp"/>
-
-
-    <TextView
-            android:id="@+id/alle_udsendelser"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ALLE UDSENDELSER (12)"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textStyle="bold"/>
+  <TextView
+      android:id="@+id/alle_udsendelser"
+      android:layout_marginLeft="16dp"
+      android:layout_marginRight="16dp"
+      android:layout_marginBottom="16dp"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="ALLE UDSENDELSER (12)"
+      android:textAppearance="?android:attr/textAppearanceLarge"
+      android:textStyle="bold"/>
 
 
 </LinearLayout>

@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Observer;
 
 import dk.dr.radio.diverse.FilCache;
 import dk.dr.radio.diverse.Log;
@@ -50,8 +49,8 @@ public class Grunddata {
   public HashMap<String, Kanal> kanalFraKode = new HashMap<String, Kanal>();
   public HashMap<String, Kanal> kanalFraSlug = new LinkedHashMap<String, Kanal>();
   public static final Kanal ukendtKanal = new Kanal();
-  public long opdaterPlaylisteEfterMs = 30*1000;
-  public long opdaterGrunddataEfterMs = 30*60*1000;
+  public long opdaterPlaylisteEfterMs = 30 * 1000;
+  public long opdaterGrunddataEfterMs = 30 * 60 * 1000;
   /** Om Http Live Streaming skal udelukkes fra mulige lydformater. Gælder på Android 2 og visse Android 4-enheder */
   public boolean udelukHLS;
 
@@ -82,7 +81,7 @@ public class Grunddata {
       JSONObject j = jsonArray.getJSONObject(i);
       String kanalkode = j.optString("scheduleIdent", "P4F");
       Kanal k = kanalFraKode.get(kanalkode);
-      if (k==null) {
+      if (k == null) {
         k = new Kanal();
         k.kode = j.optString("scheduleIdent", "P4F");
         kanalFraKode.put(k.kode, k);
@@ -106,7 +105,6 @@ public class Grunddata {
 
   /**
    * Henter grunddata (faste data)
-   *
    * @throws java.io.IOException hvis der er et problem med netværk
    *                             eller parsning (dvs interne fejl af forskellig art som bør rapporteres til udvikler)
    */
@@ -114,14 +112,16 @@ public class Grunddata {
     json = new JSONObject(str);
 
     try {
-      opdaterGrunddataEfterMs = json.getJSONObject("intervals").getInt("settings")*1000;
-      opdaterPlaylisteEfterMs = json.getJSONObject("intervals").getInt("playlist")*1000;
-    } catch (Exception e) { Log.e(e); } // Ikke kritisk
+      opdaterGrunddataEfterMs = json.getJSONObject("intervals").getInt("settings") * 1000;
+      opdaterPlaylisteEfterMs = json.getJSONObject("intervals").getInt("playlist") * 1000;
+    } catch (Exception e) {
+      Log.e(e);
+    } // Ikke kritisk
 
     kanaler.clear();
     p4koder.clear();
     parseKanaler(json.getJSONArray("channels"), false);
-    Log.d("parseKanaler "+kanaler+" - P4:"+p4koder);
+    Log.d("parseKanaler " + kanaler + " - P4:" + p4koder);
     android_json = json.getJSONObject("android");
     setUdelukHLS(Build.MODEL + " " + Build.PRODUCT + "/" + Build.VERSION.SDK_INT);
     if (forvalgtKanal == null) forvalgtKanal = kanaler.get(2); // Det er nok P3 :-)
@@ -133,7 +133,7 @@ public class Grunddata {
    * @param model_og_version
    */
   public void setUdelukHLS(String model_og_version) {
-    Log.d("setUdelukHLS("+model_og_version);
+    Log.d("setUdelukHLS(" + model_og_version);
 
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
       // Android 2 (og 3) understøtter det ikke
@@ -145,12 +145,14 @@ public class Grunddata {
     try {
       for (String lin : android_json.getString("udeluk_HLS").split(",")) {
         if (model_og_version.matches(lin.trim())) {
-          Log.d("setUdelukHLS linjen "+lin+" matcher "+model_og_version+", så HLS slås fra");
+          Log.d("setUdelukHLS linjen " + lin + " matcher " + model_og_version + ", så HLS slås fra");
           udelukHLS = true;
           break;
         }
       }
-    } catch (Exception e) { Log.e(e); } // Ikke kritisk
+    } catch (Exception e) {
+      Log.e(e);
+    } // Ikke kritisk
   }
 
 

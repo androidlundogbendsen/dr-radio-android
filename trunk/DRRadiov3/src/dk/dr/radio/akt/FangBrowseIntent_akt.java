@@ -46,18 +46,18 @@ public class FangBrowseIntent_akt extends Activity {
       setContentView(progressBar);
 
       // undgå at starte ny aktivitet ved skærmvending
-      if (savedInstanceState!=null) return;
+      if (savedInstanceState != null) return;
 
-      String UDSENDELSER_præfix="/radio/ondemand/";
+      String UDSENDELSER_præfix = "/radio/ondemand/";
 
       int pos = urlFraIntent.indexOf(UDSENDELSER_præfix);
-      if (pos>0) {
+      if (pos > 0) {
         hentOgVisUdsendelse(urlFraIntent.substring(pos + UDSENDELSER_præfix.length()));
       } else if (urlFraIntent.contains("/radio/live")) {
         String[] bidder = urlFraIntent.split("/");
         final String kanalSlug = bidder[bidder.length - 1];
         Kanal kanal = DRData.instans.grunddata.kanalFraSlug.get(kanalSlug);
-        if (kanal!=null) {
+        if (kanal != null) {
           DRData.instans.afspiller.setLydkilde(kanal);
           DRData.instans.afspiller.startAfspilning();
         }
@@ -70,7 +70,10 @@ public class FangBrowseIntent_akt extends Activity {
       } else {
         throw new IllegalStateException("ingen match??!?");
       }
-    } catch (Exception e) { Log.rapporterFejl(e, urlFraIntent); finish(); }
+    } catch (Exception e) {
+      Log.rapporterFejl(e, urlFraIntent);
+      finish();
+    }
   }
 
   private void hentOgVisUdsendelse(String urlFraIntent) {
@@ -83,11 +86,13 @@ public class FangBrowseIntent_akt extends Activity {
     final String udsendelseSlug = bidder[1];
 
     int tidsangivelse0 = 0;
-    if (bidder.length>3) try { // 02:45:15
+    if (bidder.length > 3) try { // 02:45:15
       String[] b = bidder[3].split(":");
-      tidsangivelse0 = Integer.parseInt(b[0])*60000 + Integer.parseInt(b[1])*1000 + Integer.parseInt(b[2])*10;
-      Log.d("tidsangivelse "+tidsangivelse0+ " fra "+urlFraIntent);
-    } catch (Exception e) { Log.rapporterFejl(e, urlFraIntent + " parsning af " + bidder[3]); }
+      tidsangivelse0 = Integer.parseInt(b[0]) * 60000 + Integer.parseInt(b[1]) * 1000 + Integer.parseInt(b[2]) * 10;
+      Log.d("tidsangivelse " + tidsangivelse0 + " fra " + urlFraIntent);
+    } catch (Exception e) {
+      Log.rapporterFejl(e, urlFraIntent + " parsning af " + bidder[3]);
+    }
 
     final int tidsangivelse = tidsangivelse0;
 
@@ -142,10 +147,11 @@ public class FangBrowseIntent_akt extends Activity {
     luk();
   }
 
-  boolean lukket=false;
+  boolean lukket = false;
+
   private void luk() {
     if (!lukket) finish();
-    lukket=true;
+    lukket = true;
   }
 }
 

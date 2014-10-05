@@ -27,7 +27,7 @@ public enum DRJson {
   StartTime, EndTime,
   Streams,
   Uri, Played, Artist, Image,
-    Type, Kind, Quality, Kbps, ChannelSlug, TotalPrograms, Programs,
+  Type, Kind, Quality, Kbps, ChannelSlug, TotalPrograms, Programs,
   FirstBroadcast, Watchable, DurationInSeconds, Format, OffsetMs,
   ProductionNumber, ShareLink, Episode, Chapters;
 
@@ -106,7 +106,7 @@ public enum DRJson {
   public static final DateFormat ugedagformat = new SimpleDateFormat("EEEE d. MMM yyyy", dansk);
   public static String iDagDatoStr, iMorgenDatoStr, iGårDatoStr, iOvermorgenDatoStr, iForgårsDatoStr;
   public static final String I_DAG = "I DAG";
-  private static HashMap<String,String> datoTilBeskrivelse = new HashMap<String, String>();
+  private static HashMap<String, String> datoTilBeskrivelse = new HashMap<String, String>();
 
   public static void opdateriDagIMorgenIGårDatoStr(long nu) {
     String nyIDagDatoStr = datoformat.format(new Date(nu));
@@ -114,9 +114,9 @@ public enum DRJson {
 
     iDagDatoStr = datoformat.format(new Date(nu));
     iMorgenDatoStr = datoformat.format(new Date(nu + 24 * 60 * 60 * 1000));
-    iOvermorgenDatoStr = datoformat.format(new Date(nu + 2* 24 * 60 * 60 * 1000));
+    iOvermorgenDatoStr = datoformat.format(new Date(nu + 2 * 24 * 60 * 60 * 1000));
     iGårDatoStr = datoformat.format(new Date(nu - 24 * 60 * 60 * 1000));
-    iForgårsDatoStr = datoformat.format(new Date(nu - 2*24 * 60 * 60 * 1000));
+    iForgårsDatoStr = datoformat.format(new Date(nu - 2 * 24 * 60 * 60 * 1000));
     datoTilBeskrivelse.clear();
   }
 
@@ -173,13 +173,13 @@ public enum DRJson {
     // Vi har brug for at tjekke for ens datoer hurtigt, så vi laver datoen med objekt-lighed ==
     // Se også String.intern()
     String dagsbeskrivelse = datoTilBeskrivelse.get(datoStr0);
-    if (dagsbeskrivelse==null) {
+    if (dagsbeskrivelse == null) {
       dagsbeskrivelse = ugedagformat.format(tid);
       if (datoStr0.equals(iDagDatoStr)) dagsbeskrivelse = I_DAG; // ingenting
-      else if (datoStr0.equals(iMorgenDatoStr)) dagsbeskrivelse = "I MORGEN - "+dagsbeskrivelse;
-      else if (datoStr0.equals(iOvermorgenDatoStr)) dagsbeskrivelse = "I OVERMORGEN - "+dagsbeskrivelse;
+      else if (datoStr0.equals(iMorgenDatoStr)) dagsbeskrivelse = "I MORGEN - " + dagsbeskrivelse;
+      else if (datoStr0.equals(iOvermorgenDatoStr)) dagsbeskrivelse = "I OVERMORGEN - " + dagsbeskrivelse;
       else if (datoStr0.equals(iGårDatoStr)) dagsbeskrivelse = "I GÅR"; // "I GÅR - "+dagsbeskrivelse;
-      else if (datoStr0.equals(iForgårsDatoStr)) dagsbeskrivelse = "I FORGÅRS - "+dagsbeskrivelse;
+      else if (datoStr0.equals(iForgårsDatoStr)) dagsbeskrivelse = "I FORGÅRS - " + dagsbeskrivelse;
       else dagsbeskrivelse = dagsbeskrivelse.toUpperCase();
       datoTilBeskrivelse.put(datoStr0, dagsbeskrivelse);
     }
@@ -202,7 +202,7 @@ public enum DRJson {
 
   public static Udsendelse parseUdsendelseForProgramseriexx(Kanal kanal, DRData drData, JSONObject o) throws JSONException, ParseException {
     Udsendelse u = opretUdsendelse(drData, o);
-    if (kanal!=null) u.kanalSlug = kanal.slug;
+    if (kanal != null) u.kanalSlug = kanal.slug;
     else u.kanalSlug = o.optString(DRJson.ChannelSlug.name());  // Bemærk - kan være tom.
     u.startTid = servertidsformat.parse(o.getString(DRJson.FirstBroadcast.name()));
     u.startTidKl = klokkenformat.format(u.startTid);
@@ -240,7 +240,6 @@ public enum DRJson {
    * F.eks. Streams-objekt fra
    * http://www.dr.dk/tjenester/mu-apps/channel?urn=urn:dr:mu:bundle:4f3b8926860d9a33ccfdafb9&includeStreams=true
    * http://www.dr.dk/tjenester/mu-apps/program?includeStreams=true&urn=urn:dr:mu:programcard:531520836187a20f086b5bf9
-   *
    * @param jsonArray
    * @return
    * @throws JSONException
@@ -290,7 +289,7 @@ OffsetMs: 1096360
    */
   public static ArrayList<Indslaglisteelement> parsIndslag(JSONArray jsonArray) throws JSONException, ParseException {
     ArrayList<Indslaglisteelement> liste = new ArrayList<Indslaglisteelement>();
-    if (jsonArray==null) return liste;
+    if (jsonArray == null) return liste;
     for (int n = 0; n < jsonArray.length(); n++) {
       JSONObject o = jsonArray.getJSONObject(n);
       Indslaglisteelement u = new Indslaglisteelement();
@@ -336,7 +335,6 @@ Description: "I 'Efter fyringerne' lykkes det, gennem private optagelser og inte
 
   /**
    * Parser et Programserie-objekt
-   *
    * @param o  JSON
    * @param ps et eksisterende objekt, der skal opdateres, eller null
    * @return objektet
@@ -354,9 +352,9 @@ Description: "I 'Efter fyringerne' lykkes det, gennem private optagelser og inte
 
   public static void parseRadioDrama(JSONArray jsonArray, DRData instans) throws JSONException {
     ArrayList<Programserie> res = new ArrayList<Programserie>();
-    for (int n=0; n<jsonArray.length(); n++) {
+    for (int n = 0; n < jsonArray.length(); n++) {
       res.add(parsProgramserie(jsonArray.getJSONObject(n), new Programserie()));
     }
-    Log.d("parseRadioDrama res="+res);
+    Log.d("parseRadioDrama res=" + res);
   }
 }

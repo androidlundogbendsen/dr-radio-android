@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -55,10 +54,10 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
 
     kanal = DRData.instans.grunddata.kanalFraKode.get(getArguments().getString(Kanal_frag.P_kode));
     startudsendelse = DRData.instans.udsendelseFraSlug.get(getArguments().getString(DRJson.Slug.name()));
-    if (startudsendelse==null) { // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/805598045
+    if (startudsendelse == null) { // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/805598045
       if (!App.PRODUKTION) { // https://www.bugsense.com/dashboard/project/cd78aa05/errors/822628124
         App.langToast("startudsendelse==null");
-        App.langToast("startudsendelse==null for "+kanal);
+        App.langToast("startudsendelse==null for " + kanal);
       }
       Log.e(new IllegalStateException("startudsendelse==null"));
       // Fjern backstak og hop ud
@@ -84,13 +83,13 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     DRJson.opdateriDagIMorgenIGårDatoStr(App.serverCurrentTimeMillis());
 
     liste.clear(); // undgå dubletter i tilfælde af at onCreateView kaldes flere gange
-    if (programserie==null) {
+    if (programserie == null) {
       liste.add(startudsendelse);
       viewPager.setAdapter(adapter);
       hentUdsendelser(0);
     } else {
       int n = Programserie.findUdsendelseIndexFraSlug(liste, startudsendelse.slug);
-      if (n<0) {
+      if (n < 0) {
         liste.add(startudsendelse);
         viewPager.setAdapter(adapter);
         hentUdsendelser(0);
@@ -124,8 +123,8 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
 
   private void vispager_title_strip() {
     pager_title_strip.setVisibility(
-        !App.prefs.getBoolean("vispager_title_strip",false)?View.GONE :
-        liste.size() > 1 ? View.VISIBLE : View.INVISIBLE);
+        !App.prefs.getBoolean("vispager_title_strip", false) ? View.GONE :
+            liste.size() > 1 ? View.VISIBLE : View.INVISIBLE);
   }
 
 
@@ -134,7 +133,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     Udsendelse udsFør = liste.get(viewPager.getCurrentItem());
     liste.clear();
     liste.addAll(programserie.getUdsendelser());
-    if (Programserie.findUdsendelseIndexFraSlug(liste, startudsendelse.slug)<0) {
+    if (Programserie.findUdsendelseIndexFraSlug(liste, startudsendelse.slug) < 0) {
       liste.add(startudsendelse);
       // hvis startudsendelse ikke er med i listen, så hent nogle flere, i håb om at komme hen til
       // startudsendelsen (hvis vi ikke allerede har forsøgt 7 gange)
@@ -143,9 +142,9 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
       }
     }
     int nEft = Programserie.findUdsendelseIndexFraSlug(liste, udsFør.slug);
-    if (nEft<0) nEft = liste.size()-1; // startudsendelsen
+    if (nEft < 0) nEft = liste.size() - 1; // startudsendelsen
     adapter.notifyDataSetChanged();
-    Log.d("xxx setCurrentItem "+viewPager.getCurrentItem()+"   nEft="+nEft);
+    Log.d("xxx setCurrentItem " + viewPager.getCurrentItem() + "   nEft=" + nEft);
     viewPager.setCurrentItem(nEft, false); // - burde ikke være nødvendig, vi har defineret getItemPosition
     vispager_title_strip();
 /*
@@ -205,8 +204,8 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
 
   @Override
   public void onPageSelected(int position) {
-    if (programserie!=null && position==liste.size()-1 && antalHentedeSendeplaner++ < 7) { // Hent flere udsendelser
-      hentUdsendelser(programserie.getUdsendelser()==null?0:programserie.getUdsendelser().size());
+    if (programserie != null && position == liste.size() - 1 && antalHentedeSendeplaner++ < 7) { // Hent flere udsendelser
+      hentUdsendelser(programserie.getUdsendelser() == null ? 0 : programserie.getUdsendelser().size());
     }
   }
 
@@ -214,7 +213,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
   public void onPageScrollStateChanged(int state) {
   }
 
-//  public class UdsendelserAdapter extends FragmentPagerAdapter {
+  //  public class UdsendelserAdapter extends FragmentPagerAdapter {
   public class UdsendelserAdapter extends FragmentStatePagerAdapter {
 
     public UdsendelserAdapter(FragmentManager fm) {
@@ -233,33 +232,35 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
       return f;
     }
 
-  /**
-   * Denne metode kaldes af systemet efter et kald til notifyDataSetChanged()
-   * Se http://developer.android.com/reference/android/support/v4/view/PagerAdapter.html :
-   * Data set changes must occur on the main thread and must end with a call to notifyDataSetChanged()
-   * similar to AdapterView adapters derived from BaseAdapter. A data set change may involve pages being
-   * added, removed, or changing position. The ViewPager will keep the current page active provided
-   * the adapter implements the method getItemPosition(Object).
-   * @param object fragmentet
-   * @return dets (nye) position
-   *
-    @Override
-    public int getItemPosition(Object object) {
-      if (!(object instanceof Fragment)) {
-        Log.rapporterFejl(new Exception("getItemPosition gav ikke et fragment!??!"), ""+object);
-        return POSITION_NONE;
-      }
-      Bundle arg = ((Fragment) object).getArguments();
-      String slug = arg.getString(DRJson.Slug.name());
-      if (slug==null) {
-        Log.rapporterFejl(new Exception("getItemPosition gav fragment uden slug!??!"), ""+arg);
-        return POSITION_NONE;
-      }
-      int nyPos = Programserie.findUdsendelseIndexFraSlug(liste, slug);
-      Log.d("xxx getItemPosition "+object+" "+arg +"   - nyPos="+nyPos);
-      return nyPos;
-    }
-*/
+    /**
+     * Denne metode kaldes af systemet efter et kald til notifyDataSetChanged()
+     * Se http://developer.android.com/reference/android/support/v4/view/PagerAdapter.html :
+     * Data set changes must occur on the main thread and must end with a call to notifyDataSetChanged()
+     * similar to AdapterView adapters derived from BaseAdapter. A data set change may involve pages being
+     * added, removed, or changing position. The ViewPager will keep the current page active provided
+     * the adapter implements the method getItemPosition(Object).
+     * @param object fragmentet
+     * @return dets (nye) position
+     *
+     */
+    /*
+     @Override
+     public int getItemPosition(Object object) {
+     if (!(object instanceof Fragment)) {
+     Log.rapporterFejl(new Exception("getItemPosition gav ikke et fragment!??!"), ""+object);
+     return POSITION_NONE;
+     }
+     Bundle arg = ((Fragment) object).getArguments();
+     String slug = arg.getString(DRJson.Slug.name());
+     if (slug==null) {
+     Log.rapporterFejl(new Exception("getItemPosition gav fragment uden slug!??!"), ""+arg);
+     return POSITION_NONE;
+     }
+     int nyPos = Programserie.findUdsendelseIndexFraSlug(liste, slug);
+     Log.d("xxx getItemPosition "+object+" "+arg +"   - nyPos="+nyPos);
+     return nyPos;
+     }
+     */
     @Override
     public int getCount() {
       return liste.size();

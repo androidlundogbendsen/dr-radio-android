@@ -72,20 +72,20 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
     adapter.notifyDataSetChanged();
   }
 
-/*
-  private static View.OnTouchListener farvKnapNårDenErTrykketNed = new View.OnTouchListener() {
-    public boolean onTouch(View view, MotionEvent me) {
-      ImageView ib = (ImageView) view;
-      if (me.getAction() == MotionEvent.ACTION_DOWN) {
-        ib.setColorFilter(App.color.blå, PorterDuff.Mode.MULTIPLY);
-      } else if (me.getAction() == MotionEvent.ACTION_MOVE) {
-      } else {
-        ib.setColorFilter(null);
+  /*
+    private static View.OnTouchListener farvKnapNårDenErTrykketNed = new View.OnTouchListener() {
+      public boolean onTouch(View view, MotionEvent me) {
+        ImageView ib = (ImageView) view;
+        if (me.getAction() == MotionEvent.ACTION_DOWN) {
+          ib.setColorFilter(App.color.blå, PorterDuff.Mode.MULTIPLY);
+        } else if (me.getAction() == MotionEvent.ACTION_MOVE) {
+        } else {
+          ib.setColorFilter(null);
+        }
+        return false;
       }
-      return false;
-    }
-  };
-*/
+    };
+  */
   private BaseAdapter adapter = new Basisadapter() {
     @Override
     public int getCount() {
@@ -143,7 +143,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
         aq.id(R.id.startStopKnap).gone();
       }
       aq.id(R.id.linje1).text(udsendelse.titel)
-          .textColor(status==DownloadManager.STATUS_SUCCESSFUL ? Color.BLACK : App.color.grå60);
+          .textColor(status == DownloadManager.STATUS_SUCCESSFUL ? Color.BLACK : App.color.grå60);
 
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
 
@@ -183,7 +183,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
   public void onClick(View v) {
     try {
       Udsendelse u = (Udsendelse) v.getTag();
-      if (v.getId()==R.id.slet) {
+      if (v.getId() == R.id.slet) {
         hentedeUdsendelser.slet(u);
       } else {
         App.langToast("Eksperiment - tjek hvordan det virker");

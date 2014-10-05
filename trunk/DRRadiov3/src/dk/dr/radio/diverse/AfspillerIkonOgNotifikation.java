@@ -46,7 +46,6 @@ import dk.dr.radio.v3.R;
 public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
 
 
-
   /**
    * Kaldes når ikonet oprettes
    */
@@ -85,7 +84,6 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
 
   /**
    * Laver et sæt RemoteViews der passer til forskellige situationer
-   *
    * @param type låseskærm    hvis det er til låseskærmen - kun for Build.VERSION.SDK_INT >= 16
    *             notifikation hvis det er til en notifikation
    */
@@ -122,20 +120,20 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
       remoteViews.setTextViewText(R.id.titel, udsendelse == null ? kanal.navn : udsendelse.titel);
     }
     remoteViews.setTextViewText(R.id.metainformation, kanal.navn);
-    if (Build.VERSION.SDK_INT>=15) {
+    if (Build.VERSION.SDK_INT >= 15) {
       remoteViews.setContentDescription(R.id.metainformation, "D R Radio " + kanal.navn);
     }
 
     switch (DRData.instans.afspiller.getAfspillerstatus()) {
       case STOPPET:
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.ic_action_play);
-        if (Build.VERSION.SDK_INT>=15) remoteViews.setContentDescription(R.id.startStopKnap, "Start afspilning");
+        if (Build.VERSION.SDK_INT >= 15) remoteViews.setContentDescription(R.id.startStopKnap, "Start afspilning");
         remoteViews.setViewVisibility(R.id.progressBar, View.GONE);
         remoteViews.setTextColor(R.id.metainformation, App.color.grå60);
         break;
       case FORBINDER:
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.ic_action_pause);
-        if (Build.VERSION.SDK_INT>=15) remoteViews.setContentDescription(R.id.startStopKnap, "Stop afspilning");
+        if (Build.VERSION.SDK_INT >= 15) remoteViews.setContentDescription(R.id.startStopKnap, "Stop afspilning");
         remoteViews.setViewVisibility(R.id.progressBar, View.VISIBLE);
         int fpct = DRData.instans.afspiller.getForbinderProcent();
         //remoteViews.setTextViewText(R.id.metainformation, "Forbinder " + (fpct > 0 ? fpct : ""));
@@ -144,14 +142,14 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
       case SPILLER:
         //  App.kortToast("SPILLER " + k.navn);
         remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.ic_action_pause);
-        if (Build.VERSION.SDK_INT>=15) remoteViews.setContentDescription(R.id.startStopKnap, "Stop afspilning");
+        if (Build.VERSION.SDK_INT >= 15) remoteViews.setContentDescription(R.id.startStopKnap, "Stop afspilning");
         remoteViews.setViewVisibility(R.id.progressBar, View.GONE);
         remoteViews.setTextColor(R.id.metainformation, type == TYPE_hjemmeskærm ? App.color.grå60 : App.color.grå60);
         break;
     }
 
 
-    if (type==TYPE_notifikation_lille || type==TYPE_notifikation_stor || type==TYPE_låseskærm) {
+    if (type == TYPE_notifikation_lille || type == TYPE_notifikation_stor || type == TYPE_låseskærm) {
       Intent startPauseI = new Intent(App.instans, AfspillerStartStopReciever.class).setAction(AfspillerStartStopReciever.PAUSE);
       PendingIntent startPausePI = PendingIntent.getBroadcast(App.instans, 0, startPauseI, PendingIntent.FLAG_UPDATE_CURRENT);
       remoteViews.setOnClickPendingIntent(R.id.startStopKnap, startPausePI);

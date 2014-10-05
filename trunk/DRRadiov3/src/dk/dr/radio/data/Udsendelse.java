@@ -101,7 +101,7 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
     if (o == this) return true;
     if (!(o instanceof Udsendelse)) return false;
     Udsendelse u = (Udsendelse) o;
-    if (slug!=null) return slug.equals(u.slug);
+    if (slug != null) return slug.equals(u.slug);
     return false;
   }
 
@@ -110,7 +110,7 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
     int e = episodeIProgramserie;
     int e2 = u2.episodeIProgramserie;
     if (e != e2) return e2 < e ? -1 : 1;
-    if (slug==null) return u2.slug==null? 0 : 1;
+    if (slug == null) return u2.slug == null ? 0 : 1;
     return slug.compareTo(u2.slug);
   }
 

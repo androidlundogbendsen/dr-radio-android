@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="16dp"
-        android:background="@drawable/knap_graa10_bg"
-        android:orientation="vertical">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp"
+    android:background="@drawable/knap_graa10_bg"
+    android:orientation="vertical">
 
-    <View
-            android:id="@+id/stiplet_linje"
-            android:background="@drawable/stiplet_linje"
-            android:layerType="software"
-            android:layout_width="match_parent"
-            android:layout_marginBottom="13dp"
-            android:layout_height="3dp"/>
+  <View
+      android:id="@+id/stiplet_linje"
+      android:background="@drawable/stiplet_linje"
+      android:layerType="software"
+      android:layout_width="match_parent"
+      android:layout_marginBottom="13dp"
+      android:layout_height="3dp"/>
 
 
-    <TextView
-            android:id="@+id/titel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Pressen på P3 - 17. jan. 2014"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textStyle="bold"
-            android:textColor="@color/grå80"
-            tools:ignore="HardcodedText"
-            />
+  <TextView
+      android:id="@+id/titel"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Pressen på P3 - 17. jan. 2014"
+      android:textAppearance="?android:attr/textAppearanceMedium"
+      android:textStyle="bold"
+      android:textColor="@color/grå80"
+      tools:ignore="HardcodedText"
+      />
 
-    <TextView
-            android:id="@+id/varighed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="P3, 55 MIN"
-            tools:ignore="HardcodedText"/>
+  <TextView
+      android:id="@+id/varighed"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="P3, 55 MIN"
+      tools:ignore="HardcodedText"/>
 
 
 </LinearLayout>

@@ -99,14 +99,14 @@ public final class Alarm {
    * 0x40: Sunday
    */
   static final class DaysOfWeek {
-    private static int[] DAY_MAP = new int[] {
-      Calendar.MONDAY,
-      Calendar.TUESDAY,
-      Calendar.WEDNESDAY,
-      Calendar.THURSDAY,
-      Calendar.FRIDAY,
-      Calendar.SATURDAY,
-      Calendar.SUNDAY, };
+    private static int[] DAY_MAP = new int[]{
+        Calendar.MONDAY,
+        Calendar.TUESDAY,
+        Calendar.WEDNESDAY,
+        Calendar.THURSDAY,
+        Calendar.FRIDAY,
+        Calendar.SATURDAY,
+        Calendar.SUNDAY,};
     // Bitmask of all repeating days
     private int mDays;
 
@@ -147,7 +147,7 @@ public final class Alarm {
           ret.append(dayList[DAY_MAP[i]]);
           dayCount -= 1;
           if (dayCount > 0) ret.append(
-                context.getText(R.string.day_concat));
+              context.getText(R.string.day_concat));
         }
       }
       return ret.toString();

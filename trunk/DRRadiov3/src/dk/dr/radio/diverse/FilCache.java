@@ -40,7 +40,6 @@ public class FilCache {
 
   /**
    * Henter en fil fra cachen eller fra webserveren
-   *
    * @param url
    * @param ændrerSigIkke Hvis true vil cachen aldrig forsøge at kontakte serveren hvis der er en lokal fil.
    *                      God til f.eks. billeder og andre ting der ikke ændrer sig
@@ -56,7 +55,6 @@ public class FilCache {
    * Sker der en netværksfejl bliver der forsøgt 2 gange mere.
    * Dette løser et kendt problem med at URLConnection fejler engang imellem på visse enheder.
    * Tjekker om data er komprimeret ("Content-Encoding: gzip") og dekomprimerer dem.
-   *
    * @param url
    * @param ændrerSigIkke Hvis true vil cachen aldrig forsøge at kontakte serveren hvis der er en lokal fil.
    *                      God til f.eks. billeder og andre ting der ikke ændrer sig
@@ -169,7 +167,6 @@ public class FilCache {
    * Giver filnavn på hvor URL er gemt i cachet.
    * Hvis filen ikke findes i cachen vil der stadig blive returneret et filnavn.
    * Brug new File(FilCache.findLokaltFilnavn(url)).exists() for at afgøre om en URL findes cachet lokalt
-   *
    * @param url
    * @return Stien til hvor filen (muligvis) findes lokalt.
    */

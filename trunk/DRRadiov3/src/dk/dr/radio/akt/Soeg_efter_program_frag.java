@@ -48,7 +48,7 @@ import dk.dr.radio.v3.R;
 public class Soeg_efter_program_frag extends Basisfragment implements
     OnClickListener, AdapterView.OnItemClickListener {
 
-    private static final boolean SØG_OGSÅ_EFTER_UDSENDELSER = false;
+  private static final boolean SØG_OGSÅ_EFTER_UDSENDELSER = false;
   private ListView listView;
   private EditText søgFelt;
   private ArrayList<Object> liste = new ArrayList<Object>(); // Indeholder både udsendelser og -serier
@@ -66,32 +66,32 @@ public class Soeg_efter_program_frag extends Basisfragment implements
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this)
         .getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson_fed)
-            .text("").getView());
+        .text("").getView());
 
     søgFelt = aq.id(R.id.soegFelt).getEditText();
-      søgFelt.setImeActionLabel("Søg", KeyEvent.KEYCODE_ENTER);
+    søgFelt.setImeActionLabel("Søg", KeyEvent.KEYCODE_ENTER);
 
-      //søgFelt.setBackgroundResource(android.R.drawable.editbox_background_normal);
+    //søgFelt.setBackgroundResource(android.R.drawable.editbox_background_normal);
     søgKnap = aq.id(R.id.soegKnap).clicked(this).getImageView();
-      //søgKnap.setBackgroundResource(R.drawable.knap_graa10_bg);
-      søgKnap.setVisibility(View.VISIBLE);
+    //søgKnap.setBackgroundResource(R.drawable.knap_graa10_bg);
+    søgKnap.setVisibility(View.VISIBLE);
     tomStr = aq.id(R.id.tom).getTextView();
 
     søgFelt.addTextChangedListener(new TextWatcher() {
 
       @Override
       public void onTextChanged(CharSequence s, int start, int before, int count) {
-          Log.d("JPER text changed");
+        Log.d("JPER text changed");
 
-          if (søgFelt.getText().toString().length() > 0) {
+        if (søgFelt.getText().toString().length() > 0) {
 
-              søgKnap.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
+          søgKnap.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
 
-          } else {
-              liste.clear();
-              adapter.notifyDataSetChanged();
-              søgKnap.setImageResource(R.drawable.dri_soeg_blaa);
-          }
+        } else {
+          liste.clear();
+          adapter.notifyDataSetChanged();
+          søgKnap.setImageResource(R.drawable.dri_soeg_blaa);
+        }
 
       }
 
@@ -102,34 +102,34 @@ public class Soeg_efter_program_frag extends Basisfragment implements
       @Override
       public void afterTextChanged(Editable s) {
 
-          if (søgFelt.getText().length() > 0) {
-              searchProgram();
-          } else {
-              tomStr.setText("");
+        if (søgFelt.getText().length() > 0) {
+          searchProgram();
+        } else {
+          tomStr.setText("");
 
-          }
+        }
 
 
       }
     });
 
     /*Lytter efter enter key */
-      søgFelt.setOnEditorActionListener(new OnEditorActionListener() {
-          @Override
-          public boolean onEditorAction(TextView v, int actionId,
-                                        KeyEvent event) {
-            Log.d("actionId="+actionId);
-            searchProgram();
-            return true;
-          }
-      });
+    søgFelt.setOnEditorActionListener(new OnEditorActionListener() {
+      @Override
+      public boolean onEditorAction(TextView v, int actionId,
+                                    KeyEvent event) {
+        Log.d("actionId=" + actionId);
+        searchProgram();
+        return true;
+      }
+    });
     // Skjul softkeyboard når man hopper ud af indtastningsfeltet
     // se http://stackoverflow.com/questions/1109022/close-hide-the-android-soft-keyboard
-    final InputMethodManager imm = (InputMethodManager)(getActivity().getSystemService(Context.INPUT_METHOD_SERVICE));
+    final InputMethodManager imm = (InputMethodManager) (getActivity().getSystemService(Context.INPUT_METHOD_SERVICE));
     søgFelt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
       @Override
       public void onFocusChange(View v, boolean hasFocus) {
-        Log.d("onFocusChange "+hasFocus);
+        Log.d("onFocusChange " + hasFocus);
         if (!hasFocus) {
           imm.hideSoftInputFromWindow(søgFelt.getWindowToken(), 0);
         }
@@ -226,72 +226,35 @@ public class Soeg_efter_program_frag extends Basisfragment implements
 
   @Override
   public void onClick(View v) {
-      AQuery aq = new AQuery(rod);
-      tomStr = aq.id(R.id.tom).getTextView();
-      tomStr.setText("");
-      søgFelt.setText("");
+    AQuery aq = new AQuery(rod);
+    tomStr = aq.id(R.id.tom).getTextView();
+    tomStr.setText("");
+    søgFelt.setText("");
   }
 
-    public void searchProgram() {
-        Log.d("Liste " + liste);
+  public void searchProgram() {
+    Log.d("Liste " + liste);
 
-        // Anullér forrige søgning
-        App.volleyRequestQueue.cancelAll(this);
+    // Anullér forrige søgning
+    App.volleyRequestQueue.cancelAll(this);
 
-        søgStr = søgFelt.getText().toString();
-      if (søgStr.length()==0) {
-          tomStr.setText("");
-        liste.clear();
-        adapter.notifyDataSetChanged();
-      }
+    søgStr = søgFelt.getText().toString();
+    if (søgStr.length() == 0) {
+      tomStr.setText("");
+      liste.clear();
+      adapter.notifyDataSetChanged();
+    }
 
 
-      if (SØG_OGSÅ_EFTER_UDSENDELSER) {
-          String url = "http://www.dr.dk/tjenester/mu-apps/search/programs?q=" + URLEncoder.encode(søgStr) + "&type=radio";
-        Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
-          @Override
-          public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
-            Log.d("SØG: fikSvar fraCache=" + fraCache + " uændret=" + uændret + " data = " + json);
-              if (json != null && !"null".equals(json)) {
-              JSONArray data = new JSONArray(json);
-              udsendelseListe = DRJson.parseUdsendelserForProgramserie(data, null, DRData.instans);
-              liste.clear();
-              liste.addAll(programserieListe);
-              liste.addAll(udsendelseListe);
-              Log.d("liste = " + liste);
-              adapter.notifyDataSetChanged();
-
-              if (liste.size() == 0) {
-                tomStr.setText("Søgningen gav intet resultat");
-              }
-              return;
-            }
-            Log.d("Slut søgning!");
-          }
-
-          @Override
-          protected void fikFejl(VolleyError error) {
-            super.fikFejl(error);
-            liste.clear();
-            adapter.notifyDataSetChanged();
-              //tomStr.setText("Søgningen gav intet resultat");
-          }
-        }).setTag(this);
-        App.volleyRequestQueue.add(req);
-      }
-
-        String url = "http://www.dr.dk/tjenester/mu-apps/search/series?q=" + URLEncoder.encode(søgStr) + "&type=radio";
+    if (SØG_OGSÅ_EFTER_UDSENDELSER) {
+      String url = "http://www.dr.dk/tjenester/mu-apps/search/programs?q=" + URLEncoder.encode(søgStr) + "&type=radio";
       Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
         @Override
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
           Log.d("SØG: fikSvar fraCache=" + fraCache + " uændret=" + uændret + " data = " + json);
-            if (json != null) {
+          if (json != null && !"null".equals(json)) {
             JSONArray data = new JSONArray(json);
-            programserieListe.clear();
-            for (int n=0; n<data.length(); n++) {
-              JSONObject elem = data.getJSONObject(n);
-              programserieListe.add(DRJson.parsProgramserie(elem, null));
-            }
+            udsendelseListe = DRJson.parseUdsendelserForProgramserie(data, null, DRData.instans);
             liste.clear();
             liste.addAll(programserieListe);
             liste.addAll(udsendelseListe);
@@ -311,10 +274,47 @@ public class Soeg_efter_program_frag extends Basisfragment implements
           super.fikFejl(error);
           liste.clear();
           adapter.notifyDataSetChanged();
-            //tomStr.setText("Søgningen gav intet resultat");
+          //tomStr.setText("Søgningen gav intet resultat");
         }
       }).setTag(this);
       App.volleyRequestQueue.add(req);
-
     }
+
+    String url = "http://www.dr.dk/tjenester/mu-apps/search/series?q=" + URLEncoder.encode(søgStr) + "&type=radio";
+    Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
+      @Override
+      public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+        Log.d("SØG: fikSvar fraCache=" + fraCache + " uændret=" + uændret + " data = " + json);
+        if (json != null) {
+          JSONArray data = new JSONArray(json);
+          programserieListe.clear();
+          for (int n = 0; n < data.length(); n++) {
+            JSONObject elem = data.getJSONObject(n);
+            programserieListe.add(DRJson.parsProgramserie(elem, null));
+          }
+          liste.clear();
+          liste.addAll(programserieListe);
+          liste.addAll(udsendelseListe);
+          Log.d("liste = " + liste);
+          adapter.notifyDataSetChanged();
+
+          if (liste.size() == 0) {
+            tomStr.setText("Søgningen gav intet resultat");
+          }
+          return;
+        }
+        Log.d("Slut søgning!");
+      }
+
+      @Override
+      protected void fikFejl(VolleyError error) {
+        super.fikFejl(error);
+        liste.clear();
+        adapter.notifyDataSetChanged();
+        //tomStr.setText("Søgningen gav intet resultat");
+      }
+    }).setTag(this);
+    App.volleyRequestQueue.add(req);
+
+  }
 }

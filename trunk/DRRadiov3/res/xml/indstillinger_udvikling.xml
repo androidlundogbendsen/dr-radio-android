@@ -1,78 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="Andet">
+  <PreferenceCategory android:title="Andet">
 
     <CheckBoxPreference
-            android:key="udviklerEkstra" android:title="Udvikler"
-            android:defaultValue="false"
-            android:summary="Vis ekstra muligheder til udvikling og fejlfinding"
-            />
+        android:key="udviklerEkstra" android:title="Udvikler"
+        android:defaultValue="false"
+        android:summary="Vis ekstra muligheder til udvikling og fejlfinding"
+        />
 
-<PreferenceScreen android:dependency="udviklerEkstra"
-        android:title="Til udvikling og fejlfinding">
+    <PreferenceScreen android:dependency="udviklerEkstra"
+                      android:title="Til udvikling og fejlfinding">
 
-    <CheckBoxPreference
-            android:key="startStopKnapAnim" android:title="startStopKnap anim"
-            android:summaryOn="Rotér"
-            android:summaryOff="Hop"/>
-
-
-
-    <CheckBoxPreference
-            android:key="tving_lodret_visning" android:title="Blokér vandret visning"
-            android:defaultValue="true"
-            android:summaryOn="Tving folk til at rejse deres tablet/telefon op"
-            android:summaryOff="Tillad vandret visning (kræver genstart)"/>
+      <CheckBoxPreference
+          android:key="startStopKnapAnim" android:title="startStopKnap anim"
+          android:summaryOn="Rotér"
+          android:summaryOff="Hop"/>
 
 
-    <!-- 	<EditTextPreference android:key="udviklerKontakt" android:title="Kontakt"
-        android:summary="Skriv din e-postadresse hvis du vil kunne kontaktes i forbindelse
-        med udvikling" android:defaultValue="" /> -->
+      <CheckBoxPreference
+          android:key="tving_lodret_visning" android:title="Blokér vandret visning"
+          android:defaultValue="true"
+          android:summaryOn="Tving folk til at rejse deres tablet/telefon op"
+          android:summaryOff="Tillad vandret visning (kræver genstart)"/>
 
-<!--
-    <CheckBoxPreference
-            android:key="kunSortLigeBagTekst"
-            android:title="Kun sort bag tekst i titler"
-            android:defaultValue="false"
-            android:summary="Kræver app-genstart"/>
--->
 
-    <CheckBoxPreference
-            android:key="fejlsøgning" android:title="Fejlsøgning"
-            android:defaultValue="false" android:summaryOff=""
-            android:summaryOn="Sæt app i fejlsøgningstilstand (også efter genstart)"/>
+      <!-- 	<EditTextPreference android:key="udviklerKontakt" android:title="Kontakt"
+          android:summary="Skriv din e-postadresse hvis du vil kunne kontaktes i forbindelse
+          med udvikling" android:defaultValue="" /> -->
 
-    <CheckBoxPreference
-            android:key="manuelStreamvalg"
-            android:title="Manuelt streamvalg"
-            android:defaultValue="false"
-            android:summary="Vælg manuelt mellem de tilgængelige streams"/>
+      <!--
+          <CheckBoxPreference
+                  android:key="kunSortLigeBagTekst"
+                  android:title="Kun sort bag tekst i titler"
+                  android:defaultValue="false"
+                  android:summary="Kræver app-genstart"/>
+      -->
 
-    <CheckBoxPreference
-            android:key="udsendelser_bladr"
-            android:title="Swipe mellem udsendelser"
-            android:defaultValue="true"
-            android:summary="Swipe for at bladre mellem udsendelser fra samme programserie"/>
+      <CheckBoxPreference
+          android:key="fejlsøgning" android:title="Fejlsøgning"
+          android:defaultValue="false" android:summaryOff=""
+          android:summaryOn="Sæt app i fejlsøgningstilstand (også efter genstart)"/>
 
-    <CheckBoxPreference
-            android:key="vispager_title_strip"
-            android:title="Titel på udsendelser"
-            android:defaultValue="false"
-            android:summary="Vis faneblade med titler for nemmere at bladre mellem udsendelser"/>
+      <CheckBoxPreference
+          android:key="manuelStreamvalg"
+          android:title="Manuelt streamvalg"
+          android:defaultValue="false"
+          android:summary="Vælg manuelt mellem de tilgængelige streams"/>
 
-    <CheckBoxPreference
-            android:key="udsendelser_lodret_skift"
-            android:title="Lodret swipe mellem udsendelser"
-            android:defaultValue="false"
-            android:summary="Bladr mellem udsendelser med lodret swipe"/>
+      <CheckBoxPreference
+          android:key="udsendelser_bladr"
+          android:title="Swipe mellem udsendelser"
+          android:defaultValue="true"
+          android:summary="Swipe for at bladre mellem udsendelser fra samme programserie"/>
 
-    <CheckBoxPreference
-            android:title="Rapportér statistik"
-            android:key="Rapportér statistik"
-            android:defaultValue="true"
-            android:summaryOn="Send statistik til DR, om hvad du lytter til. Mener du at app'en tager for meget strøm kan du slå det fra og rapportere om det gør en forskel"
-            android:summaryOff="Indsamler ikke statisik. Rapportér venligst om det gør en forskel for dig. Du skal genstarte app'en (evt telefonen) og se meddelelse ved opstart før det er trådt i kraft."
-            />
-</PreferenceScreen>
-    </PreferenceCategory>
+      <CheckBoxPreference
+          android:key="vispager_title_strip"
+          android:title="Titel på udsendelser"
+          android:defaultValue="false"
+          android:summary="Vis faneblade med titler for nemmere at bladre mellem udsendelser"/>
+
+      <CheckBoxPreference
+          android:key="udsendelser_lodret_skift"
+          android:title="Lodret swipe mellem udsendelser"
+          android:defaultValue="false"
+          android:summary="Bladr mellem udsendelser med lodret swipe"/>
+
+      <CheckBoxPreference
+          android:title="Rapportér statistik"
+          android:key="Rapportér statistik"
+          android:defaultValue="true"
+          android:summaryOn="Send statistik til DR, om hvad du lytter til. Mener du at app'en tager for meget strøm kan du slå det fra og rapportere om det gør en forskel"
+          android:summaryOff="Indsamler ikke statisik. Rapportér venligst om det gør en forskel for dig. Du skal genstarte app'en (evt telefonen) og se meddelelse ved opstart før det er trådt i kraft."
+          />
+    </PreferenceScreen>
+  </PreferenceCategory>
 </PreferenceScreen>

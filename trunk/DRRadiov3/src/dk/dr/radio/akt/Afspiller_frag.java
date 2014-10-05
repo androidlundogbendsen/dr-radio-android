@@ -127,7 +127,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
       startStopKnapImageResource = startStopKnapNyImageResource;
 
       Animation anim;
-      if (App.prefs.getBoolean("startStopKnapAnim",false)) {
+      if (App.prefs.getBoolean("startStopKnapAnim", false)) {
         anim = new RotateAnimation(0f, 180f, 0, 0);
         //r.setStartOffset(1000);
         anim.setDuration(200);
@@ -157,7 +157,8 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
       });
       startStopKnap.startAnimation(anim);
     }
-    if (App.accessibilityManager.isEnabled() && getActivity()!=null) ActivityCompat.invalidateOptionsMenu(getActivity());
+    if (App.accessibilityManager.isEnabled() && getActivity() != null)
+      ActivityCompat.invalidateOptionsMenu(getActivity());
   }
 
   @Override
@@ -179,7 +180,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId()==R.id.startStopKnap) {
+    if (item.getItemId() == R.id.startStopKnap) {
       if (DRData.instans.afspiller.afspillerstatus == Status.STOPPET) {
         DRData.instans.afspiller.startAfspilning();
       } else {
@@ -222,6 +223,8 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .commit();
       }
-    } catch (Exception e) { Log.rapporterFejl(e); } // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/825688064
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
+    } // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/825688064
   }
 }

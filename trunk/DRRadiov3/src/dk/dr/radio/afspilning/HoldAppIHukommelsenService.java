@@ -29,7 +29,6 @@ import dk.dr.radio.diverse.Log;
 
 /**
  * Sørger for at app'en holdes i hukommelsen
- *
  * @author j
  */
 public class HoldAppIHukommelsenService extends Service implements Runnable {
@@ -75,6 +74,8 @@ public class HoldAppIHukommelsenService extends Service implements Runnable {
     try {
       Notification notification = AfspillerIkonOgNotifikation.lavNotification(this);
       App.notificationManager.notify(NOTIFIKATION_ID, notification);
-    } catch (Exception e) { Log.rapporterFejl(e); } // fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/830228171
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
+    } // fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/830228171
   }
 }
