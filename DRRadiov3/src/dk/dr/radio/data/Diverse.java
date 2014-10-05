@@ -142,14 +142,14 @@ public class Diverse {
     File[] files = mappe.listFiles();
     if (files != null) {
       for (File file : files) {
-        if (file.lastModified()<tidsstempel) {
+        if (file.lastModified() < tidsstempel) {
           antalByteDerBlevSlettet += file.length();
           antalFilerDerBlevSlettet++;
           file.delete();
         }
       }
     }
-    Log.d("sletFilerÆldreEnd: " +mappe.getName()+": "  + antalFilerDerBlevSlettet + " filer blev slettet, og " + antalByteDerBlevSlettet / 1000 + " kb frigivet");
+    Log.d("sletFilerÆldreEnd: " + mappe.getName() + ": " + antalFilerDerBlevSlettet + " filer blev slettet, og " + antalByteDerBlevSlettet / 1000 + " kb frigivet");
     return antalByteDerBlevSlettet;
   }
 }

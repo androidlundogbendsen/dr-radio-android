@@ -1,174 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:descendantFocusability="blocksDescendants"
+    >
+  <!--
+              android:descendantFocusability="blocksDescendants"
+              gør at knappen her ikke tager fokus for hele listeelementet
+  -->
+  <LinearLayout
+      android:layout_width="0px"
+      android:layout_height="wrap_content"
+      android:layout_weight="2"
+      android:orientation="vertical"
+      >
+
+    <include
+        layout="@layout/inkl_billede_med_titeloverlaegning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_height="wrap_content">
+
+      <LinearLayout
+          android:id="@+id/tidsbjælke"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/starttidbjælke"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="74"
+            android:textSize="12sp"
+            android:background="@color/grå60"/>
+
+        <TextView
+            android:id="@+id/slutttidbjælke"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="26"
+            android:textColor="@color/hvid"
+            android:textSize="12sp"
+            android:background="@color/grå20"/>
+        <!--
+                               android:textAppearance="?android:attr/textAppearanceLarge"
+
+        -->
+      </LinearLayout>
+
+
+      <TextView
+          android:id="@+id/startid"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="16.10"
+          android:textColor="@color/hvid"
+          android:textSize="12sp"
+          android:layout_marginLeft="4dp"
+          android:layout_gravity="left"
+          tools:ignore="HardcodedText"/>
+
+      <TextView
+          android:id="@+id/slutttid"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="16.30"
+          android:importantForAccessibility="no"
+          android:layout_gravity="right"
+          android:layout_marginRight="4dp"
+          android:textColor="@color/hvid"
+          android:textSize="12sp"
+          tools:ignore="HardcodedText"/>
+    </FrameLayout>
+
+  </LinearLayout>
+
+  <LinearLayout
+      android:layout_width="0px"
+      android:layout_height="wrap_content"
+      android:layout_weight="2"
+      android:layout_gravity="bottom"
+      android:orientation="vertical"
+      >
+
+    <LinearLayout
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:id="@+id/senest_spillet_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:descendantFocusability="blocksDescendants"
+        android:background="@color/grå10"
+        android:padding="8dp"
+        android:orientation="horizontal">
+
+      <ImageView
+          android:layout_width="60dp"
+          android:layout_height="60dp"
+          android:adjustViewBounds="true"
+          android:id="@+id/senest_spillet_kunstnerbillede"
+          android:src="@drawable/eksempel_kunstner"
+          tools:ignore="ContentDescription"/>
+
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="60dp"
+          android:layout_marginLeft="8dp"
+          android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/senest_spillet_overskrift"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SENEST SPILLET"
+            android:textColor="@color/grå70"
+            tools:ignore="HardcodedText"
+            />
+
+
+        <TextView
+            android:id="@+id/titel_og_kunstner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Feel Again One | Republic"
+            android:maxLines="2"
+            tools:ignore="HardcodedText"/>
+
+      </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         >
-    <!--
-                android:descendantFocusability="blocksDescendants"
-                gør at knappen her ikke tager fokus for hele listeelementet
-    -->
-    <LinearLayout
-            android:layout_width="0px"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:orientation="vertical"
-            >
 
-        <include
-                layout="@layout/inkl_billede_med_titeloverlaegning"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+      <!--
+          designoplæg siger 36dp, men designretningslinjer på Android siger min 48dp i højde9
+          (se http://developer.android.com/design/style/metrics-grids.html)
+                  android:layout_height="36dp"
 
-
-        <FrameLayout
-                android:layout_width="match_parent"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:layout_height="wrap_content">
-
-            <LinearLayout
-                    android:id="@+id/tidsbjælke"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                <TextView
-                        android:id="@+id/starttidbjælke"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="74"
-                        android:textSize="12sp"
-                        android:background="@color/grå60"/>
-
-                <TextView
-                        android:id="@+id/slutttidbjælke"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="26"
-                        android:textColor="@color/hvid"
-                        android:textSize="12sp"
-                        android:background="@color/grå20"/>
-                <!--
-                                       android:textAppearance="?android:attr/textAppearanceLarge"
-
-                -->
-            </LinearLayout>
-
-
-            <TextView
-                    android:id="@+id/startid"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="16.10"
-                    android:textColor="@color/hvid"
-                    android:textSize="12sp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_gravity="left"
-                    tools:ignore="HardcodedText"/>
-
-            <TextView
-                    android:id="@+id/slutttid"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="16.30"
-                    android:importantForAccessibility="no"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="4dp"
-                    android:textColor="@color/hvid"
-                    android:textSize="12sp"
-                    tools:ignore="HardcodedText"/>
-        </FrameLayout>
-
+  Vi udvider derfor knappens trykområde med teknikken beskrevet i
+  http://stackoverflow.com/questions/2949407/can-i-increase-a-buttons-onclick-area-programmatically
+          -->
+      <Button
+          android:id="@+id/hør_live"
+          android:layout_width="wrap_content"
+          android:layout_height="@dimen/hørknap_højde"
+          android:layout_marginLeft="16dp"
+          android:layout_marginRight="16dp"
+          android:layout_marginTop="8dp"
+          android:layout_marginBottom="8dp"
+          android:paddingLeft="4dp"
+          android:paddingRight="16dp"
+          android:drawableLeft="@drawable/dri_lyd_hvid"
+          android:text=" HØR P3 LIVE"
+          android:textColor="@color/hvid"
+          android:background="@drawable/knap_blaa_bg"/>
     </LinearLayout>
-
-    <LinearLayout
-            android:layout_width="0px"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:layout_gravity="bottom"
-            android:orientation="vertical"
-            >
-
-        <LinearLayout
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:id="@+id/senest_spillet_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/grå10"
-                android:padding="8dp"
-                android:orientation="horizontal">
-
-            <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:adjustViewBounds="true"
-                    android:id="@+id/senest_spillet_kunstnerbillede"
-                    android:src="@drawable/eksempel_kunstner"
-                    tools:ignore="ContentDescription"/>
-
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_marginLeft="8dp"
-                    android:orientation="vertical">
-
-
-                <TextView
-                        android:id="@+id/senest_spillet_overskrift"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="SENEST SPILLET"
-                        android:textColor="@color/grå70"
-                        tools:ignore="HardcodedText"
-                        />
-
-
-                <TextView
-                        android:id="@+id/titel_og_kunstner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Feel Again One | Republic"
-                        android:maxLines="2"
-                        tools:ignore="HardcodedText"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                >
-
-            <!--
-                designoplæg siger 36dp, men designretningslinjer på Android siger min 48dp i højde9
-                (se http://developer.android.com/design/style/metrics-grids.html)
-                        android:layout_height="36dp"
-
-        Vi udvider derfor knappens trykområde med teknikken beskrevet i
-        http://stackoverflow.com/questions/2949407/can-i-increase-a-buttons-onclick-area-programmatically
-                -->
-            <Button
-                    android:id="@+id/hør_live"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/hørknap_højde"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="16dp"
-                    android:drawableLeft="@drawable/dri_lyd_hvid"
-                    android:text=" HØR P3 LIVE"
-                    android:textColor="@color/hvid"
-                    android:background="@drawable/knap_blaa_bg"/>
-        </LinearLayout>
-    </LinearLayout>
+  </LinearLayout>
 
 </LinearLayout>

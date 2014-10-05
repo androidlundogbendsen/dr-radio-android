@@ -15,15 +15,15 @@
 -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_item_add_alarm"
+  <item android:id="@+id/menu_item_add_alarm"
         android:title="@string/add_alarm"
         android:icon="@drawable/deskclock_ic_menu_add"
-				android:showAsAction="ifRoom|withText" />
-<!--				android:icon="?android:attr/actionModeCloseDrawable"-->
-    <item android:id="@+id/menu_item_done"
+        android:showAsAction="ifRoom|withText"/>
+  <!--				android:icon="?android:attr/actionModeCloseDrawable"-->
+  <item android:id="@+id/menu_item_done"
         android:title="@string/done"
 
-         />
+      />
 </menu>
 
 

@@ -1,7 +1,6 @@
 package dk.dr.radio.afspilning;
 
 import android.content.Context;
-import android.os.Build;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -37,13 +36,13 @@ class GemiusStatistik {
   GemiusStatistik() {
     String påkrævedeFelter =
         "{\"ScreenResolution\":{\"X\":1024,\"Y\":768}"
-            +",\"VideoResolution\":{\"X\":1024,\"Y\":768}"
-            +",\"ScreenColorDepth\":24"
-            +",\"PlayerEvents\":[{\"MaterialOffsetSeconds\":0,\"Started\":\"FirstPlay\",\"Created\":\"2014-07-09T09:54:32.086603Z\"}]"
-            +",\"ChannelType\":\"RADIO\""
-            +",\"Testmode\":\"true\""
+            + ",\"VideoResolution\":{\"X\":1024,\"Y\":768}"
+            + ",\"ScreenColorDepth\":24"
+            + ",\"PlayerEvents\":[{\"MaterialOffsetSeconds\":0,\"Started\":\"FirstPlay\",\"Created\":\"2014-07-09T09:54:32.086603Z\"}]"
+            + ",\"ChannelType\":\"RADIO\""
+            + ",\"Testmode\":\"true\""
 //            +",\"Testmode\":"+!App.PRODUKTION
-            +"}";
+            + "}";
     try {
       json = new JSONObject(påkrævedeFelter);
       json.put("AutoStarted", false);
@@ -58,7 +57,7 @@ class GemiusStatistik {
     json.put("VideoResolution = new Resolution(1024, 768),
     json.put("ScreenColorDepth = 24
 */
-      if (App.prefs!=null) {
+      if (App.prefs != null) {
         sporingsnøgle = App.prefs.getString("Gemius sporingsnøgle", null);
         json.put("CorrelationId", sporingsnøgle);
         Display display = ((WindowManager) App.instans.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -73,7 +72,6 @@ class GemiusStatistik {
   }
 
 
-
   void testSetlydkilde() throws JSONException {
     hændelser.clear();
     setLydkilde(null);
@@ -82,9 +80,9 @@ class GemiusStatistik {
   }
 
   void setLydkilde(Lydkilde nyLydkilde) {
-    Log.d("Gemius setLydkilde "+ lydkilde);
-    if (hændelser.size()>0) {
-      Log.d("Gemius setLydkilde, hov, havde ikke sendt disse hændelser: "+ hændelser);
+    Log.d("Gemius setLydkilde " + lydkilde);
+    if (hændelser.size() > 0) {
+      Log.d("Gemius setLydkilde, hov, havde ikke sendt disse hændelser: " + hændelser);
       startSendData();
     }
     if (nyLydkilde != null && lydkilde != nyLydkilde) {
@@ -94,7 +92,6 @@ class GemiusStatistik {
   }
 
 
-
   void startSendData() {
     if (hændelser.isEmpty()) return;
     try {
@@ -102,12 +99,12 @@ class GemiusStatistik {
       // json.put("InitialLoadTime", 0);  // behøves ikke?
       // json.put("TimezoneOffsetInMinutes", -120);  // behøves ikke?
       json.put("PlayerEvents", new JSONArray(hændelser));
-      if (lydkilde!=null) {
+      if (lydkilde != null) {
         json.put("IsLiveStream", lydkilde.erDirekte());
-        json.put("Id", lydkilde.getUdsendelse()!=null?lydkilde.getUdsendelse().slug:"ukendt");
-        json.put("Channel", lydkilde.getKanal()!=null?lydkilde.getKanal().slug:"ukendt");
+        json.put("Id", lydkilde.getUdsendelse() != null ? lydkilde.getUdsendelse().slug : "ukendt");
+        json.put("Channel", lydkilde.getKanal() != null ? lydkilde.getKanal().slug : "ukendt");
       } else {
-        if (App.instans!=null) { // Hvis dette er en kørende app, så rapporter en fejl med dette
+        if (App.instans != null) { // Hvis dette er en kørende app, så rapporter en fejl med dette
           Log.rapporterFejl(new IllegalStateException("Gemius lydkilde er null"));
         }
         json.put("IsLiveStream", false);
@@ -115,11 +112,11 @@ class GemiusStatistik {
         json.put("Channel", "ukendt");
       }
     } catch (Exception e) {
-      Log.rapporterFejl(e, "for "+lydkilde);
+      Log.rapporterFejl(e, "for " + lydkilde);
     }
     hændelser.clear();
     final String data = json.toString();
-    if (App.fejlsøgning) Log.d("Gemius startSendData json="+ data);
+    if (App.fejlsøgning) Log.d("Gemius startSendData json=" + data);
     //new Exception().printStackTrace();
 
     new Thread(new Runnable() {
@@ -135,7 +132,7 @@ class GemiusStatistik {
           }
           if (App.fejlsøgning) Log.d("Gemius res=" + res);
         } catch (IOException ioe) {
-          if (!App.fejlsøgning) Log.d("data json="+ data);
+          if (!App.fejlsøgning) Log.d("data json=" + data);
           Log.e(ioe);
         } catch (Exception e) {
           Log.rapporterFejl(e);
@@ -145,9 +142,7 @@ class GemiusStatistik {
   }
 
 
-
-  static enum PlayerAction
-  {
+  static enum PlayerAction {
     FirstPlay,
     Play,
     Pause,
@@ -161,9 +156,9 @@ class GemiusStatistik {
     try {
       JSONObject hændelse = new JSONObject();
       hændelse.put("Started", hvad.toString());
-      hændelse.put("Created", servertidsformat.format(new Date()) ); // "2014-07-09T09:54:32.086603Z"
+      hændelse.put("Created", servertidsformat.format(new Date())); // "2014-07-09T09:54:32.086603Z"
       hændelse.put("MaterialOffsetSeconds", mediaOffsetISekunder);
-      Log.d("Gemius registérHændelse "+ hændelse);
+      Log.d("Gemius registérHændelse " + hændelse);
       hændelser.add(hændelse);
     } catch (Exception e) {
       Log.rapporterFejl(e);
@@ -176,7 +171,7 @@ class GemiusStatistik {
    */
   public static void main(String[] a) throws Exception {
     GemiusStatistik g = new GemiusStatistik();
-    for (int n=0; n<100; n++) {
+    for (int n = 0; n < 100; n++) {
       g.testSetlydkilde();
       g.registérHændelse(PlayerAction.Play, 0);
       Thread.sleep(1000);

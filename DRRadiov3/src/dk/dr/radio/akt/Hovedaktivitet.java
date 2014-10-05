@@ -94,13 +94,15 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
       }
 
       //Log.d("getIntent()="+getIntent().getFlags());
-      if (App.prefs.getBoolean("startAfspilningMedDetSammme", false) && DRData.instans.afspiller.getAfspillerstatus()==Status.STOPPET) {
+      if (App.prefs.getBoolean("startAfspilningMedDetSammme", false) && DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
         App.forgrundstråd.post(new Runnable() {
           @Override
           public void run() {
             try {
               DRData.instans.afspiller.startAfspilning();
-            } catch (Exception e) { Log.rapporterFejl(e); }
+            } catch (Exception e) {
+              Log.rapporterFejl(e);
+            }
           }
         });
       }
@@ -141,7 +143,7 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
   @Override
   public void run() {
     if (viser_drift_statusmeddelelse) return;
-    if (vis_drift_statusmeddelelse==null) {
+    if (vis_drift_statusmeddelelse == null) {
       String drift_statusmeddelelse = DRData.instans.grunddata.android_json.optString(drift_statusmeddelelse_NØGLE).trim();
       // Tjek i prefs om denne drifmeddelelse allerede er vist.
       // Der er 1 ud af en millards chance for at hashkoden ikke er ændret, den risiko tør vi godt løbe
@@ -152,12 +154,12 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
         vis_drift_statusmeddelelse = drift_statusmeddelelse;
       }
     }
-    if (vis_drift_statusmeddelelse!=null) {
+    if (vis_drift_statusmeddelelse != null) {
       AlertDialog.Builder ab = new AlertDialog.Builder(this);
       ab.setMessage(Html.fromHtml(vis_drift_statusmeddelelse));
       ab.setPositiveButton("OK", new AlertDialog.OnClickListener() {
         public void onClick(DialogInterface arg0, int arg1) {
-          if (vis_drift_statusmeddelelse==null) return;
+          if (vis_drift_statusmeddelelse == null) return;
           App.prefs.edit().putInt(drift_statusmeddelelse_NØGLE, vis_drift_statusmeddelelse.hashCode()).commit(); // ...og gem ny hashkode i prefs
           vis_drift_statusmeddelelse = null;
           viser_drift_statusmeddelelse = false;

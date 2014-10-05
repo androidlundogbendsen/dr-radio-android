@@ -21,11 +21,11 @@
     android:background="@null"
 -->
 <EditText xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/label"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="48dip"
-    android:paddingLeft="@dimen/alarm_label_padding"
-    android:paddingRight="@dimen/alarm_label_padding"
-    android:hint="@string/label"
-		/>
+          android:id="@+id/label"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:minHeight="48dip"
+          android:paddingLeft="@dimen/alarm_label_padding"
+          android:paddingRight="@dimen/alarm_label_padding"
+          android:hint="@string/label"
+    />

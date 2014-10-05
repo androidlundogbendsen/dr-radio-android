@@ -45,8 +45,10 @@ import dk.dr.radio.v3.R;
  */
 public class AlarmClock_akt extends Activity implements OnItemClickListener {
   static final String PREFERENCES = "AlarmClock";
-  /** This must be false for production.  If true, turns on logging,
-   test code, etc. */
+  /**
+   * This must be false for production.  If true, turns on logging,
+   * test code, etc.
+   */
   static final boolean DEBUG = false;
   private LayoutInflater mFactory;
   private ListView mAlarmsList;
@@ -131,7 +133,9 @@ public class AlarmClock_akt extends Activity implements OnItemClickListener {
 
       return view;
     }
-  };
+  }
+
+  ;
 
   @Override
   public boolean onContextItemSelected(final MenuItem item) {
@@ -150,12 +154,12 @@ public class AlarmClock_akt extends Activity implements OnItemClickListener {
             .setTitle(getString(R.string.delete_alarm))
             .setMessage(getString(R.string.delete_alarm_confirm))
             .setPositiveButton(android.R.string.ok,
-            new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface d, int w) {
-            Alarms.deleteAlarm(AlarmClock_akt.this, alarm.id);
-            adapter.notifyDataSetChanged(); // hack
-          }
-        })
+                new DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface d, int w) {
+                    Alarms.deleteAlarm(AlarmClock_akt.this, alarm.id);
+                    adapter.notifyDataSetChanged(); // hack
+                  }
+                })
             .setNegativeButton(android.R.string.cancel, null)
             .show();
         return true;
@@ -243,7 +247,7 @@ public class AlarmClock_akt extends Activity implements OnItemClickListener {
 
   @Override
   public void onCreateContextMenu(ContextMenu menu, View view,
-      ContextMenuInfo menuInfo) {
+                                  ContextMenuInfo menuInfo) {
     // Inflate the menu from xml.
     getMenuInflater().inflate(R.menu.deskclock_context_menu, menu);
 

@@ -126,7 +126,6 @@ public class Alarms {
 
   /**
    * A convenience method to enable or disable an alarm.
-   *
    */
   private static Alarm calculateNextAlert(final Context context) {
     long minTime = Long.MAX_VALUE;
@@ -166,13 +165,14 @@ public class Alarms {
       alarmer = new ArrayList<Alarm>();
       String alarmoj = prefs(context).getString("alarmoj", null);
       if (alarmoj == null) try {
-          alarmoj = DRData.instans.grunddata.json.getJSONObject("vækning").getString("forslag");
-        } catch (Exception e) {
-          Log.e("Rezignas pri alarmoj!", e);
-          alarmoj = "";
-        }
+        alarmoj = DRData.instans.grunddata.json.getJSONObject("vækning").getString("forslag");
+      } catch (Exception e) {
+        Log.e("Rezignas pri alarmoj!", e);
+        alarmoj = "";
+      }
       Log.d("tjekIndlæst alarmo=\n" + alarmoj);
-      for (String alarmo : alarmoj.split("\n")) try {
+      for (String alarmo : alarmoj.split("\n"))
+        try {
           alarmer.add(new Alarm(alarmo));
         } catch (Exception e) {
           Log.rapporterFejl(e);
@@ -204,12 +204,11 @@ public class Alarms {
   /**
    * Sets alert in AlarmManger and StatusBar.  This is what will
    * actually launch the alert when the alarm triggers.
-   *
-   * @param alarm Alarm.
+   * @param alarm          Alarm.
    * @param atTimeInMillis milliseconds since epoch
    */
   private static void enableAlert(Context context, final Alarm alarm,
-      final long atTimeInMillis) {
+                                  final long atTimeInMillis) {
     AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
     Log.d("** setAlert atTime " + new Date(atTimeInMillis) + " -- " + alarm);
@@ -231,7 +230,6 @@ public class Alarms {
 
   /**
    * Disables alert in AlarmManger and StatusBar.
-   *
    */
   static void disableAlert(Context context) {
     AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -261,7 +259,7 @@ public class Alarms {
    * setting in AlarmManager.
    */
   static Calendar calculateAlarm(int hour, int minute,
-      Alarm.DaysOfWeek daysOfWeek) {
+                                 Alarm.DaysOfWeek daysOfWeek) {
 
     // start with now
     Calendar c = Calendar.getInstance();
@@ -286,7 +284,7 @@ public class Alarms {
   }
 
   static String formatTime(final Context context, int hour, int minute,
-      Alarm.DaysOfWeek daysOfWeek) {
+                           Alarm.DaysOfWeek daysOfWeek) {
     Calendar c = calculateAlarm(hour, minute, daysOfWeek);
     return formatTime(context, c);
   }

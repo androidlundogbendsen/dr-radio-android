@@ -16,7 +16,7 @@
 
 <resources>
 
-    <style name="AlarmClockTheme" parent="android:Theme.Dialog"/>
-    <style name="SetAlarmTheme" parent="android:Theme.Dialog"/>
+  <style name="AlarmClockTheme" parent="android:Theme.Dialog"/>
+  <style name="SetAlarmTheme" parent="android:Theme.Dialog"/>
 
 </resources>

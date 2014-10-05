@@ -35,7 +35,6 @@ import java.util.LinkedHashMap;
  * - hvor man slipper for at angive tag
  * - man kan logge objekter (få kaldt toString)
  * - cirkulær buffer tillader at man kan gemme loggen til fejlrapportering
- *
  * @author j
  */
 public class Log {
@@ -84,7 +83,7 @@ public class Log {
   }
 
   public static void e(String tekst, Exception e) {
-    if (e==null) e=new Exception(tekst);
+    if (e == null) e = new Exception(tekst);
     if (App.instans == null) {
       System.err.println(tekst);
       e.printStackTrace();
@@ -103,14 +102,14 @@ public class Log {
     Log.e(e);
     if (fejlRapporteret++ > 3) return; // rapportér ikke mere end 3 fejl per kørsel
     if (!App.EMULATOR) BugSenseHandler.sendException(e);
-    if (!App.PRODUKTION) App.langToast("Fejl: "+e);
+    if (!App.PRODUKTION) App.langToast("Fejl: " + e);
   }
 
   public static void rapporterFejl(final Exception e, final Object f) {
-    Log.e(""+f, e);
+    Log.e("" + f, e);
     if (fejlRapporteret++ > 3) return; // rapportér ikke mere end 3 fejl per kørsel
-    if (!App.EMULATOR) BugSenseHandler.sendExceptionMessage("fejl", ""+f, e);
-    if (!App.PRODUKTION) App.langToast("Fejl: "+f);
+    if (!App.EMULATOR) BugSenseHandler.sendExceptionMessage("fejl", "" + f, e);
+    if (!App.PRODUKTION) App.langToast("Fejl: " + f);
   }
 
 
@@ -162,7 +161,7 @@ public class Log {
     */
     ret += App.versionsnavn +
         "\nTelefonmodel: " + Build.MODEL + " " + Build.PRODUCT +
-        "\nAndroid v" + Build.VERSION.RELEASE + " (sdk: " + Build.VERSION.SDK_INT+ ")";
+        "\nAndroid v" + Build.VERSION.RELEASE + " (sdk: " + Build.VERSION.SDK_INT + ")";
 
     return ret;
   }

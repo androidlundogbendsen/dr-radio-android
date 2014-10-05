@@ -54,7 +54,6 @@ import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.data.Lydstream;
-import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.AfspillerIkonOgNotifikation;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
@@ -150,7 +149,8 @@ public class Afspiller {
           JSONObject o = new JSONObject(json);
           lydkilde.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
           Log.d("Afspiller hentStreams " + lydkilde + " fraCache=" + fraCache + " k.lydUrl=" + lydkilde.streams);
-          if (onErrorTæller++>10) Log.rapporterFejl(new Exception("onErrorTæller++>10, uendelig løkke afværget"), lydkilde);
+          if (onErrorTæller++ > 10)
+            Log.rapporterFejl(new Exception("onErrorTæller++>10, uendelig løkke afværget"), lydkilde);
           else startAfspilning(); // Opdatér igen
         }
 
@@ -188,7 +188,7 @@ public class Afspiller {
         int result = audioManager.requestAudioFocus(getOnAudioFocusChangeListener(),
             AudioManager.STREAM_MUSIC,
             AudioManager.AUDIOFOCUS_GAIN);
-        Log.d("requestAudioFocus res="+result);
+        Log.d("requestAudioFocus res=" + result);
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
           MediabuttonReceiver.registrér();
         }
@@ -229,7 +229,7 @@ public class Afspiller {
 
         @TargetApi(Build.VERSION_CODES.FROYO)
         public void onAudioFocusChange(int focusChange) {
-          Log.d("onAudioFocusChange "+focusChange);
+          Log.d("onAudioFocusChange " + focusChange);
           AudioManager am = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
 
           switch (focusChange) {
@@ -239,13 +239,13 @@ public class Afspiller {
               // Vi 'dukker' lyden mens den vigtigere lyd høres
               // Sæt lydstyrken ned til en 1/3-del
               lydstyreFørDuck = am.getStreamVolume(AudioManager.STREAM_MUSIC);
-              am.setStreamVolume(AudioManager.STREAM_MUSIC, (lydstyreFørDuck+2)/3, 0);
+              am.setStreamVolume(AudioManager.STREAM_MUSIC, (lydstyreFørDuck + 2) / 3, 0);
               break;
 
             // Dette sker ved f.eks. opkald
             case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT):
               Log.d("JPER pause");
-              if (afspillerstatus!=Status.STOPPET) {
+              if (afspillerstatus != Status.STOPPET) {
                 pauseAfspilning(); // sætter afspilningPåPause=false
                 afspilningPåPause = true;
               }
@@ -261,11 +261,11 @@ public class Afspiller {
             // Dette sker når opkaldet er slut og ved f.eks. opkald
             case (AudioManager.AUDIOFOCUS_GAIN):
               Log.d("JPER Gain");
-              if (afspillerstatus==Status.STOPPET) {
+              if (afspillerstatus == Status.STOPPET) {
                 if (afspilningPåPause) startAfspilningIntern();
               } else {
                 // Genskab lydstyrke før den blev dukket
-                if (lydstyreFørDuck>0) {
+                if (lydstyreFørDuck > 0) {
                   am.setStreamVolume(AudioManager.STREAM_MUSIC, lydstyreFørDuck, 0);
                 }
                 // Genstart ikke afspilning, der spilles allerede!
@@ -297,7 +297,7 @@ public class Afspiller {
   synchronized private void startAfspilningIntern() {
     MediabuttonReceiver.registrér();
     afspillerstatus = Status.FORBINDER;
-    afspilningPåPause=false;
+    afspilningPåPause = false;
     sendOnAfspilningForbinder(-1);
     opdaterObservatører();
     handler.removeCallbacks(startAfspilningIntern);
@@ -311,8 +311,8 @@ public class Afspiller {
         try {
           lydstream = lydkilde.findBedsteStreams(false).get(0);
 
-          if (lydstream ==null) {
-            Log.rapporterFejl(new IllegalStateException("Ingen lydUrl for "+lydkilde+": "+lydkilde.streams));
+          if (lydstream == null) {
+            Log.rapporterFejl(new IllegalStateException("Ingen lydUrl for " + lydkilde + ": " + lydkilde.streams));
             App.kortToast("Kunne ikke oprette forbindelse");
             return;
           }
@@ -376,31 +376,31 @@ public class Afspiller {
     int pos = gemPosition();
     pauseAfspilningIntern();
     if (wifilock != null) wifilock.release();
-    gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Pause, pos/1000);
+    gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Pause, pos / 1000);
   }
 
   /**
    * Gem position - og spol herhen næste gang udsendelsen spiller
    */
   private int gemPosition() {
-    if (!lydkilde.erDirekte() && afspillerstatus==Status.SPILLER)
+    if (!lydkilde.erDirekte() && afspillerstatus == Status.SPILLER)
       try {
-      int pos = mediaPlayer.getCurrentPosition();
-      if (pos>0) {
-        //senestLyttet.getUdsendelse().startposition = pos;
-        DRData.instans.senestLyttede.sætStartposition(lydkilde, pos);
+        int pos = mediaPlayer.getCurrentPosition();
+        if (pos > 0) {
+          //senestLyttet.getUdsendelse().startposition = pos;
+          DRData.instans.senestLyttede.sætStartposition(lydkilde, pos);
+        }
+        return pos;
+      } catch (Exception e) {
+        Log.rapporterFejl(e); // TODO fjern hvis der aldrig kommer fejl her
       }
-      return pos;
-    } catch (Exception e) {
-      Log.rapporterFejl(e); // TODO fjern hvis der aldrig kommer fejl her
-    }
     return 0;
   }
 
 
   synchronized public void stopAfspilning() {
     Log.d("Afspiller stopAfspilning");
-    gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Stopped, getCurrentPosition()/1000);
+    gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Stopped, getCurrentPosition() / 1000);
     pauseAfspilning();
     // Stop afspillerservicen
     App.instans.stopService(new Intent(App.instans, HoldAppIHukommelsenService.class));
@@ -412,12 +412,12 @@ public class Afspiller {
 
 
   public void setLydkilde(Lydkilde lydkilde) {
-    if (lydkilde==this.lydkilde) return;
+    if (lydkilde == this.lydkilde) return;
     if (lydkilde == null) {
       Log.rapporterFejl(new IllegalStateException("setLydkilde(null"));
       return;
     }
-    if (lydkilde instanceof Kanal && Kanal.P4kode.equals( ((Kanal) lydkilde).kode)) { // TODO - fjern tjek
+    if (lydkilde instanceof Kanal && Kanal.P4kode.equals(((Kanal) lydkilde).kode)) { // TODO - fjern tjek
       // Nærmere fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/820758400
       // Log.rapporterFejl(new IllegalStateException("setLydkilde(P4F"));
       // return;
@@ -516,7 +516,7 @@ public class Afspiller {
   /** Flyt til position (i millisekunder) */
   public void seekTo(int offsetMs) {
     mediaPlayer.seekTo(offsetMs);
-    gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Seeking, offsetMs /1000);
+    gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Seeking, offsetMs / 1000);
   }
 
   /** Længde i millisekunder */
@@ -543,21 +543,23 @@ public class Afspiller {
       // (i hvert fald på Samsung Galaxy S III), så vi kalder det i baggrunden
       new Thread() {
         public void run() {
-         try { // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/825188032
-          Log.d("mediaPlayer.start() " + mpTils());
-          int startposition = DRData.instans.senestLyttede.getStartposition(lydkilde);
-           Log.d("mediaPlayer genoptager afspilning ved " + startposition);
-          gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Play, startposition /1000);
-          if (startposition > 0) {
-            mediaPlayer.seekTo(startposition);
+          try { // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/825188032
+            Log.d("mediaPlayer.start() " + mpTils());
+            int startposition = DRData.instans.senestLyttede.getStartposition(lydkilde);
+            Log.d("mediaPlayer genoptager afspilning ved " + startposition);
+            gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Play, startposition / 1000);
+            if (startposition > 0) {
+              mediaPlayer.seekTo(startposition);
+            }
+            mediaPlayer.start();
+            Log.d("mediaPlayer.start() slut " + mpTils());
+            Thread.sleep(5000); // Vent lidt før data sendes
+            if (App.netværk.erOnline()) {
+              gemiusStatistik.startSendData();
+            } // Ellers venter vi, det kan være vi er heldige at brugeren er online ved næste hændelse
+          } catch (Exception e) {
+            Log.rapporterFejl(e);
           }
-          mediaPlayer.start();
-          Log.d("mediaPlayer.start() slut " + mpTils());
-          Thread.sleep(5000); // Vent lidt før data sendes
-          if (App.netværk.erOnline()) {
-            gemiusStatistik.startSendData();
-          } // Ellers venter vi, det kan være vi er heldige at brugeren er online ved næste hændelse
-         } catch (Exception e) { Log.rapporterFejl(e); }
         }
       }.start();
     }
@@ -588,7 +590,7 @@ public class Afspiller {
           startAfspilningIntern();
         } else {
           DRData.instans.senestLyttede.sætStartposition(lydkilde, 0);
-          gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Completed, getCurrentPosition()/1000);
+          gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Completed, getCurrentPosition() / 1000);
           stopAfspilning();
         }
       }
@@ -599,7 +601,7 @@ public class Afspiller {
       Log.d("onError(" + hvad + ") " + extra + " onErrorTæller=" + onErrorTæller);
 
 
-      if (Build.VERSION.SDK_INT==Build.VERSION_CODES.JELLY_BEAN && hvad==MediaPlayer.MEDIA_ERROR_UNKNOWN
+      if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN && hvad == MediaPlayer.MEDIA_ERROR_UNKNOWN
           && "GT-I9300".equals(Build.MODEL) && mediaPlayer.mediaPlayer.isPlaying()) {
         // Ignorer, da Samsung Galaxy SIII på Android 4.1 Jelly Bean
         // sender denne fejl (onError(1) -110) men i øvrigt spiller fint videre!

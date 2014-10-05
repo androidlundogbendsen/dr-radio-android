@@ -21,20 +21,44 @@
 -->
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Non focused states -->
-    <item android:state_focused="false" android:state_selected="false" android:state_pressed="false" android:drawable="@color/grå10"/>
-    <item android:state_focused="false" android:state_selected="true" android:state_pressed="false" android:drawable="@color/hvid"/>
+  <!-- Non focused states -->
+  <item android:state_focused="false"
+        android:state_selected="false"
+        android:state_pressed="false"
+        android:drawable="@color/grå10"/>
+  <item android:state_focused="false"
+        android:state_selected="true"
+        android:state_pressed="false"
+        android:drawable="@color/hvid"/>
 
-    <!-- Focused states -->
-    <item android:state_focused="true" android:state_selected="false" android:state_pressed="false" android:drawable="@color/grå20"/>
-    <item android:state_focused="true" android:state_selected="true" android:state_pressed="false" android:drawable="@color/grå40"/>
+  <!-- Focused states -->
+  <item android:state_focused="true"
+        android:state_selected="false"
+        android:state_pressed="false"
+        android:drawable="@color/grå20"/>
+  <item android:state_focused="true"
+        android:state_selected="true"
+        android:state_pressed="false"
+        android:drawable="@color/grå40"/>
 
-    <!-- Pressed -->
-    <!--    Non focused states -->
-    <item android:state_focused="false" android:state_selected="false" android:state_pressed="true" android:drawable="@color/grå20"/>
-    <item android:state_focused="false" android:state_selected="true" android:state_pressed="true" android:drawable="@color/grå40"/>
+  <!-- Pressed -->
+  <!--    Non focused states -->
+  <item android:state_focused="false"
+        android:state_selected="false"
+        android:state_pressed="true"
+        android:drawable="@color/grå20"/>
+  <item android:state_focused="false"
+        android:state_selected="true"
+        android:state_pressed="true"
+        android:drawable="@color/grå40"/>
 
-    <!--    Focused states -->
-    <item android:state_focused="true" android:state_selected="false" android:state_pressed="true" android:drawable="@color/grå20"/>
-    <item android:state_focused="true" android:state_selected="true" android:state_pressed="true" android:drawable="@color/grå40"/>
+  <!--    Focused states -->
+  <item android:state_focused="true"
+        android:state_selected="false"
+        android:state_pressed="true"
+        android:drawable="@color/grå20"/>
+  <item android:state_focused="true"
+        android:state_selected="true"
+        android:state_pressed="true"
+        android:drawable="@color/grå40"/>
 </selector>

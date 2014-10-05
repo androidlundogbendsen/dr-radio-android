@@ -40,7 +40,7 @@ public class Opkaldshaandtering extends PhoneStateListener {
   @Override
   public void onCallStateChanged(int state, String incomingNumber) {
     Status afspilningsstatus = afspiller.getAfspillerstatus();
-    Log.d("Opkaldshaandtering Opkaldshaandtering "+state+" afspilningsstatus="+afspilningsstatus);
+    Log.d("Opkaldshaandtering Opkaldshaandtering " + state + " afspilningsstatus=" + afspilningsstatus);
     switch (state) {
       case TelephonyManager.CALL_STATE_OFFHOOK:
       case TelephonyManager.CALL_STATE_RINGING:

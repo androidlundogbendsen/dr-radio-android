@@ -1,7 +1,6 @@
 package dk.dr.radio.akt;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.DialogInterface;
@@ -9,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -39,10 +37,7 @@ import com.androidquery.AQuery;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -84,7 +79,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   private Runnable hentStreams = new Runnable() {
     @Override
     public void run() {
-      if (udsendelse.hentetStream == null && (udsendelse.streams==null || udsendelse.streams.size()==0) && antalGangeForsøgtHentet++<1) {
+      if (udsendelse.hentetStream == null && (udsendelse.streams == null || udsendelse.streams.size() == 0) && antalGangeForsøgtHentet++ < 1) {
         Request<?> req = new DrVolleyStringRequest(udsendelse.getStreamsUrl(), new DrVolleyResonseListener() {
           @Override
           public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
@@ -94,20 +89,20 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
               JSONObject o = new JSONObject(json);
               udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
               udsendelse.indslag = DRJson.parsIndslag(o.optJSONArray(DRJson.Chapters.name()));
-              udsendelse.kanStreames = udsendelse.findBedsteStreams(false).size()>0;
-              udsendelse.kanHentes = udsendelse.findBedsteStreams(true).size()>0;
+              udsendelse.kanStreames = udsendelse.findBedsteStreams(false).size() > 0;
+              udsendelse.kanHentes = udsendelse.findBedsteStreams(true).size() > 0;
               udsendelse.kanNokHøres = udsendelse.kanStreames;
-              if (udsendelse.streams.size()==0) {
-                Log.d("SSSSS TOMME STREAMS ... men det passer måske ikke! for "+udsendelse.slug+" " +udsendelse.getStreamsUrl());
+              if (udsendelse.streams.size() == 0) {
+                Log.d("SSSSS TOMME STREAMS ... men det passer måske ikke! for " + udsendelse.slug + " " + udsendelse.getStreamsUrl());
                 streamsVarTom.put(udsendelse, System.currentTimeMillis());
                 //App.volleyRequestQueue.getCache().remove(url);
                 App.forgrundstråd.postDelayed(hentStreams, 5000);
               } else if (streamsVarTom.containsKey(udsendelse)) {
                 long t0 = streamsVarTom.get(udsendelse);
-                if (!App.PRODUKTION){
+                if (!App.PRODUKTION) {
                   App.langToast("Serveren har ombestemt sig, nu er streams ikke mere tom for " + udsendelse.slug);
                   App.langToast("Tidsforskel mellem de to svar: " + (System.currentTimeMillis() - t0) / 1000 + " sek");
-                  Log.rapporterFejl(new Exception("Server ombestemte sig, der var streams alligevel"), udsendelse.slug+"  dt="+(System.currentTimeMillis()-t0));
+                  Log.rapporterFejl(new Exception("Server ombestemte sig, der var streams alligevel"), udsendelse.slug + "  dt=" + (System.currentTimeMillis() - t0));
                 }
                 streamsVarTom.remove(udsendelse);
               }
@@ -135,7 +130,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     kanal = DRData.instans.grunddata.kanalFraKode.get(getArguments().getString(Kanal_frag.P_kode));
     udsendelse = DRData.instans.udsendelseFraSlug.get(getArguments().getString(DRJson.Slug.name()));
     if (udsendelse == null) {
-      if (!App.PRODUKTION) Log.rapporterFejl(new IllegalStateException("afbrydManglerData()"),getArguments().toString());
+      if (!App.PRODUKTION)
+        Log.rapporterFejl(new IllegalStateException("afbrydManglerData()"), getArguments().toString());
       afbrydManglerData();
       return rod;
     }
@@ -153,7 +149,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     listView = aq.id(R.id.listView).adapter(adapter).getListView();
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).getView());
     listView.setOnItemClickListener(this);
-    listView.setContentDescription(udsendelse.titel + " - " + (udsendelse.startTid==null?"":DRJson.datoformat.format(udsendelse.startTid)));
+    listView.setContentDescription(udsendelse.titel + " - " + (udsendelse.startTid == null ? "" : DRJson.datoformat.format(udsendelse.startTid)));
     /*
     listView.setAccessibilityDelegate(new View.AccessibilityDelegate() {
       @Override
@@ -225,7 +221,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
   private boolean aktuelUdsendelsePåKanalen() {
     boolean res = udsendelse.equals(udsendelse.getKanal().getUdsendelse());
-    Log.d("aktuelUdsendelsePåKanalen()? "+res+" "+udsendelse+" "+udsendelse.getKanal()+":"+udsendelse.getKanal().getUdsendelse());
+    Log.d("aktuelUdsendelsePåKanalen()? " + res + " " + udsendelse + " " + udsendelse.getKanal() + ":" + udsendelse.getKanal().getUdsendelse());
     return res;
   }
 
@@ -241,7 +237,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           if (App.fejlsøgning) Log.d("fikSvar playliste(" + fraCache + " " + url + "   " + this);
           Log.d("UDS fikSvar playliste(" + fraCache + uændret + " " + url);
           if (uændret) return;
-          if (udsendelse.playliste!=null && fraCache) return; // så har vi allerede den nyeste liste i MEM
+          if (udsendelse.playliste != null && fraCache) return; // så har vi allerede den nyeste liste i MEM
           if (json == null || "null".equals(json)) return; // fejl
           udsendelse.playliste = DRJson.parsePlayliste(new JSONArray(json));
           if (!aktuelUdsendelsePåKanalen()) { // Aktuel udsendelse skal have senest spillet nummer øverst
@@ -335,7 +331,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       liste.add(OVERSKRIFT_PLAYLISTE_INFO);
       liste.add(INFOTEKST);
     } else {
-      if (udsendelse.indslag !=null && udsendelse.indslag.size() > 0) {
+      if (udsendelse.indslag != null && udsendelse.indslag.size() > 0) {
         liste.add(OVERSKRIFT_INDSLAG_INFO);
         liste.addAll(udsendelse.indslag);
       } else if (udsendelse.playliste != null && udsendelse.playliste.size() > 0) {
@@ -366,7 +362,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   // Kaldes af afspiller og hentning
   @Override
   public void run() {
-    if (udsendelse==null) return; // fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/834728045 ???
+    if (udsendelse == null) return; // fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/834728045 ???
     DRData.instans.hentedeUdsendelser.tjekOmHentet(udsendelse);
     adapter.notifyDataSetChanged(); // Opdater knapper etc
     App.forgrundstråd.post(opdaterSeekBar);
@@ -374,10 +370,11 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
   Runnable opdaterSeekBar = new Runnable() {
     int spillerNuIndexFør = 0;
+
     @Override
     public void run() {
       App.forgrundstråd.removeCallbacks(this);
-      if (seekBar==null) return; // det er set ske i abetest
+      if (seekBar == null) return; // det er set ske i abetest
       boolean denneUdsSpiller = udsendelse.equals(afspiller.getLydkilde()) && afspiller.getAfspillerstatus() != Status.STOPPET;
       if (!denneUdsSpiller || App.accessibilityManager.isEnabled()) {
         seekBar.setVisibility(View.GONE);
@@ -400,7 +397,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
             seekBarTekst_opdater(pos);
             seekBar.setProgress(pos);
             // Forsøgsvist fremhævet nummeret der spilles lige nu (fremhævet nummer passer ikke altid - UDESTÅR)
-            if (udsendelse.playliste!=null && udsendelse.playliste.size()>0) {
+            if (udsendelse.playliste != null && udsendelse.playliste.size() > 0) {
               int spillerNuIndex = udsendelse.playliste.size() * pos / længdeMs; // TODO rigtig logik
               if (spillerNuIndexFør != spillerNuIndex) {
                 udsendelse.playliste.get(spillerNuIndexFør).spillerNu = false;
@@ -463,9 +460,14 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
     // Fix for https://code.google.com/p/eyes-free/issues/detail?id=318 ... men det hjælper ikke?
     @Override
-    public boolean hasStableIds() { return true; }
+    public boolean hasStableIds() {
+      return true;
+    }
+
     @Override
-    public long getItemId(int position) { return position; }
+    public long getItemId(int position) {
+      return position;
+    }
 
     @Override
     public int getViewTypeCount() {
@@ -524,7 +526,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           }
 
           aq.id(R.id.titel_og_tid).typeface(App.skrift_gibson)
-              .text(lavFedSkriftTil(udsendelse.titel + " - " + (udsendelse.startTid==null?"(ukendt)":DRJson.datoformat.format(udsendelse.startTid)), udsendelse.titel.length()));
+              .text(lavFedSkriftTil(udsendelse.titel + " - " + (udsendelse.startTid == null ? "(ukendt)" : DRJson.datoformat.format(udsendelse.startTid)), udsendelse.titel.length()));
           aq.getView().setContentDescription(null); // varetages af listviewet
 
           //aq.id(R.id.beskrivelse).text(udsendelse.beskrivelse).typeface(App.skrift_georgia);
@@ -573,44 +575,45 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       } else {
         vh = (Viewholder) v.getTag();
         aq = vh.aq;
-        if (!App.PRODUKTION && vh.itemViewType!=type) throw new IllegalStateException("Liste ej konsistent, der er nok sket ændringer i den fra f.eks. getView()");
+        if (!App.PRODUKTION && vh.itemViewType != type)
+          throw new IllegalStateException("Liste ej konsistent, der er nok sket ændringer i den fra f.eks. getView()");
       }
 
       // Opdatér viewholderens data
       if (type == TOP) {
         //aq.id(R.id.højttalerikon).visibility(streams ? View.VISIBLE : View.GONE);
         boolean lydkildeErDenneUds = udsendelse.equals(afspiller.getLydkilde());
-        boolean lydkildeErDenneKanal = kanal==afspiller.getLydkilde().getKanal();
+        boolean lydkildeErDenneKanal = kanal == afspiller.getLydkilde().getKanal();
         boolean erAktuelUdsendelsePåKanalen = aktuelUdsendelsePåKanalen();
-        boolean spiller = afspiller.getAfspillerstatus()==Status.SPILLER;
-        boolean forbinder = afspiller.getAfspillerstatus()==Status.FORBINDER;
+        boolean spiller = afspiller.getAfspillerstatus() == Status.SPILLER;
+        boolean forbinder = afspiller.getAfspillerstatus() == Status.FORBINDER;
         boolean erOnline = App.netværk.erOnline();
         opdaterSeekBar.run();
 
         aq.id(R.id.hør).visible().enabled(true);
         if (udsendelse.hentetStream != null)         // Hentede udsendelser
         {
-          if (lydkildeErDenneUds && (spiller||forbinder)) aq.gone();
+          if (lydkildeErDenneUds && (spiller || forbinder)) aq.gone();
           else aq.text("HØR HENTET UDSENDELSE").getView().setContentDescription("hør hentet udsendelse");
-        }
-        else                                        // On demand og direkte udsendelser
+        } else                                        // On demand og direkte udsendelser
         {
-          if (lydkildeErDenneUds && (spiller||forbinder)) aq.gone();
-          //else if (udsendelse.streamsKlar()) {
+          if (lydkildeErDenneUds && (spiller || forbinder)) aq.gone();
+            //else if (udsendelse.streamsKlar()) {
           else if (udsendelse.kanStreames) {
             if (erOnline) aq.text("HØR UDSENDELSE").getView().setContentDescription("hør udsendelse");
             else aq.text("Internetforbindelse mangler").enabled(false);
           } else if (erAktuelUdsendelsePåKanalen) {
-            if (lydkildeErDenneKanal&&(spiller||forbinder)) aq.enabled(false).text("SPILLER "+ kanal.navn.toUpperCase() + " LIVE");
-            else if (erOnline) aq.text("HØR "+ kanal.navn.toUpperCase() + " LIVE").getView().setContentDescription("hør " + kanal.navn.toUpperCase());
+            if (lydkildeErDenneKanal && (spiller || forbinder))
+              aq.enabled(false).text("SPILLER " + kanal.navn.toUpperCase() + " LIVE");
+            else if (erOnline)
+              aq.text("HØR " + kanal.navn.toUpperCase() + " LIVE").getView().setContentDescription("hør " + kanal.navn.toUpperCase());
             else aq.enabled(false).text("Internetforbindelse mangler");
-          }
-          else aq.gone();
+          } else aq.gone();
         }
 
 
         aq.id(R.id.hent).visibility(
-            DRData.instans.hentedeUdsendelser.virker() && udsendelse.hentetStream==null && udsendelse.kanHentes ? View.VISIBLE : View.GONE);
+            DRData.instans.hentedeUdsendelser.virker() && udsendelse.hentetStream == null && udsendelse.kanHentes ? View.VISIBLE : View.GONE);
         aq.textColorId(udsendelse.streamsKlar() ? R.color.blå : R.color.grå40);
         Cursor c = DRData.instans.hentedeUdsendelser.getStatusCursor(udsendelse);
         if (c != null) {
@@ -627,7 +630,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         }
 
         aq.id(R.id.kan_endnu_ikke_hentes).visibility(
-          DRData.instans.hentedeUdsendelser.virker() && !udsendelse.kanHentes  ? View.VISIBLE : View.GONE);
+            DRData.instans.hentedeUdsendelser.virker() && !udsendelse.kanHentes ? View.VISIBLE : View.GONE);
       } else if (type == PLAYLISTEELEM_NU || type == PLAYLISTEELEM) {
         Playlisteelement ple = (Playlisteelement) liste.get(position);
         vh.titel.setText(lavFedSkriftTil(ple.titel + " | " + ple.kunstner, ple.titel.length()));
@@ -693,11 +696,11 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
       intent.putExtra(Intent.EXTRA_SUBJECT, udsendelse.titel);
       intent.putExtra(Intent.EXTRA_TEXT, udsendelse.titel + "\n\n"
-          + udsendelse.beskrivelse + "\n\n" +
+              + udsendelse.beskrivelse + "\n\n" +
 // http://www.dr.dk/radio/ondemand/p6beat/debut-65
 // http://www.dr.dk/radio/ondemand/ramasjangradio/ramasjang-formiddag-44#!/00:03
               // "http://dr.dk/radio/ondemand/" + kanal.slug + "/" + udsendelse.slug
-          (udsendelse.shareLink!=null?udsendelse.shareLink:"")
+              (udsendelse.shareLink != null ? udsendelse.shareLink : "")
 //          + "\n\n" + udsendelse.findBedsteStream(true).url
       );
 //www.dr.dk/p1/mennesker-og-medier/mennesker-og-medier-100
@@ -794,7 +797,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     int type = adapter.getItemViewType(position);
 
     if (type == PLAYLISTEELEM || type == PLAYLISTEELEM_NU) {
-      if (seekBar == null || !udsendelse.streamsKlar() || !udsendelse.kanStreames) return; // seekBar==null er set ske i abetest
+      if (seekBar == null || !udsendelse.streamsKlar() || !udsendelse.kanStreames)
+        return; // seekBar==null er set ske i abetest
       // Det må være et playlisteelement
       final Playlisteelement pl = (Playlisteelement) liste.get(position);
       if (udsendelse.equals(afspiller.getLydkilde()) && afspiller.getAfspillerstatus() == Status.SPILLER) {
@@ -818,7 +822,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       seekBar.setProgress(pl.offsetMs);
       Log.registrérTestet("Valg af playlisteelement", "ja");
     } else if (type == INDSLAGLISTEELEM) {
-      if (seekBar==null || !udsendelse.streamsKlar()) return; // seekBar==null er set ske i abetest
+      if (seekBar == null || !udsendelse.streamsKlar()) return; // seekBar==null er set ske i abetest
       final Indslaglisteelement pl = (Indslaglisteelement) liste.get(position);
       if (udsendelse.equals(afspiller.getLydkilde()) && afspiller.getAfspillerstatus() == Status.SPILLER) {
         afspiller.seekTo(pl.offsetMs);

@@ -1,44 +1,43 @@
 <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:background="@drawable/knap_graa10_bg"
-        android:orientation="vertical">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:background="@drawable/knap_graa10_bg"
+    android:orientation="vertical">
 
-    <!--
-        android:layerType="software" er nødvendig,
-        ellers tegnes der en vandret streg i stedet for stiplet linje på Android 3+
-        -->
+  <!--
+      android:layerType="software" er nødvendig,
+      ellers tegnes der en vandret streg i stedet for stiplet linje på Android 3+
+      -->
 
-    <View
-            android:id="@+id/stiplet_linje"
-            android:background="@drawable/linje"
-            android:layerType="software"
-            android:layout_width="match_parent"
-            android:layout_height="3dp"/>
+  <View
+      android:id="@+id/stiplet_linje"
+      android:background="@drawable/linje"
+      android:layerType="software"
+      android:layout_width="match_parent"
+      android:layout_height="3dp"/>
 
 
-
-    <TextView
-            android:id="@+id/titel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="I DAG"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            android:background="@color/grå10"
-            android:textColor="@color/grå70"
-            android:textAppearance="?android:attr/textAppearance"
-            tools:ignore="HardcodedText"/>
-<!--
-    <View
-            android:background="@drawable/linje"
-            android:layerType="software"
-            android:layout_width="match_parent"
-            android:layout_height="3dp"/>
--->
+  <TextView
+      android:id="@+id/titel"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="I DAG"
+      android:paddingTop="4dp"
+      android:paddingBottom="4dp"
+      android:background="@color/grå10"
+      android:textColor="@color/grå70"
+      android:textAppearance="?android:attr/textAppearance"
+      tools:ignore="HardcodedText"/>
+  <!--
+      <View
+              android:background="@drawable/linje"
+              android:layerType="software"
+              android:layout_width="match_parent"
+              android:layout_height="3dp"/>
+  -->
 
 </LinearLayout>

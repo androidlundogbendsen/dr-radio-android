@@ -5,6 +5,6 @@
           android:text="Senest lyttede"
           android:textStyle="bold"
           android:id="@+id/tekst"/>
-        <!--
-                  android:textAppearance="?android:attr/textAppearanceMedium"
-        -->
+    <!--
+              android:textAppearance="?android:attr/textAppearanceMedium"
+    -->

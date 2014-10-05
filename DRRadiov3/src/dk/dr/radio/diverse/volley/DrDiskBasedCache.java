@@ -47,30 +47,29 @@ import dk.dr.radio.diverse.Log;
  */
 public class DrDiskBasedCache implements Cache {
 
-    /** Map of the Key, CacheHeader pairs */
+  /** Map of the Key, CacheHeader pairs */
   private final Map<String, CacheHeader> mEntries =
       new LinkedHashMap<String, CacheHeader>(16, .75f, true);
-    /** Total amount of space currently used by the cache in bytes. */
+  /** Total amount of space currently used by the cache in bytes. */
   private long mTotalSize = 0;
 
-    /** The root directory to use for the cache. */
+  /** The root directory to use for the cache. */
   private final File mRootDirectory;
 
-    /** The maximum size of the cache in bytes. */
+  /** The maximum size of the cache in bytes. */
   private final int mMaxCacheSizeInBytes;
 
-    /** Default maximum disk usage in bytes. 1MB cache burde være rigeligt */
+  /** Default maximum disk usage in bytes. 1MB cache burde være rigeligt */
   private static final int DEFAULT_DISK_USAGE_BYTES = 1 * 1024 * 1024; // DR ÆNDRING
 
-    /** High water mark percentage for the cache */
+  /** High water mark percentage for the cache */
   private static final float HYSTERESIS_FACTOR = 0.9f;
 
-    /** Magic number for current version of cache file format. */
+  /** Magic number for current version of cache file format. */
   private static final int CACHE_MAGIC = 0x20120504;
 
   /**
    * Constructs an instance of the DiskBasedCache at the specified directory.
-   *
    * @param rootDirectory       The root directory of the cache.
    * @param maxCacheSizeInBytes The maximum size of the cache in bytes.
    */
@@ -83,7 +82,6 @@ public class DrDiskBasedCache implements Cache {
   /**
    * Constructs an instance of the DiskBasedCache at the specified directory using
    * the default maximum cache size of 5MB.
-   *
    * @param rootDirectory The root directory of the cache.
    */
   public DrDiskBasedCache(File rootDirectory) {
@@ -194,7 +192,6 @@ public class DrDiskBasedCache implements Cache {
 
   /**
    * Invalidates an entry in the cache.
-   *
    * @param key        Cache key
    * @param fullExpire True to fully expire the entry, false to soft expire
    */
@@ -253,7 +250,6 @@ public class DrDiskBasedCache implements Cache {
 
   /**
    * Creates a pseudo-unique filename for the specified cache key.
-   *
    * @param key The key to generate a file name for.
    * @return A pseudo-unique filename.
    */
@@ -280,7 +276,6 @@ public class DrDiskBasedCache implements Cache {
 
   /**
    * Prunes the cache to fit the amount of bytes specified.
-   *
    * @param neededSpace The amount of bytes we are trying to fit into the cache.
    */
   private void pruneIfNeeded(int neededSpace) {
@@ -322,7 +317,6 @@ public class DrDiskBasedCache implements Cache {
 
   /**
    * Puts the entry with the specified key into the cache.
-   *
    * @param key   The key to identify the entry by.
    * @param entry The entry to cache.
    */
@@ -368,26 +362,28 @@ public class DrDiskBasedCache implements Cache {
    */
   // Visible for testing.
   static class CacheHeader {
-        /** The size of the data identified by this CacheHeader. (This is not
-         * serialized to disk. */
+    /**
+     * The size of the data identified by this CacheHeader. (This is not
+     * serialized to disk.
+     */
     public long size;
 
-        /** The key that identifies the cache entry. */
+    /** The key that identifies the cache entry. */
     public String key;
 
-        /** ETag for cache coherence. */
+    /** ETag for cache coherence. */
     public String etag;
 
-        /** Date of this response as reported by the server. */
+    /** Date of this response as reported by the server. */
     public long serverDate;
 
-        /** TTL for this record. */
+    /** TTL for this record. */
     public long ttl;
 
-        /** Soft TTL for this record. */
+    /** Soft TTL for this record. */
     public long softTtl;
 
-        /** Headers from the response resulting in this cache entry. */
+    /** Headers from the response resulting in this cache entry. */
     public Map<String, String> responseHeaders;
 
     private CacheHeader() {
@@ -395,7 +391,6 @@ public class DrDiskBasedCache implements Cache {
 
     /**
      * Instantiates a new CacheHeader object
-     *
      * @param key   The key that identifies the cache entry
      * @param entry The cache entry.
      */
@@ -411,7 +406,6 @@ public class DrDiskBasedCache implements Cache {
 
     /**
      * Reads the header off of an InputStream and returns a CacheHeader object.
-     *
      * @param is The InputStream to read from.
      * @throws IOException
      */

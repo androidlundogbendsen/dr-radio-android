@@ -7,12 +7,12 @@
                     android:resizeMode="horizontal|vertical"
                     android:widgetCategory="keyguard|home_screen"
                     android:initialKeyguardLayout="@layout/afspiller_levendeikon"
-        >
-    <!--
-                    android:minHeight="72dip"
-                    android:minWidth="294dip"
+    >
+  <!--
+                  android:minHeight="72dip"
+                  android:minWidth="294dip"
 
-                    Se også
-                    http://developer.android.com/guide/topics/appwidgets/index.html
-    -->
+                  Se også
+                  http://developer.android.com/guide/topics/appwidgets/index.html
+  -->
 </appwidget-provider>

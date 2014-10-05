@@ -32,8 +32,10 @@ import dk.dr.radio.diverse.Log;
  * activity.  Passes through Alarm ID.
  */
 public class AlarmReceiver extends BroadcastReceiver {
-  /** If the alarm is older than STALE_WINDOW, ignore.  It
-   is probably the result of a time or timezone change */
+  /**
+   * If the alarm is older than STALE_WINDOW, ignore.  It
+   * is probably the result of a time or timezone change
+   */
   private final static int STALE_WINDOW = 30 * 60 * 1000;
 
   @Override
@@ -60,7 +62,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     Alarms.tjekIndlæst(context);
-
 
 
     if (alarm == null) {
@@ -102,7 +103,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     //playAlarm.putExtra(Alarms.ALARM_INTENT_EXTRA, alarm.toString());
     playAlarm.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     context.startActivity(playAlarm);
-
 
 
     try {

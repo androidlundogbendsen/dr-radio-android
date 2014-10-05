@@ -1,7 +1,5 @@
 package dk.dr.radio.data;
 
-import android.os.Build;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +33,7 @@ public abstract class Lydkilde implements Serializable {
 
   public String findBedsteStreamUrl(boolean tilHentning) {
     List<Lydstream> prioriteretListe = findBedsteStreams(tilHentning);
-    if (prioriteretListe.size()==0) return null;
+    if (prioriteretListe.size() == 0) return null;
     return prioriteretListe.get(0).url;
   }
 

@@ -21,52 +21,52 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/add_alarm"
-        android:clickable="true"
-        android:focusable="true"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@android:drawable/list_selector_background"
-		>
+  <LinearLayout
+      android:id="@+id/add_alarm"
+      android:clickable="true"
+      android:focusable="true"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:background="@android:drawable/list_selector_background"
+      >
 
-
-        <ImageView
-            style="@style/alarm_list_left_column"
-            android:duplicateParentState="true"
-            android:gravity="center"
-            android:scaleType="center"
-            android:src="@drawable/deskclock_ic_menu_add" />
-
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:duplicateParentState="true"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/add_alarm" />
-
-    </LinearLayout>
 
     <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="fitXY"
-        android:gravity="fill_horizontal"
-        android:src="@android:drawable/divider_horizontal_dark" />
+        style="@style/alarm_list_left_column"
+        android:duplicateParentState="true"
+        android:gravity="center"
+        android:scaleType="center"
+        android:src="@drawable/deskclock_ic_menu_add"/>
 
-    <ListView
-        android:id="@+id/alarms_list"
-        android:layout_width="fill_parent"
+    <TextView
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:duplicateParentState="true"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/add_alarm"/>
 
-    <!-- style="?android:attr/buttonBarButtonStyle"  -->
-    <Button android:id="@+id/done"
-            android:focusable="true"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/done"/>
+  </LinearLayout>
+
+  <ImageView
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:scaleType="fitXY"
+      android:gravity="fill_horizontal"
+      android:src="@android:drawable/divider_horizontal_dark"/>
+
+  <ListView
+      android:id="@+id/alarms_list"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"/>
+
+  <!-- style="?android:attr/buttonBarButtonStyle"  -->
+  <Button android:id="@+id/done"
+          android:focusable="true"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/done"/>
 </LinearLayout>

@@ -124,7 +124,6 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
       vh.aq.id(R.id.stiplet_linje).background(position == 0 ? R.drawable.linje : R.drawable.stiplet_linje);
 
 
-
       if (sl.lydkilde instanceof Kanal) {
         Kanal k = (Kanal) sl.lydkilde;
         vh.linje1.setText(k.navn + " (Direkte)");
@@ -133,7 +132,7 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
         Udsendelse u = (Udsendelse) sl.lydkilde;
         vh.linje1.setText(u.titel);
         Kanal k = u.getKanal();
-        vh.linje2.setText((k==null?"":k.navn+" - ")+DRJson.getDagsbeskrivelse(u.startTid).toLowerCase()+" kl "+u.startTidKl);
+        vh.linje2.setText((k == null ? "" : k.navn + " - ") + DRJson.getDagsbeskrivelse(u.startTid).toLowerCase() + " kl " + u.startTidKl);
       } else {
         Log.rapporterFejl(new Exception("forkert type"), sl.lydkilde);
       }

@@ -8,10 +8,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 
-import org.apache.http.protocol.HTTP;
-
 import dk.dr.radio.diverse.App;
-import dk.dr.radio.diverse.Log;
 
 /**
  * Created by j on 13-03-14.
@@ -79,7 +76,7 @@ public class DrVolleyStringRequest extends StringRequest {
 */
 //    Log.d("YYYY parseNetworkResponse " + response.headers);
     String servertidStr = response.headers.get("Date");
-    if (servertidStr!=null) { // Er set på nogle ældre enheder
+    if (servertidStr != null) { // Er set på nogle ældre enheder
       long servertid = HttpHeaderParser.parseDateAsEpoch(servertidStr);
       if (servertid > 0) {
         App.sætServerCurrentTimeMillis(servertid);

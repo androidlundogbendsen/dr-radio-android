@@ -28,7 +28,6 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
 import android.text.format.Formatter;
 import android.view.MenuItem;
 
@@ -68,27 +67,28 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
       ArrayList<File> l = HentedeUdsendelser.findMuligeEksternLagerstier();
       String[] visVærdi = new String[l.size()];
       String[] værdi = new String[l.size()];
-      for (int i=0; i<l.size(); i++) try {
-        File dir = l.get(i);
-        String dirs = dir.toString();
-        værdi[i] = dirs;
-        visVærdi[i] = dir.getParent() + " (ikke tilgængelig)";
-        // Find ledig plads
-        boolean fandtesFørMkdirs = dir.exists();
-        dir.mkdirs();
-        StatFs stat = new StatFs(dirs);
-        long blockSize = stat.getBlockSize();
-        long availableBlocks = stat.getAvailableBlocks();
-        if (!fandtesFørMkdirs) dir.delete(); // ryd op
-        visVærdi[i] = dir.getParent() + " ("+ Formatter.formatFileSize(App.instans, availableBlocks * blockSize)+" ledig)";
-      } catch (Exception e) {
-        Log.e(e);
-      }
+      for (int i = 0; i < l.size(); i++)
+        try {
+          File dir = l.get(i);
+          String dirs = dir.toString();
+          værdi[i] = dirs;
+          visVærdi[i] = dir.getParent() + " (ikke tilgængelig)";
+          // Find ledig plads
+          boolean fandtesFørMkdirs = dir.exists();
+          dir.mkdirs();
+          StatFs stat = new StatFs(dirs);
+          long blockSize = stat.getBlockSize();
+          long availableBlocks = stat.getAvailableBlocks();
+          if (!fandtesFørMkdirs) dir.delete(); // ryd op
+          visVærdi[i] = dir.getParent() + " (" + Formatter.formatFileSize(App.instans, availableBlocks * blockSize) + " ledig)";
+        } catch (Exception e) {
+          Log.e(e);
+        }
       ListPreference lp = (ListPreference) findPreference(HentedeUdsendelser.NØGLE_placeringAfHentedeFiler);
-      Log.d("Indstillinger_akt placeringAfHentedeFiler "+ Arrays.toString(værdi)+Arrays.toString(visVærdi));
+      Log.d("Indstillinger_akt placeringAfHentedeFiler " + Arrays.toString(værdi) + Arrays.toString(visVærdi));
       lp.setEntries(visVærdi);
       lp.setEntryValues(værdi);
-      if (visVærdi.length>0) {
+      if (visVærdi.length > 0) {
         if (!App.prefs.contains(HentedeUdsendelser.NØGLE_placeringAfHentedeFiler)) {
           lp.setValueIndex(0); // Værdi nummer 0 er forvalgt
         }
@@ -96,9 +96,9 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
         lp.setEnabled(false);
         int tilladelse = App.instans.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, App.instans.getPackageName());
         if (tilladelse != PackageManager.PERMISSION_GRANTED) {
-          lp.setSummary(lp.getSummary()+" Fejl - tilladelse til eksternt lager mangler (du skal opdatere app'en)");
+          lp.setSummary(lp.getSummary() + " Fejl - tilladelse til eksternt lager mangler (du skal opdatere app'en)");
         } else {
-          lp.setSummary(lp.getSummary()+" Fejl - adgang til eksternt lager mangler (indsæt SD-kort)");
+          lp.setSummary(lp.getSummary() + " Fejl - adgang til eksternt lager mangler (indsæt SD-kort)");
         }
       }
     } catch (Exception ex) {
@@ -107,7 +107,9 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) try {
       getActionBar().setDisplayHomeAsUpEnabled(true);
-    } catch (Exception e) { Log.rapporterFejl(e); } // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/824608029
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
+    } // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/824608029
   }
 
   @Override
