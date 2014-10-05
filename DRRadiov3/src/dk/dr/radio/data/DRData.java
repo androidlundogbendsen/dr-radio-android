@@ -60,6 +60,7 @@ public class DRData {
   public SenestLyttede senestLyttede = new SenestLyttede();
   public Favoritter favoritter = new Favoritter();
   public HentedeUdsendelser hentedeUdsendelser = new HentedeUdsendelser();  // Understøttes ikke på Android 2.2
+  public ProgramserierAtilAA programserierAtilÅ = new ProgramserierAtilAA();
 
   /**
    * Til afprøvning
@@ -196,7 +197,47 @@ http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-b.m3u8?sd=10&rebase=on
     i.grunddata.parseFællesGrunddata(Diverse.læsStreng(new FileInputStream("../DRRadiov3/res/raw/grunddata.json")));
     i.grunddata.hentSupplerendeDataBg_KUN_TIL_UDVIKLING();
 
-    // Virker ikke, giv
+
+    // A-Å-liste
+    {
+      JSONArray jsonArray = new JSONArray(main_hent("http://www.dr.dk/tjenester/mu-apps/series-list?type=radio"));
+
+
+      // http://www.dr.dk/tjenester/mu-apps/series?type=radio&includePrograms=true&urn=urn:dr:mu:bundle:50d2ab93860d9a09809ca4f2
+      ArrayList<Programserie> res = new ArrayList<Programserie>();
+      for (int n=0; n<jsonArray.length(); n++) {
+        JSONObject programserieJson = jsonArray.getJSONObject(n);
+        String programserieSlug = programserieJson.getString(DRJson.Slug.name());
+        Log.d("\n=========================================== programserieSlug = " + programserieSlug);
+
+        Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
+        if (programserie==null) {
+          programserie = new Programserie();
+          DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
+        }
+        res.add(DRJson.parsProgramserie(programserieJson, programserie));
+/*
+        int offset = 0;
+        // Virker ikke, giver ALLE udsendelser i RadioDrama:
+        // final String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
+        final String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
+        JSONObject data = new JSONObject(main_hent(url));
+        if (offset == 0) {
+          programserie = DRJson.parsProgramserie(data, programserie);
+          DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
+        }
+        programserie.tilføjUdsendelser(offset, DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), null, DRData.instans));
+        Log.d(programserie.slug + " = " + programserie.getUdsendelser());
+*/
+      }
+      Log.d("parseRadioDrama res="+res);
+
+    }
+
+    System.exit(0);
+
+    // RadioDrama
+    // Virker ikke:
     //JSONArray jsonArray = new JSONArray(main_hent("http://www.dr.dk/tjenester/mu-apps/radio-drama?type=radio&includePrograms=true"));
     JSONArray jsonArray = new JSONArray(main_hent("http://www.dr.dk/tjenester/mu-apps/radio-drama"));
     ArrayList<Programserie> res = new ArrayList<Programserie>();
@@ -213,6 +254,8 @@ http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-b.m3u8?sd=10&rebase=on
       res.add(DRJson.parsProgramserie(programserieJson, programserie));
 
       int offset = 0;
+      // Virker ikke, giver ALLE udsendelser i RadioDrama:
+      // final String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
       final String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
       JSONObject data = new JSONObject(main_hent(url));
       if (offset == 0) {
@@ -223,6 +266,8 @@ http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-b.m3u8?sd=10&rebase=on
       Log.d(programserie.slug + " = " + programserie.getUdsendelser());
     }
     Log.d("parseRadioDrama res="+res);
+
+
     System.exit(0);
 
 

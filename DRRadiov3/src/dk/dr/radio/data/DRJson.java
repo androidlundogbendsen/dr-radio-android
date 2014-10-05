@@ -348,7 +348,7 @@ Description: "I 'Efter fyringerne' lykkes det, gennem private optagelser og inte
     ps.beskrivelse = o.optString(DRJson.Description.name());
     ps.slug = o.getString(DRJson.Slug.name());
     ps.urn = o.optString(DRJson.Urn.name());
-    ps.antalUdsendelser = o.getInt(DRJson.TotalPrograms.name());
+    ps.antalUdsendelser = o.optInt(DRJson.TotalPrograms.name());
     return ps;
   }
 

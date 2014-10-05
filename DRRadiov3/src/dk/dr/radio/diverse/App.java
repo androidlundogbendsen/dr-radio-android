@@ -56,10 +56,12 @@ import com.android.volley.toolbox.Volley;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.bugsense.trace.BugSenseHandler;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 
 import dk.dr.radio.afspilning.Afspiller;
@@ -68,6 +70,7 @@ import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Diverse;
 import dk.dr.radio.data.Grunddata;
 import dk.dr.radio.data.Kanal;
+import dk.dr.radio.data.Programserie;
 import dk.dr.radio.diverse.volley.DrBasicNetwork;
 import dk.dr.radio.diverse.volley.DrDiskBasedCache;
 import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
@@ -308,7 +311,36 @@ public class App extends Application {
       }
 
 
-
+      if (DRData.instans.programserierAtilÅ.liste == null) {
+        færdig = false;
+        Request<?> req = new DrVolleyStringRequest("http://www.dr.dk/tjenester/mu-apps/series-list?type=radio", new DrVolleyResonseListener() {
+          @Override
+          public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+            if (uændret) return;
+            JSONArray jsonArray = new JSONArray(json);
+            // http://www.dr.dk/tjenester/mu-apps/series?type=radio&includePrograms=true&urn=urn:dr:mu:bundle:50d2ab93860d9a09809ca4f2
+            ArrayList<Programserie> res = new ArrayList<Programserie>();
+            for (int n=0; n<jsonArray.length(); n++) {
+              JSONObject programserieJson = jsonArray.getJSONObject(n);
+              String programserieSlug = programserieJson.getString(DRJson.Slug.name());
+              Log.d("\n=========================================== programserieSlug = " + programserieSlug);
+              Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
+              if (programserie==null) {
+                programserie = new Programserie();
+                DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
+              }
+              res.add(DRJson.parsProgramserie(programserieJson, programserie));
+            }
+            Log.d("parseRadioDrama res="+res);
+            DRData.instans.programserierAtilÅ.liste = res;
+          }
+        }) {
+          public Priority getPriority() {
+            return Priority.LOW;
+          }
+        };
+        App.volleyRequestQueue.add(req);
+      }
 
 
       if (!færdig) {
