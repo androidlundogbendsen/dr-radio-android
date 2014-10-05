@@ -275,52 +275,56 @@ public class App extends Application {
    * Dette sker når app'en er synlig og telefonen er online
    */
   private Runnable udeståendeInitialisering = new Runnable() {
-   @Override
-   public void run() {
-    if (!erOnline()) return;
-    boolean færdig = true;
-    Log.d("Onlineinitialisering starter efter "+(System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
+    @Override
+    public void run() {
+      if (!erOnline()) return;
+      boolean færdig = true;
+      Log.d("Onlineinitialisering starter efter "+(System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
 
-    if (App.netværk.status == Netvaerksstatus.Status.WIFI) { // Tjek at alle kanaler har deres streamsurler
-      for (final Kanal k : DRData.instans.grunddata.kanaler) {
-        if (k.streams != null) continue;
-//        Log.d("run()1 " + (System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
-        Request<?> req = new DrVolleyStringRequest(k.getStreamsUrl(), new DrVolleyResonseListener() {
-          @Override
-          public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
-            if (uændret) return;
-            JSONObject o = new JSONObject(json);
-            k.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
-            Log.d("hentSupplerendeDataBg " + k.kode + " fraCache=" + fraCache + " => " + k.slug + " k.lydUrl=" + k.streams);
-          }
-        }) {
-          public Priority getPriority() {
-            return Priority.LOW;
-          }
-        };
-        App.volleyRequestQueue.add(req);
+      if (App.netværk.status == Netvaerksstatus.Status.WIFI) { // Tjek at alle kanaler har deres streamsurler
+        for (final Kanal k : DRData.instans.grunddata.kanaler) {
+          if (k.streams != null) continue;
+  //        Log.d("run()1 " + (System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
+          Request<?> req = new DrVolleyStringRequest(k.getStreamsUrl(), new DrVolleyResonseListener() {
+            @Override
+            public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
+              if (uændret) return;
+              JSONObject o = new JSONObject(json);
+              k.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
+              Log.d("hentSupplerendeDataBg " + k.kode + " fraCache=" + fraCache + " => " + k.slug + " k.lydUrl=" + k.streams);
+            }
+          }) {
+            public Priority getPriority() {
+              return Priority.LOW;
+            }
+          };
+          App.volleyRequestQueue.add(req);
+        }
       }
-    }
 
-    if (DRData.instans.favoritter.getAntalNyeUdsendelser() < 0) {
-      færdig = false;
-      DRData.instans.favoritter.startOpdaterAntalNyeUdsendelser.run();
-    }
+      if (DRData.instans.favoritter.getAntalNyeUdsendelser() < 0) {
+        færdig = false;
+        DRData.instans.favoritter.startOpdaterAntalNyeUdsendelser.run();
+      }
 
-    if (!færdig) {
-      App.forgrundstråd.postDelayed(this, 15000); // prøv igen om 15 sekunder og se om alle data er klar der
-    }
 
-    if (prefs.getString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, null) == null) {
-      færdig = false;
-      startP4stedplacering();
+
+
+
+      if (!færdig) {
+        App.forgrundstråd.postDelayed(this, 15000); // prøv igen om 15 sekunder og se om alle data er klar der
+      }
+
+      if (prefs.getString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, null) == null) {
+        færdig = false;
+        startP4stedplacering();
+      }
+      if (færdig) {
+        netværk.observatører.remove(this); // Hold ikke mere øje med om vi kommer online
+        udeståendeInitialisering = null;
+      }
+      Log.d("Onlineinitialisering færdig="+færdig);
     }
-    if (færdig) {
-      netværk.observatører.remove(this); // Hold ikke mere øje med om vi kommer online
-      udeståendeInitialisering = null;
-    }
-    Log.d("Onlineinitialisering færdig="+færdig);
-   }
   };
 
 
