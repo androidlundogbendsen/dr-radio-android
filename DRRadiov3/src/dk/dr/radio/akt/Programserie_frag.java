@@ -60,7 +60,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     aq = new AQuery(rod);
 
     programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
-    if (programserie == null) {
+    if (programserie == null || programserie.getUdsendelser()==null) {
       hentUdsendelser(0); // hent kun en frisk udgave hvis vi ikke allerede har en
     }
     bygListe();
@@ -205,10 +205,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
           if (kanal == null) aq.id(R.id.logo).gone();
           else aq.id(R.id.logo).image(kanal.kanallogo_resid).getView().setContentDescription(kanal.navn);
           aq.id(R.id.titel).typeface(App.skrift_gibson_fed).text(programserie.titel);
-          String tekst = "ALLE UDSENDELSER";
-          aq.id(R.id.alle_udsendelser).typeface(App.skrift_gibson)
-              .text(lavFedSkriftTil(tekst + " (" + programserie.antalUdsendelser + ")", tekst.length()))
-              .getView().setContentDescription(programserie.antalUdsendelser + " udsendelser");
+          aq.id(R.id.alle_udsendelser).typeface(App.skrift_gibson);
           aq.id(R.id.beskrivelse).text(programserie.beskrivelse).typeface(App.skrift_georgia);
           Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS);
           favorit = aq.id(R.id.favorit).clicked(Programserie_frag.this).getCheckBox();
@@ -226,7 +223,12 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
       }
 
       // Opdatér viewholderens data
-      if (type == UDSENDELSE) {
+      if (type == TOP) {
+        String tekst = "ALLE UDSENDELSER";
+        aq.id(R.id.alle_udsendelser)
+            .text(lavFedSkriftTil(tekst + " (" + programserie.antalUdsendelser + ")", tekst.length()))
+            .getView().setContentDescription(programserie.antalUdsendelser + " udsendelser");
+      } else if (type == UDSENDELSE) {
         Udsendelse u = (Udsendelse) liste.get(position);
         vh.udsendelse = u;
         //vh.stiplet_linje.setVisibility(position > 1 ? View.VISIBLE : View.INVISIBLE); // Første stiplede linje væk
