@@ -314,6 +314,11 @@ public class App extends Application {
       }
 
 
+      if (DRData.instans.radiodrama.liste == null) {
+        færdig = false;
+        DRData.instans.radiodrama.startHentAtilÅ();
+      }
+
       if (!færdig) {
         App.forgrundstråd.postDelayed(this, 15000); // prøv igen om 15 sekunder og se om alle data er klar der
       }

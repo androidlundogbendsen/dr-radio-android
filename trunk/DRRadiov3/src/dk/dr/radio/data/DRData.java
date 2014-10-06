@@ -61,6 +61,7 @@ public class DRData {
   public Favoritter favoritter = new Favoritter();
   public HentedeUdsendelser hentedeUdsendelser = new HentedeUdsendelser();  // Understøttes ikke på Android 2.2
   public ProgramserierAtilAA programserierAtilÅ = new ProgramserierAtilAA();
+  public Radiodrama radiodrama = new Radiodrama();
 
   /**
    * Til afprøvning

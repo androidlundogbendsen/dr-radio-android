@@ -19,7 +19,7 @@ import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.PagerSlidingTabStrip;
 import dk.dr.radio.v3.R;
 
-public class ProgramserierAtilAA_frag extends Basisfragment implements ViewPager.OnPageChangeListener, Runnable {
+public class Radiodrama_frag extends Basisfragment implements ViewPager.OnPageChangeListener, Runnable {
 
   private static final String INDEX = "Radiodrama_frag_index";
   private ViewPager viewPager;
@@ -35,7 +35,7 @@ public class ProgramserierAtilAA_frag extends Basisfragment implements ViewPager
   @Override
   public void run() {
     liste.clear();
-    if (DRData.instans.programserierAtilÅ.liste!=null) liste.addAll(DRData.instans.programserierAtilÅ.liste);
+    if (DRData.instans.radiodrama.liste!=null) liste.addAll(DRData.instans.radiodrama.liste);
     if (adapter != null) {
       if (viewPager.getCurrentItem() >= liste.size()) {
         viewPager.setCurrentItem(0);
@@ -81,7 +81,7 @@ public class ProgramserierAtilAA_frag extends Basisfragment implements ViewPager
     kanalfaneblade.setUnderlineColor(0x1A000000);
     kanalfaneblade.setDividerColor(0x1A000000);
 
-    DRData.instans.programserierAtilÅ.observatører.add(this);
+    DRData.instans.radiodrama.observatører.add(this);
 
     return rod;
   }
@@ -92,25 +92,26 @@ public class ProgramserierAtilAA_frag extends Basisfragment implements ViewPager
     viewPager = null;
     adapter = null;
     kanalfaneblade = null;
-    DRData.instans.programserierAtilÅ.observatører.remove(this);
+    DRData.instans.radiodrama.observatører.remove(this);
     super.onDestroyView();
   }
 
   @Override
   public void onPageSelected(int position) {
-    Log.d(this+ " onPageSelected( " + position);
+    Log.d("onPageSelected( " + position);
     // Husk foretrukken getKanal
     App.prefs.edit().putInt(INDEX, position).commit();
   }
 
   @Override
   public void onPageScrollStateChanged(int state) {
-    Log.d(this+ " onPageScrollStateChanged( " + state);
+    Log.d("onPageScrollStateChanged( " + state);
     viewPagerScrollState = state;
   }
 
   @Override
   public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    if (App.fejlsøgning) Log.d("onPageScrolled( " + position + " " + positionOffset + " " + positionOffsetPixels);
     // Hvis vi er på 0'te side og der trækkes mod højre kan viewpageren ikke komme længere og offsetPixels vil være 0,
     if (position == 0 && positionOffsetPixels == 0 && viewPagerScrollState == ViewPager.SCROLL_STATE_DRAGGING) {
       venstremenuFrag.visMenu();
@@ -123,6 +124,9 @@ public class ProgramserierAtilAA_frag extends Basisfragment implements ViewPager
     public KanalAdapter(FragmentManager fm) {
       super(fm);
     }
+
+    //@Override
+    //public float getPageWidth(int position) { return(0.9f); }
 
     @Override
     public Basisfragment getItem(int position) {
@@ -143,6 +147,16 @@ public class ProgramserierAtilAA_frag extends Basisfragment implements ViewPager
       return liste.get(position).titel;
     }
 
+/*
+    @Override
+    public int getPageIconResId(int position) {
+      return 0; //kanaler.get(position).kanallogo_resid;
+    }
+    @Override
+    public String getPageContentDescription(int position) {
+      return kanaler.get(position).titel;
+    }
+*/
   }
 }
 
