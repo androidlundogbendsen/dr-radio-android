@@ -13,9 +13,10 @@
         "kontakt_modtagere": ["android@lundogbendsen.dk" ],
         "kontakt_titel": "Angående DR Radio BETA",
         "kontakt_brugerspørgsmål": "\n",
-        "drift_statusmeddelelse": "DR Radio BETA - hent officiel udgave <a href='https://play.google.com/store/apps/details?id=dk.dr.radio'>her</a>.<br/>\
-        <small>Nyeste beta (17.sept) kan hentes i venstremenuen nederst.<br/>\
-        * Forsøgsvise animationer af spil/pauseknap<br/>\
+        "drift_statusmeddelelse": "Ændringer i DR Radio BETA\
+        <small>Hent officiel udgave <a href='https://play.google.com/store/apps/details?id=dk.dr.radio'>her</a>.<br/>\
+        Hent <a href='http://android.lundogbendsen.dk/DRRadiov3.apk'>nyeste beta her</a> eller i venstremenuen nederst.<br/>\
+        * Alle udsendelser A til Å - første bud på implementering<br/>\
         <br/>\
         Øvrige ændringer kan ses i kontakt/info/om i venstremenuen<br/>\
         <br/>\
