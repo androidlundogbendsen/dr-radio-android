@@ -144,7 +144,8 @@ public enum DRJson {
   /**
    * Parser udsendelser for getKanal. A la http://www.dr.dk/tjenester/mu-apps/schedule/P3/0
    */
-  public static ArrayList<Udsendelse> parseUdsendelserForKanal(JSONArray jsonArray, Kanal kanal, DRData drData) throws JSONException, ParseException {
+  public static ArrayList<Udsendelse> parseUdsendelserForKanal(JSONArray jsonArray, Kanal kanal, Date dato, DRData drData) throws JSONException, ParseException {
+    String dagsbeskrivelse = getDagsbeskrivelse(dato);
 
     ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
     for (int n = 0; n < jsonArray.length(); n++) {
@@ -156,7 +157,7 @@ public enum DRJson {
       u.startTidKl = klokkenformat.format(u.startTid);
       u.slutTid = servertidsformat.parse(o.getString(DRJson.EndTime.name()));
       u.slutTidKl = klokkenformat.format(u.slutTid);
-      u.dagsbeskrivelse = getDagsbeskrivelse(u.startTid);
+      u.dagsbeskrivelse = dagsbeskrivelse;
 /*
       if (datoStr.equals(iDagDatoStr)) ; // ingen ting
       else if (datoStr.equals(iMorgenDatoStr)) u.startTidKl += " - i morgen";
