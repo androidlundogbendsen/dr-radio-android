@@ -5,21 +5,15 @@
     android:layout_height="wrap_content"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:background="@drawable/knap_graa10_bg"
+    android:background="@color/hvid"
     android:orientation="vertical">
 
   <!--
+    android:background="@drawable/knap_graa10_bg"
+
       android:layerType="software" er nødvendig,
       ellers tegnes der en vandret streg i stedet for stiplet linje på Android 3+
       -->
-
-  <View
-      android:id="@+id/stiplet_linje"
-      android:background="@drawable/linje"
-      android:layerType="software"
-      android:layout_width="match_parent"
-      android:layout_height="3dp"/>
-
 
   <TextView
       android:id="@+id/titel"
@@ -28,7 +22,6 @@
       android:text="I DAG"
       android:paddingTop="4dp"
       android:paddingBottom="4dp"
-      android:background="@color/grå10"
       android:textColor="@color/grå70"
       android:textAppearance="?android:attr/textAppearance"
       tools:ignore="HardcodedText"/>
