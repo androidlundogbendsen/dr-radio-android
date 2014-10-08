@@ -460,14 +460,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       if (elem instanceof String) {  // Overskrifter
         String tekst = (String) elem;
         vh.titel.setText(tekst);
-        a.id(R.id.stiplet_linje);
-        if (tekst.length() == 0) {
-          a.visibility(View.GONE);
-          vh.titel.setVisibility(View.GONE);
-        } else {
-          a.visibility(View.VISIBLE);
-          vh.titel.setVisibility(View.VISIBLE);
-        }
+        vh.titel.setVisibility(tekst.length()==0? View.GONE : View.VISIBLE);
         return v;
       }
       Udsendelse udsendelse = (Udsendelse) elem; // Resten er 'udsendelser'
@@ -507,11 +500,10 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           vh.startid.setText(udsendelse.startTidKl);
           vh.titel.setText(udsendelse.titel);
           // Stiplet linje skal vises mellem udsendelser - men ikke over aktuel udsendelse
-          // Hvis det er en overskrift der er nedenunder skal linjen være fuldt optrukken
-          a.id(R.id.stiplet_linje).background(R.drawable.stiplet_linje);
+          // og heller ikke hvis det er en overskrift der er nedenunder
+          a.id(R.id.stiplet_linje);
           if (position == aktuelUdsendelseIndex + 1) a.visibility(View.INVISIBLE);
-          else if (position > 0 && liste.get(position - 1) instanceof String)
-            a.visibility(View.VISIBLE).background(R.drawable.linje);
+          else if (position > 0 && liste.get(position - 1) instanceof String) a.visibility(View.INVISIBLE);
           else a.visibility(View.VISIBLE);
           vh.titel.setTextColor(udsendelse.kanNokHøres ? Color.BLACK : App.color.grå60);
           break;
