@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import dk.dr.radio.afspilning.Afspiller;
@@ -142,7 +143,7 @@ http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-b.m3u8?sd=10&rebase=on
       System.exit(0);
 
       if ("DRN".equals(kanal.kode)) continue; // ikke DR Nyheder
-      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(main_hent(kanal.getUdsendelserUrl())), kanal, DRData.instans), "0");
+      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(main_hent(kanal.getUdsendelserUrl())), kanal, new Date(), DRData.instans), "0");
       for (Udsendelse u : kanal.udsendelser) {
         Log.d("\nudsendelse = " + u);
         JSONObject obj = new JSONObject(main_hent(u.getStreamsUrl()));
@@ -275,7 +276,7 @@ http://drradio1-lh.akamaihd.net/i/p1_9@143503/index_192_a-b.m3u8?sd=10&rebase=on
       if (Kanal.P4kode.equals(kanal.kode)) continue;
       if ("DRN".equals(kanal.kode)) continue;
       Log.d("\n=========================================== kanal = " + kanal);
-      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(main_hent(kanal.getUdsendelserUrl())), kanal, DRData.instans), "0");
+      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(main_hent(kanal.getUdsendelserUrl())), kanal, new Date(), DRData.instans), "0");
       for (Udsendelse u : kanal.udsendelser) {
         Log.d("\nudsendelse = " + u);
         Programserie ps = i.programserieFraSlug.get(u.programserieSlug);

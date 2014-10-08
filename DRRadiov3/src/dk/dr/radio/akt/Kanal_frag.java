@@ -142,13 +142,13 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   }
 
 
-  private void hentSendeplanForDag(Date dag) {
-    final String dato = DRJson.apiDatoFormat.format(dag);
-    if (kanal.harUdsendelserForDag(dato)) { // brug værdier i RAMen
+  private void hentSendeplanForDag(final Date dato) {
+    final String datoStr = DRJson.apiDatoFormat.format(dato);
+    if (kanal.harUdsendelserForDag(datoStr)) { // brug værdier i RAMen
       opdaterListe();
     }
 
-    final String url = kanal.getUdsendelserUrl() + "/date/" + dato;
+    final String url = kanal.getUdsendelserUrl() + "/date/" + datoStr;
     if (App.fejlsøgning) Log.d("hentSendeplanForDag url=" + url);
 
     Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
@@ -156,12 +156,12 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       @Override
       public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
         if (getActivity() == null || uændret) return;
-        if (kanal.harUdsendelserForDag(dato) && fraCache) return; // så er værdierne i RAMen gode nok
+        if (kanal.harUdsendelserForDag(datoStr) && fraCache) return; // så er værdierne i RAMen gode nok
         //Log.d(kanal + " hentSendeplanForDag fikSvar for url " + url + " fraCache=" + fraCache + " efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
         if (json != null && !"null".equals(json)) {
           int næstøversteSynligPos = listView.getFirstVisiblePosition() + 1;
           if (!brugerHarNavigeret || næstøversteSynligPos >= liste.size()) {
-            kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json), kanal, DRData.instans), dato);
+            kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json), kanal, dato, DRData.instans), datoStr);
             opdaterListe();
           } else {
             // Nu ændres der i listen for at vise en dag før eller efter - sørg for at det synlige indhold ikke rykker sig
@@ -170,7 +170,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
             View v = listView.getChildAt(1);
             int næstøversteSynligOffset = (v == null) ? 0 : v.getTop();
 
-            kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json), kanal, DRData.instans), dato);
+            kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(json), kanal, dato, DRData.instans), datoStr);
             opdaterListe();
 
             int næstøversteSynligNytIndex = liste.indexOf(næstøversteSynlig);
