@@ -183,7 +183,7 @@ public class Afspiller {
       }
 
       AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
-      if (Build.VERSION.SDK_INT >= 8) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
         // Se http://developer.android.com/training/managing-audio/audio-focus.html
         int result = audioManager.requestAudioFocus(getOnAudioFocusChangeListener(),
             AudioManager.STREAM_MUSIC,
@@ -197,12 +197,13 @@ public class Afspiller {
 
 
       // Skru op til 1/5 styrke hvis volumen er lavere end det
-      tjekVolumennMindst(1);
+      tjekVolumenMindst5tedele(1);
 
     } else Log.d(" forkert status=" + afspillerstatus);
   }
 
-  public void tjekVolumennMindst(int min5) {
+  /** Sørg for at volumen er skruet op til en minimumsværdi, angivet i 5'tedele af fuld styrke */
+  public void tjekVolumenMindst5tedele(int min5) {
     AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
     int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
     int nu = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -296,6 +297,7 @@ public class Afspiller {
 
   synchronized private void startAfspilningIntern() {
     MediabuttonReceiver.registrér();
+    MediabuttonReceiver.opdaterBillede(this);
     afspillerstatus = Status.FORBINDER;
     afspilningPåPause = false;
     sendOnAfspilningForbinder(-1);
@@ -384,15 +386,13 @@ public class Afspiller {
    */
   private int gemPosition() {
     if (!lydkilde.erDirekte() && afspillerstatus == Status.SPILLER)
-      try {
+      {
         int pos = mediaPlayer.getCurrentPosition();
         if (pos > 0) {
           //senestLyttet.getUdsendelse().startposition = pos;
           DRData.instans.senestLyttede.sætStartposition(lydkilde, pos);
         }
         return pos;
-      } catch (Exception e) {
-        Log.rapporterFejl(e); // TODO fjern hvis der aldrig kommer fejl her
       }
     return 0;
   }

@@ -146,12 +146,6 @@
         "slug": "p8jazz",
         "urn": "urn:dr:mu:bundle:4f3b8926860d9a33ccfdafb9"
     }, {
-        "title": "MAMA",
-        "logo": "channel-logo-mama",
-        "scheduleIdent": "DRM",
-        "slug": "mama",
-        "urn": "urn:dr:mu:bundle:4f3b88f8860d9a33ccfdaeca"
-    }, {
         "title": "Ramasjang/Ultra",
         "logo": "channel-logo-ramasjang",
         "scheduleIdent": "RAM",
