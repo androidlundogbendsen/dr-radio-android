@@ -119,7 +119,7 @@ public class AlarmReceiver extends BroadcastReceiver {
       Log.d("AlarmReceiver AlarmAlertWakeLock.createPartialWakeLock()");
 
       // Skru op til 3/5 styrke hvis volumen er lavere end det
-      DRData.instans.afspiller.tjekVolumennMindst(3);
+      DRData.instans.afspiller.tjekVolumenMindst5tedele(3);
 
     } catch (Exception ex) {
       Log.e("argh!", ex);
