@@ -16,7 +16,7 @@
 
  */
 
-package dk.dr.radio.diverse;
+package dk.dr.radio.skrald;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -27,8 +27,6 @@ import android.widget.ImageView;
  * Da setContentDescription() tilsyneladende bliver ignoreret på ImageViews
  * er vi nødt til at omdefinere dispatchPopulateAccessibilityEvent
  * for at få tekst læst højt.
- * TODO: Se om vi kan erstatte ImageView med en ImageButton i kanalvalgs
- * layout så vi kan droppe klassen her igen
  * @author j
  */
 public class ImageViewTilBlinde extends ImageView {

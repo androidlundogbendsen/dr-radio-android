@@ -31,7 +31,6 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
 import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
-import dk.dr.radio.skrald.Udsendelser_lodret_skift_frag;
 import dk.dr.radio.v3.R;
 
 public class Programserie_frag extends Basisfragment implements AdapterView.OnItemClickListener, View.OnClickListener {
@@ -287,7 +286,6 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
       // Hvis tilgængelighed er slået til (eller bladring slået fra) vises blot ét Udsendelse_frag
       Fragment f =
           App.accessibilityManager.isEnabled() || !App.prefs.getBoolean("udsendelser_bladr", true) ? new Udsendelse_frag() :
-              App.prefs.getBoolean("udsendelser_lodret_skift", false) ? new Udsendelser_lodret_skift_frag() :
                   new Udsendelser_vandret_skift_frag(); // standard
       f.setArguments(new Intent()
           .putExtra(Udsendelse_frag.BLOKER_VIDERE_NAVIGERING, true)

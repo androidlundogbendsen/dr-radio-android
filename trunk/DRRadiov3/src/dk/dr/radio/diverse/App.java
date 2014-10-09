@@ -224,7 +224,7 @@ public class App extends Application {
       // - muligvis aldrig hvis app'en kun betjenes via levende ikon
 
     } catch (Exception ex) {
-      // TODO popop-advarsel til bruger om intern fejl og rapporter til udvikler-dialog
+      // Burde der være popop-advarsel til bruger om intern fejl og rapporter til udvikler-dialog ?
       Log.rapporterFejl(ex);
     }
 

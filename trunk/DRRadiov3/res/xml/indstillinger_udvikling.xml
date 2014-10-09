@@ -28,14 +28,6 @@
           android:summary="Skriv din e-postadresse hvis du vil kunne kontaktes i forbindelse
           med udvikling" android:defaultValue="" /> -->
 
-      <!--
-          <CheckBoxPreference
-                  android:key="kunSortLigeBagTekst"
-                  android:title="Kun sort bag tekst i titler"
-                  android:defaultValue="false"
-                  android:summary="Kræver app-genstart"/>
-      -->
-
       <CheckBoxPreference
           android:key="fejlsøgning" android:title="Fejlsøgning"
           android:defaultValue="false" android:summaryOff=""
@@ -57,13 +49,7 @@
           android:key="vispager_title_strip"
           android:title="Titel på udsendelser"
           android:defaultValue="false"
-          android:summary="Vis faneblade med titler for nemmere at bladre mellem udsendelser"/>
-
-      <CheckBoxPreference
-          android:key="udsendelser_lodret_skift"
-          android:title="Lodret swipe mellem udsendelser"
-          android:defaultValue="false"
-          android:summary="Bladr mellem udsendelser med lodret swipe"/>
+          android:summary="Vis faneblade med titler for nemmere at bladre mellem udsendelser i en programserie"/>
 
       <CheckBoxPreference
           android:title="Rapportér statistik"
