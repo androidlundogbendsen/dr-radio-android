@@ -54,11 +54,8 @@ import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.data.Lydstream;
-import dk.dr.radio.diverse.AfspillerIkonOgNotifikation;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
-import dk.dr.radio.diverse.MediabuttonReceiver;
-import dk.dr.radio.diverse.Opkaldshaandtering;
 import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
 import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 
@@ -174,6 +171,7 @@ public class Afspiller {
     onErrorTællerNultid = System.currentTimeMillis();
 
     if (afspillerstatus == Status.STOPPET) {
+      Fjernbetjening.registrér();
       //opdaterNotification();
       // Start afspillerservicen så programmet ikke bliver lukket
       // når det kører i baggrunden under afspilning
@@ -190,7 +188,7 @@ public class Afspiller {
             AudioManager.AUDIOFOCUS_GAIN);
         Log.d("requestAudioFocus res=" + result);
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-          MediabuttonReceiver.registrér();
+          Fjernbetjening.registrér();
         }
       }
       startAfspilningIntern();
@@ -296,8 +294,7 @@ public class Afspiller {
   }
 
   synchronized private void startAfspilningIntern() {
-    MediabuttonReceiver.registrér();
-    MediabuttonReceiver.opdaterBillede(this);
+    Fjernbetjening.opdaterBillede(this); // TODO - opdateres en gang i minuttet
     afspillerstatus = Status.FORBINDER;
     afspilningPåPause = false;
     sendOnAfspilningForbinder(-1);
@@ -408,6 +405,7 @@ public class Afspiller {
       wakeLock.release();
       wakeLock = null;
     }
+    Fjernbetjening.afregistrér();
   }
 
 
