@@ -15,6 +15,7 @@ import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
+import dk.dr.radio.afspilning.Fjernbetjening;
 import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
@@ -22,7 +23,6 @@ import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
-import dk.dr.radio.diverse.MediabuttonReceiver;
 import dk.dr.radio.v3.R;
 
 public class Hovedaktivitet extends Basisaktivitet implements Runnable {
@@ -110,7 +110,7 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
-    MediabuttonReceiver.registrér();
+    Fjernbetjening.registrér();
   }
 
 
@@ -188,7 +188,6 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
       showDialog(0);
       return;
     }
-    MediabuttonReceiver.afregistrér();
     super.finish();
   }
 

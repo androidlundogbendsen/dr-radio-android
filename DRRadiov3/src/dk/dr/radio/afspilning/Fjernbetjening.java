@@ -16,7 +16,7 @@
 
  */
 
-package dk.dr.radio.diverse;
+package dk.dr.radio.afspilning;
 
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
@@ -35,88 +35,22 @@ import android.view.KeyEvent;
 import com.android.volley.Response;
 import com.android.volley.toolbox.ImageRequest;
 
-import dk.dr.radio.afspilning.Afspiller;
-import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.akt.Basisfragment;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.data.Udsendelse;
+import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
 
 /**
  * Til håndtering af knapper på fjernbetjening (f.eks. på Bluetooth headset.)
  * Se også http://android-developers.blogspot.com/2010/06/allowing-applications-to-play-nicer.html
  */
-public class MediabuttonReceiver extends BroadcastReceiver {
+public class Fjernbetjening extends BroadcastReceiver {
 
   private static RemoteControlClient remoteControlClient;
   private static Udsendelse forrigeUdsendelse;
-
-  @Override
-  public void onReceive(Context context, Intent intent) {
-    KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
-    Log.d("MediabuttonReciever " + event);
-
-    if (!Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction()) || event == null || event.getAction() != KeyEvent.ACTION_DOWN) {
-      return;
-    }
-
-    switch (event.getKeyCode()) {
-      case KeyEvent.KEYCODE_HEADSETHOOK:
-      case KeyEvent.KEYCODE_MEDIA_STOP:
-      case KeyEvent.KEYCODE_MEDIA_PAUSE:
-        if (DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET) {
-          DRData.instans.afspiller.stopAfspilning();
-        }
-        break;
-      case KeyEvent.KEYCODE_MEDIA_PLAY:
-      case KeyEvent.KEYCODE_MEDIA_REWIND:
-      case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
-        if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
-          DRData.instans.afspiller.startAfspilning();
-        }
-        break;
-      case KeyEvent.KEYCODE_MEDIA_NEXT:
-        App.kortToast("næste");
-//        DRData.instans.afspiller.forrige();
-        break;
-      case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-        App.kortToast("forrige");
-//        DRData.instans.afspiller.næste();
-        break;
-      case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-      default:
-        if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
-          DRData.instans.afspiller.startAfspilning();
-        } else {
-          DRData.instans.afspiller.stopAfspilning();
-        }
-    }
-  }
-
-  @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-  public static void registrér() {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) return;
-//    if (!App.prefs.getBoolean("MediabuttonReceiver", true)) return;
-
-    ComponentName eventReceiver = new ComponentName(App.instans.getPackageName(), MediabuttonReceiver.class.getName());
-    AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
-    audioManager.registerMediaButtonEventReceiver(eventReceiver);
-
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) return;
-
-    Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON).setComponent(eventReceiver);
-    PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(App.instans, 0, mediaButtonIntent, 0);
-    // create and register the remote control client
-    remoteControlClient = new RemoteControlClient(mediaPendingIntent);
-    remoteControlClient.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY_PAUSE
-            | RemoteControlClient.FLAG_KEY_MEDIA_NEXT
-            | RemoteControlClient.FLAG_KEY_MEDIA_PREVIOUS
-            | RemoteControlClient.FLAG_KEY_MEDIA_STOP
-            | RemoteControlClient.FLAG_KEY_MEDIA_PLAY
-    );
-    audioManager.registerRemoteControlClient(remoteControlClient);
-  }
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
   public static void opdaterBillede(Afspiller afspiller) {
@@ -125,7 +59,7 @@ public class MediabuttonReceiver extends BroadcastReceiver {
     Lydkilde lk = afspiller.getLydkilde();
     Kanal k = lk.getKanal();
     Udsendelse u = lk.getUdsendelse();
-    Log.d("MediabuttonReceiver opdaterBillede "+lk+ " k="+k+" u="+u+" d="+lk.erDirekte());
+    Log.d("Fjernbetjening opdaterBillede " + lk + " k=" + k + " u=" + u + " d=" + lk.erDirekte());
     if (lk.erDirekte()) {
       /*
       Bitmap bm = null;
@@ -175,19 +109,85 @@ public class MediabuttonReceiver extends BroadcastReceiver {
     //if (Build.VERSION.SDK_INT >= 18)
     //  remoteControlClient.setPlaybackState(ps, 0, 1);
     //else
-      remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PLAYING);
+    remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PLAYING);
+  }
+
+
+  @Override
+  public void onReceive(Context context, Intent intent) {
+    KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+    Log.d("MediabuttonReciever " + event);
+
+    if (!Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction()) || event == null || event.getAction() != KeyEvent.ACTION_DOWN) {
+      return;
+    }
+
+    switch (event.getKeyCode()) {
+      case KeyEvent.KEYCODE_HEADSETHOOK:
+      case KeyEvent.KEYCODE_MEDIA_STOP:
+      case KeyEvent.KEYCODE_MEDIA_PAUSE:
+        if (DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET) {
+          DRData.instans.afspiller.stopAfspilning();
+        }
+        break;
+      case KeyEvent.KEYCODE_MEDIA_PLAY:
+      case KeyEvent.KEYCODE_MEDIA_REWIND:
+      case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
+        if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
+          DRData.instans.afspiller.startAfspilning();
+        }
+        break;
+      case KeyEvent.KEYCODE_MEDIA_NEXT:
+        App.kortToast("næste");
+//        DRData.instans.afspiller.forrige();
+        break;
+      case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+        App.kortToast("forrige");
+//        DRData.instans.afspiller.næste();
+        break;
+      case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+      default:
+        if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
+          DRData.instans.afspiller.startAfspilning();
+        } else {
+          DRData.instans.afspiller.stopAfspilning();
+        }
+    }
+  }
+
+  @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+  public static void registrér() {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) return;
+
+    ComponentName eventReceiver = new ComponentName(App.instans.getPackageName(), Fjernbetjening.class.getName());
+    AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
+    audioManager.registerMediaButtonEventReceiver(eventReceiver);
+
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) return;
+
+    Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON).setComponent(eventReceiver);
+    PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(App.instans, 0, mediaButtonIntent, 0);
+    // create and register the remote control client
+    remoteControlClient = new RemoteControlClient(mediaPendingIntent);
+    remoteControlClient.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY_PAUSE
+            | RemoteControlClient.FLAG_KEY_MEDIA_NEXT
+            | RemoteControlClient.FLAG_KEY_MEDIA_PREVIOUS
+            | RemoteControlClient.FLAG_KEY_MEDIA_STOP
+            | RemoteControlClient.FLAG_KEY_MEDIA_PLAY
+    );
+    audioManager.registerRemoteControlClient(remoteControlClient);
   }
 
   @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
   public static void afregistrér() {
     if (Build.VERSION.SDK_INT < 8) return;
-    ComponentName eventReceiver = new ComponentName(App.instans.getPackageName(), MediabuttonReceiver.class.getName());
+    ComponentName eventReceiver = new ComponentName(App.instans.getPackageName(), Fjernbetjening.class.getName());
     AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
     audioManager.unregisterMediaButtonEventReceiver(eventReceiver);
 
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) return;
-    //remoteControlClient.editMetadata(true).apply();
+    remoteControlClient.editMetadata(true).apply();
     remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_STOPPED);
-    //audioManager.unregisterRemoteControlClient(remoteControlClient);
+    audioManager.unregisterRemoteControlClient(remoteControlClient);
   }
 }

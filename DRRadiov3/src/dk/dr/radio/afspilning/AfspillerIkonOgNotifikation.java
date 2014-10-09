@@ -16,7 +16,7 @@
 
  */
 
-package dk.dr.radio.diverse;
+package dk.dr.radio.afspilning;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -34,12 +34,13 @@ import android.widget.RemoteViews;
 
 import java.util.Arrays;
 
-import dk.dr.radio.afspilning.AfspillerStartStopReciever;
 import dk.dr.radio.akt.Hovedaktivitet;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.data.Udsendelse;
+import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
 @SuppressLint({"NewApi", "ResourceAsColor"})

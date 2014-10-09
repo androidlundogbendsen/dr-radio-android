@@ -1,4 +1,4 @@
-package dk.dr.radio.afspilning;
+package dk.dr.radio.skrald;
 
 import java.io.BufferedReader;
 import java.io.IOException;

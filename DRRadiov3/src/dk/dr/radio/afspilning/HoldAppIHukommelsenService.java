@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.os.IBinder;
 
 import dk.dr.radio.data.DRData;
-import dk.dr.radio.diverse.AfspillerIkonOgNotifikation;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
