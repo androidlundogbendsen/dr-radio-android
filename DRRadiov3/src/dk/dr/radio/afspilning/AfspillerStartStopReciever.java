@@ -59,7 +59,7 @@ public class AfspillerStartStopReciever extends BroadcastReceiver {
           public void run() {
             try {
               DRData.instans.afspiller.startAfspilning();
-            } catch (Exception ex) { // TODO fjern
+            } catch (Exception ex) { // TODO fjern. 9. okt 2014
               Log.rapporterFejl(ex);
             }
           }

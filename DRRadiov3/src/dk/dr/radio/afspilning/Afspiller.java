@@ -415,9 +415,9 @@ public class Afspiller {
       Log.rapporterFejl(new IllegalStateException("setLydkilde(null"));
       return;
     }
-    if (lydkilde instanceof Kanal && Kanal.P4kode.equals(((Kanal) lydkilde).kode)) { // TODO - fjern tjek
+    if (lydkilde instanceof Kanal && Kanal.P4kode.equals(((Kanal) lydkilde).kode)) { // TODO - fjern tjek 9.okt 2014
       // Nærmere fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/820758400
-      // Log.rapporterFejl(new IllegalStateException("setLydkilde(P4F"));
+      Log.rapporterFejl(new IllegalStateException("setLydkilde(P4F"));
       // return;
 
       // Nyt fix - vi vælger bare en underkanal.

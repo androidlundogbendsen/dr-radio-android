@@ -72,8 +72,6 @@ public class SetAlarm_akt extends PreferenceActivity implements Preference.OnPre
 
     ListView list = (ListView) findViewById(android.R.id.list);
     list.addFooterView(label);
-    // TODO Stop using preferences for this view. Save on done, not after
-    // each change.
     addPreferencesFromResource(R.xml.deskclock_alarm_prefs);
 
     // Get each preference so we can retrieve the value later.

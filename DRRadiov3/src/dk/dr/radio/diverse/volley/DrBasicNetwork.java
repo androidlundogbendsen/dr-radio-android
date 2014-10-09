@@ -146,7 +146,7 @@ public class DrBasicNetwork implements Network {
             attemptRetryOnException("auth",
                 request, new AuthFailureError(networkResponse));
           } else {
-            // TODO: Only throw ServerError for 5xx status codes.
+            // T O D O: Only throw ServerError for 5xx status codes.
             throw new ServerError(networkResponse);
           }
         } else {

@@ -175,7 +175,7 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
       kanalNavn = DRData.instans.afspiller.getLydkilde().getKanal().navn;
     } catch (Exception e) {
       Log.rapporterFejl(e);
-    } // TODO fjern try-catch efter nogle måneder i drift
+    } // TODO fjern try-catch efter nogle måneder i drift. 9. okt 2014
 
     NotificationCompat.Builder b = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.dr_notifikation)
         .setContentTitle("DR Radio")

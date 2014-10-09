@@ -10,9 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.BackgroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.TouchDelegate;
 import android.view.View;
@@ -48,7 +45,6 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
 import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
-import dk.dr.radio.skrald.Udsendelser_lodret_skift_frag;
 import dk.dr.radio.v3.R;
 
 public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClickListener, View.OnClickListener, Runnable {
@@ -393,7 +389,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     static final int TIDLIGERE_SENERE = 2;
     static final int DAGSOVERSKRIFT = 3;
 
-    boolean TITELTEKST_KUN_SORT_LIGE_BAG_TEKST = App.prefs.getBoolean("kunSortLigeBagTekst", false);
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
@@ -477,14 +472,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           String burl = skalérSlugBilledeUrl(udsendelse.slug, br, hø);
           a.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
 
-          if (TITELTEKST_KUN_SORT_LIGE_BAG_TEKST) {
-            vh.titel.setBackgroundColor(0);
-            Spannable spanna = new SpannableString(udsendelse.titel.toUpperCase());
-            spanna.setSpan(new BackgroundColorSpan(0xFF000000), 0, udsendelse.titel.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            vh.titel.setText(spanna);
-          } else {
-            vh.titel.setText(udsendelse.titel.toUpperCase());
-          }
+          vh.titel.setText(udsendelse.titel.toUpperCase());
 
           opdaterAktuelUdsendelseViews(aktuelUdsendelseViewholder);
           if (udsendelse.playliste == null) {
@@ -674,8 +662,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       // Hvis tilgængelighed er slået til (eller bladring slået fra) vises blot ét Udsendelse_frag
       Fragment f =
           App.accessibilityManager.isEnabled() || !App.prefs.getBoolean("udsendelser_bladr", true) ? new Udsendelse_frag() :
-              App.prefs.getBoolean("udsendelser_lodret_skift", false) ? new Udsendelser_lodret_skift_frag() :
-                  new Udsendelser_vandret_skift_frag(); // standard
+                  new Udsendelser_vandret_skift_frag();
       f.setArguments(new Intent()
           .putExtra(P_kode, kanal.kode)
           .putExtra(Udsendelse_frag.AKTUEL_UDSENDELSE_SLUG, aktuelUdsendelseSlug)

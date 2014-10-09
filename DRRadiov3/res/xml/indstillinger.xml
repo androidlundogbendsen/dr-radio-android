@@ -49,13 +49,7 @@
         android:title="Hold skærmen tændt"
         android:defaultValue="false"
         android:summary="Hakker afspilningen efter at skærmen slukker så prøv at krydse af her (bruger mere batteri)."/>
-    <!-- indstilling fjernes -
-        <CheckBoxPreference
-                android:key="MediabuttonReceiver"
-                android:title="Fjernbetjening"
-                android:defaultValue="true"
-                android:summary="Reagér på knapper på fjernbetjening (f.eks. på Bluetooth headset)"/>
-    -->
+
   </PreferenceCategory>
 
   <PreferenceCategory android:title="Hentede udsendelser">

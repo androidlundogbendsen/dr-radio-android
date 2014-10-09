@@ -161,6 +161,7 @@ public class P4kanalvalg_frag extends Basisfragment implements AdapterView.OnIte
       App.prefs.edit().putString(App.P4_FORETRUKKEN_AF_BRUGER, kanalkode).commit();
     }
     App.prefs.edit().putString(App.FORETRUKKEN_KANAL, kanalkode).commit();
+    // Ny getKanal valgt - send valg til afspiller
     DRData.instans.afspiller.setLydkilde(kanal);
 
     FragmentManager fm = getFragmentManager();
@@ -172,8 +173,6 @@ public class P4kanalvalg_frag extends Basisfragment implements AdapterView.OnIte
     //if (kanalkode.equals(DRData.instans.aktuelKanal.kode)) setResult(RESULT_CANCELED);
     //else setResult(RESULT_OK);  // Signalér til kalderen at der er skiftet getKanal!!
 
-    // Ny getKanal valgt - send valg til afspiller (ændrer også drData.aktuelKanalkode)
-//TODO    DRData.instans.skiftKanal(kanalkode);
 
     // Hop tilbage til kalderen (hovedskærmen)
     //finish();

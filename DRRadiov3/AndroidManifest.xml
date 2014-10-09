@@ -101,14 +101,14 @@
 
 
     <!-- Til håndtering af knapper på fjernbetjening (f.eks. på Bluetooth headset.) -->
-    <receiver android:name="dk.dr.radio.diverse.MediabuttonReceiver">
+    <receiver android:name="dk.dr.radio.afspilning.Fjernbetjening">
       <intent-filter android:priority="1">
         <action android:name="android.intent.action.MEDIA_BUTTON"/>
       </intent-filter>
     </receiver>
 
     <receiver
-        android:name="dk.dr.radio.diverse.AfspillerIkonOgNotifikation"
+        android:name="dk.dr.radio.afspilning.AfspillerIkonOgNotifikation"
         android:label="DR Radio">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
