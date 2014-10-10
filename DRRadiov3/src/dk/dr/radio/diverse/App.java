@@ -309,13 +309,13 @@ public class App extends Application {
 
       if (DRData.instans.programserierAtilÅ.liste == null) {
         færdig = false;
-        DRData.instans.programserierAtilÅ.startHentAtilÅ();
+        DRData.instans.programserierAtilÅ.startHentData();
       }
 
 
       if (DRData.instans.radiodrama.liste == null) {
         færdig = false;
-        DRData.instans.radiodrama.startHentAtilÅ();
+        DRData.instans.radiodrama.startHentData();
       }
 
       if (!færdig) {

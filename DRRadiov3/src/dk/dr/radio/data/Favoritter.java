@@ -90,7 +90,7 @@ public class Favoritter {
       Log.d("Favoritter: Opdaterer favoritTilStartdato=" + favoritTilStartdato + "  favoritTilAntalDagsdato=" + favoritTilAntalDagsdato);
       for (final String programserieSlug : favoritTilStartdato.keySet()) {
         String dato = favoritTilStartdato.get(programserieSlug);
-        String url = "http://www.dr.dk/tjenester/mu-apps/new-programs-since/" + programserieSlug + "/" + dato;
+        String url = DRData.getNyeProgrammerSiden(programserieSlug,dato);
         Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
           @Override
           public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {

@@ -170,10 +170,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
   }
 
   private void hentUdsendelser(final int offset) {
-    // svarer til v3_programserie.json
-    // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true
-    // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true&includeStreams=true
-    final String url = "http://www.dr.dk/tjenester/mu-apps/series/" + startudsendelse.programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
+    String url = DRData.getProgramserieUrl(startudsendelse.programserieSlug) + "&offset=" + offset;
     Log.d("XXX url=" + url);
 
     Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
@@ -232,7 +229,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
       return f;
     }
 
-    /**
+    /*
      * Denne metode kaldes af systemet efter et kald til notifyDataSetChanged()
      * Se http://developer.android.com/reference/android/support/v4/view/PagerAdapter.html :
      * Data set changes must occur on the main thread and must end with a call to notifyDataSetChanged()

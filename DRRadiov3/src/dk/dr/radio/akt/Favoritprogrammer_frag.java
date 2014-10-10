@@ -90,7 +90,7 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
         else {
           Log.d("programserieSlug gav ingen værdi: " + programserieSlug);
           final int offset = 0;
-          String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
+          String url = DRData.getProgramserieUrl(programserieSlug) + "&offset=" + offset;
           Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
             @Override
             public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {

@@ -101,7 +101,7 @@ public class FangBrowseIntent_akt extends Activity {
     if (udsendelse != null) {
       visUdsendelseFrag(kanalSlug, udsendelse, tidsangivelse);
     } else {
-      Request<?> req = new DrVolleyStringRequest("http://www.dr.dk/tjenester/mu-apps/program/" + udsendelseSlug + "?type=radio&includeStreams=true", new DrVolleyResonseListener() {
+      Request<?> req = new DrVolleyStringRequest(DRData.getUdsendelseStreamsUrlFraSlug(udsendelseSlug), new DrVolleyResonseListener() {
         @Override
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
           if (uændret) return;
@@ -154,13 +154,3 @@ public class FangBrowseIntent_akt extends Activity {
     lukket = true;
   }
 }
-
-
-/*
-123
-http://www.dr.dk/tjenester/mu-apps/program/filmland-124?type=radio&includeStreams=true
-
-124
-
-
- */

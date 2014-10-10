@@ -128,7 +128,7 @@ public class Afproevning {
         boolean gavNull = false;
         Programserie ps = i.programserieFraSlug.get(u.programserieSlug);
         if (ps == null) {
-          String str = hentStreng(u.getProgramserieUrl());
+          String str = hentStreng(DRData.getProgramserieUrl(u.programserieSlug));
           if ("null".equals(str)) gavNull = true;
           else {
             JSONObject data = new JSONObject(str);
@@ -155,7 +155,7 @@ public class Afproevning {
 
     // A-Å-liste
     {
-      JSONArray jsonArray = new JSONArray(hentStreng("http://www.dr.dk/tjenester/mu-apps/series-list?type=radio"));
+      JSONArray jsonArray = new JSONArray(hentStreng(DRData.getAtilÅUrl()));
 
 
       // http://www.dr.dk/tjenester/mu-apps/series?type=radio&includePrograms=true&urn=urn:dr:mu:bundle:50d2ab93860d9a09809ca4f2
@@ -194,7 +194,7 @@ public class Afproevning {
     // RadioDrama
     // Virker ikke:
     //JSONArray jsonArray = new JSONArray(hentStreng("http://www.dr.dk/tjenester/mu-apps/radio-drama?type=radio&includePrograms=true"));
-    JSONArray jsonArray = new JSONArray(hentStreng("http://www.dr.dk/tjenester/mu-apps/radio-drama"));
+    JSONArray jsonArray = new JSONArray(hentStreng(DRData.getRadioDramaUrl()));
     ArrayList<Programserie> res = new ArrayList<Programserie>();
     for (int n = 0; n < jsonArray.length(); n++) {
       JSONObject programserieJson = jsonArray.getJSONObject(n);
@@ -235,7 +235,7 @@ public class Afproevning {
         Log.d("\nudsendelse = " + u);
         Programserie ps = i.programserieFraSlug.get(u.programserieSlug);
         if (ps == null) {
-          String str = hentStreng(u.getProgramserieUrl());
+          String str = hentStreng(DRData.getProgramserieUrl(u.programserieSlug));
           if ("null".equals(str)) continue;
           JSONObject data = new JSONObject(str);
           ps = DRJson.parsProgramserie(data, null);
