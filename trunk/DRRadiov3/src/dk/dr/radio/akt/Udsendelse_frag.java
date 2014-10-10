@@ -108,6 +108,14 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
               }
               udsendelse.produktionsnummer = o.optString(DRJson.ProductionNumber.name());
               udsendelse.shareLink = o.optString(DRJson.ShareLink.name());
+              udsendelse.programserieSlug = o.optString(DRJson.SeriesSlug.name());
+              // 9.okt 2014 - Nicolai har forklaret at manglende 'SeriesSlug' betyder at
+              // der ikke er en programserie, og videre navigering derfor skal slås fra
+              //if (!o.has(DRJson.SeriesSlug.name()) && !blokerVidereNavigering) {
+              if (udsendelse.programserieSlug=="" && !blokerVidereNavigering) {
+                blokerVidereNavigering = true;
+                bygListe();
+              }
               if (getUserVisibleHint() && udsendelse.streamsKlar() && afspiller.getAfspillerstatus() == Status.STOPPET) {
                 afspiller.setLydkilde(udsendelse);
               }
@@ -140,7 +148,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       Log.d("Kender ikke kanalen");
     }
 
-    blokerVidereNavigering = getArguments().getBoolean(BLOKER_VIDERE_NAVIGERING);
+    App.kortToast(udsendelse.programserieSlug);
+    blokerVidereNavigering = getArguments().getBoolean(BLOKER_VIDERE_NAVIGERING) || udsendelse.programserieSlug==null;
 
     Log.d("onCreateView " + this);
 

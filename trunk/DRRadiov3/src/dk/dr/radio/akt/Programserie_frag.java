@@ -80,10 +80,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
   }
 
   private void hentUdsendelser(final int offset) {
-    // svarer til v3_programserie.json
-    // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true
-    // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true&includeStreams=true
-    final String url = "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true&offset=" + offset;
+    String url = DRData.getProgramserieUrl(programserieSlug) + "&offset=" + offset;
     Log.d("XXX url=" + url);
 
     Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {

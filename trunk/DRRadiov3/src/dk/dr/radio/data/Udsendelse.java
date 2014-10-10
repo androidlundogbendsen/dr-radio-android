@@ -48,28 +48,15 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
     return slug + "/" + episodeIProgramserie;//startTid + "/" + slutTid;
   }
 
-  // http://www.dr.dk/tjenester/mu-apps/program/monte-carlo-361
 
-
-  public String getProgramserieUrl() {
-    // svarer til v3_programserie.json
-    // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true
-    // http://www.dr.dk/tjenester/mu-apps/series/monte-carlo?type=radio&includePrograms=true&includeStreams=true
-
-    return "http://www.dr.dk/tjenester/mu-apps/series/" + programserieSlug + "?type=radio&includePrograms=true";
-  }
 
   public String getStreamsUrl() {
-    // http://www.dr.dk/tjenester/mu-apps/program?urn=urn:dr:mu:programcard:52e6fa58a11f9d1588de9c49&includeStreams=true
-    return "http://www.dr.dk/tjenester/mu-apps/program?includeStreams=true&urn=" + urn;
+    return DRData.getUdsendelseStreamsUrlFraUrn(urn);
   }
 
 
   public String getPlaylisteUrl() {
-    // Tidligere (marts 2014) skulle kanalens slug med, såsom
-    // http://www.dr.dk/tjenester/mu-apps/playlist/monte-carlo-352/p3
-    // Det er tilsyneladende ikke nødvendigt mere, per april 2014
-    return "http://www.dr.dk/tjenester/mu-apps/playlist/" + slug + "/0";
+    return DRData.getPlaylisteUrl(slug);
   }
 
   @Override

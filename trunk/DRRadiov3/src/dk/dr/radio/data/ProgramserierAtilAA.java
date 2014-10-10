@@ -22,13 +22,12 @@ public class ProgramserierAtilAA {
 
 
 
-  public void startHentAtilÅ() {
-    Request<?> req = new DrVolleyStringRequest("http://www.dr.dk/tjenester/mu-apps/series-list?type=radio", new DrVolleyResonseListener() {
+  public void startHentData() {
+    Request<?> req = new DrVolleyStringRequest(DRData.getAtilÅUrl(), new DrVolleyResonseListener() {
       @Override
       public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
         if (uændret) return;
         JSONArray jsonArray = new JSONArray(json);
-        // http://www.dr.dk/tjenester/mu-apps/series?type=radio&includePrograms=true&urn=urn:dr:mu:bundle:50d2ab93860d9a09809ca4f2
         ArrayList<Programserie> res = new ArrayList<Programserie>();
         for (int n = 0; n < jsonArray.length(); n++) {
           JSONObject programserieJson = jsonArray.getJSONObject(n);

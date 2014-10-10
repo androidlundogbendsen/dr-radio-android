@@ -31,7 +31,6 @@ import com.androidquery.AQuery;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import dk.dr.radio.data.DRData;
@@ -137,13 +136,6 @@ public class Soeg_efter_program_frag extends Basisfragment implements
     });
 
     udvikling_checkDrSkrifter(rod, this + " rod");
-    /*
-     * Kald
-		 * http://www.dr.dk/tjenester/mu-apps/search/programs?q=monte&type=radio
-		 * vil kun returnere radio programmer
-		 * http://www.dr.dk/tjenester/mu-apps/search/series?q=monte&type=radio
-		 * vil kun returnere radio serier
-		 */
 
     return rod;
   }
@@ -247,7 +239,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
 
 
     if (SØG_OGSÅ_EFTER_UDSENDELSER) {
-      String url = "http://www.dr.dk/tjenester/mu-apps/search/programs?q=" + URLEncoder.encode(søgStr) + "&type=radio";
+      String url = DRData.getSøgIUdsendelserUrl(søgStr);
       Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
         @Override
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
@@ -280,7 +272,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
       App.volleyRequestQueue.add(req);
     }
 
-    String url = "http://www.dr.dk/tjenester/mu-apps/search/series?q=" + URLEncoder.encode(søgStr) + "&type=radio";
+    String url = DRData.getSøgISerierUrl(søgStr);
     Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
       @Override
       public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {

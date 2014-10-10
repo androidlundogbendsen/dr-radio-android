@@ -58,13 +58,12 @@ public class Kanal extends Lydkilde {
 
   @Override
   public String getStreamsUrl() {
-    //return "http://www.dr.dk/tjenester/mu-apps/channel?includeStreams=true&urn=" + urn;
-    return "http://www.dr.dk/tjenester/mu-apps/channel/" + slug + "?includeStreams=true";
+    return DRData.getKanalStreamsUrlFraSlug(slug);
   }
 
 
   public String getUdsendelserUrl() {
-    return "http://www.dr.dk/tjenester/mu-apps/schedule/" + kode;  // svarer til v3_kanalside__p3.json;
+    return DRData.getKanalUdsendelserUrlFraKode(kode);
   }
 
   @Override
