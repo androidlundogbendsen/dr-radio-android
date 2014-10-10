@@ -24,13 +24,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import dk.dr.radio.diverse.FilCache;
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
 public class Grunddata {
@@ -123,7 +122,7 @@ public class Grunddata {
     parseKanaler(json.getJSONArray("channels"), false);
     Log.d("parseKanaler " + kanaler + " - P4:" + p4koder);
     android_json = json.getJSONObject("android");
-    setUdelukHLS(Build.MODEL + " " + Build.PRODUCT + "/" + Build.VERSION.SDK_INT);
+    tjekUdelukFraHLS(Build.MODEL + " " + Build.PRODUCT + "/" + Build.VERSION.SDK_INT);
     if (forvalgtKanal == null) forvalgtKanal = kanaler.get(2); // Det er nok P3 :-)
     for (Runnable r : new ArrayList<Runnable>(observatører)) r.run();
   }
@@ -132,10 +131,10 @@ public class Grunddata {
    * Sætter flaget udelukHLS, som slår HLS fra på Android-enheder, der ikke understøtter det
    * @param model_og_version
    */
-  public void setUdelukHLS(String model_og_version) {
-    Log.d("setUdelukHLS(" + model_og_version);
+  public void tjekUdelukFraHLS(String model_og_version) {
+    Log.d("tjekUdelukFraHLS(" + model_og_version);
 
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH && !App.testFraMain()) {
       // Android 2 (og 3) understøtter det ikke
       udelukHLS = true;
       return;
@@ -145,7 +144,7 @@ public class Grunddata {
     try {
       for (String lin : android_json.getString("udeluk_HLS").split(",")) {
         if (model_og_version.matches(lin.trim())) {
-          Log.d("setUdelukHLS linjen " + lin + " matcher " + model_og_version + ", så HLS slås fra");
+          Log.d("tjekUdelukFraHLS linjen " + lin + " matcher " + model_og_version + ", så HLS slås fra");
           udelukHLS = true;
           break;
         }
@@ -153,22 +152,5 @@ public class Grunddata {
     } catch (Exception e) {
       Log.e(e);
     } // Ikke kritisk
-  }
-
-
-  public void hentSupplerendeDataBg_KUN_TIL_UDVIKLING() {
-    for (Kanal k : kanaler)
-      try {
-        String url = k.getStreamsUrl();
-        String data = Diverse.læsStreng(new FileInputStream(FilCache.hentFil(url, false, true, 1000 * 60 * 60 * 24 * 7)));
-        JSONObject o = new JSONObject(data);
-        //k.slug = o.getString(DRJson.Slug.name());
-        //kanalFraSlug.put(k.slug, k);
-        k.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
-        //Log.d(k.kode + " k.lydUrl=" + k.streams);
-      } catch (Exception e) {
-        Log.e(e);
-      }
-    Log.d("DRData.instans.grunddata.kanalFraSlug=" + DRData.instans.grunddata.kanalFraSlug);
   }
 }

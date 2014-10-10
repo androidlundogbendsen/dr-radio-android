@@ -131,7 +131,6 @@ public class App extends Application {
       if (EMULATOR) App.versionsnavn += " EMU";
       Log.d("App.versionsnavn=" + App.versionsnavn);
       Class.forName("android.os.AsyncTask"); // Fix for http://code.google.com/p/android/issues/detail?id=20915
-      FilCache.init(getCacheDir()); // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/867898048
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
@@ -549,6 +548,11 @@ public class App extends Application {
       App.serverkorrektionTilKlienttidMs = serverkorrektionTilKlienttidMs2;
       new Exception("SERVERTID korrigeret med " + serverkorrektionTilKlienttidMs2 / 1000 / 60 + " min til " + new Date(servertid)).printStackTrace();
     }
+  }
+
+  /** Kan kaldet til at afgøre om vi er igang med at teste noget fra en main()-metode eller app'en rent faktisk kører */
+  public static boolean testFraMain() {
+    return instans==null;
   }
 
   /**

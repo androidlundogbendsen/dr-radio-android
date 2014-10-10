@@ -15,18 +15,7 @@
         "kontakt_modtagere": ["android@lundogbendsen.dk", "mobil@dr.dk" ],
         "kontakt_titel": "Angående DR Radio BETA",
         "kontakt_brugerspørgsmål": "\n",
-        "drift_statusmeddelelse": "DR Radio BETA - hent officiel udgave <a href='https://play.google.com/store/apps/details?id=dk.dr.radio'>her</a>.<br/>
-        <small>Nyeste beta (24.juni) kan hentes i venstremenuen nederst:<br/>
-        * Lydstream: Akamai HLS filtreres ikke mere for døde servere (det viste sig at være overflødigt arbejde)<br/>
-        * Senest spillet på kanalsiden bliver nu opdateret hvert 30. sekund<br/>
-        * Indslag, f.eks. for P2 Koncerten vises i stedet for playliste<br/>
-        * Korrekt håndtering af, at visse udsendelser ikke kan hentes (og dermed heller ikke kan spilles på Android 2)<br/>
-        * Oprydning i cachede filer<br/>
-        * Tilgængelighed for blinde og svagsseende<br/>
-        <br/>
-        Øvrige ændringer kan ses i kontakt/info/om i venstremenuen<br/>
-        <br/>
-        Efter afprøvning af nyeste beta må I meget gerne en rapport (i kontakt i venstremenuen), og fortælle om alt ser OK ud, tak!</small>"
+        "drift_statusmeddelelse": ""
     },
     "ios": {
 
@@ -81,36 +70,6 @@
             "slug": "p4kbh",
             "urn": "urn:dr:mu:bundle:4f3b890a860d9a33ccfdaf39"
         }, {
-            "title": "P4 Midt & Vest",
-            "logo": "channel-logo-p4-midtvest",
-            "scheduleIdent": "HO4",
-            "slug": "p4vest",
-            "urn": "urn:dr:mu:bundle:4f3b8907860d9a33ccfdaf34"
-        }, {
-            "title": "P4 Nordjylland",
-            "logo": "channel-logo-p4-nordjylland",
-            "scheduleIdent": "ÅL4",
-            "slug": "p4nord",
-            "urn": "urn:dr:mu:bundle:4f3b8937860d9a33ccfdafdc"
-        }, {
-            "title": "P4 Sjælland",
-            "logo": "channel-logo-p4-sjaelland",
-            "scheduleIdent": "NV4",
-            "slug": "p4sjaelland",
-            "urn": "urn:dr:mu:bundle:4f3b890d860d9a33ccfdaf3e"
-        }, {
-            "title": "P4 Syd",
-            "logo": "channel-logo-p4-syd",
-            "scheduleIdent": "ÅB4",
-            "slug": "p4syd",
-            "urn": "urn:dr:mu:bundle:4f3b8934860d9a33ccfdafd9"
-        }, {
-            "title": "P4 Trekanten",
-            "logo": "channel-logo-p4-trekanten",
-            "scheduleIdent": "TR4",
-            "slug": "p4trekanten",
-            "urn": "urn:dr:mu:bundle:4f3b892f860d9a33ccfdafd7"
-        }, {
             "title": "P4 Østjylland",
             "logo": "channel-logo-p4-oestjylland",
             "scheduleIdent": "ÅR4",
@@ -123,36 +82,6 @@
         "scheduleIdent": "P5D",
         "slug": "p5",
         "urn": "urn:dr:mu:bundle:4f3b8922860d9a33ccfdaf96"
-    }, {
-        "title": "P6 BEAT",
-        "logo": "channel-logo-p6",
-        "scheduleIdent": "P6B",
-        "slug": "p6beat",
-        "urn": "urn:dr:mu:bundle:4f3b8922860d9a33ccfdaf9f"
-    }, {
-        "title": "P7 MIX",
-        "logo": "channel-logo-p7",
-        "scheduleIdent": "P7M",
-        "slug": "p7mix",
-        "urn": "urn:dr:mu:bundle:4f3b8924860d9a33ccfdafa9"
-    }, {
-        "title": "P8 JAZZ",
-        "logo": "channel-logo-p8",
-        "scheduleIdent": "P8J",
-        "slug": "p8jazz",
-        "urn": "urn:dr:mu:bundle:4f3b8926860d9a33ccfdafb9"
-    }, {
-        "title": "MAMA",
-        "logo": "channel-logo-mama",
-        "scheduleIdent": "DRM",
-        "slug": "mama",
-        "urn": "urn:dr:mu:bundle:4f3b88f8860d9a33ccfdaeca"
-    }, {
-        "title": "Ramasjang/Ultra",
-        "logo": "channel-logo-ramasjang",
-        "scheduleIdent": "RAM",
-        "slug": "ramasjangradio",
-        "urn": "urn:dr:mu:bundle:4f3b8928860d9a33ccfdafcc"
     }, {
         "title": "DR Nyheder",
         "description": "Her kan du altid høre den seneste radioavis og sportsnyt",

@@ -1,4 +1,4 @@
-package dk.dr.radio.diverse;
+package dk.dr.radio.data.afproevning;
 
 import java.io.Closeable;
 import java.io.File;
@@ -11,10 +11,13 @@ import java.net.URL;
 import java.util.Date;
 import java.util.zip.GZIPInputStream;
 
+import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
+
 /**
  * @author Jacob Nordfalk
  */
-public class FilCache {
+class FilCache {
 
   private static final int BUFFERSTR = 4 * 1024;
   private static String lagerDir;
