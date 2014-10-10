@@ -144,7 +144,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       opdaterListe();
     }
 
-    final String url = kanal.getUdsendelserUrl() + "/date/" + datoStr;
+    final String url = DRData.getKanalUdsendelserUrlFraKode(kanal.kode) + "/date/" + datoStr;
     if (App.fejlsøgning) Log.d("hentSendeplanForDag url=" + url);
 
     Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
@@ -583,7 +583,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   }
 
   private void opdaterSenestSpillet(final AQuery aq2, final Udsendelse u2) {
-    Request<?> req = new DrVolleyStringRequest(u2.getPlaylisteUrl(), new DrVolleyResonseListener() {
+    Request<?> req = new DrVolleyStringRequest(DRData.getPlaylisteUrl(u2.slug), new DrVolleyResonseListener() {
       @Override
       public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
         //if (App.fejlsøgning) Log.d("fikSvar playliste(" + fraCache + " " + url + "   " + this);

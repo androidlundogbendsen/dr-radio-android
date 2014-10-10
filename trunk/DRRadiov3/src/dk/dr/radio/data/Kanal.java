@@ -62,10 +62,6 @@ public class Kanal extends Lydkilde {
   }
 
 
-  public String getUdsendelserUrl() {
-    return DRData.getKanalUdsendelserUrlFraKode(kode);
-  }
-
   @Override
   public Kanal getKanal() {
     return this;

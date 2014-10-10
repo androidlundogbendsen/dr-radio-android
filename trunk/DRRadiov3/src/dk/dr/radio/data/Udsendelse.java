@@ -49,15 +49,11 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
   }
 
 
-
+  @Override
   public String getStreamsUrl() {
     return DRData.getUdsendelseStreamsUrlFraUrn(urn);
   }
 
-
-  public String getPlaylisteUrl() {
-    return DRData.getPlaylisteUrl(slug);
-  }
 
   @Override
   public Kanal getKanal() {
