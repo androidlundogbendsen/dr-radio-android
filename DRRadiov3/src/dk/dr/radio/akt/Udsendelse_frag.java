@@ -108,13 +108,16 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
               }
               udsendelse.produktionsnummer = o.optString(DRJson.ProductionNumber.name());
               udsendelse.shareLink = o.optString(DRJson.ShareLink.name());
-              udsendelse.programserieSlug = o.optString(DRJson.SeriesSlug.name());
               // 9.okt 2014 - Nicolai har forklaret at manglende 'SeriesSlug' betyder at
               // der ikke er en programserie, og videre navigering derfor skal slås fra
-              //if (!o.has(DRJson.SeriesSlug.name()) && !blokerVidereNavigering) {
-              if (udsendelse.programserieSlug=="" && !blokerVidereNavigering) {
-                blokerVidereNavigering = true;
-                bygListe();
+              if (!o.has(DRJson.SeriesSlug.name())) {
+                if (!DRData.instans.programserieSlugFindesIkke.contains(udsendelse.programserieSlug)) {
+                  DRData.instans.programserieSlugFindesIkke.add(udsendelse.programserieSlug);
+                }
+                if (!blokerVidereNavigering) {
+                  blokerVidereNavigering = true;
+                  bygListe();
+                }
               }
               if (getUserVisibleHint() && udsendelse.streamsKlar() && afspiller.getAfspillerstatus() == Status.STOPPET) {
                 afspiller.setLydkilde(udsendelse);
@@ -149,7 +152,10 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     }
 
     App.kortToast(udsendelse.programserieSlug);
-    blokerVidereNavigering = getArguments().getBoolean(BLOKER_VIDERE_NAVIGERING) || udsendelse.programserieSlug==null;
+    blokerVidereNavigering = getArguments().getBoolean(BLOKER_VIDERE_NAVIGERING);
+    if (DRData.instans.programserieSlugFindesIkke.contains(udsendelse.programserieSlug)) {
+      blokerVidereNavigering = true;
+    }
 
     Log.d("onCreateView " + this);
 
@@ -240,7 +246,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       App.forgrundstråd.removeCallbacks(opdaterSpillelisteRunnable);
       if (!getUserVisibleHint() || !isResumed()) return;
       //new Exception("startOpdaterSpilleliste() for "+this).printStackTrace();
-      Request<?> req = new DrVolleyStringRequest(udsendelse.getPlaylisteUrl(), new DrVolleyResonseListener() {
+      Request<?> req = new DrVolleyStringRequest(DRData.getPlaylisteUrl(udsendelse.slug), new DrVolleyResonseListener() {
         @Override
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
           if (App.fejlsøgning) Log.d("fikSvar playliste(" + fraCache + " " + url + "   " + this);
