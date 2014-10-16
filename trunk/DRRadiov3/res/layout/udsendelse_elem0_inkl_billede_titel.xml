@@ -18,16 +18,6 @@
       android:src="@drawable/eksempel_udsendelse"
       tools:ignore="ContentDescription"/>
 
-  <!--
-      <ImageButton
-              android:id="@+id/hør"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="16dp"
-              android:layout_marginLeft="16dp"
-              android:src="@drawable/dri_lyd_hvid"/>
-  -->
-
   <LinearLayout
       android:id="@+id/lige_nu_og_titel_ll"
       android:layout_gravity="left|bottom"
@@ -70,5 +60,34 @@
         android:layout_marginBottom="8dp"/>
 
   </LinearLayout>
+
+  <ImageButton
+      android:id="@+id/hør"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginRight="16dp"
+      android:layout_marginBottom="16dp"
+      android:layout_gravity="bottom|right"
+      android:contentDescription="hør udsendelse"
+      android:src="@drawable/dri_lyd2_hvid"
+      android:background="@drawable/knap_blaa_bg"
+      />
+  <!--
+    <Button
+        android:id="@+id/hør"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/hørknap_højde"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="16dp"
+        android:drawableLeft="@drawable/dri_lyd_hvid"
+        android:text="HØR UDSENDELSE"
+        android:textColor="@color/hvid"
+        android:background="@drawable/knap_blaa_bg"
+        />
+  -->
+
 
 </FrameLayout>
