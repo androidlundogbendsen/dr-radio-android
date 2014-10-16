@@ -5,7 +5,7 @@
           android:versionCode="1"
           android:versionName="3.1.3 16.okt Favorit">
 
-<uses-sdk
+  <uses-sdk
       android:minSdkVersion="7"
       android:targetSdkVersion="19"/>
 
@@ -30,7 +30,7 @@
   <application
       android:allowBackup="true"
       android:name="dk.dr.radio.diverse.App"
-      android:icon="@drawable/ic_launcher"
+      android:icon="@drawable/ic_launcher_beta"
       android:logo="@drawable/dr_logo"
       android:label="@string/app_name"
       android:theme="@style/Theme.Dr"
