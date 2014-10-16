@@ -74,6 +74,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   private TextView seekBarMaxTekst;
   private boolean seekBarBetjenesAktivt;
   private SeekBar seekBar;
+  private View topView;
 
   private static HashMap<Udsendelse, Long> streamsVarTom = new HashMap<Udsendelse, Long>();
   private int antalGangeForsøgtHentet;
@@ -129,6 +130,15 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         }).setTag(this);
         App.volleyRequestQueue.add(req);
       }
+    }
+  };
+
+  private Runnable opdaterFavoritter = new Runnable() {
+    @Override
+    public void run() {
+      if (topView == null) return;
+      CheckBox fav = (CheckBox) topView.findViewById(R.id.favorit);
+      fav.setChecked(DRData.instans.favoritter.erFavorit(udsendelse.programserieSlug));
     }
   };
 
@@ -202,6 +212,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
     afspiller.observatører.add(this);
     DRData.instans.hentedeUdsendelser.observatører.add(this);
+    DRData.instans.favoritter.observatører.add(opdaterFavoritter);
     udvikling_checkDrSkrifter(rod, this + " rod");
     /*
     ListViewScrollObserver listViewScrollObserver = new ListViewScrollObserver(listView);
@@ -247,6 +258,112 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     });
     */
     return rod;
+  }
+
+
+  private View opretTopView() {
+    View v = getLayoutInflater(null).inflate(R.layout.udsendelse_elem0_top, listView, false);
+    AQuery aq = new AQuery(v);
+    v.setTag(aq);
+    int br = bestemBilledebredde(listView, (View) aq.id(R.id.billede).getView().getParent(), 100);
+    int hø = br * højde9 / bredde16;
+    String burl = skalérSlugBilledeUrl(udsendelse.slug, br, hø);
+    aq.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
+
+    aq.id(R.id.lige_nu).gone();
+    aq.id(R.id.info).typeface(App.skrift_gibson);
+    //Log.d("kanal JPER " + kanal.p4underkanal);
+    if (kanal.p4underkanal) {
+      //Log.d("kanal JPER1 " + kanal.slug.substring(0, 2));
+      aq.id(R.id.logo).image(R.drawable.kanalappendix_p4f);
+      aq.id(R.id.p4navn).text(kanal.navn.replace("P4", "")).typeface(App.skrift_gibson_fed);
+    } else {
+      aq.id(R.id.logo).image(kanal.kanallogo_resid);
+      aq.id(R.id.p4navn).text("");
+    }
+
+    aq.id(R.id.titel_og_tid).typeface(App.skrift_gibson)
+        .text(lavFedSkriftTil(udsendelse.titel + " - " + (udsendelse.startTid == null ? "(ukendt)" : DRJson.datoformat.format(udsendelse.startTid)), udsendelse.titel.length()));
+    aq.getView().setContentDescription(null); // varetages af listviewet
+
+    //aq.id(R.id.beskrivelse).text(udsendelse.beskrivelse).typeface(App.skrift_georgia);
+    //Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS);
+
+    aq.id(R.id.titel).typeface(App.skrift_gibson_fed).text(udsendelse.titel.toUpperCase()).getTextView().setContentDescription("\u00A0");  // SLUK for højtlæsning, det varetages af listviewet
+    aq.id(R.id.hør).clicked(this);
+    seekBarTekst = aq.id(R.id.seekBarTekst).typeface(App.skrift_gibson).getTextView();
+    seekBarMaxTekst = aq.id(R.id.seekBarMaxTekst).typeface(App.skrift_gibson).getTextView();
+    seekBar = aq.id(R.id.seekBar).getSeekBar();
+    seekBar.setOnSeekBarChangeListener(this);
+    aq.id(R.id.hent).clicked(this).typeface(App.skrift_gibson);
+    aq.id(R.id.favorit).clicked(this).typeface(App.skrift_gibson).checked(DRData.instans.favoritter.erFavorit(udsendelse.programserieSlug));
+    if (!DRData.instans.hentedeUdsendelser.virker()) aq.gone(); // Understøttes ikke på Android 2.2
+    aq.id(R.id.del).clicked(this).typeface(App.skrift_gibson);
+    return v;
+  }
+
+  private void opdaterTop() {
+    AQuery aq = (AQuery) topView.getTag();
+    //aq.id(R.id.højttalerikon).visibility(streams ? View.VISIBLE : View.GONE);
+    boolean lydkildeErDenneUds = udsendelse.equals(afspiller.getLydkilde());
+    boolean lydkildeErDenneKanal = kanal == afspiller.getLydkilde().getKanal();
+    boolean erAktuelUdsendelsePåKanalen = aktuelUdsendelsePåKanalen();
+    boolean spiller = afspiller.getAfspillerstatus() == Status.SPILLER;
+    boolean forbinder = afspiller.getAfspillerstatus() == Status.FORBINDER;
+    boolean erOnline = App.netværk.erOnline();
+    opdaterSeekBar.run();
+
+    aq.id(R.id.hør).visible().enabled(true);
+    if (udsendelse.hentetStream != null)         // Hentede udsendelser
+    {
+      if (lydkildeErDenneUds && (spiller || forbinder)) aq.enabled(false);
+      else {
+        aq.getView().setContentDescription("hør hentet udsendelse");
+        aq.id(R.id.hent).text("hentet");
+      }
+    } else                                        // On demand og direkte udsendelser
+    {
+      if (lydkildeErDenneUds && (spiller || forbinder)) aq.enabled(false);
+        //else if (udsendelse.streamsKlar()) {
+      else if (udsendelse.kanStreames) {
+        if (erOnline) aq.getView().setContentDescription("hør udsendelse");
+        else {
+          aq.enabled(false);
+          aq.id(R.id.hent).text("Internetforbindelse mangler");
+        }
+      } else if (erAktuelUdsendelsePåKanalen) {
+        if (lydkildeErDenneKanal && (spiller || forbinder)) {
+          aq.enabled(false);
+          aq.id(R.id.hent).text("SPILLER " + kanal.navn.toUpperCase() + " LIVE");
+        } else if (erOnline) {
+          aq.getView().setContentDescription("hør " + kanal.navn.toUpperCase());
+          aq.id(R.id.hent).text("HØR " + kanal.navn.toUpperCase() + " LIVE");
+        } else aq.enabled(false).text("Internetforbindelse mangler");
+      }
+    }
+
+
+    aq.id(R.id.hent).enabled(
+        DRData.instans.hentedeUdsendelser.virker() && udsendelse.kanHentes);
+    aq.textColorId(udsendelse.streamsKlar() ? R.color.blå : R.color.grå40);
+    Cursor c = DRData.instans.hentedeUdsendelser.getStatusCursor(udsendelse);
+    if (c != null) {
+      int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+      String statustekst = HentedeUdsendelser.getStatustekst(c);
+      c.close();
+
+      if (status != DownloadManager.STATUS_SUCCESSFUL && status != DownloadManager.STATUS_FAILED) {
+        aq.id(R.id.hent).text(statustekst);
+        App.forgrundstråd.removeCallbacks(this);
+        App.forgrundstråd.postDelayed(this, 5000);
+      }
+      aq.textColorId(R.color.grå40);
+    } else {
+      if (DRData.instans.hentedeUdsendelser.virker() && !udsendelse.kanHentes) {
+        aq.text("Kan ikke hentes");
+      }
+    }
+    udvikling_checkDrSkrifter(topView, this + " position top");
   }
 
 
@@ -324,6 +441,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     App.volleyRequestQueue.cancelAll(this);
     afspiller.observatører.remove(this);
     DRData.instans.hentedeUdsendelser.observatører.add(this);
+    DRData.instans.favoritter.observatører.remove(opdaterFavoritter);
     super.onDestroyView();
   }
 
@@ -561,9 +679,18 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
+      if (!App.PRODUKTION && parent != listView) throw new IllegalStateException(listView + " " + parent);
       Viewholder vh;
       AQuery aq;
       int type = getItemViewType(position);
+      if (type == TOP) {
+        if (topView == null) {
+          topView = opretTopView();
+        }
+        opdaterTop();
+        return topView;
+      }
+
       if (v == null) {
         v = getLayoutInflater(null).inflate(layoutFraType[type], parent, false);
         vh = new Viewholder();
@@ -571,44 +698,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         aq = vh.aq = new AQuery(v);
         v.setTag(vh);
         vh.startid = aq.id(R.id.startid).typeface(App.skrift_gibson).getTextView();
-        if (type == TOP) {
-          int br = bestemBilledebredde(listView, (View) aq.id(R.id.billede).getView().getParent(), 100);
-          int hø = br * højde9 / bredde16;
-          String burl = skalérSlugBilledeUrl(udsendelse.slug, br, hø);
-          aq.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
-
-          aq.id(R.id.lige_nu).gone();
-          aq.id(R.id.info).typeface(App.skrift_gibson);
-          //Log.d("kanal JPER " + kanal.p4underkanal);
-          if (kanal.p4underkanal) {
-            //Log.d("kanal JPER1 " + kanal.slug.substring(0, 2));
-            aq.id(R.id.logo).image(R.drawable.kanalappendix_p4f);
-            aq.id(R.id.p4navn).text(kanal.navn.replace("P4", "")).typeface(App.skrift_gibson_fed);
-          } else {
-            aq.id(R.id.logo).image(kanal.kanallogo_resid);
-            aq.id(R.id.p4navn).text("");
-          }
-
-          aq.id(R.id.titel_og_tid).typeface(App.skrift_gibson)
-              .text(lavFedSkriftTil(udsendelse.titel + " - " + (udsendelse.startTid == null ? "(ukendt)" : DRJson.datoformat.format(udsendelse.startTid)), udsendelse.titel.length()));
-          aq.getView().setContentDescription(null); // varetages af listviewet
-
-          //aq.id(R.id.beskrivelse).text(udsendelse.beskrivelse).typeface(App.skrift_georgia);
-          //Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS);
-
-          vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
-          vh.titel.setText(udsendelse.titel.toUpperCase());
-          vh.titel.setContentDescription("\u00A0");  // SLUK for højtlæsning, det varetages af listviewet
-          aq.id(R.id.hør).clicked(Udsendelse_frag.this);
-          seekBarTekst = aq.id(R.id.seekBarTekst).typeface(App.skrift_gibson).getTextView();
-          seekBarMaxTekst = aq.id(R.id.seekBarMaxTekst).typeface(App.skrift_gibson).getTextView();
-          seekBar = aq.id(R.id.seekBar).getSeekBar();
-          seekBar.setOnSeekBarChangeListener(Udsendelse_frag.this);
-          aq.id(R.id.hent).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
-          aq.id(R.id.favorit).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson).checked(DRData.instans.favoritter.erFavorit(udsendelse.programserieSlug));
-          if (!DRData.instans.hentedeUdsendelser.virker()) aq.gone(); // Understøttes ikke på Android 2.2
-          aq.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
-        } else if (type == OVERSKRIFT_PLAYLISTE_INFO || type == OVERSKRIFT_INDSLAG_INFO) {
+        if (type == OVERSKRIFT_PLAYLISTE_INFO || type == OVERSKRIFT_INDSLAG_INFO) {
           aq.id(R.id.playliste).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
           aq.id(R.id.info).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         } else if (type == INFOTEKST) {
@@ -644,69 +734,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       }
 
       // Opdatér viewholderens data
-      if (type == TOP) {
-        //aq.id(R.id.højttalerikon).visibility(streams ? View.VISIBLE : View.GONE);
-        boolean lydkildeErDenneUds = udsendelse.equals(afspiller.getLydkilde());
-        boolean lydkildeErDenneKanal = kanal == afspiller.getLydkilde().getKanal();
-        boolean erAktuelUdsendelsePåKanalen = aktuelUdsendelsePåKanalen();
-        boolean spiller = afspiller.getAfspillerstatus() == Status.SPILLER;
-        boolean forbinder = afspiller.getAfspillerstatus() == Status.FORBINDER;
-        boolean erOnline = App.netværk.erOnline();
-        opdaterSeekBar.run();
-
-        aq.id(R.id.hør).visible().enabled(true);
-        if (udsendelse.hentetStream != null)         // Hentede udsendelser
-        {
-          if (lydkildeErDenneUds && (spiller || forbinder)) aq.enabled(false);
-          else {
-            aq.getView().setContentDescription("hør hentet udsendelse");
-            aq.id(R.id.hent).text("hentet");
-          }
-        } else                                        // On demand og direkte udsendelser
-        {
-          if (lydkildeErDenneUds && (spiller || forbinder)) aq.enabled(false);
-            //else if (udsendelse.streamsKlar()) {
-          else if (udsendelse.kanStreames) {
-            if (erOnline) aq.getView().setContentDescription("hør udsendelse");
-            else {
-              aq.enabled(false);
-              aq.id(R.id.hent).text("Internetforbindelse mangler");
-            }
-          } else if (erAktuelUdsendelsePåKanalen) {
-            if (lydkildeErDenneKanal && (spiller || forbinder)) {
-              aq.enabled(false);
-              aq.id(R.id.hent).text("SPILLER " + kanal.navn.toUpperCase() + " LIVE");
-            } else if (erOnline) {
-              aq.getView().setContentDescription("hør " + kanal.navn.toUpperCase());
-              aq.id(R.id.hent).text("HØR " + kanal.navn.toUpperCase() + " LIVE");
-            } else aq.enabled(false).text("Internetforbindelse mangler");
-          }
-          ;
-        }
-
-
-        aq.id(R.id.hent).enabled(
-            DRData.instans.hentedeUdsendelser.virker() && udsendelse.kanHentes);
-        aq.textColorId(udsendelse.streamsKlar() ? R.color.blå : R.color.grå40);
-        Cursor c = DRData.instans.hentedeUdsendelser.getStatusCursor(udsendelse);
-        if (c != null) {
-          int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-          String statustekst = HentedeUdsendelser.getStatustekst(c);
-          c.close();
-
-          if (status != DownloadManager.STATUS_SUCCESSFUL && status != DownloadManager.STATUS_FAILED) {
-            aq.id(R.id.hent).text(statustekst);
-            App.forgrundstråd.removeCallbacks(Udsendelse_frag.this);
-            App.forgrundstråd.postDelayed(Udsendelse_frag.this, 5000);
-          }
-          aq.textColorId(R.color.grå40);
-        } else {
-          if (DRData.instans.hentedeUdsendelser.virker() && !udsendelse.kanHentes) {
-            aq.text("Kan ikke hentes");
-          }
-        }
-
-      } else if (type == PLAYLISTEELEM_NU || type == PLAYLISTEELEM) {
+      if (type == PLAYLISTEELEM_NU || type == PLAYLISTEELEM) {
         Playlisteelement ple = (Playlisteelement) liste.get(position);
         vh.titel.setText(lavFedSkriftTil(ple.titel + " | " + ple.kunstner, ple.titel.length()));
         vh.titel.setContentDescription(ple.titel + " af " + ple.kunstner);
