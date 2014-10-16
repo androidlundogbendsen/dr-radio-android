@@ -19,6 +19,34 @@
       tools:ignore="ContentDescription"/>
 
   <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="12dp"
+      android:gravity="center_horizontal"
+      android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:src="@drawable/skrald__kanallogo_p3"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/p4navn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nordjylland"
+        android:textStyle="bold"
+        android:shadowColor="@color/hvid"
+        android:shadowRadius="2"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"/>
+  </LinearLayout>
+
+  <LinearLayout
       android:id="@+id/lige_nu_og_titel_ll"
       android:layout_gravity="left|bottom"
       android:layout_width="wrap_content"
@@ -28,35 +56,34 @@
       android:layout_marginRight="8dp"
       >
 
-    <TextView
-        android:id="@+id/lige_nu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="LIGE NU"
-        android:textSize="16sp"
-        android:background="@color/sort"
-        android:textColor="@color/blå"
-        android:gravity="center_vertical|center_horizontal"
-        android:paddingTop="4dp"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
-        android:paddingBottom="0dp"
-        />
 
     <TextView
         android:id="@+id/titel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/sort"
         android:textColor="@color/hvid"
-        android:text="PRESSEN PÅ P3"
-        android:textSize="24sp"
+        android:shadowColor="@color/sort"
+        android:shadowRadius="2"
+        android:text="Pressen på P3"
+        android:textSize="20sp"
         android:gravity="center_vertical"
         android:textStyle="bold"
-        android:paddingTop="0dp"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
-        android:paddingBottom="0dp"
+        />
+
+    <TextView
+        android:id="@+id/startid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/hvid"
+        android:shadowColor="@color/sort"
+        android:shadowRadius="2"
+        android:text="11. sep. 2014"
+        android:textSize="20sp"
+        android:gravity="center_vertical"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
         android:layout_marginBottom="8dp"/>
 
   </LinearLayout>
