@@ -377,7 +377,8 @@ public class PinnedSectionListView extends ListView {
     destroyPinnedShadow();
     ListAdapter adapter = getAdapter();
     if (adapter != null && adapter.getCount() > 0) {
-      int firstVisiblePosition = getFirstVisiblePosition();
+      // JACOB: Fix for crash
+      int firstVisiblePosition = Math.min(getFirstVisiblePosition(), adapter.getCount() - 1);
       int sectionPosition = findCurrentSectionPosition(firstVisiblePosition);
       if (sectionPosition == -1) return; // no views to pin, exit
       ensureShadowForPosition(sectionPosition,
