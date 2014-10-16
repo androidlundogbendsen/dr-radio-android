@@ -151,7 +151,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       Log.d("Kender ikke kanalen");
     }
 
-    App.kortToast(udsendelse.programserieSlug);
+    if (App.fejlsøgning) App.kortToast(udsendelse.programserieSlug);
     blokerVidereNavigering = getArguments().getBoolean(BLOKER_VIDERE_NAVIGERING);
     if (DRData.instans.programserieSlugFindesIkke.contains(udsendelse.programserieSlug)) {
       blokerVidereNavigering = true;
@@ -598,13 +598,12 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
           vh.titel.setText(udsendelse.titel.toUpperCase());
           vh.titel.setContentDescription("\u00A0");  // SLUK for højtlæsning, det varetages af listviewet
-          aq.id(R.id.hør).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
+          aq.id(R.id.hør).clicked(Udsendelse_frag.this);
           seekBarTekst = aq.id(R.id.seekBarTekst).typeface(App.skrift_gibson).getTextView();
           seekBarMaxTekst = aq.id(R.id.seekBarMaxTekst).typeface(App.skrift_gibson).getTextView();
           seekBar = aq.id(R.id.seekBar).getSeekBar();
           seekBar.setOnSeekBarChangeListener(Udsendelse_frag.this);
           aq.id(R.id.hent).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
-          aq.id(R.id.kan_endnu_ikke_hentes).typeface(App.skrift_gibson);
           if (!DRData.instans.hentedeUdsendelser.virker()) aq.gone(); // Understøttes ikke på Android 2.2
           aq.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         } else if (type == OVERSKRIFT_PLAYLISTE_INFO || type == OVERSKRIFT_INDSLAG_INFO) {
@@ -656,27 +655,36 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         aq.id(R.id.hør).visible().enabled(true);
         if (udsendelse.hentetStream != null)         // Hentede udsendelser
         {
-          if (lydkildeErDenneUds && (spiller || forbinder)) aq.gone();
-          else aq.text("HØR HENTET UDSENDELSE").getView().setContentDescription("hør hentet udsendelse");
+          if (lydkildeErDenneUds && (spiller || forbinder)) aq.enabled(false);
+          else {
+            aq.getView().setContentDescription("hør hentet udsendelse");
+            aq.id(R.id.hent).text("hentet");
+          }
         } else                                        // On demand og direkte udsendelser
         {
-          if (lydkildeErDenneUds && (spiller || forbinder)) aq.gone();
+          if (lydkildeErDenneUds && (spiller || forbinder)) aq.enabled(false);
             //else if (udsendelse.streamsKlar()) {
           else if (udsendelse.kanStreames) {
-            if (erOnline) aq.text("HØR UDSENDELSE").getView().setContentDescription("hør udsendelse");
-            else aq.text("Internetforbindelse mangler").enabled(false);
+            if (erOnline) aq.getView().setContentDescription("hør udsendelse");
+            else {
+              aq.enabled(false);
+              aq.id(R.id.hent).text("Internetforbindelse mangler");
+            }
           } else if (erAktuelUdsendelsePåKanalen) {
-            if (lydkildeErDenneKanal && (spiller || forbinder))
-              aq.enabled(false).text("SPILLER " + kanal.navn.toUpperCase() + " LIVE");
-            else if (erOnline)
-              aq.text("HØR " + kanal.navn.toUpperCase() + " LIVE").getView().setContentDescription("hør " + kanal.navn.toUpperCase());
-            else aq.enabled(false).text("Internetforbindelse mangler");
-          } else aq.gone();
+            if (lydkildeErDenneKanal && (spiller || forbinder)) {
+              aq.enabled(false);
+              aq.id(R.id.hent).text("SPILLER " + kanal.navn.toUpperCase() + " LIVE");
+            } else if (erOnline) {
+              aq.getView().setContentDescription("hør " + kanal.navn.toUpperCase());
+              aq.id(R.id.hent).text("HØR " + kanal.navn.toUpperCase() + " LIVE");
+            } else aq.enabled(false).text("Internetforbindelse mangler");
+          }
+          ;
         }
 
 
-        aq.id(R.id.hent).visibility(
-            DRData.instans.hentedeUdsendelser.virker() && udsendelse.hentetStream == null && udsendelse.kanHentes ? View.VISIBLE : View.GONE);
+        aq.id(R.id.hent).enabled(
+            DRData.instans.hentedeUdsendelser.virker() && udsendelse.kanHentes);
         aq.textColorId(udsendelse.streamsKlar() ? R.color.blå : R.color.grå40);
         Cursor c = DRData.instans.hentedeUdsendelser.getStatusCursor(udsendelse);
         if (c != null) {
@@ -690,10 +698,12 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
             App.forgrundstråd.postDelayed(Udsendelse_frag.this, 5000);
           }
           aq.textColorId(R.color.grå40);
+        } else {
+          if (DRData.instans.hentedeUdsendelser.virker() && !udsendelse.kanHentes) {
+            aq.text("Kan ikke hentes");
+          }
         }
 
-        aq.id(R.id.kan_endnu_ikke_hentes).visibility(
-            DRData.instans.hentedeUdsendelser.virker() && !udsendelse.kanHentes ? View.VISIBLE : View.GONE);
       } else if (type == PLAYLISTEELEM_NU || type == PLAYLISTEELEM) {
         Playlisteelement ple = (Playlisteelement) liste.get(position);
         vh.titel.setText(lavFedSkriftTil(ple.titel + " | " + ple.kunstner, ple.titel.length()));
@@ -813,7 +823,11 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
       return;
     }
-    if (!udsendelse.kanHentes) return;
+    if (!udsendelse.kanHentes) {
+      App.kortToast("Udsendelsen kan ikke hentes");
+      Log.rapporterFejl(new IllegalStateException("Udsendelsen kan ikke hentes - burde ikke kunne komme hertil"));
+      return;
+    }
     DRData.instans.hentedeUdsendelser.hent(udsendelse);
   }
 

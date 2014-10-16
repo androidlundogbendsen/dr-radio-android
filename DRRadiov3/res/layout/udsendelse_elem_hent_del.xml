@@ -7,23 +7,6 @@
 
 
   <Button
-      android:id="@+id/kan_endnu_ikke_hentes"
-      android:layout_width="0px"
-      android:layout_height="match_parent"
-      android:layout_weight="1"
-      android:layout_marginTop="8dp"
-      android:paddingLeft="16dp"
-      android:gravity="center_vertical"
-      android:textAlignment="center"
-      android:text="UDSENDELSEN KAN IKKE HENTES"
-      android:contentDescription="Udsendelsen kan ikke hentes"
-      android:enabled="false"
-      android:textAppearance="?android:attr/textAppearanceSmall"
-      android:textColor="@color/grå40"
-      android:background="@drawable/knap_hvid_bg"/>
-
-
-  <Button
       android:id="@+id/hent"
       android:layout_width="0px"
       android:layout_height="match_parent"
@@ -34,20 +17,11 @@
       android:gravity="center_vertical"
       android:text=" DOWNLOAD"
       android:contentDescription="hent udsendelse"
-      android:textColor="@color/blå"
+      android:textAppearance="?android:attr/textAppearanceSmall"
       android:background="@drawable/knap_hvid_bg"/>
-
-  <!--Button
-          android:id="@+id/del"
-          android:layout_width="0px"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:layout_marginTop="8dp"
-          android:paddingLeft="16dp"
-          android:drawableLeft="@drawable/dri_del_blaa"
-          android:gravity="center_vertical"
-          android:text=" DEL"
-          android:textColor="@color/blå"
-          android:background="@drawable/knap_hvid_bg"/-->
+  <!--
+        android:text="UDSENDELSEN KAN IKKE HENTES"
+        android:contentDescription="Udsendelsen kan ikke hentes"
+  -->
 
 </LinearLayout>
