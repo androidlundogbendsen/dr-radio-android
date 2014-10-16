@@ -202,6 +202,49 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     afspiller.observatører.add(this);
     DRData.instans.hentedeUdsendelser.observatører.add(this);
     udvikling_checkDrSkrifter(rod, this + " rod");
+    /*
+    ListViewScrollObserver listViewScrollObserver = new ListViewScrollObserver(listView);
+    listViewScrollObserver.setOnScrollUpAndDownListener(new ListViewScrollObserver.OnListViewScrollListener() {
+      boolean actionBarSkjult = false;
+      @Override
+      public void onScrollUpDownChanged(int delta, int scrollPosition, boolean exact) {
+        Log.d("scrollPosition="+scrollPosition + " delta="+delta);
+        boolean nyActionBarSkjult = scrollPosition>0;
+        if (actionBarSkjult == nyActionBarSkjult) return;
+        actionBarSkjult = nyActionBarSkjult;
+        if (actionBarSkjult) {
+          ((Basisaktivitet) getActivity()).getSupportActionBar().hide();
+        } else {
+          ((Basisaktivitet) getActivity()).getSupportActionBar().show();
+        }
+      }
+
+      @Override
+      public void onScrollIdle() {
+
+      }
+    });
+    listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+      boolean actionBarSkjult = false;
+      @Override
+      public void onScrollStateChanged(AbsListView view, int scrollState) {
+        Log.d("onScrollStateChanged "+scrollState);
+      }
+
+      @Override
+      public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        Log.d("onScroll " + firstVisibleItem+ " " +visibleItemCount+ " " +totalItemCount);
+        boolean nyActionBarSkjult = firstVisibleItem>0;
+        if (actionBarSkjult == nyActionBarSkjult) return;
+        actionBarSkjult = nyActionBarSkjult;
+        if (actionBarSkjult) {
+          ((Basisaktivitet) getActivity()).getSupportActionBar().hide();;
+        } else {
+          ((Basisaktivitet) getActivity()).getSupportActionBar().show();
+        }
+      }
+    });
+    */
     return rod;
   }
 
@@ -498,7 +541,12 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       Playlisteelement pl = (Playlisteelement) obj;
       return pl.spillerNu ? PLAYLISTEELEM_NU : PLAYLISTEELEM;
     }
-
+/*
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+      return viewType==TOP;
+    }
+*/
     @Override
     public boolean isEnabled(int position) {
       int type = getItemViewType(position);
