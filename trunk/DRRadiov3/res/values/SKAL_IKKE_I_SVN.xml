@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- til Akamais statistik - den rigtige nøgle skal ikke comittes til SVN -->
-    <string name="akamai_konfiguration"></string>
+  <!-- til Akamais statistik - den rigtige nøgle skal ikke comittes til SVN -->
+  <string name="akamai_konfiguration"></string>
 
-    <!-- Indsæt din egen BugSense-nøgle her -->
-    <string name="bugsense_nøgle">00000000</string>
+  <!-- Indsæt din egen BugSense-nøgle her -->
+  <string name="bugsense_nøgle">00000000</string>
+  <string name="bugsense_testnøgle">00000000</string>
 </resources>

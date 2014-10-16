@@ -18,7 +18,7 @@
       >
 
     <include
-        layout="@layout/inkl_billede_med_titeloverlaegning"
+        layout="@layout/udsendelse_elem0_inkl_billede_titel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
