@@ -42,7 +42,6 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
   private Kanal kanal;
   private View rod;
   private int antalHentedeSendeplaner;
-  private CheckBox favorit;
   private AQuery aq;
 
   @Override
@@ -111,6 +110,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
 
   @Override
   public void onClick(View v) {
+    CheckBox favorit = (CheckBox) v;
     DRData.instans.favoritter.sætFavorit(programserieSlug, favorit.isChecked());
     if (favorit.isChecked()) App.kortToast("Programserien er tilføjet til favoritter");
     Log.registrérTestet("Valg af favoritprogram", programserieSlug);
@@ -204,9 +204,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
           aq.id(R.id.alle_udsendelser).typeface(App.skrift_gibson);
           aq.id(R.id.beskrivelse).text(programserie.beskrivelse).typeface(App.skrift_georgia);
           Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS);
-          favorit = aq.id(R.id.favorit).clicked(Programserie_frag.this).getCheckBox();
-          favorit.setChecked(DRData.instans.favoritter.erFavorit(programserieSlug));
-
+          aq.id(R.id.favorit).clicked(Programserie_frag.this).typeface(App.skrift_gibson).checked(DRData.instans.favoritter.erFavorit(programserieSlug));
         } else { // if (type == UDSENDELSE eller TIDLIGERE) {
           vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson).getTextView();
           vh.varighed = aq.id(R.id.varighed).typeface(App.skrift_gibson).getTextView();

@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -604,6 +605,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           seekBar = aq.id(R.id.seekBar).getSeekBar();
           seekBar.setOnSeekBarChangeListener(Udsendelse_frag.this);
           aq.id(R.id.hent).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
+          aq.id(R.id.favorit).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson).checked(DRData.instans.favoritter.erFavorit(udsendelse.programserieSlug));
           if (!DRData.instans.hentedeUdsendelser.virker()) aq.gone(); // Understøttes ikke på Android 2.2
           aq.id(R.id.del).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         } else if (type == OVERSKRIFT_PLAYLISTE_INFO || type == OVERSKRIFT_INDSLAG_INFO) {
@@ -754,6 +756,11 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     } else if (v.getId() == R.id.vis_hele_playlisten) {
       visHelePlaylisten = true;
       bygListe();
+    } else if (v.getId() == R.id.favorit) {
+      CheckBox favorit = (CheckBox) v;
+      DRData.instans.favoritter.sætFavorit(udsendelse.programserieSlug, favorit.isChecked());
+      if (favorit.isChecked()) App.kortToast("Programserien er tilføjet til favoritter");
+      Log.registrérTestet("Valg af favoritprogram", udsendelse.programserieSlug);
     } else {
       App.langToast("fejl");
     }

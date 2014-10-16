@@ -51,7 +51,9 @@
         android:id="@+id/favorit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="vælg som favorit"
+        android:contentDescription="favorit"
+        android:text="FAVORIT"
+        android:textColor="@color/blå"
         android:button="@drawable/dri_favorit"/>
   </LinearLayout>
 
