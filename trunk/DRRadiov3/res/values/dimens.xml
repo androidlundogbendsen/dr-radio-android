@@ -10,6 +10,7 @@
   <dimen name="kanalvisning_aktuelUdsendelse_topmargen">0dp</dimen>
   <dimen name="hørknap_højde">44dp</dimen>
   <dimen name="hørknap_udvidet_klikområde">12dp</dimen>
+  <dimen name="afspiller_kollapset_højde">56dp</dimen>
 
 
   <string name="akamaistatistik_device">Phone - Android</string>

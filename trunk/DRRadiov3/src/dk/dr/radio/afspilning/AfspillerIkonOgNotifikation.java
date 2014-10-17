@@ -190,8 +190,11 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
 
     b.setContent(AfspillerIkonOgNotifikation.lavRemoteViews(AfspillerIkonOgNotifikation.TYPE_notifikation_lille));
     Notification notification = b.build();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      notification.visibility = Notification.VISIBILITY_PUBLIC;
+    }
 
-    if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
       // A notification's big view appears only when the notification is expanded,
       // which happens when the notification is at the top of the notification drawer,
       // or when the user expands the notification with a gesture.
