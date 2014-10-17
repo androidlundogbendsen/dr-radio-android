@@ -6,7 +6,7 @@ do
 	i=`echo $l|cut -f1 -d' '`; 
 	n=`echo $l|cut -f2 -d' '`; 
 	if [ "$n" = "x" -o "x$n" = "x" ]; then continue; fi; 
-	echo "$i $n"; 
+	echo -n "$i $n  ->  "; 
 	
 #	for dpi in mdpi hdpi xhdpi xxhdpi; 
 	for dpi in xhdpi; 
@@ -22,9 +22,9 @@ do
 #		xp=512
 #		dpi=ios
 
-		sti=../DRRadiov3/res/drawable-${dpi}/
-#		sti=res/drawable-${dpi}/
-#		sti=res/drawable-${dpi}/
+		sti=../DRRadiov3/res/drawable-${dpi}
+#		sti=res/drawable-${dpi}
+#		sti=res/drawable-${dpi}
 		mkdir -p $sti
 		konv="convert -background none -font dr-icons-Regular -size ${xpi}x${xpi} -gravity center -trim -extent ${xp}x${xp}"
 
@@ -32,9 +32,10 @@ do
 		fn="$sti/${n}_blaa.png"; $konv -fill '#55b9c4' label:"$i" $fn; 
 		fn="$sti/${n}_graa40.png"; $konv -fill '#999999' label:"$i" $fn; 
 		fn="$sti/${n}_hvid.png";   $konv -fill white label:"$i" $fn; 
-
+		echo -n "  $fn"
 
 	done
+	echo 
 
 done
 
