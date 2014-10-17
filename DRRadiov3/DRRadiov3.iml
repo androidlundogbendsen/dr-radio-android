@@ -4,7 +4,7 @@
     <facet type="android" name="Android">
       <configuration>
         <proGuardCfgFiles>
-          <file>file://%MODULE_SDK_HOME%/tools/proguard/proguard-android.txt</file>
+          <file>file://$MODULE_DIR$/../../android-sdk-linux_86/tools/proguard/proguard-android.txt</file>
           <file>file://$MODULE_DIR$/proguard-project.txt</file>
         </proGuardCfgFiles>
         <option name="UPDATE_PROPERTY_FILES" value="true" />
