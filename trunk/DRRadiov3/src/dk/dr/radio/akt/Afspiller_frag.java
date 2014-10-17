@@ -45,7 +45,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     Log.d("Viser fragment " + this);
-    View rod = inflater.inflate(R.layout.afspiller_lille_frag, container, false);
+    View rod = inflater.inflate(R.layout.afspiller_frag, container, false);
     aq = new AQuery(rod);
     rod.setOnClickListener(this); // Ved klik på baggrunden skal kanalforside eller aktuel udsendelsesside vises
     startStopKnap = aq.id(R.id.startStopKnap).clicked(this).getImageView();

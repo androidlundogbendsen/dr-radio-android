@@ -15,7 +15,7 @@
       android:layout_height="0dp"
       android:layout_weight=".30"
       android:scaleType="centerInside"
-      android:src="@drawable/dri_lyd2_black"
+      android:src="@drawable/dr_lyd2_stor"
       tools:ignore="ContentDescription"/>
 
 
