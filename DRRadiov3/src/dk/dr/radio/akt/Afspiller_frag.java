@@ -41,6 +41,8 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
   private ProgressBar progressbar;
   private TextView titel;
   private TextView metainformation;
+  private ImageView udvidSkjulKnap;
+  private View udvidSkjulOmråde;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,6 +51,8 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     aq = new AQuery(rod);
     rod.setOnClickListener(this); // Ved klik på baggrunden skal kanalforside eller aktuel udsendelsesside vises
     startStopKnap = aq.id(R.id.startStopKnap).clicked(this).getImageView();
+    udvidSkjulKnap = aq.id(R.id.udvidSkjulKnap).clicked(this).getImageView();
+    udvidSkjulOmråde = aq.id(R.id.udvidSkjulOmråde).gone().getView();
     progressbar = aq.id(R.id.progressBar).getProgressBar();
     titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
     metainformation = aq.id(R.id.metainformation).typeface(App.skrift_gibson).getTextView();
@@ -197,6 +201,14 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         DRData.instans.afspiller.startAfspilning();
       } else {
         DRData.instans.afspiller.stopAfspilning();
+      }
+    } else if (v == udvidSkjulKnap) {
+      if (udvidSkjulOmråde.getVisibility() == View.GONE) {
+        udvidSkjulOmråde.setVisibility(View.VISIBLE);
+        udvidSkjulKnap.setImageResource(R.drawable.dri_pil_ned_graa40);
+      } else {
+        udvidSkjulOmråde.setVisibility(View.GONE);
+        udvidSkjulKnap.setImageResource(R.drawable.dri_pil_op_graa40);
       }
     } else try {
       // Ved klik på baggrunden skal kanalforside eller aktuel udsendelsesside vises
