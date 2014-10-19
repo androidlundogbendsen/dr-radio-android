@@ -1,9 +1,11 @@
 package dk.dr.radio.akt;
 
+import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -182,9 +184,23 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
   @Override
   public void onClick(View v) {
     try {
-      Udsendelse u = (Udsendelse) v.getTag();
+      final Udsendelse u = (Udsendelse) v.getTag();
       if (v.getId() == R.id.slet) {
-        hentedeUdsendelser.slet(u);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+          // Animeret fjernelse af listeelement
+          int pos = liste.indexOf(u);
+          final View le = listView.getChildAt(pos);
+          le.animate().alpha(0).withEndAction(new Runnable() {
+            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+            @Override
+            public void run() {
+              le.setAlpha(1);
+              hentedeUdsendelser.slet(u);
+            }
+          });
+        } else {
+          hentedeUdsendelser.slet(u);
+        }
       } else {
         App.langToast("Eksperiment - tjek hvordan det virker");
         Cursor c = hentedeUdsendelser.getStatusCursor(u);
