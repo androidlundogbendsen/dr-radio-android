@@ -173,6 +173,8 @@ public class Alarms {
       Log.d("tjekIndlæst alarmo=\n" + alarmoj);
       for (String alarmo : alarmoj.split("\n"))
         try {
+          alarmo = alarmo.trim();
+          if (alarmo.length() == 0) continue;
           alarmer.add(new Alarm(alarmo));
         } catch (Exception e) {
           Log.rapporterFejl(e);

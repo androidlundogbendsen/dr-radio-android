@@ -90,7 +90,7 @@ public class Log {
       return; // Hop ud hvis vi ikke kører i en Android VM
     }
     android.util.Log.e(TAG, tekst, e);
-    e.printStackTrace();
+    //e.printStackTrace();
     logappend(tekst);
     logappend(android.util.Log.getStackTraceString(e));
   }

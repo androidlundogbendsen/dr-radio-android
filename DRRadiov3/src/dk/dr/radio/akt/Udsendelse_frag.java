@@ -153,7 +153,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     udsendelse = DRData.instans.udsendelseFraSlug.get(getArguments().getString(DRJson.Slug.name()));
     if (udsendelse == null) {
       if (!App.PRODUKTION)
-        Log.rapporterFejl(new IllegalStateException("afbrydManglerData()"), getArguments().toString());
+        Log.rapporterFejl(new IllegalStateException("afbrydManglerData " + getArguments().toString()));
       afbrydManglerData();
       return rod;
     }
