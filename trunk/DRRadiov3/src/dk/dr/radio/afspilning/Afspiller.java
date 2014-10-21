@@ -58,6 +58,7 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
 import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
+import dk.dr.radio.v3.R;
 
 /**
  * @author j
@@ -65,6 +66,11 @@ import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 public class Afspiller {
 
   private final GemiusStatistik gemiusStatistik;
+  final MediaPlayer lyd_afspiller_start;
+  final MediaPlayer lyd_afspiller_fejl;
+  final MediaPlayer lyd_afspiller_spiller;
+  final MediaPlayer lyd_afspiller_stop;
+  final MediaPlayer lyd_afspiller_forbinder;
   public Status afspillerstatus = Status.STOPPET;
   // Burde være en del af afspillerstatus
   private boolean afspilningPåPause;
@@ -127,6 +133,11 @@ public class Afspiller {
     */
     if (App.fejlsøgning) tjekLydAktiv.run();
     gemiusStatistik = new GemiusStatistik();
+    lyd_afspiller_start = MediaPlayer.create(App.instans, R.raw.afspiller_start);
+    lyd_afspiller_stop = MediaPlayer.create(App.instans, R.raw.afspiller_stop);
+    lyd_afspiller_forbinder = MediaPlayer.create(App.instans, R.raw.afspiller_forbinder);
+    lyd_afspiller_fejl = MediaPlayer.create(App.instans, R.raw.afspiller_fejl);
+    lyd_afspiller_spiller = MediaPlayer.create(App.instans, R.raw.afspiller_spiller);
   }
 
   private int onErrorTæller;
@@ -198,6 +209,7 @@ public class Afspiller {
       tjekVolumenMindst5tedele(1);
 
     } else Log.d(" forkert status=" + afspillerstatus);
+    lyd_afspiller_start.start();
   }
 
   /** Sørg for at volumen er skruet op til en minimumsværdi, angivet i 5'tedele af fuld styrke */
@@ -246,6 +258,7 @@ public class Afspiller {
               Log.d("JPER pause");
               if (afspillerstatus != Status.STOPPET) {
                 pauseAfspilning(); // sætter afspilningPåPause=false
+                lyd_afspiller_stop.start();
                 afspilningPåPause = true;
               }
               break;
@@ -354,9 +367,11 @@ public class Afspiller {
             gammelMediaPlayer.stop();
           } catch (IllegalStateException e) {
           }
-          Log.d("gammelMediaPlayer.release() start");
+          Log.d("gammelMediaPlayer.reset()");
+          gammelMediaPlayer.reset();
+          Log.d("gammelMediaPlayer.release()");
           gammelMediaPlayer.release();
-          Log.d("gammelMediaPlayer.release() færdig");
+          Log.d("gammelMediaPlayer færdig");
         } catch (Exception e) {
           Log.rapporterFejl(e);
         }
@@ -398,13 +413,16 @@ public class Afspiller {
   synchronized public void stopAfspilning() {
     Log.d("Afspiller stopAfspilning");
     gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Stopped, getCurrentPosition() / 1000);
-    pauseAfspilning();
+    gemPosition();
+    pauseAfspilningIntern();
+    if (wifilock != null) wifilock.release();
     // Stop afspillerservicen
     App.instans.stopService(new Intent(App.instans, HoldAppIHukommelsenService.class));
     if (wakeLock != null) {
       wakeLock.release();
       wakeLock = null;
     }
+    lyd_afspiller_stop.start();
     Fjernbetjening.afregistrér();
   }
 
@@ -428,7 +446,7 @@ public class Afspiller {
 
 
     if ((afspillerstatus == Status.SPILLER) || (afspillerstatus == Status.FORBINDER)) {
-      stopAfspilning(); // gemmer lydkildens position
+      pauseAfspilning(); // gemmer lydkildens position
       this.lydkilde = lydkilde;
       try {
         startAfspilning(); // sætter afspilleren til den nye lydkildes position
@@ -550,6 +568,7 @@ public class Afspiller {
               mediaPlayer.seekTo(startposition);
             }
             mediaPlayer.start();
+            lyd_afspiller_spiller.start();
             Log.d("mediaPlayer.start() slut " + mpTils());
             Thread.sleep(5000); // Vent lidt før data sendes
             if (App.netværk.erOnline()) {
@@ -575,9 +594,11 @@ public class Afspiller {
         sætMediaPlayerLytter(gammelMediaPlayer, null); // afregistrér alle lyttere
         new Thread() {
           public void run() {
-            Log.d("gammelMediaPlayer.release() start");
+            Log.d("gammelMediaPlayer.reset()");
+            gammelMediaPlayer.reset();
+            Log.d("gammelMediaPlayer.release()");
             gammelMediaPlayer.release();
-            Log.d("gammelMediaPlayer.release() færdig");
+            Log.d("gammelMediaPlayer.release()");
           }
         }.start();
 
@@ -586,6 +607,7 @@ public class Afspiller {
           mediaPlayer = MediaPlayerWrapper.opret();
           sætMediaPlayerLytter(mediaPlayer, this); // registrér lyttere på den nye instans
           startAfspilningIntern();
+          lyd_afspiller_forbinder.start();
         } else {
           DRData.instans.senestLyttede.sætStartposition(lydkilde, 0);
           gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Completed, getCurrentPosition() / 1000);
@@ -638,6 +660,7 @@ public class Afspiller {
             Log.d("Vent på at vi kommer online igen");
             onErrorTællerNultid = System.currentTimeMillis();
             App.netværk.observatører.add(venterPåAtKommeOnline);
+            lyd_afspiller_fejl.start();
             if (eraroSignifasBrui) {
               ringDenAlarm();
             }
@@ -646,6 +669,7 @@ public class Afspiller {
           pauseAfspilning(); // Vi giver op efter 10. forsøg
           App.langToast("Beklager, kan ikke spille radio");
           App.langToast("Prøv at vælge et andet format i indstillingerne");
+          lyd_afspiller_fejl.start();
         }
       } else {
         mediaPlayer.reset();

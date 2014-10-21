@@ -89,13 +89,13 @@ public class Fjernbetjening extends BroadcastReceiver {
       // Skift baggrundsbillede
       forrigeUdsendelse = u;
       final String burl = Basisfragment.skalérSlugBilledeUrl(u.slug, 800, 400);
-      App.kortToast("asynk artwork\n" + burl);
+      Log.d("asynk artwork\n" + burl);
 
       App.volleyRequestQueue.add(new ImageRequest(burl,
           new Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap bm) {
-              App.kortToast("asynk artwork " + bm.getHeight() + "\n" + burl);
+              Log.d("asynk artwork " + bm.getHeight() + "\n" + burl);
               remoteControlClient.editMetadata(false)
                   .putBitmap(MetadataEditor.BITMAP_KEY_ARTWORK, bm)
                   .apply();
@@ -150,7 +150,8 @@ public class Fjernbetjening extends BroadcastReceiver {
         if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
           DRData.instans.afspiller.startAfspilning();
         } else {
-          DRData.instans.afspiller.stopAfspilning();
+          DRData.instans.afspiller.pauseAfspilning();
+          DRData.instans.afspiller.lyd_afspiller_stop.start();
         }
     }
   }
