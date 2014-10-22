@@ -21,8 +21,16 @@
         android:layout_marginBottom="@dimen/afspiller_kollapset_højde"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+    </FrameLayout>
 
 
+    <FrameLayout
+        android:id="@+id/indhold_overskygge"
+        android:layout_marginBottom="@dimen/afspiller_kollapset_højde"
+        android:background="#80000000"
+        android:alpha="0"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     </FrameLayout>
 
 
