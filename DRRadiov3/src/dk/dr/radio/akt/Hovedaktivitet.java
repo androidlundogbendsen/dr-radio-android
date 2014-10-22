@@ -33,6 +33,7 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
    * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
    */
   private Venstremenu_frag venstremenuFrag;
+  private Afspiller_frag afspillerFrag;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,9 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
 
     // Set up the drawer.
     venstremenuFrag.setUp(R.id.venstremenu_frag, (DrawerLayout) findViewById(R.id.drawer_layout));
+
+    afspillerFrag = (Afspiller_frag) getSupportFragmentManager().findFragmentById(R.id.afspiller_frag);
+
 
     if (savedInstanceState == null) try {
 
@@ -118,6 +122,8 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
   public void onBackPressed() {
     if (venstremenuFrag.isDrawerOpen()) {
       venstremenuFrag.skjulMenu();
+    } else if (afspillerFrag.viserUdvidetOmråde()) {
+      afspillerFrag.udvidSkjulOmråde();
     } else {
       super.onBackPressed();
     }

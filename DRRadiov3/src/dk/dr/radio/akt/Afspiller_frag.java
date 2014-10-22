@@ -2,6 +2,7 @@ package dk.dr.radio.akt;
 
 import android.content.Intent;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
@@ -194,6 +196,49 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     return super.onOptionsItemSelected(item);
   }
 
+  public boolean viserUdvidetOmråde() {
+    return udvidSkjulOmråde.getVisibility() == View.VISIBLE;
+  }
+
+
+  public void udvidSkjulOmråde() {
+    final View indhold_overskygge = getActivity().findViewById(R.id.indhold_overskygge);
+    if (viserUdvidetOmråde()) {
+      udvidSkjulOmråde.setVisibility(View.GONE);
+      udvidSkjulKnap.setImageResource(R.drawable.dri_pil_op_graa40);
+
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        indhold_overskygge.animate().alpha(0).withEndAction(new Runnable() {
+          @Override
+          public void run() {
+            // Får det til at hakke midt i animationen
+            // TODO fix, ved at lave egen åbne/lukke animation i afspiller, der ikke først fader og DEREFTER krympler området
+            //indhold_overskygge.setVisibility(View.GONE);
+          }
+        });
+      } else {
+        indhold_overskygge.setVisibility(View.GONE);
+      }
+    } else {
+      udvidSkjulOmråde.setVisibility(View.VISIBLE);
+      udvidSkjulKnap.setImageResource(R.drawable.dri_pil_ned_graa40);
+
+      indhold_overskygge.setOnTouchListener(new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+          udvidSkjulOmråde(); // Skjul udvidet afspiller igen
+          indhold_overskygge.setOnTouchListener(null);
+          return true;
+        }
+      });
+      indhold_overskygge.setVisibility(View.VISIBLE);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        indhold_overskygge.animate().alpha(1);
+      }
+    }
+  }
+
+
   @Override
   public void onClick(View v) {
     if (v == startStopKnap) {
@@ -203,13 +248,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         DRData.instans.afspiller.stopAfspilning();
       }
     } else if (v == udvidSkjulKnap) {
-      if (udvidSkjulOmråde.getVisibility() == View.GONE) {
-        udvidSkjulOmråde.setVisibility(View.VISIBLE);
-        udvidSkjulKnap.setImageResource(R.drawable.dri_pil_ned_graa40);
-      } else {
-        udvidSkjulOmråde.setVisibility(View.GONE);
-        udvidSkjulKnap.setImageResource(R.drawable.dri_pil_op_graa40);
-      }
+      udvidSkjulOmråde();
     } else try {
       // Ved klik på baggrunden skal kanalforside eller aktuel udsendelsesside vises
       Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
