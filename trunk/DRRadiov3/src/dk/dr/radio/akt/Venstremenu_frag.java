@@ -371,23 +371,29 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       tilføj(R.layout.venstremenu_elem_soeg, Soeg_efter_program_frag.class);
       aq.id(R.id.tekst).typeface(App.skrift_gibson_fed);
 
-      tilføj(R.layout.venstremenu_elem_adskiller_tynd);
+      //tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
       FORSIDE_INDEX = elem.size();
       tilføj(R.layout.venstremenu_elem_overskrift, Kanaler_frag.class);
       aq.id(R.id.tekst).text("Forside");
       aq.typeface(App.skrift_gibson_fed);
 
-      tilføj(R.layout.venstremenu_elem_adskiller_tynd);
+      //tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
       tilføj(R.layout.venstremenu_elem_overskrift, ProgramserierAtilAA_frag.class);
       aq.id(R.id.tekst).text("Alle udsendelser A-Å");
       aq.typeface(App.skrift_gibson_fed);
 
-      tilføj(R.layout.venstremenu_elem_adskiller_tynd);
+      //tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
       tilføj(R.layout.venstremenu_elem_overskrift, Radiodrama_frag.class);
       aq.id(R.id.tekst).text("Radio drama");
+      aq.typeface(App.skrift_gibson_fed);
+
+      //tilføj(R.layout.venstremenu_elem_adskiller_tynd);
+
+      tilføj(R.layout.venstremenu_elem_overskrift, P4kanalvalg_frag.class);
+      aq.id(R.id.tekst).text("Vælg P4-område");
       aq.typeface(App.skrift_gibson_fed);
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
@@ -396,7 +402,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       aq.id(R.id.tekst).text("Senest lyttede");
       aq.typeface(App.skrift_gibson_fed);
 
-      tilføj(R.layout.venstremenu_elem_adskiller_tynd);
+      //tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
       tilføj(new MenuElement(layoutInflater.inflate(R.layout.venstremenu_elem_favoritprogrammer, null), null, Favoritprogrammer_frag.class) {
         @Override
@@ -414,7 +420,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       aq.id(R.id.tekst).typeface(App.skrift_gibson_fed).id(R.id.tekst2).typeface(App.skrift_gibson);
 
       if (DRData.instans.hentedeUdsendelser.virker()) {
-        tilføj(R.layout.venstremenu_elem_adskiller_tynd);
+        //tilføj(R.layout.venstremenu_elem_adskiller_tynd);
         tilføj(new MenuElement(layoutInflater.inflate(R.layout.venstremenu_elem_hentede_udsendendelser, null), null, Hentede_udsendelser_frag.class) {
           @Override
           public View getView() {
@@ -426,19 +432,16 @@ public class Venstremenu_frag extends Fragment implements Runnable {
         });
         aq.id(R.id.tekst).typeface(App.skrift_gibson_fed).id(R.id.tekst2).typeface(App.skrift_gibson);
       }
-
-      /*
-      tilføj(R.layout.venstremenu_elem_adskiller_tyk);
-
-      tilføj(R.layout.venstremenu_elem_overskrift, Kanalvalg_v2_frag.class);
-      aq.id(R.id.tekst).text("Alle programmer A-Å - ... skal den laves?");
-      if (gib) aq.typeface(App.skrift_gibson_fed);
-      */
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
-
-      tilføj(R.layout.venstremenu_elem_overskrift, P4kanalvalg_frag.class);
-      aq.id(R.id.tekst).text("Vælg P4-område");
+      tilføj(R.layout.venstremenu_elem_overskrift, new Runnable() {
+        @Override
+        public void run() {
+          startActivity(new Intent(getActivity(), AlarmClock_akt.class));
+        }
+      });
+      aq.id(R.id.tekst).text("Vækning");
       aq.typeface(App.skrift_gibson_fed);
+
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
       tilføj(R.layout.venstremenu_elem_overskrift, new Runnable() {
@@ -462,23 +465,13 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       aq.id(R.id.tekst).text("Indstillinger");
       aq.typeface(App.skrift_gibson_fed);
 
-      tilføj(R.layout.venstremenu_elem_adskiller_tynd);
-      tilføj(R.layout.venstremenu_elem_overskrift, new Runnable() {
-        @Override
-        public void run() {
-          startActivity(new Intent(getActivity(), AlarmClock_akt.class));
-        }
-      });
-      aq.id(R.id.tekst).text("Vækning");
-      aq.typeface(App.skrift_gibson_fed);
-
-      tilføj(R.layout.venstremenu_elem_adskiller_tynd);
+      //tilføj(R.layout.venstremenu_elem_adskiller_tynd);
       tilføj(R.layout.venstremenu_elem_overskrift, Kontakt_info_om_frag.class);
       aq.id(R.id.tekst).text("Kontakt / info / om");
       aq.typeface(App.skrift_gibson_fed);
 
       if (!App.PRODUKTION) {
-        tilføj(R.layout.venstremenu_elem_adskiller_tynd);
+//        tilføj(R.layout.venstremenu_elem_adskiller_tynd);
         tilføj(R.layout.venstremenu_elem_overskrift, new Runnable() {
           @Override
           public void run() {
