@@ -126,6 +126,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     DRData.instans.afspiller.observatører.add(this);
     App.netværk.observatører.add(this);
     // Log.d(this + " onCreateView færdig efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
+    Log.d("onCreateView " + this);
     return rod;
   }
 
@@ -314,7 +315,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       if (App.fejlsøgning) Log.d("opdaterListe " + kanal.kode + "  aktuelUdsendelseIndex=" + aktuelUdsendelseIndex);
       adapter.notifyDataSetChanged();
       if (!brugerHarNavigeret) {
-        if (App.fejlsøgning) Log.d("hopTilAktuelUdsendelse() aktuelUdsendelseIndex="+aktuelUdsendelseIndex+" "+this);
+        if (App.fejlsøgning)
+          Log.d("hopTilAktuelUdsendelse() aktuelUdsendelseIndex=" + aktuelUdsendelseIndex + " " + this);
         if (aktuelUdsendelseIndex < 0) return;
         int topmargen = getResources().getDimensionPixelOffset(R.dimen.kanalvisning_aktuelUdsendelse_topmargen);
         listView.setSelectionFromTop(aktuelUdsendelseIndex, topmargen);
@@ -398,9 +400,9 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       if (v == null) {
         v = getLayoutInflater(null).inflate(
             type == AKTUEL ? R.layout.kanal_elem0_aktuel_udsendelse :  // Visning af den aktuelle udsendelse
-            type == NORMAL ? R.layout.kanal_elem1_udsendelse :  // De andre udsendelser
-            type == DAGSOVERSKRIFT ? R.layout.kanal_elem3_i_dag_i_morgen  // Dagens overskrift
-                    : R.layout.kanal_elem2_tidligere_senere, parent, false);
+                type == NORMAL ? R.layout.kanal_elem1_udsendelse :  // De andre udsendelser
+                    type == DAGSOVERSKRIFT ? R.layout.kanal_elem3_i_dag_i_morgen  // Dagens overskrift
+                        : R.layout.kanal_elem2_tidligere_senere, parent, false);
         vh = new Viewholder();
         vh.itemViewType = type;
         a = vh.aq = new AQuery(v);
@@ -455,7 +457,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       if (elem instanceof String) {  // Overskrifter
         String tekst = (String) elem;
         vh.titel.setText(tekst);
-        vh.titel.setVisibility(tekst.length()==0? View.GONE : View.VISIBLE);
+        vh.titel.setVisibility(tekst.length() == 0 ? View.GONE : View.VISIBLE);
         return v;
       }
       Udsendelse udsendelse = (Udsendelse) elem; // Resten er 'udsendelser'
@@ -662,7 +664,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       // Hvis tilgængelighed er slået til (eller bladring slået fra) vises blot ét Udsendelse_frag
       Fragment f =
           App.accessibilityManager.isEnabled() || !App.prefs.getBoolean("udsendelser_bladr", true) ? new Udsendelse_frag() :
-                  new Udsendelser_vandret_skift_frag();
+              new Udsendelser_vandret_skift_frag();
       f.setArguments(new Intent()
           .putExtra(P_kode, kanal.kode)
           .putExtra(Udsendelse_frag.AKTUEL_UDSENDELSE_SLUG, aktuelUdsendelseSlug)
