@@ -100,4 +100,27 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
   public boolean streamsKlar() {
     return hentetStream != null || streams != null && streams.size() > 0;
   }
+
+  /**
+   * Finder index på playlisteelement, der spiller på et bestemt offset i udsendelsen
+   * @param offsetMs Tidspunkt
+   * @param indeks   Gæt på index, f.eks fra sidste kald
+   * @return korrekt indeks
+   */
+  public int findPlaylisteElemTilTid(int offsetMs, int indeks) {
+    if (playliste == null || playliste.size() == 0) return -1;
+    if (indeks < 0 || playliste.size() <= indeks) {
+      indeks = 0;
+    } else if (offsetMs < playliste.get(indeks).offsetMs - 10000) {
+      indeks = 0; // offsetMs mere end 10 sekunder tidligere end startgæt => søg fra starten
+    }
+    ;
+
+    // Søg nu fremad til næste nummer er for langt
+    while (indeks < playliste.size() - 1 && playliste.get(indeks + 1).offsetMs < offsetMs) {
+      Log.d("findPlaylisteElemTilTid() skip playliste[" + indeks + "].offsetMs=" + playliste.get(indeks).offsetMs);
+      indeks++;
+    }
+    return indeks;
+  }
 }

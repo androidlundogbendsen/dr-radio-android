@@ -12,7 +12,6 @@ public class Playlisteelement {
   public String billedeUrl;
   public Date startTid;
   public String startTidKl;
-  public boolean spillerNu;
   public int offsetMs;
 
   @Override
