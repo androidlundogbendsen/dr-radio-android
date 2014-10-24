@@ -28,7 +28,7 @@
       android:title="@string/alarm_repeat"/>
   <ListPreference
       android:key="kanalo"
-      android:title="Kanalo"
+      android:title="Kanal"
       android:persistent="false"
       android:showDefault="false"/>
 </PreferenceScreen>

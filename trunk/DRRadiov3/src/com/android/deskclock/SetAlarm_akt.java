@@ -81,7 +81,7 @@ public class SetAlarm_akt extends PreferenceActivity implements Preference.OnPre
     mTimePref = findPreference("time");
     mKanaloPref = (ListPreference) findPreference("kanalo");
     mKanaloPref.setOnPreferenceChangeListener(this);
-    mKanaloPref.setSummary("kanalo");
+    mKanaloPref.setSummary("kanal");
 
     ArrayList<String> kk = new ArrayList<String>();
     ArrayList<String> kn = new ArrayList<String>();
