@@ -67,6 +67,9 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   private Kanal kanal;
   protected View rod;
   private Udsendelse udsendelse;
+  private Playlisteelement playlisteElemDerSpillerNu;
+  private int playlisteElemDerSpillerNuIndex = -1;
+
   private boolean blokerVidereNavigering;
   private ArrayList<Object> liste = new ArrayList<Object>();
   Afspiller afspiller = DRData.instans.afspiller;
@@ -394,7 +397,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
   private boolean aktuelUdsendelsePåKanalen() {
     boolean res = udsendelse.equals(udsendelse.getKanal().getUdsendelse());
-    Log.d("aktuelUdsendelsePåKanalen()? " + res + " " + udsendelse + " " + udsendelse.getKanal() + ":" + udsendelse.getKanal().getUdsendelse());
+    //Log.d("aktuelUdsendelsePåKanalen()? " + res + " " + udsendelse + " " + udsendelse.getKanal() + ":" + udsendelse.getKanal().getUdsendelse());
     return res;
   }
 
@@ -510,14 +513,12 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         liste.addAll(udsendelse.indslag);
       } else if (udsendelse.playliste != null && udsendelse.playliste.size() > 0) {
         liste.add(OVERSKRIFT_PLAYLISTE_INFO);
-        boolean aktuelUdsendelsePåKanalen = aktuelUdsendelsePåKanalen();
+        if (aktuelUdsendelsePåKanalen()) playlisteElemDerSpillerNu = udsendelse.playliste.get(0);
         if (visHelePlaylisten) {
-          if (aktuelUdsendelsePåKanalen) udsendelse.playliste.get(0).spillerNu = true;
           liste.addAll(udsendelse.playliste);
         } else {
           for (int i = 0; i < udsendelse.playliste.size(); i++) {
             Playlisteelement e = udsendelse.playliste.get(i);
-            e.spillerNu = (i == 0 && aktuelUdsendelsePåKanalen);
             liste.add(e);
             if (i >= 4) {
               liste.add(VIS_HELE_PLAYLISTEN_KNAP);
@@ -543,7 +544,6 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   }
 
   Runnable opdaterSeekBar = new Runnable() {
-    int spillerNuIndexFør = 0;
 
     @Override
     public void run() {
@@ -567,17 +567,16 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
             seekBarMaxTekst.setVisibility(View.VISIBLE);
             seekBarMaxTekst.setText(DateUtils.formatElapsedTime(længdeMs / 1000));
             int pos = afspiller.getCurrentPosition();
-            Log.d("   pos " + pos + "   " + afspiller.getDuration());
-            seekBarTekst_opdater(pos);
-            seekBar.setProgress(pos);
-            // Forsøgsvist fremhævet nummeret der spilles lige nu (fremhævet nummer passer ikke altid - UDESTÅR)
-            if (udsendelse.playliste != null && udsendelse.playliste.size() > 0) {
-              int spillerNuIndex = udsendelse.playliste.size() * pos / længdeMs; // TODO rigtig logik
-              if (spillerNuIndexFør != spillerNuIndex) {
-                udsendelse.playliste.get(spillerNuIndexFør).spillerNu = false;
-                udsendelse.playliste.get(spillerNuIndex).spillerNu = true;
-                spillerNuIndexFør = spillerNuIndex;
-                bygListe();
+            Log.d("   pos " + pos + "   " + længdeMs);
+            if (pos > 0) { // pos=0 rapporteres efter onSeekComplete, det skal ignoreres
+              seekBarTekst_opdater(pos);
+              seekBar.setProgress(pos);
+              // Find og fremhævet nummeret der spilles lige nu
+              int spillerNuIndexNy = udsendelse.findPlaylisteElemTilTid(pos, playlisteElemDerSpillerNuIndex);
+              if (playlisteElemDerSpillerNuIndex != spillerNuIndexNy) {
+                playlisteElemDerSpillerNuIndex = spillerNuIndexNy;
+                playlisteElemDerSpillerNu = playlisteElemDerSpillerNuIndex < 0 ? null : udsendelse.playliste.get(playlisteElemDerSpillerNuIndex);
+                adapter.notifyDataSetChanged();
               }
             }
           } else {
@@ -655,7 +654,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       if (obj instanceof Indslaglisteelement) return INDSLAGLISTEELEM;
       // Så må det være et playlisteelement
       Playlisteelement pl = (Playlisteelement) obj;
-      return pl.spillerNu ? PLAYLISTEELEM_NU : PLAYLISTEELEM;
+      return pl == playlisteElemDerSpillerNu ? PLAYLISTEELEM_NU : PLAYLISTEELEM;
     }
 /*
     @Override
@@ -929,6 +928,9 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         });
       }
       seekBar.setProgress(pl.offsetMs);
+      playlisteElemDerSpillerNu = pl;
+      playlisteElemDerSpillerNuIndex = udsendelse.playliste.indexOf(pl);
+      adapter.notifyDataSetChanged();
       Log.registrérTestet("Valg af playlisteelement", "ja");
     } else if (type == INDSLAGLISTEELEM) {
       if (seekBar == null || !udsendelse.streamsKlar()) return; // seekBar==null er set ske i abetest
