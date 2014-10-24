@@ -63,6 +63,7 @@ import java.io.FileOutputStream;
 import java.util.Date;
 
 import dk.dr.radio.afspilning.Afspiller;
+import dk.dr.radio.afspilning.Fjernbetjening;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Diverse;
@@ -92,6 +93,7 @@ public class App extends Application {
   public static Typeface skrift_georgia;
 
   public static Netvaerksstatus netværk;
+  public static Fjernbetjening fjernbetjening;
   public static RequestQueue volleyRequestQueue;
   private DrDiskBasedCache volleyCache;
   public static EgenTypefaceSpan skrift_gibson_fed_span;
@@ -109,7 +111,8 @@ public class App extends Application {
     instans = this;
     netværk = new Netvaerksstatus();
     EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator");
-    if (!EMULATOR) BugSenseHandler.initAndStartSession(this, getString(PRODUKTION?R.string.bugsense_nøgle:R.string.bugsense_testnøgle));
+    if (!EMULATOR)
+      BugSenseHandler.initAndStartSession(this, getString(PRODUKTION ? R.string.bugsense_nøgle : R.string.bugsense_testnøgle));
     super.onCreate();
 
     forgrundstråd = new Handler();
@@ -205,7 +208,9 @@ public class App extends Application {
             Log.d("hentSupplerendeDataBgX " + kanal.kode + " fraCache=" + fraCache + " => " + kanal.slug + " k.lydUrl=" + kanal.streams);
           }
         }) {
-          public Priority getPriority() { return Priority.HIGH;}
+          public Priority getPriority() {
+            return Priority.HIGH;
+          }
         };
         App.volleyRequestQueue.add(req);
       }
@@ -214,10 +219,9 @@ public class App extends Application {
       DRData.instans.afspiller.setLydkilde(aktuelKanal);
 
 
-      IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-      registerReceiver(netværk, filter);
+      registerReceiver(netværk, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
       netværk.onReceive(this, null); // Få opdateret netværksstatus
-      //langToast("xxxx "+App.fejlsøgning);
+      fjernbetjening = new Fjernbetjening();
 
       // udeståendeInitialisering kaldes når aktivitet bliver synlig første gang
       // - muligvis aldrig hvis app'en kun betjenes via levende ikon
@@ -552,7 +556,7 @@ public class App extends Application {
 
   /** Kan kaldet til at afgøre om vi er igang med at teste noget fra en main()-metode eller app'en rent faktisk kører */
   public static boolean testFraMain() {
-    return instans==null;
+    return instans == null;
   }
 
   /**

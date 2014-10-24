@@ -20,7 +20,6 @@ package dk.dr.radio.afspilning;
 
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -30,7 +29,6 @@ import android.media.MediaMetadataRetriever;
 import android.media.RemoteControlClient;
 import android.media.RemoteControlClient.MetadataEditor;
 import android.os.Build;
-import android.view.KeyEvent;
 
 import com.android.volley.Response;
 import com.android.volley.toolbox.ImageRequest;
@@ -47,16 +45,31 @@ import dk.dr.radio.diverse.Log;
  * Til håndtering af knapper på fjernbetjening (f.eks. på Bluetooth headset.)
  * Se også http://android-developers.blogspot.com/2010/06/allowing-applications-to-play-nicer.html
  */
-public class Fjernbetjening extends BroadcastReceiver {
+public class Fjernbetjening implements Runnable {
 
-  private static RemoteControlClient remoteControlClient;
-  private static Udsendelse forrigeUdsendelse;
+  private final ComponentName eventReceiver;
+  private final AudioManager audioManager;
+  private RemoteControlClient remoteControlClient;
+  private Udsendelse forrigeUdsendelse;
+
+  public Fjernbetjening() {
+    DRData.instans.afspiller.positionsobservatører.add(this);
+    eventReceiver = new ComponentName(App.instans.getPackageName(), FjernbetjeningReciever.class.getName());
+    audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
+  }
+
+
+  @Override
+  public void run() {
+    opdaterBillede();
+  }
+
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-  public static void opdaterBillede(Afspiller afspiller) {
+  public void opdaterBillede() {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) return;
 
-    Lydkilde lk = afspiller.getLydkilde();
+    Lydkilde lk = DRData.instans.afspiller.getLydkilde();
     Kanal k = lk.getKanal();
     Udsendelse u = lk.getUdsendelse();
     Log.d("Fjernbetjening opdaterBillede " + lk + " k=" + k + " u=" + u + " d=" + lk.erDirekte());
@@ -80,12 +93,12 @@ public class Fjernbetjening extends BroadcastReceiver {
     } else {
       remoteControlClient.editMetadata(false)
           .putString(MediaMetadataRetriever.METADATA_KEY_TITLE, u.titel)
-          .putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, k==null?null:"DR " + k.navn)
+          .putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, k == null ? null : "DR " + k.navn)
           .putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, u.playliste == null || u.playliste.size() == 0 ? "" : u.playliste.get(0).kunstner)
           .apply();
     }
 
-    if (u!=null && u!=forrigeUdsendelse) {
+    if (u != null && u != forrigeUdsendelse) {
       // Skift baggrundsbillede
       forrigeUdsendelse = u;
       final String burl = Basisfragment.skalérSlugBilledeUrl(u.slug, 800, 400);
@@ -103,67 +116,19 @@ public class Fjernbetjening extends BroadcastReceiver {
           }, 0, 0, null, null));
     }
 
-    Status s = afspiller.getAfspillerstatus();
-    int ps = s == Status.STOPPET ? RemoteControlClient.PLAYSTATE_STOPPED : s == Status.SPILLER ? RemoteControlClient.PLAYSTATE_PLAYING : RemoteControlClient.PLAYSTATE_BUFFERING;
-
+    Status s = DRData.instans.afspiller.getAfspillerstatus();
+    int ps = s == Status.STOPPET ? RemoteControlClient.PLAYSTATE_PAUSED : s == Status.SPILLER ? RemoteControlClient.PLAYSTATE_PLAYING : RemoteControlClient.PLAYSTATE_BUFFERING;
+    remoteControlClient.setPlaybackState(ps);
     //if (Build.VERSION.SDK_INT >= 18)
     //  remoteControlClient.setPlaybackState(ps, 0, 1);
     //else
-    remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PLAYING);
   }
 
-
-  @Override
-  public void onReceive(Context context, Intent intent) {
-    KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
-    Log.d("MediabuttonReciever " + event);
-
-    if (!Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction()) || event == null || event.getAction() != KeyEvent.ACTION_DOWN) {
-      return;
-    }
-
-    switch (event.getKeyCode()) {
-      case KeyEvent.KEYCODE_HEADSETHOOK:
-      case KeyEvent.KEYCODE_MEDIA_STOP:
-      case KeyEvent.KEYCODE_MEDIA_PAUSE:
-        if (DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET) {
-          DRData.instans.afspiller.stopAfspilning();
-        }
-        break;
-      case KeyEvent.KEYCODE_MEDIA_PLAY:
-      case KeyEvent.KEYCODE_MEDIA_REWIND:
-      case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
-        if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
-          DRData.instans.afspiller.startAfspilning();
-        }
-        break;
-      case KeyEvent.KEYCODE_MEDIA_NEXT:
-        App.kortToast("næste");
-//        DRData.instans.afspiller.forrige();
-        break;
-      case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-        App.kortToast("forrige");
-//        DRData.instans.afspiller.næste();
-        break;
-      case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-      default:
-        if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
-          DRData.instans.afspiller.startAfspilning();
-        } else {
-          DRData.instans.afspiller.pauseAfspilning();
-          DRData.instans.afspiller.lyd_afspiller_stop.start();
-        }
-    }
-  }
 
   @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-  public static void registrér() {
+  public void registrér() {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) return;
-
-    ComponentName eventReceiver = new ComponentName(App.instans.getPackageName(), Fjernbetjening.class.getName());
-    AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
     audioManager.registerMediaButtonEventReceiver(eventReceiver);
-
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) return;
 
     Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON).setComponent(eventReceiver);
@@ -180,13 +145,11 @@ public class Fjernbetjening extends BroadcastReceiver {
   }
 
   @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-  public static void afregistrér() {
-    if (Build.VERSION.SDK_INT < 8) return;
-    ComponentName eventReceiver = new ComponentName(App.instans.getPackageName(), Fjernbetjening.class.getName());
-    AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
+  public void afregistrér() {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) return;
     audioManager.unregisterMediaButtonEventReceiver(eventReceiver);
-
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) return;
+
     remoteControlClient.editMetadata(true).apply();
     remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_STOPPED);
     audioManager.unregisterRemoteControlClient(remoteControlClient);
