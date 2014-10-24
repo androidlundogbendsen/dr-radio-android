@@ -5,7 +5,7 @@
           android:versionCode="1"
           android:versionName="3.1.3 21.okt lydstatus+fix">
 
-<uses-sdk
+  <uses-sdk
       android:minSdkVersion="7"
       android:targetSdkVersion="19"/>
 
@@ -55,7 +55,7 @@
     <activity
         android:launchMode="singleTop"
         android:name="dk.dr.radio.akt.Hovedaktivitet">
-    <intent-filter>
+      <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
@@ -100,7 +100,7 @@
 
 
     <!-- Til håndtering af knapper på fjernbetjening (f.eks. på Bluetooth headset.) -->
-    <receiver android:name="dk.dr.radio.afspilning.Fjernbetjening">
+    <receiver android:name="dk.dr.radio.afspilning.FjernbetjeningReciever">
       <intent-filter android:priority="1">
         <action android:name="android.intent.action.MEDIA_BUTTON"/>
       </intent-filter>
@@ -150,7 +150,6 @@
     <activity android:name="com.android.deskclock.AlarmClock_akt"
               android:icon="@drawable/deskclock_ic_menu_alarms"
               android:label="@string/alarm_list_title"
-              android:theme="@style/AlarmClockTheme"
               android:configChanges="orientation|keyboardHidden|keyboard|navigation"
         >
       <!--
@@ -164,7 +163,6 @@
 
     <activity android:name="com.android.deskclock.SetAlarm_akt"
               android:label="@string/set_alarm"
-              android:theme="@style/SetAlarmTheme"
               android:configChanges="orientation|keyboardHidden|keyboard|navigation"/>
 
 
@@ -184,6 +182,19 @@
         <action android:name="android.intent.action.LOCALE_CHANGED"/>
       </intent-filter>
     </receiver>
+
+
+    <!-- Eksperiment - bruge ExoPlayer i stedet for indbygget MediaPlayer
+    <activity android:name="com.google.android.exoplayer.demo.full.FullPlayerActivity"
+              android:configChanges="keyboardHidden|orientation|screenSize"
+              android:label="@string/application_name">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
+-->
+
   </application>
 
 </manifest>
