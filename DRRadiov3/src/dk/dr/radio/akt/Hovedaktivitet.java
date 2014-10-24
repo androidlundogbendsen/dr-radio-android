@@ -13,9 +13,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.view.View;
 import android.widget.TextView;
 
-import dk.dr.radio.afspilning.Fjernbetjening;
 import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
@@ -58,7 +58,7 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
     venstremenuFrag.setUp(R.id.venstremenu_frag, (DrawerLayout) findViewById(R.id.drawer_layout));
 
     afspillerFrag = (Afspiller_frag) getSupportFragmentManager().findFragmentById(R.id.afspiller_frag);
-
+    afspillerFrag.setIndholdOverskygge(findViewById(R.id.indhold_overskygge));
 
     if (savedInstanceState == null) try {
 
@@ -114,7 +114,7 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
-    Fjernbetjening.registrér();
+    App.fjernbetjening.registrér();
   }
 
 
@@ -134,13 +134,24 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
     super.onResume();
     DRData.instans.grunddata.observatører.add(this);
     run();
+    App.netværk.observatører.add(visSkjulSkilt_ingen_forbindelse);
+    visSkjulSkilt_ingen_forbindelse.run();
   }
 
   @Override
   protected void onPause() {
     DRData.instans.grunddata.observatører.remove(this);
+    App.netværk.observatører.remove(visSkjulSkilt_ingen_forbindelse);
     super.onPause();
   }
+
+  Runnable visSkjulSkilt_ingen_forbindelse = new Runnable() {
+    @Override
+    public void run() {
+      findViewById(R.id.ingen_forbindelse).setVisibility(App.netværk.erOnline() ? View.GONE : View.VISIBLE);
+    }
+  };
+
 
   private static final String drift_statusmeddelelse_NØGLE = "drift_statusmeddelelse";
   private static String vis_drift_statusmeddelelse;

@@ -24,11 +24,25 @@
     </FrameLayout>
 
 
+    <TextView
+        android:id="@+id/ingen_forbindelse"
+        android:animateLayoutChanges="true"
+        android:background="#80ff0000"
+        android:padding="8dp"
+        android:drawableLeft="@drawable/dri_advarsel_graa40"
+        android:text="@string/dr_ingen_forbindelse"
+        android:textColor="@color/hvid"
+        android:shadowColor="@color/rød"
+        android:shadowRadius="2"
+        android:textSize="16dp"
+        android:layout_marginTop="48dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
     <FrameLayout
         android:id="@+id/indhold_overskygge"
         android:layout_marginBottom="@dimen/afspiller_kollapset_højde"
         android:background="#80000000"
-        android:alpha="0"
+        android:alpha="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>
