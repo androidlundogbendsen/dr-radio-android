@@ -54,6 +54,8 @@ import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.data.Lydstream;
+import dk.dr.radio.data.Playlisteelement;
+import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
@@ -80,6 +82,7 @@ public class Afspiller {
 
   public List<Runnable> observatører = new ArrayList<Runnable>();
   public List<Runnable> forbindelseobservatører = new ArrayList<Runnable>();
+  public List<Runnable> positionsobservatører = new ArrayList<Runnable>();
 
   private Lydstream lydstream;
   private int forbinderProcent;
@@ -182,7 +185,7 @@ public class Afspiller {
     onErrorTællerNultid = System.currentTimeMillis();
 
     if (afspillerstatus == Status.STOPPET) {
-      Fjernbetjening.registrér();
+      App.fjernbetjening.registrér();
       //opdaterNotification();
       // Start afspillerservicen så programmet ikke bliver lukket
       // når det kører i baggrunden under afspilning
@@ -199,7 +202,7 @@ public class Afspiller {
             AudioManager.AUDIOFOCUS_GAIN);
         Log.d("requestAudioFocus res=" + result);
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-          Fjernbetjening.registrér();
+          App.fjernbetjening.registrér();
         }
       }
       startAfspilningIntern();
@@ -307,7 +310,7 @@ public class Afspiller {
   }
 
   synchronized private void startAfspilningIntern() {
-    Fjernbetjening.opdaterBillede(this); // TODO - opdateres en gang i minuttet
+    App.fjernbetjening.opdaterBillede(); // TODO - opdateres en gang i minuttet
     afspillerstatus = Status.FORBINDER;
     afspilningPåPause = false;
     sendOnAfspilningForbinder(-1);
@@ -397,15 +400,14 @@ public class Afspiller {
    * Gem position - og spol herhen næste gang udsendelsen spiller
    */
   private int gemPosition() {
-    if (!lydkilde.erDirekte() && afspillerstatus == Status.SPILLER)
-      {
-        int pos = mediaPlayer.getCurrentPosition();
-        if (pos > 0) {
-          //senestLyttet.getUdsendelse().startposition = pos;
-          DRData.instans.senestLyttede.sætStartposition(lydkilde, pos);
-        }
-        return pos;
+    if (!lydkilde.erDirekte() && afspillerstatus == Status.SPILLER) {
+      int pos = mediaPlayer.getCurrentPosition();
+      if (pos > 0) {
+        //senestLyttet.getUdsendelse().startposition = pos;
+        DRData.instans.senestLyttede.sætStartposition(lydkilde, pos);
       }
+      return pos;
+    }
     return 0;
   }
 
@@ -423,7 +425,7 @@ public class Afspiller {
       wakeLock = null;
     }
     lyd_afspiller_stop.start();
-    Fjernbetjening.afregistrér();
+    App.fjernbetjening.afregistrér();
   }
 
 
@@ -531,8 +533,12 @@ public class Afspiller {
 
   /** Flyt til position (i millisekunder) */
   public void seekTo(int offsetMs) {
+    Log.d("afspiler seekTo " + offsetMs);
     mediaPlayer.seekTo(offsetMs);
     gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Seeking, offsetMs / 1000);
+    for (Runnable runnable : positionsobservatører) {
+      runnable.run();
+    }
   }
 
   /** Længde i millisekunder */
@@ -545,6 +551,28 @@ public class Afspiller {
   public int getCurrentPosition() {
     if (afspillerstatus == Status.SPILLER) return mediaPlayer.getCurrentPosition();
     return 0;
+  }
+
+  public void forrige() {
+    if (lydkilde.erDirekte()) {
+      // Skift til forrige kanal
+      int index = DRData.instans.grunddata.kanaler.indexOf(lydkilde) - 1;
+      if (index < 0) index = DRData.instans.grunddata.kanaler.size() - 1;
+      setLydkilde(DRData.instans.grunddata.kanaler.get(index));
+      return;
+    }
+    Udsendelse u = lydkilde.getUdsendelse();
+    if (u == null) return;
+    int index = u.findPlaylisteElemTilTid(getCurrentPosition(), 0);
+    if (index < 0) return;
+    Playlisteelement pl = u.playliste.get(index);
+    if (pl.offsetMs < getCurrentPosition() + 5000) index = index - 1; // Forrige sang
+    if (index < 0) seekTo(0); // TODO afklar - forrige ting der blev afspillet?
+    seekTo(u.playliste.get(index).offsetMs);
+  }
+
+  public void næste() {
+    App.kortToast("næste");
   }
 
   //
