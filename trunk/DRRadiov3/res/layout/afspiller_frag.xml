@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/grå70"
     android:orientation="vertical"
-    android:animateLayoutChanges="true"
     android:layout_width="match_parent" android:layout_height="wrap_content">
 
 
@@ -91,6 +90,13 @@
       android:layout_width="match_parent" android:layout_height="wrap_content">
 
 
+    <View
+        android:background="@drawable/stiplet_linje"
+        android:layerType="software"
+        android:layout_margin="8dp"
+        android:layout_width="match_parent" android:layout_height="3dp"/>
+
+
     <FrameLayout
         android:layout_width="match_parent" android:layout_height="wrap_content">
 
@@ -138,14 +144,17 @@
         android:layout_width="match_parent" android:layout_height="wrap_content">
 
       <ImageView
-          android:src="@drawable/dri_lyd_graa40"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"/>
+          android:id="@+id/forrige"
+          android:src="@drawable/dri_radio_forrige_graa40"
+          android:layout_marginRight="16dp"
+          android:layout_width="44dp"
+          android:layout_height="44dp"/>
 
       <ImageView
-          android:src="@drawable/dri_lyd_graa40"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"/>
+          android:id="@+id/næste"
+          android:src="@drawable/dri_radio_naeste_graa40"
+          android:layout_width="44dp"
+          android:layout_height="44dp"/>
 
     </LinearLayout>
 
@@ -157,7 +166,7 @@
     <View
         android:background="@drawable/stiplet_linje"
         android:layerType="software"
-        android:layout_margin="8dp"
+        android:layout_margin="4dp"
         android:layout_width="match_parent" android:layout_height="3dp"/>
 
 
@@ -194,13 +203,6 @@
         android:layerType="software" er nødvendig, ellers tegnes der en vandret
          streg i stedet for stiplet linje på Android 3+
         -->
-
-    <View
-        android:background="@drawable/stiplet_linje"
-        android:layerType="software"
-        android:layout_margin="8dp"
-        android:layout_width="match_parent" android:layout_height="3dp"/>
-
   </LinearLayout>
 
 </LinearLayout>
