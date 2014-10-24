@@ -555,24 +555,56 @@ public class Afspiller {
 
   public void forrige() {
     if (lydkilde.erDirekte()) {
+      Kanal k = lydkilde.getKanal();
       // Skift til forrige kanal
-      int index = DRData.instans.grunddata.kanaler.indexOf(lydkilde) - 1;
+      if (k.p4underkanal) k = DRData.instans.grunddata.kanalFraKode.get(Kanal.P4kode); // P4 overkanal
+      int index = DRData.instans.grunddata.kanaler.indexOf(k) - 1;
       if (index < 0) index = DRData.instans.grunddata.kanaler.size() - 1;
-      setLydkilde(DRData.instans.grunddata.kanaler.get(index));
+      k = DRData.instans.grunddata.kanaler.get(index);
+      if (k.p4underkanal) { // Vi er kommet til P4 - vælg brugerens foretrukne underkanal
+        k = DRData.instans.grunddata.kanalFraKode.get(App.tjekP4OgVælgUnderkanal(Kanal.P4kode));
+      }
+      setLydkilde(k);
       return;
     }
     Udsendelse u = lydkilde.getUdsendelse();
     if (u == null) return;
-    int index = u.findPlaylisteElemTilTid(getCurrentPosition(), 0);
-    if (index < 0) return;
+    int posMs = getCurrentPosition() - 10000; // spol hen til sang, der var 10 sekunder før denne
+    // TODO hvis posMs<0, skal der så skiftes til forrige udsendelse/lytning?
+    int index = u.findPlaylisteElemTilTid(posMs, 0);
+    if (index < 0) {
+      Log.rapporterFejl(new IllegalStateException("index =" + index + " for " + posMs));
+      return;
+    }
     Playlisteelement pl = u.playliste.get(index);
-    if (pl.offsetMs < getCurrentPosition() + 5000) index = index - 1; // Forrige sang
-    if (index < 0) seekTo(0); // TODO afklar - forrige ting der blev afspillet?
-    seekTo(u.playliste.get(index).offsetMs);
+    if (posMs < pl.offsetMs) seekTo(0); // Før føste sang
+    else seekTo(pl.offsetMs);
   }
 
   public void næste() {
-    App.kortToast("næste");
+    if (lydkilde.erDirekte()) {
+      Kanal k = lydkilde.getKanal();
+      int index = DRData.instans.grunddata.kanaler.indexOf(k) + 1;
+      if (index == DRData.instans.grunddata.kanaler.size()) index = 0;
+      while (k.p4underkanal && DRData.instans.grunddata.kanaler.get(index).p4underkanal) index++; // skip underkanaler
+      k = DRData.instans.grunddata.kanaler.get(index);
+      if (k.p4underkanal) { // Vi er kommet til P4 - vælg brugerens foretrukne underkanal
+        k = DRData.instans.grunddata.kanalFraKode.get(App.tjekP4OgVælgUnderkanal(Kanal.P4kode));
+      }
+      setLydkilde(k);
+      return;
+    }
+    Udsendelse u = lydkilde.getUdsendelse();
+    if (u == null) return;
+    int posMs = getCurrentPosition();
+    int index = u.findPlaylisteElemTilTid(posMs, 0);
+    if (index < 0) {
+      Log.rapporterFejl(new IllegalStateException("index =" + index + " for " + posMs));
+      return;
+    }
+    if (index + 1 == u.playliste.size()) return; // TODO næste udsendelse?
+    Playlisteelement pl = u.playliste.get(index + 1);
+    seekTo(pl.offsetMs);
   }
 
   //
