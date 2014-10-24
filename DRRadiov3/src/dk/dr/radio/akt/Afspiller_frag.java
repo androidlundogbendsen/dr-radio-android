@@ -1,5 +1,6 @@
 package dk.dr.radio.akt;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Build;
