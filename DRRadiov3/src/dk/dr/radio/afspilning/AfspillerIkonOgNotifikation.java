@@ -89,7 +89,7 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
    *             notifikation hvis det er til en notifikation
    */
   private static RemoteViews lavRemoteViews(int type) {
-    Log.d("lavRemoteViews type=" + type + " fspillerstatus " + DRData.instans.afspiller.getAfspillerstatus());
+    //Log.d("lavRemoteViews type=" + type + " fspillerstatus " + DRData.instans.afspiller.getAfspillerstatus());
 
     RemoteViews remoteViews;
     if (type == TYPE_notifikation_lille) {
