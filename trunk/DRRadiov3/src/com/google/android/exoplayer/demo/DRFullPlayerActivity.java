@@ -84,6 +84,7 @@ public class DRFullPlayerActivity extends Activity implements SurfaceHolder.Call
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    //                      http://dr02-lh.akamaihd.net/i/dr02_0@147055/master.m3u8?b=100-2000
     contentUri = Uri.parse("http://drradio3-lh.akamaihd.net/i/p4ostjylland_9@143515/master.m3u8");
     contentType = DemoUtil.TYPE_HLS_MASTER;
     contentId = "p4ostjylland";
