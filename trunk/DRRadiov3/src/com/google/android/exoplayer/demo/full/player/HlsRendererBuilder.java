@@ -16,7 +16,6 @@
 package com.google.android.exoplayer.demo.full.player;
 
 import android.media.MediaCodec;
-import android.net.Uri;
 
 import com.google.android.exoplayer.DefaultLoadControl;
 import com.google.android.exoplayer.LoadControl;
@@ -27,7 +26,6 @@ import com.google.android.exoplayer.demo.full.player.DemoPlayer.RendererBuilder;
 import com.google.android.exoplayer.demo.full.player.DemoPlayer.RendererBuilderCallback;
 import com.google.android.exoplayer.hls.HlsChunkSource;
 import com.google.android.exoplayer.hls.HlsMasterPlaylist;
-import com.google.android.exoplayer.hls.HlsMasterPlaylist.Variant;
 import com.google.android.exoplayer.hls.HlsMasterPlaylistParser;
 import com.google.android.exoplayer.hls.HlsSampleSource;
 import com.google.android.exoplayer.upstream.BufferPool;
@@ -37,7 +35,6 @@ import com.google.android.exoplayer.util.ManifestFetcher;
 import com.google.android.exoplayer.util.ManifestFetcher.ManifestCallback;
 
 import java.io.IOException;
-import java.util.Collections;
 
 /**
  * A {@link RendererBuilder} for HLS.
@@ -53,33 +50,24 @@ public class HlsRendererBuilder implements RendererBuilder, ManifestCallback<Hls
   private final String userAgent;
   private final String url;
   private final String contentId;
-  private final int playlistType;
 
   private DemoPlayer player;
   private RendererBuilderCallback callback;
 
-  public HlsRendererBuilder(String userAgent, String url, String contentId, int playlistType) {
+  public HlsRendererBuilder(String userAgent, String url, String contentId) {
     this.userAgent = userAgent;
     this.url = url;
     this.contentId = contentId;
-    this.playlistType = playlistType;
   }
 
   @Override
   public void buildRenderers(DemoPlayer player, RendererBuilderCallback callback) {
     this.player = player;
     this.callback = callback;
-    switch (playlistType) {
-      case TYPE_MASTER:
-        HlsMasterPlaylistParser parser = new HlsMasterPlaylistParser();
-        ManifestFetcher<HlsMasterPlaylist> mediaPlaylistFetcher =
-            new ManifestFetcher<HlsMasterPlaylist>(parser, contentId, url);
-        mediaPlaylistFetcher.singleLoad(player.getMainHandler().getLooper(), this);
-        break;
-      case TYPE_MEDIA:
-        onManifest(contentId, newSimpleMasterPlaylist(url));
-        break;
-    }
+    HlsMasterPlaylistParser parser = new HlsMasterPlaylistParser();
+    ManifestFetcher<HlsMasterPlaylist> mediaPlaylistFetcher =
+        new ManifestFetcher<HlsMasterPlaylist>(parser, contentId, url);
+    mediaPlaylistFetcher.singleLoad(player.getMainHandler().getLooper(), this);
   }
 
   @Override
@@ -104,10 +92,4 @@ public class HlsRendererBuilder implements RendererBuilder, ManifestCallback<Hls
     renderers[DemoPlayer.TYPE_AUDIO] = audioRenderer;
     callback.onRenderers(null, null, renderers);
   }
-
-  private HlsMasterPlaylist newSimpleMasterPlaylist(String mediaPlaylistUrl) {
-    return new HlsMasterPlaylist(Uri.parse(""),
-        Collections.singletonList(new Variant(mediaPlaylistUrl, 0)));
-  }
-
 }

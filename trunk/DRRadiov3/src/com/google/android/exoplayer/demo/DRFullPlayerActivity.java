@@ -16,7 +16,9 @@
 package com.google.android.exoplayer.demo;
 
 import android.app.Activity;
-import android.net.Uri;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -33,11 +35,10 @@ import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 
 import com.google.android.exoplayer.ExoPlayer;
+import com.google.android.exoplayer.ExoPlayerLibraryInfo;
 import com.google.android.exoplayer.VideoSurfaceView;
 import com.google.android.exoplayer.demo.full.EventLogger;
-import com.google.android.exoplayer.demo.full.player.DefaultRendererBuilder;
 import com.google.android.exoplayer.demo.full.player.DemoPlayer;
-import com.google.android.exoplayer.demo.full.player.DemoPlayer.RendererBuilder;
 import com.google.android.exoplayer.demo.full.player.HlsRendererBuilder;
 import com.google.android.exoplayer.text.SubtitleView;
 import com.google.android.exoplayer.util.VerboseLogUtil;
@@ -74,9 +75,6 @@ public class DRFullPlayerActivity extends Activity implements SurfaceHolder.Call
   private long playerPosition;
   private boolean enableBackgroundAudio = true;
 
-  private Uri contentUri;
-  private int contentType;
-  private String contentId;
 
   // Activity lifecycle
 
@@ -84,10 +82,6 @@ public class DRFullPlayerActivity extends Activity implements SurfaceHolder.Call
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    //                      http://dr02-lh.akamaihd.net/i/dr02_0@147055/master.m3u8?b=100-2000
-    contentUri = Uri.parse("http://drradio3-lh.akamaihd.net/i/p4ostjylland_9@143515/master.m3u8");
-    contentType = DemoUtil.TYPE_HLS_MASTER;
-    contentId = "p4ostjylland";
 
     setContentView(R.layout.exoplayer_activity_full);
     View root = findViewById(R.id.root);
@@ -154,27 +148,22 @@ public class DRFullPlayerActivity extends Activity implements SurfaceHolder.Call
 
   // Internal methods
 
-  private RendererBuilder getRendererBuilder() {
-    String userAgent = DemoUtil.getUserAgent(this);
-    switch (contentType) {
-      case DemoUtil.TYPE_HLS_MASTER:
-        return new HlsRendererBuilder(userAgent, contentUri.toString(), contentId,
-            HlsRendererBuilder.TYPE_MASTER);
-      case DemoUtil.TYPE_HLS_MEDIA:
-        return new HlsRendererBuilder(userAgent, contentUri.toString(), contentId,
-            HlsRendererBuilder.TYPE_MEDIA);
-      default:
-        return new DefaultRendererBuilder(this, contentUri, debugTextView);
-    }
-  }
-
   private void preparePlayer() {
     if (player == null) {
-      player = new DemoPlayer(getRendererBuilder());
+      //                      http://dr02-lh.akamaihd.net/i/dr02_0@147055/master.m3u8?b=100-2000
+      String versionName;
+      try {
+        String packageName = getPackageName();
+        PackageInfo info = getPackageManager().getPackageInfo(packageName, 0);
+        versionName = info.versionName;
+      } catch (PackageManager.NameNotFoundException e) {
+        versionName = "?";
+      }
+      player = new DemoPlayer(new HlsRendererBuilder("ExoPlayerDemo/" + versionName + " (Linux;Android " + Build.VERSION.RELEASE +
+          ") " + "ExoPlayerLib/" + ExoPlayerLibraryInfo.VERSION, "http://drradio3-lh.akamaihd.net/i/p4ostjylland_9@143515/master.m3u8", "p4ostjylland"));
       player.addListener(this);
       player.setTextListener(this);
       player.seekTo(playerPosition);
-      playerNeedsPrepare = true;
       mediaController.setMediaPlayer(player.getPlayerControl());
       mediaController.setEnabled(true);
       eventLogger = new EventLogger();
@@ -182,8 +171,6 @@ public class DRFullPlayerActivity extends Activity implements SurfaceHolder.Call
       player.addListener(eventLogger);
       player.setInfoListener(eventLogger);
       player.setInternalErrorListener(eventLogger);
-    }
-    if (playerNeedsPrepare) {
       player.prepare();
       playerNeedsPrepare = false;
       updateButtonVisibilities();
