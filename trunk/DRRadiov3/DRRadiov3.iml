@@ -21,6 +21,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="libs" level="project" />
     <orderEntry type="module" module-name="appcompat" />
+    <orderEntry type="library" name="ExoPlayer-HLS" level="project" />
   </component>
 </module>
 
