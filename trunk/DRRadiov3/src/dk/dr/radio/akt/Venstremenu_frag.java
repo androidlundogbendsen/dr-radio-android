@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import dk.dr.exoplayer.DRFullPlayerActivity;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
@@ -482,6 +483,24 @@ public class Venstremenu_frag extends Fragment implements Runnable {
             + "\n" + App.res.getString(R.string.akamaistatistik_device) + "/" + Build.MODEL + " " + Build.PRODUCT);
 
         aq.typeface(App.skrift_gibson).textSize(12);
+
+
+        tilføj(R.layout.venstremenu_elem_overskrift, new Runnable() {
+          @Override
+          public void run() {
+            startActivity(new Intent(getActivity(), DRFullPlayerActivity.class)
+                .setData(Uri.parse(DRData.instans.afspiller.getLydkilde().findBedsteStreamUrl(false))));
+          }
+        });
+        aq.id(R.id.tekst).text("ExoPlayer");
+        tilføj(R.layout.venstremenu_elem_overskrift, new Runnable() {
+          @Override
+          public void run() {
+            startActivity(new Intent(getActivity(), DRFullPlayerActivity.class)
+                .setData(Uri.parse("http://dr02-lh.akamaihd.net/i/dr02_0@147055/master.m3u8")));
+          }
+        });
+        aq.id(R.id.tekst).text("ExoPlayer DR2");
       }
     }
 
