@@ -104,7 +104,7 @@ public class Afspiller {
    * Forudsætter DRData er initialiseret
    */
   public Afspiller() {
-    mediaPlayer = MediaPlayerWrapper.opret();
+    mediaPlayer = AndroidMediaPlayerWrapper.opret();
 
     sætMediaPlayerLytter(mediaPlayer, this.lytter);
     // Indlæs gamle værdier så vi har nogle...
@@ -381,7 +381,7 @@ public class Afspiller {
       }
     }.start();
 
-    mediaPlayer = MediaPlayerWrapper.opret();
+    mediaPlayer = AndroidMediaPlayerWrapper.opret();
     sætMediaPlayerLytter(mediaPlayer, this.lytter); // registrér lyttere på den nye instans
 
     afspillerstatus = Status.STOPPET;
@@ -664,7 +664,7 @@ public class Afspiller {
 
         if (lydkilde.erDirekte()) {
           Log.d("Genstarter afspilning!");
-          mediaPlayer = MediaPlayerWrapper.opret();
+          mediaPlayer = AndroidMediaPlayerWrapper.opret();
           sætMediaPlayerLytter(mediaPlayer, this); // registrér lyttere på den nye instans
           startAfspilningIntern();
           lyd_afspiller_forbinder.start();
@@ -682,7 +682,7 @@ public class Afspiller {
 
 
       if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN && hvad == MediaPlayer.MEDIA_ERROR_UNKNOWN
-          && "GT-I9300".equals(Build.MODEL) && mediaPlayer.mediaPlayer.isPlaying()) {
+          && "GT-I9300".equals(Build.MODEL) && mediaPlayer.isPlaying()) {
         // Ignorer, da Samsung Galaxy SIII på Android 4.1 Jelly Bean
         // sender denne fejl (onError(1) -110) men i øvrigt spiller fint videre!
         return true;
@@ -756,7 +756,7 @@ public class Afspiller {
     public void run() {
       App.forgrundstråd.removeCallbacks(this);
       AudioManager ar = (AudioManager) App.instans.getSystemService(App.AUDIO_SERVICE);
-      Log.d("tjekLydAktiv " + ar.isMusicActive() + " " + mediaPlayer.mediaPlayer.isPlaying() + " " + getCurrentPosition() + " " + getDuration() + " " + new Date());
+      Log.d("tjekLydAktiv " + ar.isMusicActive() + " " + mediaPlayer.isPlaying() + " " + getCurrentPosition() + " " + getDuration() + " " + new Date());
       App.forgrundstråd.postDelayed(this, 10000);
     }
   };
