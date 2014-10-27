@@ -37,7 +37,7 @@
         android:duplicateParentState="true"
         android:gravity="center"
         android:scaleType="center"
-        android:src="@drawable/deskclock_ic_menu_add"/>
+        android:src="@android:drawable/ic_input_add"/>
 
     <TextView
         android:layout_height="wrap_content"
