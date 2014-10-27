@@ -26,12 +26,16 @@ package dk.dr.radio.diverse;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -79,6 +83,7 @@ public class App extends Application {
   public static final String P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING = "P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING";
   public static final String P4_FORETRUKKEN_AF_BRUGER = "P4_FORETRUKKEN_AF_BRUGER";
   public static final String FORETRUKKEN_KANAL = "FORETRUKKEN_kanal";
+  public static final String NØGLE_advaretOmInstalleretPåSDKort = "erInstalleretPåSDKort";
   public static final boolean PRODUKTION = false;
   public static boolean EMULATOR = true; // Sæt i onCreate(), ellers virker det ikke i std Java
   public static App instans;
@@ -95,6 +100,7 @@ public class App extends Application {
   public static Netvaerksstatus netværk;
   public static Fjernbetjening fjernbetjening;
   public static RequestQueue volleyRequestQueue;
+  public static boolean erInstalleretPåSDKort;
   private DrDiskBasedCache volleyCache;
   public static EgenTypefaceSpan skrift_gibson_fed_span;
   public static DRFarver color;
@@ -130,9 +136,26 @@ public class App extends Application {
     String packageName = getPackageName();
     try {
       //noinspection ConstantConditions
-      App.versionsnavn = packageName + "/" + getPackageManager().getPackageInfo(packageName, 0).versionName;
+      PackageInfo pi = getPackageManager().getPackageInfo(packageName, 0);
+      App.versionsnavn = packageName + "/" + pi.versionName;
       if (EMULATOR) App.versionsnavn += " EMU";
       Log.d("App.versionsnavn=" + App.versionsnavn);
+
+      App.erInstalleretPåSDKort = 0!=(pi.applicationInfo.flags & ApplicationInfo.FLAG_EXTERNAL_STORAGE);
+      /* check for API level 7 - check files dir
+      try {
+        String filesDir = context.getFilesDir().getAbsolutePath();
+        if (filesDir.startsWith("/data/")) {
+          return false;
+        } else if (filesDir.contains("/mnt/") || filesDir.contains("/sdcard/")) {
+          return true;
+        }
+      } catch (Throwable e) {
+        // ignore
+      }
+      */
+      if (!App.erInstalleretPåSDKort) prefs.edit().remove(NØGLE_advaretOmInstalleretPåSDKort).commit();
+
       Class.forName("android.os.AsyncTask"); // Fix for http://code.google.com/p/android/issues/detail?id=20915
     } catch (Exception e) {
       Log.rapporterFejl(e);
@@ -255,6 +278,20 @@ public class App extends Application {
     return kanalkode;
   }
 
+  public static void advarEvtOmAlarmerHvisInstalleretPåSDkort(Activity akt) {
+    if (App.erInstalleretPåSDKort && prefs.getBoolean(NØGLE_advaretOmInstalleretPåSDKort, false)) {
+      AlertDialog.Builder dialog = new AlertDialog.Builder(akt);
+      dialog.setTitle("SD-kort");
+      dialog.setIcon(R.drawable.ic_dr_icon);
+      dialog.setMessage("Vækning fungerer muligvis ikke altid, når DR Radio er flyttet til SD-kort");
+      dialog.setPositiveButton(android.R.string.ok, new AlertDialog.OnClickListener() {
+        public void onClick(DialogInterface arg0, int arg1) {
+          prefs.edit().putBoolean(NØGLE_advaretOmInstalleretPåSDKort, true).commit();
+        }
+      });
+      dialog.show();
+    }
+  }
 
   private void startP4stedplacering() {
     new AsyncTask() {

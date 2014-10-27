@@ -38,6 +38,7 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.v3.R;
 
 /**
@@ -196,6 +197,7 @@ public class AlarmClock_akt extends Activity implements OnItemClickListener {
     Alarms.tjekIndlæst(this);
 
     updateLayout();
+    App.advarEvtOmAlarmerHvisInstalleretPåSDkort(this);
   }
 
   private void updateLayout() {
