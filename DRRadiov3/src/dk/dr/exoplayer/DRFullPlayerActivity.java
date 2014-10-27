@@ -17,6 +17,7 @@ package dk.dr.exoplayer;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -149,8 +150,11 @@ public class DRFullPlayerActivity extends Activity implements SurfaceHolder.Call
 
   private void preparePlayer() {
     if (player == null) {
-      // String url = "http://dr02-lh.akamaihd.net/i/dr02_0@147055/master.m3u8?b=100-2000";
+      //String url = "http://dr02-lh.akamaihd.net/i/dr02_0@147055/master.m3u8?b=100-2000";
       String url = "http://drradio3-lh.akamaihd.net/i/p4ostjylland_9@143515/master.m3u8";
+      Intent intent = getIntent();
+      if (intent!=null && intent.getData()!=null) url = intent.getData().toString();
+
       String navn = "p4ostjylland";
       String versionName;
       try {
