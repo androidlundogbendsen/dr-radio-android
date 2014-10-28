@@ -152,6 +152,7 @@ public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventLi
   public static final int TYPE_VIDEO = 0;
   public static final int TYPE_AUDIO = 1;
   public static final int TYPE_TEXT = 2;
+  public static final int TYPE_DEBUG = 3;
 
   private static final int RENDERER_BUILDING_STATE_IDLE = 1;
   private static final int RENDERER_BUILDING_STATE_BUILDING = 2;
