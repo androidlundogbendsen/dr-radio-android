@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -42,6 +43,7 @@ import com.google.android.exoplayer.VideoSurfaceView;
 import com.google.android.exoplayer.text.SubtitleView;
 import com.google.android.exoplayer.util.VerboseLogUtil;
 
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.v3.R;
 
 /**
@@ -165,7 +167,13 @@ public class DRFullPlayerActivity extends Activity implements SurfaceHolder.Call
         versionName = "?";
       }
       versionName = "ExoPlayerDemo/" + versionName + " (Linux;Android " + Build.VERSION.RELEASE +") " + "ExoPlayerLib/" + ExoPlayerLibraryInfo.VERSION;
-      player = new DemoPlayer(new HlsRendererBuilder(versionName, url, navn));
+      if (url.endsWith("m3u8")) {
+        player = new DemoPlayer(new HlsRendererBuilder(versionName, url, navn));
+        App.kortToast("HlsRendererBuilder\n"+url);
+      } else {
+        player = new DemoPlayer(new DefaultRendererBuilder(this, Uri.parse(url), debugTextView));
+        App.kortToast("DefaultRendererBuilder\n"+url);
+      }
       player.addListener(this);
       player.setTextListener(this);
       player.seekTo(playerPosition);
