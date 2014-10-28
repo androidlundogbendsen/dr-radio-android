@@ -1,4 +1,4 @@
-package dk.dr.radio.afspilning;
+package dk.dr.radio.afspilning.wrapper;
 
 import android.content.Context;
 
