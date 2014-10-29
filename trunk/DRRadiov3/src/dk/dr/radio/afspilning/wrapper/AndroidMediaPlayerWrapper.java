@@ -29,11 +29,6 @@ public class AndroidMediaPlayerWrapper implements MediaPlayerWrapper {
     this(true);
   }
 
-  @Override
-  public void setWakeMode(Context ctx, int screenDimWakeLock) {
-    mediaPlayer.setWakeMode(ctx, screenDimWakeLock);
-  }
-
 
   private static int tæller;
 
@@ -101,6 +96,16 @@ public class AndroidMediaPlayerWrapper implements MediaPlayerWrapper {
   }
 
   @Override
+  public boolean isPlaying() {
+    return mediaPlayer.isPlaying();
+  }
+
+  @Override
+  public void setWakeMode(Context ctx, int screenDimWakeLock) {
+    mediaPlayer.setWakeMode(ctx, screenDimWakeLock);
+  }
+
+  @Override
   public void setMediaPlayerLytter(MediaPlayerLytter lytter) {
     mediaPlayer.setOnCompletionListener(lytter);
     mediaPlayer.setOnCompletionListener(lytter);
@@ -110,17 +115,14 @@ public class AndroidMediaPlayerWrapper implements MediaPlayerWrapper {
     mediaPlayer.setOnSeekCompleteListener(lytter);
   }
 
-  @Override
-  public boolean isPlaying() {
-    return mediaPlayer.isPlaying();
-  }
-
-
   private static Class<? extends MediaPlayerWrapper> mediaPlayerWrapperKlasse = null;
 
   public static MediaPlayerWrapper opret() {
+    if (!App.PRODUKTION) mediaPlayerWrapperKlasse = null; // TODO skal nok fjernes igen
     if (mediaPlayerWrapperKlasse == null) {
-      if (!App.prefs.getBoolean("Rapportér statistik", true)) {
+      if (App.prefs.getBoolean("exoplayer", false)) {
+        mediaPlayerWrapperKlasse = ExoPlayerWrapper.class;
+      } else if (!App.prefs.getBoolean("Rapportér statistik", true)) {
         App.langToast("DR Radio indsamler ikke brugsstatisik. Rapportér venligst om det gør en forskel for dig MHT batteriforbrug.");
         App.langToast("Hvis du er sikker på at det medfører væsentligt længere batterilevetid, så kontakt os, så vi kan kigge på problemet.");
         mediaPlayerWrapperKlasse = AndroidMediaPlayerWrapper.class;

@@ -644,7 +644,7 @@ public class Afspiller {
       }.start();
     }
 
-    public void onCompletion(MediaPlayer mp) {
+    public void onCompletion(MediaPlayer mp_UBRUGT) {
       Log.d("AfspillerService onCompletion!");
       // Hvis forbindelsen mistes kommer der en onCompletion() og vi er derfor
       // nødt til at genstarte, medmindre brugeren trykkede stop

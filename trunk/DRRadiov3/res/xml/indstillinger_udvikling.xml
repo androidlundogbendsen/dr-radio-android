@@ -10,6 +10,11 @@
 
     <PreferenceScreen android:dependency="udviklerEkstra"
                       android:title="Til udvikling og fejlfinding">
+      <CheckBoxPreference
+          android:key="exoplayer" android:title="ExoPlayer"
+          android:summaryOn="Den nye ExoPlayer benyttes!"
+          android:summaryOff="Den indbyggede MediaPlayer benyttes"/>
+
 
       <CheckBoxPreference
           android:key="startStopKnapAnim" android:title="startStopKnap anim"
