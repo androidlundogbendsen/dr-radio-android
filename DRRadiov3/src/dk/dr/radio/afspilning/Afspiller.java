@@ -50,6 +50,7 @@ import java.util.Date;
 import java.util.List;
 
 import dk.dr.radio.afspilning.wrapper.AndroidMediaPlayerWrapper;
+import dk.dr.radio.afspilning.wrapper.ExoPlayerWrapper;
 import dk.dr.radio.afspilning.wrapper.MediaPlayerLytter;
 import dk.dr.radio.afspilning.wrapper.MediaPlayerWrapper;
 import dk.dr.radio.data.DRData;
@@ -407,6 +408,7 @@ public class Afspiller {
       int pos = mediaPlayer.getCurrentPosition();
       if (pos > 0) {
         //senestLyttet.getUdsendelse().startposition = pos;
+        Log.d("senestLyttede.sætStartposition("+lydkilde+" , "+pos);
         DRData.instans.senestLyttede.sætStartposition(lydkilde, pos);
       }
       return pos;
@@ -628,7 +630,11 @@ public class Afspiller {
             Log.d("mediaPlayer genoptager afspilning ved " + startposition);
             gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Play, startposition / 1000);
             if (startposition > 0) {
-              mediaPlayer.seekTo(startposition);
+              if (mediaPlayer instanceof ExoPlayerWrapper) {
+                Log.d("exoplayer.seekTo() er slået fra - TODO fix"); //TODO fix
+              } else {
+                mediaPlayer.seekTo(startposition);
+              }
             }
             mediaPlayer.start();
             lyd_afspiller_spiller.start();
