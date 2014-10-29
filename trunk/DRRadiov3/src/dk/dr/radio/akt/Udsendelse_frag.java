@@ -912,8 +912,11 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       if (udsendelse.equals(afspiller.getLydkilde()) && afspiller.getAfspillerstatus() == Status.SPILLER) {
         afspiller.seekTo(pl.offsetMs);
       } else {
+        DRData.instans.senestLyttede.registrérLytning(udsendelse);
+        DRData.instans.senestLyttede.sætStartposition(udsendelse, pl.offsetMs);
         afspiller.setLydkilde(udsendelse);
         afspiller.startAfspilning();
+        /*
         afspiller.observatører.add(new Runnable() {
           @Override
           public void run() {
@@ -926,6 +929,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
             afspiller.observatører.remove(this); // afregistrér
           }
         });
+        */
       }
       seekBar.setProgress(pl.offsetMs);
       playlisteElemDerSpillerNu = pl;
