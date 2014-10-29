@@ -29,7 +29,7 @@ import com.google.android.exoplayer.TrackRenderer;
  * A {@link dk.dr.exoplayer.DemoPlayer.RendererBuilder} for streams that can be read using
  * {@link android.media.MediaExtractor}.
  */
-/* package */ class DefaultRendererBuilder implements DemoPlayer.RendererBuilder {
+/* package */ public class DefaultRendererBuilder implements DemoPlayer.RendererBuilder {
 
   private final Context context;
   private final Uri uri;
