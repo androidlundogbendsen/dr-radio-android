@@ -26,33 +26,32 @@
               android:layout_marginTop="16dp"
               android:layout_marginLeft="16dp"
               android:src="@drawable/dri_lyd_hvid"/>
+
+
+  <ImageView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:adjustViewBounds="true"
+      android:src="@drawable/udsendelse_baggrundsmaske"
+      tools:ignore="ContentDescription"/>
+
   -->
 
-  <LinearLayout
-      android:id="@+id/lige_nu_og_titel_ll"
-      android:layout_gravity="left|bottom"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      android:layout_marginLeft="8dp"
-      android:layout_marginRight="8dp"
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@drawable/udsendelse_baggrundsgradient"
+      android:paddingLeft="8dp"
+      android:paddingRight="8dp"
       >
+      </RelativeLayout>
 
-    <TextView
-        android:id="@+id/lige_nu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="LIGE NU"
-        android:textSize="16sp"
-        android:shadowColor="@color/hvid"
-        android:shadowRadius="2"
-        android:textColor="@color/blå"
-        android:gravity="center_vertical|center_horizontal"
-        android:paddingTop="4dp"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
-        android:paddingBottom="0dp"
-        />
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:paddingLeft="8dp"
+      android:paddingRight="8dp"
+      >
 
     <TextView
         android:id="@+id/titel"
@@ -67,8 +66,31 @@
         android:textStyle="bold"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
-        android:paddingBottom="8dp"/>
+        android:paddingBottom="8dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
 
-  </LinearLayout>
+    <!--
+        android:shadowColor="@color/hvid"
+        android:shadowRadius="2"
+    -->
+    <TextView
+        android:id="@+id/lige_nu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LIGE NU"
+        android:textSize="16sp"
+        android:textColor="@color/blå"
+        android:gravity="center_vertical|center_horizontal"
+        android:paddingTop="4dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingBottom="0dp"
+        android:layout_above="@+id/titel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+  </RelativeLayout>
 
 </FrameLayout>
