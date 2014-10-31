@@ -574,20 +574,24 @@ public class Afspiller {
     }
     Udsendelse u = lydkilde.getUdsendelse();
     if (u == null) return;
-    int posMs = getCurrentPosition() - 10000; // spol hen til sang, der var 10 sekunder før denne
+    int posMs = getCurrentPosition(); // spol hen til sang, der var 10 sekunder før denne
     // TODO hvis posMs<0, skal der så skiftes til forrige udsendelse/lytning?
-    int index = u.findPlaylisteElemTilTid(posMs, 0);
+    int index = u.findPlaylisteElemTilTid(posMs-10000, 0);
     if (index < 0) {
-      Log.rapporterFejl(new IllegalStateException("index =" + index + " for " + posMs));
+      // Skift 5% af udsendelsens varighed
+      posMs = posMs - getDuration()*5/100;
+      if (posMs<0) posMs=0;
+      seekTo(posMs);
       return;
     }
     Playlisteelement pl = u.playliste.get(index);
-    if (posMs < pl.offsetMs) seekTo(0); // Før føste sang
+    if (posMs-10000 < pl.offsetMs) seekTo(0); // Før føste sang
     else seekTo(pl.offsetMs);
   }
 
   public void næste() {
     if (lydkilde.erDirekte()) {
+      // Skift til næste kanal
       Kanal k = lydkilde.getKanal();
       int index = DRData.instans.grunddata.kanaler.indexOf(k) + 1;
       if (index == DRData.instans.grunddata.kanaler.size()) index = 0;
@@ -604,7 +608,10 @@ public class Afspiller {
     int posMs = getCurrentPosition();
     int index = u.findPlaylisteElemTilTid(posMs, 0);
     if (index < 0) {
-      Log.rapporterFejl(new IllegalStateException("index =" + index + " for " + posMs));
+      // Skift 5% af udsendelsens varighed
+      posMs = posMs + getDuration()*5/100;
+      if (posMs>getDuration()) pauseAfspilning();
+      else seekTo(posMs);
       return;
     }
     if (index + 1 == u.playliste.size()) return; // TODO næste udsendelse?
