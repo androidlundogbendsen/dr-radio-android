@@ -3,6 +3,7 @@ package dk.dr.radio.afspilning.wrapper;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.os.PowerManager;
 
 import com.google.android.exoplayer.ExoPlayer;
 import com.google.android.exoplayer.ExoPlayerLibraryInfo;
@@ -25,6 +26,8 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
 
   private EventLogger eventLogger;
   private MediaPlayerLytter lytter;
+  private PowerManager.WakeLock mWakeLock = null;
+  private boolean mStayAwake;
 
   @Override
   public void setDataSource(final String url) throws IOException {
@@ -85,12 +88,14 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
   @Override
   public void start() {
     player.getPlayerControl().start();
+    stayAwake(true);
   }
 
 
   @Override
   public void stop() {
     player.getPlayerControl().pause();
+    stayAwake(false);
   }
 
   @Override
@@ -108,9 +113,50 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
     return player.getPlaybackState()== ExoPlayer.STATE_READY;
   }
 
-  @Override
-  public void setWakeMode(Context ctx, int screenDimWakeLock) {
-    //player.setWakeMode(ctx, screenDimWakeLock);
+  /**
+   * Set the low-level power management behavior for this MediaPlayer.  This
+   * can be used when the MediaPlayer is not playing through a SurfaceHolder
+   * set with {@link #setDisplay(android.view.SurfaceHolder)} and thus can use the
+   * high-level {@link #setScreenOnWhilePlaying(boolean)} feature.
+   *
+   * <p>This function has the MediaPlayer access the low-level power manager
+   * service to control the device's power usage while playing is occurring.
+   * The parameter is a combination of {@link android.os.PowerManager} wake flags.
+   * Use of this method requires {@link android.Manifest.permission#WAKE_LOCK}
+   * permission.
+   * By default, no attempt is made to keep the device awake during playback.
+   *
+   * @param context the Context to use
+   * @param mode    the power/wake mode to set
+   * @see android.os.PowerManager
+   */
+  public void setWakeMode(Context context, int mode) {
+    boolean washeld = false;
+    if (mWakeLock != null) {
+      if (mWakeLock.isHeld()) {
+        washeld = true;
+        mWakeLock.release();
+      }
+      mWakeLock = null;
+    }
+
+    PowerManager pm = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
+    mWakeLock = pm.newWakeLock(mode|PowerManager.ON_AFTER_RELEASE, "ExoPlayer");
+    mWakeLock.setReferenceCounted(false);
+    if (washeld) {
+      mWakeLock.acquire();
+    }
+  }
+
+  private void stayAwake(boolean awake) {
+    if (mWakeLock != null) {
+      if (awake && !mWakeLock.isHeld()) {
+        mWakeLock.acquire();
+      } else if (!awake && mWakeLock.isHeld()) {
+        mWakeLock.release();
+      }
+    }
+    mStayAwake = awake;
   }
 
   @Override

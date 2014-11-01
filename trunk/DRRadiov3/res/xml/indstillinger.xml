@@ -48,7 +48,7 @@
         android:key="holdSkærmTændt"
         android:title="Hold skærmen tændt"
         android:defaultValue="false"
-        android:summary="Hakker afspilningen efter at skærmen slukker så prøv at krydse af her (bruger mere batteri)."/>
+        android:summary="Hakker afspilningen efter at skærmen slukker så prøv at krydse af her (bruger mere batteri). Virker ikke hvis du selv slukker skærmen."/>
 
   </PreferenceCategory>
 

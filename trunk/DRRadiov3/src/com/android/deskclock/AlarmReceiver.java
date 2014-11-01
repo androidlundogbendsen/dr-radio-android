@@ -24,6 +24,7 @@ import java.util.Date;
 import dk.dr.radio.akt.Hovedaktivitet;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Kanal;
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
 
@@ -41,6 +42,7 @@ public class AlarmReceiver extends BroadcastReceiver {
   @Override
   public void onReceive(final Context context, final Intent intent) {
     Log.d("AlarmReceiver onReceive(" + intent);
+    if (!App.PRODUKTION) App.langToast("AlarmReceiver onReceive(" + intent);
     handleIntent(context, intent);
     //XXX TODO Se om det hjælper wakeLock.release();
   }
@@ -113,13 +115,13 @@ public class AlarmReceiver extends BroadcastReceiver {
       }
       DRData.instans.afspiller.setLydkilde(nyKanal);
       DRData.instans.afspiller.startAfspilning();
-      DRData.instans.afspiller.eraroSignifasBrui = true;
-      DRData.instans.afspiller.wakeLock = AlarmAlertWakeLock.createPartialWakeLock(context);
-      DRData.instans.afspiller.wakeLock.acquire(); // preferus temon, eble 120000 ĉi tie,
+      DRData.instans.afspiller.vækningIGang = true;
+      DRData.instans.afspiller.vækkeurWakeLock = AlarmAlertWakeLock.createPartialWakeLock(context);
+      DRData.instans.afspiller.vækkeurWakeLock.acquire(); // preferus temon, eble 120000 ĉi tie,
       Log.d("AlarmReceiver AlarmAlertWakeLock.createPartialWakeLock()");
 
       // Skru op til 3/5 styrke hvis volumen er lavere end det
-      DRData.instans.afspiller.tjekVolumenMindst5tedele(3);
+      DRData.instans.afspiller.tjekVolumenMindst5tedele(4);
 
     } catch (Exception ex) {
       Log.e("argh!", ex);
