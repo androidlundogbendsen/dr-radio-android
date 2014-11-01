@@ -3,7 +3,7 @@
           package="dk.dr.radio.v3"
           android:installLocation="auto"
           android:versionCode="1"
-          android:versionName="3.1.5 31.okt design">
+          android:versionName="3.1.5 1.nov wakelock3">
 
 <uses-sdk
       android:minSdkVersion="7"
@@ -169,10 +169,9 @@
     <receiver android:name="com.android.deskclock.AlarmReceiver"
               android:exported="false">
       <intent-filter><!-- XXXX -->
-        <action android:name="comx.android.deskclock.ALARM_ALERT"/>
+        <action android:name="comx2.android.deskclock.ALARM_ALERT"/>
       </intent-filter>
     </receiver>
-
 
     <receiver android:name="com.android.deskclock.AlarmInitReceiver">
       <intent-filter>
@@ -182,7 +181,6 @@
         <action android:name="android.intent.action.LOCALE_CHANGED"/>
       </intent-filter>
     </receiver>
-
 
     <!-- Eksperiment - bruge ExoPlayer i stedet for indbygget MediaPlayer
 -->

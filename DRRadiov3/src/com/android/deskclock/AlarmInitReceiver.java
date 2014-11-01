@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager.WakeLock;
 
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
 public class AlarmInitReceiver extends BroadcastReceiver {
@@ -31,6 +32,7 @@ public class AlarmInitReceiver extends BroadcastReceiver {
   public void onReceive(final Context context, Intent intent) {
     final String action = intent.getAction();
     Log.d("AlarmInitReceiver" + action);
+    if (!App.PRODUKTION) App.langToast("AlarmInitReceiver onReceive(" + intent);
 
     //final PendingResult result = goAsync();
     final WakeLock wl = AlarmAlertWakeLock.createPartialWakeLock(context);

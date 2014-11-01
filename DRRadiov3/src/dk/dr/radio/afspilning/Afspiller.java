@@ -91,13 +91,14 @@ public class Afspiller {
   private Lydstream lydstream;
   private int forbinderProcent;
   private Lydkilde lydkilde;
-  public boolean eraroSignifasBrui;
-  public PowerManager.WakeLock wakeLock;
+  public boolean vækningIGang;
+  public PowerManager.WakeLock vækkeurWakeLock;
 
   private static void sætMediaPlayerLytter(MediaPlayerWrapper mediaPlayer, MediaPlayerLytter lytter) {
     mediaPlayer.setMediaPlayerLytter(lytter);
-    if (lytter != null && App.prefs.getBoolean(NØGLEholdSkærmTændt, false)) {
-      mediaPlayer.setWakeMode(App.instans, PowerManager.SCREEN_DIM_WAKE_LOCK);
+    if (lytter != null) {
+      mediaPlayer.setWakeMode(App.instans, PowerManager.PARTIAL_WAKE_LOCK |
+          (App.prefs.getBoolean(NØGLEholdSkærmTændt, false)?PowerManager.SCREEN_DIM_WAKE_LOCK:0));
     }
   }
 
@@ -151,7 +152,7 @@ public class Afspiller {
   private long onErrorTællerNultid;
 
   public void startAfspilning() {
-    eraroSignifasBrui = false;
+    vækningIGang = false;
     if (lydkilde.hentetStream == null && !App.erOnline()) {
       App.kortToast("Internetforbindelse mangler");
       return;
@@ -172,7 +173,7 @@ public class Afspiller {
         @Override
         protected void fikFejl(VolleyError error) {
           App.kortToast("Internetforbindelse mangler");
-          if (eraroSignifasBrui) ringDenAlarm();
+          if (vækningIGang) ringDenAlarm();
           super.fikFejl(error);
         }
       }) {
@@ -196,6 +197,13 @@ public class Afspiller {
       App.instans.startService(new Intent(App.instans, HoldAppIHukommelsenService.class));
       if (App.prefs.getBoolean("wifilås", true) && wifilock != null) {
         wifilock.acquire();
+      }
+
+      // XXX TODO Eksperiment - skal ud igen
+      if (App.prefs.getBoolean("wakelockaltid", false)) {
+        PowerManager pm = (PowerManager)App.instans.getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, "ExoPlayer");
+        mWakeLock.acquire();
       }
 
       AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
@@ -425,9 +433,9 @@ public class Afspiller {
     if (wifilock != null) wifilock.release();
     // Stop afspillerservicen
     App.instans.stopService(new Intent(App.instans, HoldAppIHukommelsenService.class));
-    if (wakeLock != null) {
-      wakeLock.release();
-      wakeLock = null;
+    if (vækkeurWakeLock != null) {
+      vækkeurWakeLock.release();
+      vækkeurWakeLock = null;
     }
     lyd_afspiller_stop.start();
     App.fjernbetjening.afregistrér();
@@ -728,7 +736,7 @@ public class Afspiller {
             Log.d("Ventetid før vi prøver igen: " + ventetid + "  n=" + n + " " + onErrorTæller);
             handler.postDelayed(startAfspilningIntern, ventetid);
 
-            if (eraroSignifasBrui) {
+            if (vækningIGang) {
               vibru(1000);
             }
 
@@ -737,7 +745,7 @@ public class Afspiller {
             onErrorTællerNultid = System.currentTimeMillis();
             App.netværk.observatører.add(venterPåAtKommeOnline);
             lyd_afspiller_fejl.start();
-            if (eraroSignifasBrui) {
+            if (vækningIGang) {
               ringDenAlarm();
             }
           }

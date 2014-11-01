@@ -27,6 +27,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import dk.dr.radio.data.DRData;
+import dk.dr.radio.data.Kanal;
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
 
@@ -49,7 +51,7 @@ public class Alarms {
   // This action triggers the AlarmReceiver as well as the AlarmKlaxon. It
   // is a public action used in the manifest for receiving Alarm broadcasts
   // from the alarm manager.
-  public static final String ALARM_ALERT_ACTION = "comx.android.deskclock.ALARM_ALERT";
+  public static final String ALARM_ALERT_ACTION = "dk.dr.radio.ALARM_ALERT";
   // This string is used when passing an Alarm object through an intent.
   public static final String ALARM_INTENT_EXTRA = "intent.extra.alarm";
   // This extra is the raw Alarm object data. It is used in the
@@ -225,9 +227,20 @@ public class Alarms {
     am.set(AlarmManager.RTC_WAKEUP, atTimeInMillis, sender);
 
     setStatusBarIcon(context, true);
-
     Calendar c = Calendar.getInstance();
     c.setTimeInMillis(atTimeInMillis);
+
+    Kanal nyKanal = DRData.instans.grunddata.kanalFraKode.get(alarm.kanalo);
+    if (nyKanal == null) {
+      Log.rapporterFejl(new IllegalStateException("Alarm: Kanal findes ikke!" + alarm.kanalo));
+      nyKanal = DRData.instans.grunddata.forvalgtKanal;
+    }
+
+    String message = nyKanal.navn +"\n"+DateFormat.format(DM24, c);
+    if (!App.PRODUKTION) App.kortToast("Næste alarm sat til:\n"+message);
+/*  writing to settings requires android.permission.WRITE_SETTINGS
+    Settings.System.putString(App.instans.getContentResolver(), Settings.System.NEXT_ALARM_FORMATTED, message);
+    */
   }
 
   /**
