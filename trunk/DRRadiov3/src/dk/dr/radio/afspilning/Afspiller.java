@@ -97,8 +97,9 @@ public class Afspiller {
   private static void sætMediaPlayerLytter(MediaPlayerWrapper mediaPlayer, MediaPlayerLytter lytter) {
     mediaPlayer.setMediaPlayerLytter(lytter);
     if (lytter != null) {
-      mediaPlayer.setWakeMode(App.instans, PowerManager.PARTIAL_WAKE_LOCK |
-          (App.prefs.getBoolean(NØGLEholdSkærmTændt, false)?PowerManager.SCREEN_DIM_WAKE_LOCK:0));
+      int mode = (App.prefs.getBoolean("partielwakelockPåMediaplayer", true)?PowerManager.PARTIAL_WAKE_LOCK:0) |
+                 (App.prefs.getBoolean(NØGLEholdSkærmTændt, false)?PowerManager.SCREEN_DIM_WAKE_LOCK:0);
+      if (mode != 0) mediaPlayer.setWakeMode(App.instans,mode);
     }
   }
 

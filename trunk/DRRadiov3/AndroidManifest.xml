@@ -3,7 +3,7 @@
           package="dk.dr.radio.v3"
           android:installLocation="auto"
           android:versionCode="1"
-          android:versionName="3.1.5 1.nov wakelock3">
+          android:versionName="3.1.5 3.nov wakelock5">
 
 <uses-sdk
       android:minSdkVersion="7"
@@ -169,21 +169,24 @@
     <receiver android:name="com.android.deskclock.AlarmReceiver"
               android:exported="false">
       <intent-filter><!-- XXXX -->
-        <action android:name="comx2.android.deskclock.ALARM_ALERT"/>
+        <action android:name="dk.dr.radio.ALARM_ALERT"/>
       </intent-filter>
     </receiver>
 
     <receiver android:name="com.android.deskclock.AlarmInitReceiver">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
+        <!-- overflødige i vores tilfælde - og det er set at de kommer for ofte, f.eks.
+        http://stackoverflow.com/questions/16113459/timezone-changed-intent-being-received-every-few-seconds
+        vi ønsker at lave et simpelt vækkeur, så disse er droppet
         <action android:name="android.intent.action.TIME_SET"/>
         <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
         <action android:name="android.intent.action.LOCALE_CHANGED"/>
+        -->
       </intent-filter>
     </receiver>
 
     <!-- Eksperiment - bruge ExoPlayer i stedet for indbygget MediaPlayer
--->
     <activity android:name="dk.dr.exoplayer.DRFullPlayerActivity"
               android:configChanges="keyboardHidden|orientation|screenSize"
               android:label="@string/application_name"
@@ -193,6 +196,7 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
+-->
 
   </application>
 
