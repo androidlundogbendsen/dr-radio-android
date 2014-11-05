@@ -124,6 +124,19 @@ public enum DRJson {
     opdateriDagIMorgenIGårDatoStr(System.currentTimeMillis());
   }
 
+  private static final String HTTP_WWW_DR_DK = "http://www.dr.dk";
+  private static final int HTTP_WWW_DR_DK_lgd = HTTP_WWW_DR_DK.length();
+
+  /**
+   * Fjerner http://www.dr.dk i URL'er
+   */
+  private static String fjernHttpWwwDrDk(String url) {
+    if (url!=null && url.startsWith(HTTP_WWW_DR_DK)) {
+      return url.substring(HTTP_WWW_DR_DK_lgd);
+    }
+    return url;
+  }
+
 
   private static Udsendelse opretUdsendelse(DRData drData, JSONObject o) throws JSONException {
     String slug = o.optString(DRJson.Slug.name());  // Bemærk - kan være tom!
@@ -135,7 +148,7 @@ public enum DRJson {
     }
     u.titel = o.getString(DRJson.Title.name());
     u.beskrivelse = o.getString(DRJson.Description.name());
-    u.billedeUrl = o.optString(DRJson.ImageUrl.name(), null);
+    u.billedeUrl = fjernHttpWwwDrDk(o.optString(DRJson.ImageUrl.name(), null));
     u.programserieSlug = o.optString(DRJson.SeriesSlug.name());  // Bemærk - kan være tom!
     u.episodeIProgramserie = o.optInt(DRJson.Episode.name());
     u.urn = o.optString(DRJson.Urn.name());  // Bemærk - kan være tom!
@@ -346,7 +359,7 @@ Description: "I 'Efter fyringerne' lykkes det, gennem private optagelser og inte
     if (ps == null) ps = new Programserie();
     ps.titel = o.getString(DRJson.Title.name());
     ps.beskrivelse = o.optString(DRJson.Description.name());
-    ps.billedeUrl = o.optString(DRJson.ImageUrl.name(), null);
+    ps.billedeUrl = fjernHttpWwwDrDk(o.optString(DRJson.ImageUrl.name(), null));
     ps.slug = o.getString(DRJson.Slug.name());
     ps.urn = o.optString(DRJson.Urn.name());
     ps.antalUdsendelser = o.optInt(DRJson.TotalPrograms.name());
