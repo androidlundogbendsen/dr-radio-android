@@ -187,16 +187,12 @@
     </receiver>
 
     <!-- Eksperiment - bruge ExoPlayer i stedet for indbygget MediaPlayer
+-->
     <activity android:name="dk.dr.exoplayer.DRFullPlayerActivity"
               android:configChanges="keyboardHidden|orientation|screenSize"
               android:label="@string/application_name"
               android:theme="@style/PlayerTheme">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN"/>
-        <category android:name="android.intent.category.LAUNCHER"/>
-      </intent-filter>
     </activity>
--->
 
   </application>
 
