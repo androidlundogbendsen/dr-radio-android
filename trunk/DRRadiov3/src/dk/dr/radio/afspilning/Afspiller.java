@@ -607,9 +607,8 @@ public class Afspiller {
       if (index == DRData.instans.grunddata.kanaler.size()) index = 0;
       while (k.p4underkanal && DRData.instans.grunddata.kanaler.get(index).p4underkanal) index++; // skip underkanaler
       k = DRData.instans.grunddata.kanaler.get(index);
-      if (k.p4underkanal) { // Vi er kommet til P4 - vælg brugerens foretrukne underkanal
-        k = DRData.instans.grunddata.kanalFraKode.get(App.tjekP4OgVælgUnderkanal(Kanal.P4kode));
-      }
+      // Tjek om vi er kommet til P4 - vælg brugerens foretrukne underkanal
+      k = DRData.instans.grunddata.kanalFraKode.get(App.tjekP4OgVælgUnderkanal(k.kode));
       setLydkilde(k);
       return;
     }
