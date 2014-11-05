@@ -28,12 +28,6 @@
 
 
       <CheckBoxPreference
-          android:key="startStopKnapAnim" android:title="startStopKnap anim"
-          android:summaryOn="Rotér"
-          android:summaryOff="Hop"/>
-
-
-      <CheckBoxPreference
           android:key="tving_lodret_visning" android:title="Blokér vandret visning"
           android:defaultValue="true"
           android:summaryOn="Tving folk til at rejse deres tablet/telefon op"
