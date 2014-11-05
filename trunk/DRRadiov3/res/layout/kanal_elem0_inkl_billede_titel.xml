@@ -41,8 +41,6 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:background="@drawable/udsendelse_baggrundsgradient"
-      android:paddingLeft="8dp"
-      android:paddingRight="8dp"
       >
       </RelativeLayout>
 

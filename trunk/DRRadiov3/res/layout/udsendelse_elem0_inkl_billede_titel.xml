@@ -5,6 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
+<!--
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+-->
 
 
   <ImageView
@@ -14,13 +18,20 @@
       android:id="@+id/billede"
       android:src="@drawable/eksempel_udsendelse"
       tools:ignore="ContentDescription"/>
-
+<!--
   <ImageView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:adjustViewBounds="true"
       android:src="@drawable/udsendelse_baggrundsmaske"
       tools:ignore="ContentDescription"/>
+-->
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@drawable/udsendelse_baggrundsgradient"
+      >
+  </RelativeLayout>
 
   <RelativeLayout
       android:layout_width="match_parent"
