@@ -52,7 +52,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     Log.d("Viser fragment " + this);
     rod = inflater.inflate(R.layout.afspiller_frag, container, false);
     aq = new AQuery(rod);
-    rod.setOnClickListener(this); // Ved klik på baggrunden skal kanalforside eller aktuel udsendelsesside vises
+    rod.setOnClickListener(this); // Fang klik på baggrunden, så de ikke går til det underliggende lag
     startStopKnap = aq.id(R.id.startStopKnap).clicked(this).getImageView();
     udvidSkjulKnap = aq.id(R.id.udvidSkjulKnap).getImageView();
     // udvid/skjul knap - hvis vi bruger en onClickListener får vi først  besked når knappen slippes.
@@ -69,8 +69,8 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
 
     udvidSkjulOmråde = aq.id(R.id.udvidSkjulOmråde).gone().getView();
     progressbar = aq.id(R.id.progressBar).getProgressBar();
-    titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
-    metainformation = aq.id(R.id.metainformation).typeface(App.skrift_gibson).getTextView();
+    titel = aq.id(R.id.titel).clicked(this).typeface(App.skrift_gibson_fed).getTextView();
+    metainformation = aq.id(R.id.metainformation).clicked(this).typeface(App.skrift_gibson).getTextView();
     // Knappen er meget vigtig, og har derfor et udvidet område hvor det også er den man rammer
     // se http://developer.android.com/reference/android/view/TouchDelegate.html
     final int udvid = getResources().getDimensionPixelSize(R.dimen.hørknap_udvidet_klikområde);
@@ -337,9 +337,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
       DRData.instans.afspiller.forrige();
     } else if (v.getId() == R.id.næste) {
       DRData.instans.afspiller.næste();
-    } else if (v == udvidSkjulKnap) {
-      udvidSkjulOmråde();
-    } else try {
+    } else if (v==titel || v==metainformation) try {
       // Ved klik på baggrunden skal kanalforside eller aktuel udsendelsesside vises
       Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
       FragmentManager fm = getFragmentManager();
