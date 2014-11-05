@@ -17,6 +17,8 @@ import android.widget.TextView;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import dk.dr.radio.data.Programserie;
+import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
@@ -174,13 +176,38 @@ Jeg bruger selv følgende macro'er i C til generering af URIs:
 
 
   /**
-   * Billedeskalering af billeder på DRs servere.
+   * Billedeskalering af billeder ud fra en slug
    */
-  public static String skalérSlugBilledeUrl(String slug, int bredde, int højde) {
+  public static String skalérBilledeFraSlug(String slug, int bredde, int højde) {
     String res = "http://asset.dr.dk/imagescaler/?file=/mu/programcard/imageuri/" + slug + "&w=" + bredde + "&h=" + højde + "&scaleAfter=crop";
-    if (App.fejlsøgning) Log.d("skalérSlugBilledeUrl " + slug + " " + bredde + "x" + højde + " giver: " + res);
+    if (App.fejlsøgning) Log.d("skalérBilledeFraSlug " + slug + " " + bredde + "x" + højde + " giver: " + res);
     return res;
   }
+
+  /**
+   * Billedeskalering af billeder på DRs servere, ud fra en URL.
+   * F.eks. http://asset.dr.dk/imagescaler/?file=http://www.dr.dk/mu/bar/544e40f7a11f9d16c4c96db7&w=620&h=349
+   */
+  public static String skalérBilledeFraUrl(String url, int bredde, int højde) {
+    String res = "http://asset.dr.dk/imagescaler/?file=" + url + "&w=" + bredde + "&h=" + højde + "&scaleAfter=crop";
+    if (App.fejlsøgning) Log.d("skalérBilledeFraUrl " + url + " " + bredde + "x" + højde + " giver: " + res);
+    return res;
+  }
+
+  public static String skalérBillede(Udsendelse u, int bredde, int højde) {
+//    u.billedeUrl = null;
+    return u.billedeUrl==null
+        ? skalérBilledeFraSlug(u.slug, bredde, højde)
+        : skalérBilledeFraUrl(u.billedeUrl, bredde, højde);
+  }
+
+  public static String skalérBillede(Programserie u, int bredde, int højde) {
+//    u.billedeUrl = null;
+    return u.billedeUrl==null
+        ? skalérBilledeFraSlug(u.slug, bredde, højde)
+        : skalérBilledeFraUrl(u.billedeUrl, bredde, højde);
+  }
+
 
 
   /**

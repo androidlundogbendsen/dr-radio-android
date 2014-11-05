@@ -270,7 +270,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     v.setTag(aq);
     int br = bestemBilledebredde(listView, (View) aq.id(R.id.billede).getView().getParent(), 100);
     int hø = br * højde9 / bredde16;
-    String burl = skalérSlugBilledeUrl(udsendelse.slug, br, hø);
+    String burl = Basisfragment.skalérBillede(udsendelse, br, hø);
     aq.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
 
     aq.id(R.id.lige_nu).gone();
