@@ -17,10 +17,8 @@ import android.view.MotionEvent;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -152,6 +150,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
       startStopKnapImageResource = startStopKnapNyImageResource;
 
       Animation anim;
+      /*
       if (App.prefs.getBoolean("startStopKnapAnim", false)) {
         anim = new RotateAnimation(0f, 180f, 0, 0);
         //r.setStartOffset(1000);
@@ -160,12 +159,13 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         anim.setRepeatMode(RotateAnimation.REVERSE);
         anim.setInterpolator(new AccelerateInterpolator());
       } else {
+      */
         anim = new ScaleAnimation(1, 1.2f, 1, 1.2f, startStopKnap.getWidth() / 2, startStopKnap.getHeight() / 2);
         anim.setDuration(100);
         anim.setRepeatCount(1); // skalér ind og ud igen
         anim.setRepeatMode(Animation.REVERSE);
         anim.setInterpolator(new DecelerateInterpolator());
-      }
+      //}
       anim.setAnimationListener(new Animation.AnimationListener() {
         @Override
         public void onAnimationStart(Animation animation) {
