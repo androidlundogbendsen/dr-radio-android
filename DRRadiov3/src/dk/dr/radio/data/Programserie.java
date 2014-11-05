@@ -14,6 +14,7 @@ public class Programserie { //implements Serializable {
   //  private static final long serialVersionUID = 1L;
   public String titel;
   public String beskrivelse;
+  public String billedeUrl; // Bemærk - kan være tom
   public String slug;
   public int antalUdsendelser;
   public String urn;

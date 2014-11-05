@@ -17,6 +17,7 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
 
   public String titel;
   public String beskrivelse;
+  public String billedeUrl; // Bemærk - kan være tom
   public String kanalSlug;  // Bemærk - kan være tom!
   public String programserieSlug;  // Bemærk - kan være tom!
 

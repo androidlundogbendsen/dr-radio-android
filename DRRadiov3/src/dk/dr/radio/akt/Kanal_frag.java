@@ -471,7 +471,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
           int br = bestemBilledebredde(listView, (View) a.id(R.id.billede).getView().getParent(), 100);
           int hø = br * højde9 / bredde16;
-          String burl = skalérSlugBilledeUrl(udsendelse.slug, br, hø);
+          String burl = Basisfragment.skalérBillede(udsendelse, br, hø);
           a.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
 
           vh.titel.setText(udsendelse.titel.toUpperCase());
@@ -534,7 +534,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           .getView().setContentDescription(elem.titel + "  af  " + elem.kunstner);
 
       ImageView b = aq.id(R.id.senest_spillet_kunstnerbillede).getImageView();
-      if (elem.billedeUrl.length() == 0) {
+      if (elem.billedeUrl==null) {
         aq.gone();
       } else {
         aq.visible().image(skalérDiscoBilledeUrl(elem.billedeUrl, b.getWidth(), b.getHeight()), true, true, b.getWidth(), b.getHeight());

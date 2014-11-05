@@ -23,7 +23,7 @@ public enum DRJson {
   Slug,       // unik ID for en udsendelse eller getKanal
   SeriesSlug, // unik ID for en programserie
   Urn,        // en anden slags unik ID
-  Title, Description,
+  Title, Description, ImageUrl,
   StartTime, EndTime,
   Streams,
   Uri, Played, Artist, Image,
@@ -135,6 +135,7 @@ public enum DRJson {
     }
     u.titel = o.getString(DRJson.Title.name());
     u.beskrivelse = o.getString(DRJson.Description.name());
+    u.billedeUrl = o.optString(DRJson.ImageUrl.name(), null);
     u.programserieSlug = o.optString(DRJson.SeriesSlug.name());  // Bemærk - kan være tom!
     u.episodeIProgramserie = o.optInt(DRJson.Episode.name());
     u.urn = o.optString(DRJson.Urn.name());  // Bemærk - kan være tom!
@@ -227,7 +228,7 @@ public enum DRJson {
       Playlisteelement u = new Playlisteelement();
       u.titel = o.getString(DRJson.Title.name());
       u.kunstner = o.getString(DRJson.Artist.name());
-      u.billedeUrl = o.optString(DRJson.Image.name());
+      u.billedeUrl = o.optString(DRJson.Image.name(), null);
       u.startTid = DRJson.servertidsformat_playlise.parse(o.getString(DRJson.Played.name()));
       u.startTidKl = klokkenformat.format(u.startTid);
       u.offsetMs = o.optInt(DRJson.OffsetMs.name(), -1);
@@ -345,6 +346,7 @@ Description: "I 'Efter fyringerne' lykkes det, gennem private optagelser og inte
     if (ps == null) ps = new Programserie();
     ps.titel = o.getString(DRJson.Title.name());
     ps.beskrivelse = o.optString(DRJson.Description.name());
+    ps.billedeUrl = o.optString(DRJson.ImageUrl.name(), null);
     ps.slug = o.getString(DRJson.Slug.name());
     ps.urn = o.optString(DRJson.Urn.name());
     ps.antalUdsendelser = o.optInt(DRJson.TotalPrograms.name());
