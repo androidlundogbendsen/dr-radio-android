@@ -40,7 +40,7 @@ public class ProgramserierAtilAA {
           }
           res.add(DRJson.parsProgramserie(programserieJson, programserie));
         }
-        Log.d("parseRadioDrama res=" + res);
+        Log.d(" res=" + res);
         DRData.instans.programserierAtilÅ.liste = res;
         for (Runnable r : observatører) r.run(); // Informér observatører
       }

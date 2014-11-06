@@ -58,7 +58,7 @@ public class DRData {
   public Favoritter favoritter = new Favoritter();
   public HentedeUdsendelser hentedeUdsendelser = new HentedeUdsendelser();  // Understøttes ikke på Android 2.2
   public ProgramserierAtilAA programserierAtilÅ = new ProgramserierAtilAA();
-  public Radiodrama radiodrama = new Radiodrama();
+  public DramaOgBog dramaOgBog = new DramaOgBog();
     /*
      * Kald
 		 * http://www.dr.dk/tjenester/mu-apps/search/programs?q=monte&type=radio
@@ -106,7 +106,7 @@ public class DRData {
     return "http://www.dr.dk/tjenester/mu-apps/search/series?q=" + URLEncoder.encode(søgStr) + "&type=radio";
   }
 
-  public static String getRadioDramaUrl() {
+  public static String getBogOgDramaUrl() {
     return "http://www.dr.dk/tjenester/mu-apps/radio-drama";
   }
 

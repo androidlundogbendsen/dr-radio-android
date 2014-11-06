@@ -354,9 +354,9 @@ public class App extends Application {
       }
 
 
-      if (DRData.instans.radiodrama.liste == null) {
+      if (DRData.instans.dramaOgBog.liste == null) {
         færdig = false;
-        DRData.instans.radiodrama.startHentData();
+        DRData.instans.dramaOgBog.startHentData();
       }
 
       if (!færdig) {

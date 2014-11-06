@@ -19,7 +19,7 @@ import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.PagerSlidingTabStrip;
 import dk.dr.radio.v3.R;
 
-public class Radiodrama_frag extends Basisfragment implements ViewPager.OnPageChangeListener, Runnable {
+public class Radiodrama_frag_SLETTES extends Basisfragment implements ViewPager.OnPageChangeListener, Runnable {
 
   private static final String INDEX = "Radiodrama_frag_index";
   private ViewPager viewPager;
@@ -35,7 +35,7 @@ public class Radiodrama_frag extends Basisfragment implements ViewPager.OnPageCh
   @Override
   public void run() {
     liste.clear();
-    if (DRData.instans.radiodrama.liste!=null) liste.addAll(DRData.instans.radiodrama.liste);
+    if (DRData.instans.dramaOgBog.liste!=null) liste.addAll(DRData.instans.dramaOgBog.liste);
     if (adapter != null) {
       if (viewPager.getCurrentItem() >= liste.size()) {
         viewPager.setCurrentItem(0);
@@ -81,7 +81,7 @@ public class Radiodrama_frag extends Basisfragment implements ViewPager.OnPageCh
     kanalfaneblade.setUnderlineColor(0x1A000000);
     kanalfaneblade.setDividerColor(0x1A000000);
 
-    DRData.instans.radiodrama.observatører.add(this);
+    DRData.instans.dramaOgBog.observatører.add(this);
 
     return rod;
   }
@@ -92,7 +92,7 @@ public class Radiodrama_frag extends Basisfragment implements ViewPager.OnPageCh
     viewPager = null;
     adapter = null;
     kanalfaneblade = null;
-    DRData.instans.radiodrama.observatører.remove(this);
+    DRData.instans.dramaOgBog.observatører.remove(this);
     super.onDestroyView();
   }
 

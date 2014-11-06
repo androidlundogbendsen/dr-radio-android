@@ -185,7 +185,7 @@ public class Afproevning {
         Log.d(programserie.slug + " = " + programserie.getUdsendelser());
 */
       }
-      Log.d("parseRadioDrama res=" + res);
+      Log.d("res=" + res);
 
     }
 
@@ -194,7 +194,7 @@ public class Afproevning {
     // RadioDrama
     // Virker ikke:
     //JSONArray jsonArray = new JSONArray(hentStreng("http://www.dr.dk/tjenester/mu-apps/radio-drama?type=radio&includePrograms=true"));
-    JSONArray jsonArray = new JSONArray(hentStreng(DRData.getRadioDramaUrl()));
+    JSONArray jsonArray = new JSONArray(hentStreng(DRData.getBogOgDramaUrl()));
     ArrayList<Programserie> res = new ArrayList<Programserie>();
     for (int n = 0; n < jsonArray.length(); n++) {
       JSONObject programserieJson = jsonArray.getJSONObject(n);
@@ -220,7 +220,7 @@ public class Afproevning {
       programserie.tilføjUdsendelser(offset, DRJson.parseUdsendelserForProgramserie(data.getJSONArray(DRJson.Programs.name()), null, DRData.instans));
       Log.d(programserie.slug + " = " + programserie.getUdsendelser());
     }
-    Log.d("parseRadioDrama res=" + res);
+    Log.d("res=" + res);
 
 
     System.exit(0);

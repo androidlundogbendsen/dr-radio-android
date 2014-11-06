@@ -21,7 +21,7 @@ import dk.dr.radio.v3.R;
 
 public class ProgramserierAtilAA_frag extends Basisfragment implements ViewPager.OnPageChangeListener, Runnable {
 
-  private static final String INDEX = "Radiodrama_frag_index";
+  private static final String INDEX = ProgramserierAtilAA_frag.class.getName();
   private ViewPager viewPager;
   private KanalAdapter adapter;
   private ArrayList<Programserie> liste = new ArrayList<Programserie>();
