@@ -33,7 +33,7 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
   @Override
   public void run() {
     liste.clear();
-    if (DRData.instans.radiodrama.liste!=null) liste.addAll(DRData.instans.radiodrama.liste);
+    if (DRData.instans.dramaOgBog.liste!=null) liste.addAll(DRData.instans.dramaOgBog.liste);
     if (adapter != null) {
       if (viewPager.getCurrentItem() >= liste.size()) {
         viewPager.setCurrentItem(0);
@@ -66,7 +66,7 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
       // gendan position fra sidste gang vi var herinde
       viewPager.setCurrentItem(App.prefs.getInt(INDEX, 0));
     }
-    DRData.instans.radiodrama.observatører.add(this);
+    DRData.instans.dramaOgBog.observatører.add(this);
 
     return rod;
   }
@@ -77,7 +77,7 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
     viewPager = null;
     adapter = null;
     indicator = null;
-    DRData.instans.radiodrama.observatører.remove(this);
+    DRData.instans.dramaOgBog.observatører.remove(this);
     super.onDestroyView();
   }
 

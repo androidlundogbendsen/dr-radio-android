@@ -391,7 +391,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       aq.id(R.id.tekst).text("Drama & Bog");
       aq.typeface(App.skrift_gibson_fed);
 
-      tilføj(R.layout.venstremenu_elem_overskrift, Radiodrama_frag.class);
+      tilføj(R.layout.venstremenu_elem_overskrift, Radiodrama_frag_SLETTES.class);
       aq.id(R.id.tekst).text("Radio drama x");
       aq.typeface(App.skrift_gibson_fed);
 

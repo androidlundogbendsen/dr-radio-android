@@ -16,14 +16,14 @@ import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 /**
  * Created by j on 05-10-14.
  */
-public class Radiodrama {
+public class DramaOgBog {
   public ArrayList<Programserie> liste;
   public List<Runnable> observatører = new ArrayList<Runnable>();
 
 
 
   public void startHentData() {
-    Request<?> req = new DrVolleyStringRequest(DRData.getRadioDramaUrl(), new DrVolleyResonseListener() {
+    Request<?> req = new DrVolleyStringRequest(DRData.getBogOgDramaUrl(), new DrVolleyResonseListener() {
       @Override
       public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
         if (uændret) return;
@@ -40,7 +40,7 @@ public class Radiodrama {
           }
           res.add(DRJson.parsProgramserie(programserieJson, programserie));
         }
-        Log.d("parseRadioDrama res=" + res);
+        Log.d("parseDramaOgBog res=" + res);
         liste = res;
         for (Runnable r : observatører) r.run(); // Informér observatører
       }
