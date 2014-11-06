@@ -146,7 +146,9 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         metainformation.setText(k.navn);
         break;
     }
-    if (startStopKnapImageResource != startStopKnapNyImageResource) {
+    if (startStopKnapImageResource == 0) {
+      startStopKnap.setImageResource(startStopKnapNyImageResource);
+    } else if (startStopKnapImageResource != startStopKnapNyImageResource) {
       startStopKnapImageResource = startStopKnapNyImageResource;
 
       Animation anim;
