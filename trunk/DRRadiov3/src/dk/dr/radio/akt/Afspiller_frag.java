@@ -277,6 +277,8 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
   public void udvidSkjulOmråde() {
     if (!viserUdvidetOmråde()) {
       indhold_overskygge.setOnTouchListener(indhold_overskygge_onTouchListener);
+      int forrigeNæsteSynlighed = DRData.instans.afspiller.getLydkilde().erDirekte() ? View.GONE : View.VISIBLE;
+      aq.id(R.id.forrige).visibility(forrigeNæsteSynlighed).id(R.id.næste).visibility(forrigeNæsteSynlighed);
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
         indhold_overskygge.setVisibility(View.VISIBLE);
         udvidSkjulOmråde.setVisibility(View.VISIBLE);
