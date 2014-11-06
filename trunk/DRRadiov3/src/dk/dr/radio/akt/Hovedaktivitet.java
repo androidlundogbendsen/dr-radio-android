@@ -10,10 +10,14 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -201,6 +205,29 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
       viser_drift_statusmeddelelse = true;
       ((TextView) (d.findViewById(android.R.id.message))).setMovementMethod(LinkMovementMethod.getInstance());
     }
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.soeg, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId()==R.id.søg) {
+      FragmentManager fm = getSupportFragmentManager();
+      // Fjern backstak - så vi starter forfra i 'roden'
+      fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      FragmentTransaction ft = fm.beginTransaction();
+      ft.replace(R.id.indhold_frag, new Soeg_efter_program_frag());
+      // Tilbageknappen skal gå til forsiden - undtagen hvis vi ER på forsiden
+      ft.addToBackStack("Venstremenu");
+      ft.commit();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   @Override
