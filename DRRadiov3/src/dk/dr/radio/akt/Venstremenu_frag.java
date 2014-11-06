@@ -368,12 +368,12 @@ public class Venstremenu_frag extends Fragment implements Runnable {
 
     public VenstremenuAdapter(final Context themedContext) {
       layoutInflater = (LayoutInflater) themedContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
+/*
       tilføj(R.layout.venstremenu_elem_soeg, Soeg_efter_program_frag.class);
       aq.id(R.id.tekst).typeface(App.skrift_gibson_fed);
 
       //tilføj(R.layout.venstremenu_elem_adskiller_tynd);
-
+*/
       FORSIDE_INDEX = elem.size();
       tilføj(R.layout.venstremenu_elem_overskrift, Kanaler_frag.class);
       aq.id(R.id.tekst).text("Forside");
