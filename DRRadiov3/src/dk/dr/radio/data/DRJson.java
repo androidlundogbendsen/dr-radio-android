@@ -29,7 +29,7 @@ public enum DRJson {
   Uri, Played, Artist, Image,
   Type, Kind, Quality, Kbps, ChannelSlug, TotalPrograms, Programs,
   FirstBroadcast, Watchable, DurationInSeconds, Format, OffsetMs,
-  ProductionNumber, ShareLink, Episode, Chapters;
+  ProductionNumber, ShareLink, Episode, Chapters, Subtitle;
 
   /*
     public enum StreamType {
@@ -358,6 +358,7 @@ Description: "I 'Efter fyringerne' lykkes det, gennem private optagelser og inte
   public static Programserie parsProgramserie(JSONObject o, Programserie ps) throws JSONException {
     if (ps == null) ps = new Programserie();
     ps.titel = o.getString(DRJson.Title.name());
+    ps.undertitel = o.getString(DRJson.Subtitle.name());
     ps.beskrivelse = o.optString(DRJson.Description.name());
     ps.billedeUrl = fjernHttpWwwDrDk(o.optString(DRJson.ImageUrl.name(), null));
     ps.slug = o.getString(DRJson.Slug.name());

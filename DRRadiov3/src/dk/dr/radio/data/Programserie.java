@@ -13,6 +13,7 @@ import dk.dr.radio.diverse.Log;
 public class Programserie { //implements Serializable {
   //  private static final long serialVersionUID = 1L;
   public String titel;
+  public String undertitel;
   public String beskrivelse;
   public String billedeUrl; // Bemærk - kan være tom
   public String slug;
