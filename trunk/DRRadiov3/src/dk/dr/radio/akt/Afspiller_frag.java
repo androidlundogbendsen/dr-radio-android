@@ -149,9 +149,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     if (startStopKnapImageResource == 0) {
       startStopKnap.setImageResource(startStopKnapNyImageResource);
     } else if (startStopKnapImageResource != startStopKnapNyImageResource) {
-      startStopKnapImageResource = startStopKnapNyImageResource;
 
-      Animation anim;
       /*
       if (App.prefs.getBoolean("startStopKnapAnim", false)) {
         anim = new RotateAnimation(0f, 180f, 0, 0);
@@ -162,12 +160,12 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         anim.setInterpolator(new AccelerateInterpolator());
       } else {
       */
-        anim = new ScaleAnimation(1, 1.2f, 1, 1.2f, startStopKnap.getWidth() / 2, startStopKnap.getHeight() / 2);
-        anim.setDuration(100);
-        anim.setRepeatCount(1); // skalér ind og ud igen
-        anim.setRepeatMode(Animation.REVERSE);
-        anim.setInterpolator(new DecelerateInterpolator());
-      //}
+      Animation anim;
+      anim = new ScaleAnimation(1, 1.2f, 1, 1.2f, startStopKnap.getWidth() / 2, startStopKnap.getHeight() / 2);
+      anim.setDuration(100);
+      anim.setRepeatCount(1); // skalér ind og ud igen
+      anim.setRepeatMode(Animation.REVERSE);
+      anim.setInterpolator(new DecelerateInterpolator());
       anim.setAnimationListener(new Animation.AnimationListener() {
         @Override
         public void onAnimationStart(Animation animation) {
@@ -184,6 +182,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
       });
       startStopKnap.startAnimation(anim);
     }
+    startStopKnapImageResource = startStopKnapNyImageResource;
     if (App.accessibilityManager.isEnabled() && getActivity() != null)
       ActivityCompat.invalidateOptionsMenu(getActivity());
   }

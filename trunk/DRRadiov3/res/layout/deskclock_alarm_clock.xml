@@ -40,6 +40,7 @@
         android:src="@android:drawable/ic_input_add"/>
 
     <TextView
+        android:id="@+id/tilføj_alarm"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_gravity="center_vertical"

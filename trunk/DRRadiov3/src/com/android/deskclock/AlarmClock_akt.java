@@ -32,12 +32,14 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.Calendar;
 
+import dk.dr.radio.akt.Basisfragment;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.v3.R;
 
@@ -94,6 +96,7 @@ public class AlarmClock_akt extends Activity implements OnItemClickListener {
       final CheckBox clockOnOff =
           (CheckBox) indicator.findViewById(R.id.clock_onoff);
       clockOnOff.setChecked(alarm.enabled);
+      clockOnOff.setTypeface(App.skrift_gibson);
 
       // Clicking outside the "checkbox" should also change the state.
       indicator.setOnClickListener(new OnClickListener() {
@@ -113,6 +116,7 @@ public class AlarmClock_akt extends Activity implements OnItemClickListener {
       // Set the repeat text or leave it blank if it does not repeat.
       TextView daysOfWeekView =
           (TextView) digitalClock.findViewById(R.id.daysOfWeek);
+      daysOfWeekView.setTypeface(App.skrift_gibson);
       final String daysOfWeekStr =
           alarm.daysOfWeek.toString(AlarmClock_akt.this, false);
       if (daysOfWeekStr != null && daysOfWeekStr.length() != 0) {
@@ -125,13 +129,15 @@ public class AlarmClock_akt extends Activity implements OnItemClickListener {
       // Display the label
       TextView labelView =
           (TextView) view.findViewById(R.id.label);
+      labelView.setTypeface(App.skrift_gibson);
       if (alarm.label != null && alarm.label.length() != 0) {
         labelView.setText(alarm.label);
         labelView.setVisibility(View.VISIBLE);
       } else {
         labelView.setVisibility(View.GONE);
       }
-
+      ((TextView) view.findViewById(R.id.timeDisplay)).setTypeface(App.skrift_gibson);
+      Basisfragment.udvikling_checkDrSkrifter(view, this.toString());
       return view;
     }
   }
@@ -221,7 +227,7 @@ public class AlarmClock_akt extends Activity implements OnItemClickListener {
         v.setSelected(hasFocus);
       }
     });
-    View doneButton = findViewById(R.id.done);
+    Button doneButton = (Button) findViewById(R.id.done);
     if (doneButton != null) {
       doneButton.setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
@@ -229,6 +235,8 @@ public class AlarmClock_akt extends Activity implements OnItemClickListener {
         }
       });
     }
+    doneButton.setTypeface(App.skrift_gibson);
+    ((TextView) findViewById(R.id.tilføj_alarm)).setTypeface(App.skrift_gibson);
   }
 
   @Override
@@ -266,9 +274,11 @@ public class AlarmClock_akt extends Activity implements OnItemClickListener {
     // Inflate the custom view and set each TextView's text.
     final View v = mFactory.inflate(R.layout.deskclock_context_menu_header, null);
     TextView textView = (TextView) v.findViewById(R.id.header_time);
+    textView.setTypeface(App.skrift_gibson);
     textView.setText(time);
     textView = (TextView) v.findViewById(R.id.header_label);
     textView.setText(alarm.label);
+    textView.setTypeface(App.skrift_gibson);
 
     // Set the custom view on the menu.
     menu.setHeaderView(v);
