@@ -1,5 +1,6 @@
 package dk.dr.radio.akt;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -24,9 +25,9 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
 
   private static final String INDEX = DramaOgBog_frag.class.getName();
   private ViewPager viewPager;
-  private KanalAdapter adapter;
+  private KaruselAdapter adapter;
   private ArrayList<Programserie> liste = new ArrayList<Programserie>();
-  private CirclePageIndicator mIndicator;
+  private CirclePageIndicator indicator;
 
 
   @Override
@@ -47,11 +48,20 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
     View rod = inflater.inflate(R.layout.drama_og_bog_frag, container, false);
 
     run();
-    adapter = new KanalAdapter(getChildFragmentManager());
+    adapter = new KaruselAdapter(getChildFragmentManager());
     viewPager = (ViewPager) rod.findViewById(R.id.pager);
     viewPager.setAdapter(adapter);
-    mIndicator = (CirclePageIndicator)rod.findViewById(R.id.indicator);
-    mIndicator.setViewPager(viewPager);
+    int br = Hovedaktivitet.billedeBredde; //XXXbestemBilledebredde(listView, (View) aq.id(R.id.billede).getView().getParent(), 100);
+    int hø = br * højde9 / bredde16;
+    viewPager.getLayoutParams().height = hø;
+    indicator = (CirclePageIndicator)rod.findViewById(R.id.indicator);
+    indicator.setViewPager(viewPager);
+    final float density = getResources().getDisplayMetrics().density;
+    indicator.setRadius(5 * density);
+    indicator.setPageColor(Color.BLACK);
+    indicator.setFillColor(App.color.blå);
+    indicator.setStrokeColor(0);
+    indicator.setStrokeWidth(0);
     if (savedInstanceState == null) {
       // gendan position fra sidste gang vi var herinde
       viewPager.setCurrentItem(App.prefs.getInt(INDEX, 0));
@@ -66,42 +76,31 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
     viewPager.setAdapter(null); // forårsager crash? - men nødvendig for at undgå https://mint.splunk.com/dashboard/project/cd78aa05/errors/2151178610
     viewPager = null;
     adapter = null;
-    mIndicator = null;
+    indicator = null;
     DRData.instans.radiodrama.observatører.remove(this);
     super.onDestroyView();
   }
 
-  public class KanalAdapter extends FragmentPagerAdapter {
-    //public class KanalAdapter extends FragmentStatePagerAdapter implements PagerSlidingTabStrip.IconTabProvider {
-
-    public KanalAdapter(FragmentManager fm) {
+  public class KaruselAdapter extends FragmentPagerAdapter {
+    public KaruselAdapter(FragmentManager fm) {
       super(fm);
     }
-
-    //@Override
-    //public float getPageWidth(int position) { return(0.9f); }
-
-    @Override
-    public Basisfragment getItem(int position) {
-      Basisfragment f = new MitProgramserie_frag();
-      Bundle b = new Bundle();
-      b.putString(DRJson.SeriesSlug.name(), liste.get(position).slug);
-      f.setArguments(b);
-      return f;
-    }
-
     @Override
     public int getCount() {
       return liste.size();
     }
 
     @Override
-    public CharSequence getPageTitle(int position) {
-      return liste.get(position).titel;
+    public Basisfragment getItem(int position) {
+      Basisfragment f = new KaruselFrag();
+      Bundle b = new Bundle();
+      b.putString(DRJson.SeriesSlug.name(), liste.get(position).slug);
+      f.setArguments(b);
+      return f;
     }
   }
 
-  public static class MitProgramserie_frag extends Basisfragment {
+  public static class KaruselFrag extends Basisfragment {
     private String programserieSlug;
     private Programserie programserie;
 
@@ -109,17 +108,18 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       programserieSlug = getArguments().getString(DRJson.SeriesSlug.name());
       Log.d("onCreateView " + this + " viser " + programserieSlug);
-      View rod = inflater.inflate(R.layout.udsendelse_elem0_inkl_billede_titel, container, false);
-      AQuery aq = new AQuery(rod);
+      View rod = inflater.inflate(R.layout.kanal_elem0_inkl_billede_titel, container, false);
       programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
 
-      int br = 400; //XXXbestemBilledebredde(listView, (View) aq.id(R.id.billede).getView().getParent(), 100);
+      int br = Hovedaktivitet.billedeBredde; //XXXbestemBilledebredde(listView, (View) aq.id(R.id.billede).getView().getParent(), 100);
       int hø = br * højde9 / bredde16;
       String burl = Basisfragment.skalérBillede(programserie, br, hø);
-      aq.width(br, false).height(hø, false).image(burl, true, true, br, AQuery.INVISIBLE, null, AQuery.FADE_IN, (float) højde9 / bredde16);
+      AQuery aq = new AQuery(rod);
+      //aq.width(br, false).height(hø, false);
+      aq.id(R.id.billede).width(br, false).height(hø, false).image(burl, true, true, br, AQuery.INVISIBLE, null, AQuery.FADE_IN, (float) højde9 / bredde16);
 
-      aq.id(R.id.titel).typeface(App.skrift_gibson_fed).text(programserie.titel);
-      aq.id(R.id.beskrivelse).text(programserie.beskrivelse).typeface(App.skrift_georgia);
+      aq.id(R.id.titel).typeface(App.skrift_gibson_fed).text(programserie.undertitel);
+      aq.id(R.id.lige_nu).text(programserie.titel.toUpperCase()).typeface(App.skrift_gibson);
 
       Log.registrérTestet("Visning af "+INDEX, "ja");
       //udvikling_checkDrSkrifter(rod, this + " rod");
