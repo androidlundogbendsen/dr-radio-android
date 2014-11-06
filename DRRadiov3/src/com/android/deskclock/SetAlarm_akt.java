@@ -40,6 +40,7 @@ import java.util.ArrayList;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Kanal;
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
@@ -118,6 +119,7 @@ public class SetAlarm_akt extends PreferenceActivity implements Preference.OnPre
 
     // Attach actions to each button.
     Button b = (Button) findViewById(R.id.alarm_save);
+    b.setTypeface(App.skrift_gibson);
     b.setOnClickListener(new View.OnClickListener() {
       public void onClick(View v) {
         long time = saveAlarm(null);
@@ -128,6 +130,7 @@ public class SetAlarm_akt extends PreferenceActivity implements Preference.OnPre
       }
     });
     Button revert = (Button) findViewById(R.id.alarm_revert);
+    revert.setTypeface(App.skrift_gibson);
     revert.setOnClickListener(new View.OnClickListener() {
       public void onClick(View v) {
         revert();
@@ -135,6 +138,7 @@ public class SetAlarm_akt extends PreferenceActivity implements Preference.OnPre
       }
     });
     b = (Button) findViewById(R.id.alarm_delete);
+    b.setTypeface(App.skrift_gibson);
     if (mId == Alarm.INVALID_ALARM_ID) {
       b.setEnabled(false);
       b.setVisibility(View.GONE);
