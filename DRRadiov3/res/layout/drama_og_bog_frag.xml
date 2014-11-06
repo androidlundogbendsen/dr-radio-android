@@ -1,0 +1,64 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+  <android.support.v4.view.ViewPager
+     android:id="@+id/pager"
+     android:layout_width="match_parent"
+     android:layout_height="0dp"
+    android:layout_weight="1"
+    >
+  </android.support.v4.view.ViewPager>
+
+  <dk.dr.radio.diverse.CirclePageIndicator
+      android:id="@+id/indicator"
+      android:padding="10dip"
+      android:layout_height="wrap_content"
+      android:layout_width="fill_parent"
+      android:background="#FFCCCCCC"
+      app:radius="10dp"
+      app:fillColor="#FF888888"
+      app:pageColor="#88FF0000"
+      app:strokeColor="#FF000000"
+      app:strokeWidth="2dp"
+      />
+
+
+  <dk.dr.radio.diverse.PinnedSectionListView
+      android:id="@+id/listView"
+      android:divider="@null"
+      android:dividerHeight="0px"
+      android:requiresFadingEdge="vertical"
+      android:fadingEdgeLength="4dp"
+      android:cacheColorHint="@color/grå20"
+      android:layout_width="fill_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"/>
+  <!--
+
+
+  hurtigscroll
+              android:scrollbars="none"
+              android:fastScrollEnabled="true"/>
+
+
+  For mere kompleks tomhedsindikator, brug ViewStub - se
+             http://cyrilmottier.com/2011/06/20/listview-tips-tricks-1-handle-emptiness/
+              android:visibility="gone"
+          android:layout_gravity="center"
+  -->
+  <TextView
+      android:id="@+id/tom"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:padding="20dp"
+      android:textSize="18sp"
+      android:text="Indlæser, vent venligst..."/>
+
+
+
+</LinearLayout>
