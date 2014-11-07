@@ -192,7 +192,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   }
 
   public void rulBlødtTilAktuelUdsendelse() {
-    Log.d(this + " rulBlødtTilAktuelUdsendelse()");
+    Log.d("rulBlødtTilAktuelUdsendelse() "+this);
     if (aktuelUdsendelseIndex < 0) return;
     int topmargen = getResources().getDimensionPixelOffset(R.dimen.kanalvisning_aktuelUdsendelse_topmargen);
     if (Build.VERSION.SDK_INT >= 11) listView.smoothScrollToPositionFromTop(aktuelUdsendelseIndex, topmargen);
@@ -230,12 +230,12 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     super.onPause();
     App.forgrundstråd.removeCallbacks(this);
     if (senesteSynligeFragment == this) senesteSynligeFragment = null;
-    if (App.fejlsøgning) Log.d(this + " onPause() ");
+    if (App.fejlsøgning) Log.d("onPause() "+this);
   }
 
   @Override
   public void run() {
-    if (App.fejlsøgning) Log.d(this + " run() synlig=" + getUserVisibleHint());
+    if (App.fejlsøgning) Log.d("run() synlig=" + getUserVisibleHint()+" "+this);
     App.forgrundstråd.removeCallbacks(this);
     App.forgrundstråd.postDelayed(this, DRData.instans.grunddata.opdaterPlaylisteEfterMs);
 
@@ -588,8 +588,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     Request<?> req = new DrVolleyStringRequest(DRData.getPlaylisteUrl(u2.slug), new DrVolleyResonseListener() {
       @Override
       public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
-        //if (App.fejlsøgning) Log.d("fikSvar playliste(" + fraCache + " " + url + "   " + this);
-        Log.d("KAN fikSvar playliste(" + fraCache + uændret + " " + url);
+        if (App.fejlsøgning) Log.d("KAN fikSvar playliste(" + fraCache + uændret + " " + url);
         if (getActivity() == null || uændret) return;
         if (u2.playliste != null && fraCache) return; // så har vi allerede den nyeste liste i MEM
         if (json != null && !"null".equals(json)) {

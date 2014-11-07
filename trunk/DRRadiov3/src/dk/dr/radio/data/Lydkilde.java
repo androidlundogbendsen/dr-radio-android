@@ -96,13 +96,13 @@ public abstract class Lydkilde implements Serializable {
         if (s.foretrukken) score += 1000;
         if ("mp3".equals(s.format)) score += 10; // mp3 er mere pålideligt end mp4
         s.score = score;
-        Log.d("findBedsteStreams " + s);
         kandidater.add(s);
       } catch (Exception e) {
         Log.rapporterFejl(e, " ls=" + sxxx);
       }
 
     Collections.sort(kandidater);
+    Log.d("findBedsteStreams " + kandidater);
     return kandidater;
   }
 
