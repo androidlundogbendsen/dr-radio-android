@@ -469,11 +469,15 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           a.id(R.id.slutttid).text(udsendelse.slutTidKl);
           vh.titel.setText(udsendelse.titel);
 
+          /*
           int br = bestemBilledebredde(listView, (View) a.id(R.id.billede).getView().getParent(), 100);
           int hø = br * højde9 / bredde16;
           String burl = Basisfragment.skalérBillede(udsendelse, br, hø);
           a.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
+          */
 
+          String burl = Basisfragment.skalérBillede(udsendelse);
+          a.id(R.id.billede).image(burl, true, true, 0, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
           vh.titel.setText(udsendelse.titel.toUpperCase());
 
           opdaterAktuelUdsendelseViews(aktuelUdsendelseViewholder);

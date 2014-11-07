@@ -193,10 +193,15 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
         AQuery aq = vh.aq = new AQuery(v);
         v.setTag(vh);
         if (type == TOP) {
+/*
           int br = bestemBilledebredde(listView, (View) aq.id(R.id.billede).getView().getParent(), 50);
           int hø = br * højde9 / bredde16;
           String burl = Basisfragment.skalérBillede(programserie, br, hø);
           aq.width(br, false).height(hø, false).image(burl, true, true, br, AQuery.INVISIBLE, null, AQuery.FADE_IN, (float) højde9 / bredde16);
+           */
+
+          String burl = Basisfragment.skalérBillede(programserie);
+          aq.id(R.id.billede).width(2*billedeBr/3, false).height(2*billedeHø/3, false).image(burl, true, true, 0, AQuery.INVISIBLE, null, AQuery.FADE_IN, (float) højde9 / bredde16);
 
           if (kanal == null) aq.id(R.id.logo).gone();
           else aq.id(R.id.logo).image(kanal.kanallogo_resid).getView().setContentDescription(kanal.navn);

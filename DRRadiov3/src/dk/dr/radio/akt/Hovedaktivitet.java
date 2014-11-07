@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,13 +39,6 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
   private Venstremenu_frag venstremenuFrag;
   private Afspiller_frag afspillerFrag;
 
-  /**
-   * Bredden af aktiviteten skal bruges forskellige steder til at afgøre skalering af billeder
-   * Der bruges generelt halv bredde ved liggende visning.
-   * Bemærk, værdien er kun til læsning, og ændrer sig ved skærmvending
-   */
-  public static int billedeBredde;
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -59,9 +51,7 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
-    DisplayMetrics metrics = getResources().getDisplayMetrics();
-    billedeBredde = metrics.widthPixels;
-    if (metrics.heightPixels < 2 * billedeBredde / 3) billedeBredde = billedeBredde / 2; // Halvbreddebilleder ved liggende visning
+    Basisfragment.sætBilledeDimensioner(getResources().getDisplayMetrics());
 
     setContentView(R.layout.hoved_akt);
     setTitle("D R Radio"); // til blinde, for at undgå at "DR Radio" bliver udtalt som "Doktor Radio"

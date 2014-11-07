@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -104,20 +105,39 @@ Forhold 1:1 for playlistebilleder - og de skal være 1/3-del i højden af de sto
   public static final int bredde16 = 16;
   public static final int højde9 = 9;
 
+  /**
+   * Bredden af aktiviteten skal bruges forskellige steder til at afgøre skalering af billeder
+   * Der bruges generelt halv bredde ved liggende visning.
+   * Bemærk, værdien er *kun til læsning*, og ændrer sig ved skærmvending
+   */
+  public static int billedeBr;
+  public static int billedeHø;
+  public static boolean halvbreddebilleder;
+
+  public static void sætBilledeDimensioner(DisplayMetrics metrics) {
+    halvbreddebilleder = metrics.heightPixels < metrics.widthPixels;
+    billedeBr = metrics.widthPixels;
+    if (halvbreddebilleder) billedeBr = billedeBr / 2; // Halvbreddebilleder ved liggende visning
+    billedeHø = billedeBr * Basisfragment.højde9 / Basisfragment.bredde16;
+  }
+
 
   /**
    * Finder bredden som et et velskaleret billede forventes at have
    * @param rod         listen eller rod-viewet hvor billedet skal vises
    * @param paddingView containeren der har polstring/padding
    */
+  /*
   protected int bestemBilledebredde(View rod, View paddingView, int procent) {
-    int br = rod.getWidth() * procent / 100;
-    if (rod.getHeight() < 2 * br / 3) br = br / 2; // Halvbreddebilleder ved liggende visning
+    //if (!App.PRODUKTION && rod.getWidth() != billedeBr) throw new IllegalStateException(rod.getWidth()+" != "+ billedeBr);
+    //int br = rod.getWidth() * procent / 100;
+    //if (rod.getHeight() < 2 * br / 3) br = br / 2; // Halvbreddebilleder ved liggende visning
+    int br = billedeBr;
     br = br - paddingView.getPaddingRight() - paddingView.getPaddingLeft();
     //Log.d("QQQQQ listView.getWidth()=" + rod.getWidth() + " getHeight()=" + rod.getHeight());
     //Log.d("QQQQQ billedeContainer.getPaddingRight()=" + paddingView.getPaddingRight() + "   .... så br=" + br);
     return br;
-  }
+  }*/
 
 /* Doku fra Nicolai
 Alle billeder der ligger på dr.dk skal igennem "asset.dr.dk/imagescaler<http://asset.dr.dk/imagescaler>".
@@ -209,6 +229,15 @@ Jeg bruger selv følgende macro'er i C til generering af URIs:
   }
 
 
+  public static String skalérBillede(Udsendelse u) {
+    return skalérBillede(u, billedeBr, billedeHø);
+  }
+
+
+  public static String skalérBillede(Programserie u) {
+    return skalérBillede(u, billedeBr, billedeHø);
+  }
+
 
   /**
    * Billedeskalering til LastFM og discogs til playlister.
@@ -281,5 +310,4 @@ Jeg bruger selv følgende macro'er i C til generering af URIs:
     spannable.setSpan(App.skrift_gibson_fed_span, 0, fedTil, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     return spannable;
   }
-
 }
