@@ -301,11 +301,11 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       // Hvis listen er uændret så hop ud - forhindrer en uendelig løkke
       // af opdateringer i tilfælde af, at sendeplanen for dags dato ikke kan hentes
       if (nyListe.equals(liste) && nyAktuelUdsendelseIndex == aktuelUdsendelseIndex) {
-        Log.d("opdaterListe: listen er uændret: " + liste);
+        if (App.fejlsøgning) Log.d("opdaterListe: listen er uændret: " + liste);
         return;
       } else {
-        Log.d("opdaterListe: ændring fra " + aktuelUdsendelseIndex + liste);
-        Log.d("opdaterListe: ændring til " + nyAktuelUdsendelseIndex + nyListe);
+        if (App.fejlsøgning) Log.d("opdaterListe: ændring fra " + aktuelUdsendelseIndex + liste);
+        if (App.fejlsøgning) Log.d("opdaterListe: ændring til " + nyAktuelUdsendelseIndex + nyListe);
       }
 
       aktuelUdsendelseIndex = nyAktuelUdsendelseIndex;
