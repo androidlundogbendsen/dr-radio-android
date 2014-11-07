@@ -5,9 +5,7 @@
   <style name="Theme.Dr" parent="@style/Theme.AppCompat.Light">
     <item name="android:actionBarStyle">@style/ActionBar.Solid.Dr</item>
     <item name="android:windowBackground">@color/hvid</item>
-    <!--
-    <item name="android:windowActionBarOverlay">true</item>
-    -->
+    <item name="android:homeAsUpIndicator">@drawable/abc_ic_ab_back_holo_dark</item>
   </style>
 
   <style name="ActionBar.Solid.Dr" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
