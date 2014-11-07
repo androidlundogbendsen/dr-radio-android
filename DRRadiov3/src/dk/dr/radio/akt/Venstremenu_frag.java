@@ -127,6 +127,10 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     super.onDestroyView();
   }
 
+  public void visOpnavigering(boolean vis) {
+    mDrawerToggle.setDrawerIndicatorEnabled( !vis );
+  }
+
   /**
    * Kaldes når favoritter opdateres - så skal listens tekst opdateres
    */
