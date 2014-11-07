@@ -1,11 +1,15 @@
 package dk.dr.radio.akt;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -64,13 +68,34 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
       viewPager.setCurrentItem(App.prefs.getInt(INDEX, 0));
     }
     DRData.instans.dramaOgBog.observatører.add(this);
+    viewPager.setOnTouchListener(new View.OnTouchListener() {
+      @Override
+      public boolean onTouch(View v, MotionEvent event) {
+        if (event.getAction()==MotionEvent.ACTION_DOWN || event.getAction()==MotionEvent.ACTION_UP) {
+          App.forgrundstråd.removeCallbacks(skiftTilNæsteIKarusellen);
+          App.forgrundstråd.postDelayed(skiftTilNæsteIKarusellen, 10000);
+        }
+        return false;
+      }
+    });
+    App.forgrundstråd.postDelayed(skiftTilNæsteIKarusellen, 10000);
 
     return rod;
   }
 
+  Runnable skiftTilNæsteIKarusellen = new Runnable() {
+    @Override
+    public void run() {
+      if (viewPager==null) return;
+      int n = (viewPager.getCurrentItem() + 1) % liste.size();
+      viewPager.setCurrentItem(n, true);
+      App.forgrundstråd.removeCallbacks(skiftTilNæsteIKarusellen);
+      App.forgrundstråd.postDelayed(skiftTilNæsteIKarusellen, 5000);
+    }
+  };
+
   @Override
   public void onDestroyView() {
-    viewPager.setAdapter(null); // forårsager crash? - men nødvendig for at undgå https://mint.splunk.com/dashboard/project/cd78aa05/errors/2151178610
     viewPager = null;
     adapter = null;
     indicator = null;
@@ -102,7 +127,7 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
     }
   }
 
-  public static class KaruselFrag extends Basisfragment {
+  public static class KaruselFrag extends Basisfragment implements View.OnClickListener {
     private String programserieSlug;
     private Programserie programserie;
 
@@ -115,6 +140,7 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
 
       String burl = Basisfragment.skalérBillede(programserie);
       AQuery aq = new AQuery(rod);
+      aq.clicked(this);
       aq.id(R.id.billede)
       //.width(billedeBr, false).height(billedeHø, false)
           .image(burl, true, true, billedeBr, AQuery.INVISIBLE, null, AQuery.FADE_IN, (float) højde9 / bredde16);
@@ -125,6 +151,20 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
       Log.registrérTestet("Visning af "+INDEX, "ja");
       //udvikling_checkDrSkrifter(rod, this + " rod");
       return rod;
+    }
+
+    @Override
+    public void onClick(View v) {
+      Fragment f = new Programserie_frag();
+      f.setArguments(new Intent()
+          .putExtra(DRJson.SeriesSlug.name(), programserieSlug)
+          .getExtras());
+      getActivity().getSupportFragmentManager().beginTransaction()
+          .replace(R.id.indhold_frag, f)
+          .addToBackStack(null)
+          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+          .commit();
+
     }
   }
 }
