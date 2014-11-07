@@ -291,6 +291,9 @@ public class AlarmClock_akt extends Activity implements OnItemClickListener {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
+      case android.R.id.home:
+        finish();
+        return true;
       case R.id.menu_item_add_alarm:
         addNewAlarm();
         return true;

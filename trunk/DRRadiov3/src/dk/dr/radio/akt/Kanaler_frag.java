@@ -73,7 +73,14 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
   @Override
   public void onResume() {
     App.hentEvtNyeGrunddata.run();
+    venstremenuFrag.visOpnavigering(false);
     super.onResume();
+  }
+
+  @Override
+  public void onPause() {
+    venstremenuFrag.visOpnavigering(true);
+    super.onPause();
   }
 
   @Override
