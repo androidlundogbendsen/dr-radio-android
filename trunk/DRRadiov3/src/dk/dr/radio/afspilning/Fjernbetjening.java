@@ -101,7 +101,7 @@ public class Fjernbetjening implements Runnable {
     if (u != null && u != forrigeUdsendelse) {
       // Skift baggrundsbillede
       forrigeUdsendelse = u;
-      final String burl = Basisfragment.skalérBillede(u, 800, 400);
+      final String burl = Basisfragment.skalérBillede(u);
       Log.d("asynk artwork\n" + burl);
 
       App.volleyRequestQueue.add(new ImageRequest(burl,

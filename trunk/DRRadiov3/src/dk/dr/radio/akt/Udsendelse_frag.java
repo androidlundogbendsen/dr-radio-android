@@ -98,17 +98,20 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
               udsendelse.kanHentes = udsendelse.findBedsteStreams(true).size() > 0;
               udsendelse.kanNokHøres = udsendelse.kanStreames;
               if (udsendelse.streams.size() == 0) {
-                Log.d("SSSSS TOMME STREAMS ... men det passer måske ikke! for " + udsendelse.slug + " " + udsendelse.getStreamsUrl());
+                if (App.fejlsøgning) Log.d("SSSSS TOMME STREAMS ... men det passer måske ikke! for " + udsendelse.slug + " " + udsendelse.getStreamsUrl());
                 streamsVarTom.put(udsendelse, System.currentTimeMillis());
                 //App.volleyRequestQueue.getCache().remove(url);
                 App.forgrundstråd.postDelayed(hentStreams, 5000);
               } else if (streamsVarTom.containsKey(udsendelse)) {
                 long t0 = streamsVarTom.get(udsendelse);
+                /*
                 if (!App.PRODUKTION) {
                   App.langToast("Serveren har ombestemt sig, nu er streams ikke mere tom for " + udsendelse.slug);
                   App.langToast("Tidsforskel mellem de to svar: " + (System.currentTimeMillis() - t0) / 1000 + " sek");
                   Log.rapporterFejl(new Exception("Server ombestemte sig, der var streams alligevel"), udsendelse.slug + "  dt=" + (System.currentTimeMillis() - t0));
                 }
+                */
+                Log.d("Server ombestemte sig, der var streams alligevel: "+ udsendelse.slug + "  dt=" + (System.currentTimeMillis() - t0));
                 streamsVarTom.remove(udsendelse);
               }
               udsendelse.produktionsnummer = o.optString(DRJson.ProductionNumber.name());
@@ -268,11 +271,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     View v = getLayoutInflater(null).inflate(R.layout.udsendelse_elem0_top, listView, false);
     AQuery aq = new AQuery(v);
     v.setTag(aq);
-    int br = bestemBilledebredde(listView, (View) aq.id(R.id.billede).getView().getParent(), 100);
-    int hø = br * højde9 / bredde16;
-    String burl = Basisfragment.skalérBillede(udsendelse, br, hø);
-    aq.width(br, false).height(hø, false).image(burl, true, true, br, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
-
+    String burl = Basisfragment.skalérBillede(udsendelse);
+    aq.id(R.id.billede).width(billedeBr, false).height(billedeHø, false).image(burl, true, true, billedeBr, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
     aq.id(R.id.lige_nu).gone();
     aq.id(R.id.info).typeface(App.skrift_gibson);
     //Log.d("kanal JPER " + kanal.p4underkanal);

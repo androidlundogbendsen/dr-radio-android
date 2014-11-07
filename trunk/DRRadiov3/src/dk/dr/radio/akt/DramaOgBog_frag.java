@@ -46,14 +46,11 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     Log.d("onCreateView " + this);
     View rod = inflater.inflate(R.layout.drama_og_bog_frag, container, false);
-
     run();
     adapter = new KaruselAdapter(getChildFragmentManager());
     viewPager = (ViewPager) rod.findViewById(R.id.pager);
     viewPager.setAdapter(adapter);
-    int br = Hovedaktivitet.billedeBredde; //XXXbestemBilledebredde(listView, (View) aq.id(R.id.billede).getView().getParent(), 100);
-    int hø = br * højde9 / bredde16;
-    viewPager.getLayoutParams().height = hø;
+    viewPager.getLayoutParams().height = billedeHø; // Viewpageren skal fylde præcist ét billede i højden
     indicator = (CirclePageIndicator)rod.findViewById(R.id.indicator);
     indicator.setViewPager(viewPager);
     final float density = getResources().getDisplayMetrics().density;
@@ -91,6 +88,11 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
     }
 
     @Override
+    public float getPageWidth(int position) {
+      return halvbreddebilleder?0.5f : 1;
+    }
+
+    @Override
     public Basisfragment getItem(int position) {
       Basisfragment f = new KaruselFrag();
       Bundle b = new Bundle();
@@ -111,12 +113,11 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
       View rod = inflater.inflate(R.layout.kanal_elem0_inkl_billede_titel, container, false);
       programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
 
-      int br = Hovedaktivitet.billedeBredde; //XXXbestemBilledebredde(listView, (View) aq.id(R.id.billede).getView().getParent(), 100);
-      int hø = br * højde9 / bredde16;
-      String burl = Basisfragment.skalérBillede(programserie, br, hø);
+      String burl = Basisfragment.skalérBillede(programserie);
       AQuery aq = new AQuery(rod);
-      //aq.width(br, false).height(hø, false);
-      aq.id(R.id.billede).width(br, false).height(hø, false).image(burl, true, true, br, AQuery.INVISIBLE, null, AQuery.FADE_IN, (float) højde9 / bredde16);
+      aq.id(R.id.billede)
+      //.width(billedeBr, false).height(billedeHø, false)
+          .image(burl, true, true, billedeBr, AQuery.INVISIBLE, null, AQuery.FADE_IN, (float) højde9 / bredde16);
 
       aq.id(R.id.titel).typeface(App.skrift_gibson_fed).text(programserie.undertitel);
       aq.id(R.id.lige_nu).text(programserie.titel.toUpperCase()).typeface(App.skrift_gibson);
@@ -125,7 +126,6 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
       //udvikling_checkDrSkrifter(rod, this + " rod");
       return rod;
     }
-
   }
 }
 
