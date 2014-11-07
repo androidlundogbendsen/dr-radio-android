@@ -29,7 +29,7 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
 
   private static final String INDEX = DramaOgBog_frag.class.getName();
   private ViewPager viewPager;
-  private KaruselAdapter adapter;
+  private KarruselAdapter adapter;
   private ArrayList<Programserie> liste = new ArrayList<Programserie>();
   private CirclePageIndicator indicator;
 
@@ -51,7 +51,7 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
     Log.d("onCreateView " + this);
     View rod = inflater.inflate(R.layout.drama_og_bog_frag, container, false);
     run();
-    adapter = new KaruselAdapter(getChildFragmentManager());
+    adapter = new KarruselAdapter(getChildFragmentManager());
     viewPager = (ViewPager) rod.findViewById(R.id.pager);
     viewPager.setAdapter(adapter);
     viewPager.getLayoutParams().height = billedeHø; // Viewpageren skal fylde præcist ét billede i højden
@@ -72,25 +72,25 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
       @Override
       public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction()==MotionEvent.ACTION_DOWN || event.getAction()==MotionEvent.ACTION_UP) {
-          App.forgrundstråd.removeCallbacks(skiftTilNæsteIKarusellen);
-          App.forgrundstråd.postDelayed(skiftTilNæsteIKarusellen, 10000);
+          App.forgrundstråd.removeCallbacks(skiftTilNæsteIKarrusellen);
+          App.forgrundstråd.postDelayed(skiftTilNæsteIKarrusellen, 10000);
         }
         return false;
       }
     });
-    App.forgrundstråd.postDelayed(skiftTilNæsteIKarusellen, 10000);
+    App.forgrundstråd.postDelayed(skiftTilNæsteIKarrusellen, 10000);
 
     return rod;
   }
 
-  Runnable skiftTilNæsteIKarusellen = new Runnable() {
+  Runnable skiftTilNæsteIKarrusellen = new Runnable() {
     @Override
     public void run() {
       if (viewPager==null) return;
       int n = (viewPager.getCurrentItem() + 1) % liste.size();
       viewPager.setCurrentItem(n, true);
-      App.forgrundstråd.removeCallbacks(skiftTilNæsteIKarusellen);
-      App.forgrundstråd.postDelayed(skiftTilNæsteIKarusellen, 5000);
+      App.forgrundstråd.removeCallbacks(skiftTilNæsteIKarrusellen);
+      App.forgrundstråd.postDelayed(skiftTilNæsteIKarrusellen, 5000);
     }
   };
 
@@ -103,8 +103,8 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
     super.onDestroyView();
   }
 
-  public class KaruselAdapter extends FragmentPagerAdapter {
-    public KaruselAdapter(FragmentManager fm) {
+  public class KarruselAdapter extends FragmentPagerAdapter {
+    public KarruselAdapter(FragmentManager fm) {
       super(fm);
     }
     @Override
@@ -119,7 +119,7 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
 
     @Override
     public Basisfragment getItem(int position) {
-      Basisfragment f = new KaruselFrag();
+      Basisfragment f = new KarruselFrag();
       Bundle b = new Bundle();
       b.putString(DRJson.SeriesSlug.name(), liste.get(position).slug);
       f.setArguments(b);
@@ -127,7 +127,7 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
     }
   }
 
-  public static class KaruselFrag extends Basisfragment implements View.OnClickListener {
+  public static class KarruselFrag extends Basisfragment implements View.OnClickListener {
     private String programserieSlug;
     private Programserie programserie;
 
