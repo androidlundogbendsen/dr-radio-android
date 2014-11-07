@@ -216,6 +216,9 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      getSupportFragmentManager().popBackStack();
+    }
     if (item.getItemId()==R.id.søg) {
       FragmentManager fm = getSupportFragmentManager();
       // Fjern backstak - så vi starter forfra i 'roden'
