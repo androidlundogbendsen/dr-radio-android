@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 
 import com.androidquery.AQuery;
 
@@ -23,26 +25,45 @@ import dk.dr.radio.data.Programserie;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.CirclePageIndicator;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.PinnedSectionListView;
 import dk.dr.radio.v3.R;
 
-public class DramaOgBog_frag extends Basisfragment implements Runnable {
-
-  private static final String INDEX = DramaOgBog_frag.class.getName();
+public class DramaOgBog_frag extends Basisfragment implements Runnable, AdapterView.OnItemClickListener {
   private ViewPager viewPager;
-  private KarruselAdapter adapter;
-  private ArrayList<Programserie> liste = new ArrayList<Programserie>();
-  private CirclePageIndicator indicator;
+  private KarruselAdapter karruselAdapter;
+  private ArrayList<Programserie> karruselListe = new ArrayList<Programserie>();
+  private ArrayList liste = new ArrayList();
+  private CirclePageIndicator karruselIndikator;
+  private PinnedSectionListView listView;
 
+  final static String[] listesektioner = { "RADIO DRAMA", "LYDBØGER"};
+  boolean[] listesektionerUdvidet = new boolean[listesektioner.length];
 
   @Override
   public void run() {
+    karruselListe.clear();
     liste.clear();
-    if (DRData.instans.dramaOgBog.liste!=null) liste.addAll(DRData.instans.dramaOgBog.liste);
-    if (adapter != null) {
-      if (viewPager.getCurrentItem() >= liste.size()) {
+    if (DRData.instans.dramaOgBog.liste!=null) {
+      liste.add(listesektioner[0]);
+      int n=0;
+      int halvvejs = DRData.instans.dramaOgBog.liste.size()/2;
+      for (Programserie programserie : DRData.instans.dramaOgBog.liste) {
+        n++;
+        if (programserie.antalUdsendelser>0) karruselListe.add(programserie);
+        // Vi lader som om første halvdel er radio drama, anden halvdel er lydbøger
+        if (n<halvvejs && (n<3 || listesektionerUdvidet[0])) liste.add(programserie);
+        if (n==halvvejs && !listesektionerUdvidet[0]) liste.add(0); // VIS FLERE
+        if (n==halvvejs) liste.add(listesektioner[1]); // LYDBØGER
+        if (n>halvvejs && (n<3+halvvejs || listesektionerUdvidet[1])) liste.add(programserie);
+        if (n==DRData.instans.dramaOgBog.liste.size()-1 && !listesektionerUdvidet[1]) liste.add(1); // VIS FLERE
+      }
+    }
+    if (karruselAdapter != null) {
+      if (viewPager.getCurrentItem() >= karruselListe.size()) {
         viewPager.setCurrentItem(0);
       }
-      adapter.notifyDataSetChanged();
+      karruselAdapter.notifyDataSetChanged();
+      listeAdapter.notifyDataSetChanged();
     }
   }
 
@@ -51,22 +72,18 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
     Log.d("onCreateView " + this);
     View rod = inflater.inflate(R.layout.drama_og_bog_frag, container, false);
     run();
-    adapter = new KarruselAdapter(getChildFragmentManager());
+    karruselAdapter = new KarruselAdapter(getChildFragmentManager());
     viewPager = (ViewPager) rod.findViewById(R.id.pager);
-    viewPager.setAdapter(adapter);
+    viewPager.setAdapter(karruselAdapter);
     viewPager.getLayoutParams().height = billedeHø; // Viewpageren skal fylde præcist ét billede i højden
-    indicator = (CirclePageIndicator)rod.findViewById(R.id.indicator);
-    indicator.setViewPager(viewPager);
+    karruselIndikator = (CirclePageIndicator)rod.findViewById(R.id.indicator);
+    karruselIndikator.setViewPager(viewPager);
     final float density = getResources().getDisplayMetrics().density;
-    indicator.setRadius(5 * density);
-    indicator.setPageColor(Color.BLACK);
-    indicator.setFillColor(App.color.blå);
-    indicator.setStrokeColor(0);
-    indicator.setStrokeWidth(0);
-    if (savedInstanceState == null) {
-      // gendan position fra sidste gang vi var herinde
-      viewPager.setCurrentItem(App.prefs.getInt(INDEX, 0));
-    }
+    karruselIndikator.setRadius(5 * density);
+    karruselIndikator.setPageColor(Color.BLACK);
+    karruselIndikator.setFillColor(App.color.blå);
+    karruselIndikator.setStrokeColor(0);
+    karruselIndikator.setStrokeWidth(0);
     DRData.instans.dramaOgBog.observatører.add(this);
     viewPager.setOnTouchListener(new View.OnTouchListener() {
       @Override
@@ -80,6 +97,10 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
     });
     App.forgrundstråd.postDelayed(skiftTilNæsteIKarrusellen, 10000);
 
+    AQuery aq = new AQuery(rod);
+    listView = (PinnedSectionListView) aq.id(R.id.listView).adapter(listeAdapter).getListView();
+    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).getView());
+    listView.setOnItemClickListener(this);
     return rod;
   }
 
@@ -87,7 +108,7 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
     @Override
     public void run() {
       if (viewPager==null) return;
-      int n = (viewPager.getCurrentItem() + 1) % liste.size();
+      int n = (viewPager.getCurrentItem() + 1) % karruselListe.size();
       viewPager.setCurrentItem(n, true);
       App.forgrundstråd.removeCallbacks(skiftTilNæsteIKarrusellen);
       App.forgrundstråd.postDelayed(skiftTilNæsteIKarrusellen, 5000);
@@ -97,8 +118,8 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
   @Override
   public void onDestroyView() {
     viewPager = null;
-    adapter = null;
-    indicator = null;
+    karruselAdapter = null;
+    karruselIndikator = null;
     DRData.instans.dramaOgBog.observatører.remove(this);
     super.onDestroyView();
   }
@@ -109,7 +130,7 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
     }
     @Override
     public int getCount() {
-      return liste.size();
+      return karruselListe.size();
     }
 
     @Override
@@ -121,7 +142,7 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
     public Basisfragment getItem(int position) {
       Basisfragment f = new KarruselFrag();
       Bundle b = new Bundle();
-      b.putString(DRJson.SeriesSlug.name(), liste.get(position).slug);
+      b.putString(DRJson.SeriesSlug.name(), karruselListe.get(position).slug);
       f.setArguments(b);
       return f;
     }
@@ -148,23 +169,107 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable {
       aq.id(R.id.titel).typeface(App.skrift_gibson_fed).text(programserie.undertitel);
       aq.id(R.id.lige_nu).text(programserie.titel.toUpperCase()).typeface(App.skrift_gibson);
 
-      Log.registrérTestet("Visning af "+INDEX, "ja");
       //udvikling_checkDrSkrifter(rod, this + " rod");
       return rod;
     }
 
     @Override
     public void onClick(View v) {
-      Fragment f = new Programserie_frag();
-      f.setArguments(new Intent()
-          .putExtra(DRJson.SeriesSlug.name(), programserieSlug)
-          .getExtras());
-      getActivity().getSupportFragmentManager().beginTransaction()
-          .replace(R.id.indhold_frag, f)
-          .addToBackStack(null)
-          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-          .commit();
+      åbn(this, programserie);
+    }
+  }
 
+
+  static final int[] layoutFraType = {
+      R.layout.kanal_elem3_i_dag_i_morgen,
+      R.layout.drama_og_bog_elem1_programserie,
+      R.layout.drama_og_bog_elem2_vis_flere,
+  };
+
+  private BaseAdapter listeAdapter = new Basisadapter() {
+    @Override
+    public int getCount() {
+      return liste.size();
+    }
+
+    @Override
+    public int getViewTypeCount() {
+      return 3;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+      Object o = liste.get(position);
+      if (o instanceof String) return 0;
+      if (o instanceof Integer) return 2;
+      return 1;
+    }
+
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+      return viewType==0;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+      return getItemViewType(position) != 0;
+    }
+
+    @Override
+    public boolean areAllItemsEnabled() {
+      return false;
+    }
+
+
+    @Override
+    public View getView(int position, View v, ViewGroup parent) {
+      int type = getItemViewType(position);
+      if (v == null) {
+        v = getLayoutInflater(null).inflate(layoutFraType[type], parent, false);
+      }
+      AQuery aq = new AQuery(v);
+      switch (type) {
+        case 0:
+          String s = (String) liste.get(position);
+          aq.id(R.id.titel).typeface(App.skrift_gibson).text(s);
+          break;
+        case 1:
+          Programserie programserie = (Programserie) liste.get(position);
+          String burl = Basisfragment.skalérBillede(programserie);
+          aq.id(R.id.billede).width(billedeBr / 3, false).height(billedeHø / 3, false).image(burl, true, true, 0, AQuery.INVISIBLE, null, AQuery.FADE_IN, (float) højde9 / bredde16);
+          aq.id(R.id.titel).typeface(App.skrift_gibson_fed).text(programserie.titel);
+          aq.id(R.id.antalUdsendelser).typeface(App.skrift_gibson).text(programserie.antalUdsendelser+" AFSNIT");
+          break;
+        case 2:
+          aq.id(R.id.titel).typeface(App.skrift_gibson);
+          aq.id(R.id.stiplet_linje).visibility(position==liste.size()-1?View.GONE:View.VISIBLE);
+      }
+      udvikling_checkDrSkrifter(v, this + " position " + position);
+      return v;
+    }
+  };
+
+  private static void åbn(Basisfragment ths, Programserie programserie) {
+    Fragment f = new Programserie_frag();
+    f.setArguments(new Intent()
+        .putExtra(DRJson.SeriesSlug.name(), programserie.slug)
+        .getExtras());
+    ths.getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.indhold_frag, f)
+        .addToBackStack(null)
+        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        .commit();
+  }
+
+  @Override
+  public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
+    Object o = liste.get(position);
+    if (o instanceof Integer) {
+      int n = (Integer) o;
+      listesektionerUdvidet[n] = !listesektionerUdvidet[n];
+      run();
+    } else {
+      åbn(this, (Programserie) o);
     }
   }
 }
