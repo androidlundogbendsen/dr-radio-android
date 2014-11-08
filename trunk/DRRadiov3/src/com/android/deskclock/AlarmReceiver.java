@@ -41,73 +41,74 @@ public class AlarmReceiver extends BroadcastReceiver {
 
   @Override
   public void onReceive(final Context context, final Intent intent) {
-    Log.d("AlarmReceiver onReceive(" + intent);
-    if (!App.PRODUKTION) App.langToast("AlarmReceiver onReceive(" + intent);
-    handleIntent(context, intent);
-    //XXX TODO Se om det hjælper wakeLock.release();
-  }
-
-  private void handleIntent(Context context, Intent intent) {
-    if (!Alarms.ALARM_ALERT_ACTION.equals(intent.getAction())) {
-      // Unknown intent, bail.
-      return;
-    }
-
-    Alarm alarm = null;
-    // Grab the alarm from the intent. Since the remote AlarmManagerService
-    // fills in the Intent to add some extra data, it must unparcel the
-    // Alarm object. It throws a ClassNotFoundException when unparcelling.
-    // To avoid this, do the marshalling ourselves.
-    final String data = intent.getStringExtra(Alarms.ALARM_RAW_DATA);
-    if (data != null) {
-      alarm = new Alarm(data);
-    }
-
-    Alarms.tjekIndlæst(context);
-
-
-    if (alarm == null) {
-      Log.rapporterFejl(new IllegalStateException("Failed to parse the alarm from the intent"));
-      // Make sure we set the next alert if needed.
-      Alarms.setNextAlert(context);
-      return;
-    }
-
-    // Disable this alarm if it does not repeat.
-    if (!alarm.daysOfWeek.isRepeatSet()) {
-      alarm.enabled = false;
-      Alarms.setAlarm(context, alarm);
-    } else {
-      // Enable the next alert if there is one. The above call to
-      // enableAlarm will call setNextAlert so avoid calling it twice.
-      Alarms.setNextAlert(context);
-    }
-
-    // Intentionally verbose: always log the alarm time to provide useful
-    // information in bug reports.
-    long now = System.currentTimeMillis();
-    Log.d("Recevied alarm set for " + new Date(alarm.time));
-
-    // Always verbose to track down time change problems.
-    if (now > alarm.time + STALE_WINDOW) {
-      Log.d("Ignoring stale alarm");
-      return;
-    }
-
-
-    /* Close dialogs and window shade */
-    Intent closeDialogs = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-    context.sendBroadcast(closeDialogs);
-
-
-    // Play the alarm alert and vibrate the device.
-    Intent playAlarm = new Intent(context, Hovedaktivitet.class);
-    //playAlarm.putExtra(Alarms.ALARM_INTENT_EXTRA, alarm.toString());
-    playAlarm.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    context.startActivity(playAlarm);
-
-
     try {
+      Log.d("AlarmReceiver onReceive(" + intent);
+      if (!App.PRODUKTION) App.langToast("AlarmReceiver onReceive(" + intent);
+      DRData.instans.afspiller.vækningIGang = true;
+      DRData.instans.afspiller.vækkeurWakeLock = AlarmAlertWakeLock.createPartialWakeLock(context);
+      DRData.instans.afspiller.vækkeurWakeLock.acquire(); // preferus temon, eble 120000 ĉi tie,
+      Log.d("AlarmReceiver AlarmAlertWakeLock.createPartialWakeLock()");
+
+      if (!Alarms.ALARM_ALERT_ACTION.equals(intent.getAction())) {
+        // Unknown intent, bail.
+        Log.rapporterFejl(new IllegalStateException("Forventet "+Alarms.ALARM_ALERT_ACTION+" fik "+intent));
+        return;
+      }
+
+      Alarm alarm = null;
+      // Grab the alarm from the intent. Since the remote AlarmManagerService
+      // fills in the Intent to add some extra data, it must unparcel the
+      // Alarm object. It throws a ClassNotFoundException when unparcelling.
+      // To avoid this, do the marshalling ourselves.
+      final String data = intent.getStringExtra(Alarms.ALARM_RAW_DATA);
+      if (data != null) {
+        alarm = new Alarm(data);
+      }
+
+      Alarms.tjekIndlæst(context);
+
+
+      if (alarm == null) {
+        Log.rapporterFejl(new IllegalStateException("Failed to parse the alarm from the intent"));
+        // Make sure we set the next alert if needed.
+        Alarms.setNextAlert(context);
+        return;
+      }
+
+      // Disable this alarm if it does not repeat.
+      if (!alarm.daysOfWeek.isRepeatSet()) {
+        alarm.enabled = false;
+        Alarms.setAlarm(context, alarm);
+      } else {
+        // Enable the next alert if there is one. The above call to
+        // enableAlarm will call setNextAlert so avoid calling it twice.
+        Alarms.setNextAlert(context);
+      }
+
+      // Intentionally verbose: always log the alarm time to provide useful
+      // information in bug reports.
+      long now = System.currentTimeMillis();
+      Log.d("Recevied alarm set for " + new Date(alarm.time));
+
+      // Always verbose to track down time change problems.
+      if (now > alarm.time + STALE_WINDOW) {
+        Log.rapporterFejl(new IllegalStateException("Ignoring stale alarm"), now +" > "+alarm.time + STALE_WINDOW);
+        return;
+      }
+
+
+      /* Close dialogs and window shade */
+      Intent closeDialogs = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+      context.sendBroadcast(closeDialogs);
+
+
+      // Play the alarm alert and vibrate the device.
+      Intent playAlarm = new Intent(context, Hovedaktivitet.class);
+      //playAlarm.putExtra(Alarms.ALARM_INTENT_EXTRA, alarm.toString());
+      playAlarm.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      context.startActivity(playAlarm);
+
+
       Kanal nyKanal = DRData.instans.grunddata.kanalFraKode.get(alarm.kanalo);
       if (nyKanal == null) {
         Log.rapporterFejl(new IllegalStateException("Alarm: Kanal findes ikke!" + alarm.kanalo + " for alarmstr=" + data));
@@ -115,18 +116,12 @@ public class AlarmReceiver extends BroadcastReceiver {
       }
       DRData.instans.afspiller.setLydkilde(nyKanal);
       DRData.instans.afspiller.startAfspilning();
-      DRData.instans.afspiller.vækningIGang = true;
-      DRData.instans.afspiller.vækkeurWakeLock = AlarmAlertWakeLock.createPartialWakeLock(context);
-      DRData.instans.afspiller.vækkeurWakeLock.acquire(); // preferus temon, eble 120000 ĉi tie,
-      Log.d("AlarmReceiver AlarmAlertWakeLock.createPartialWakeLock()");
 
       // Skru op til 3/5 styrke hvis volumen er lavere end det
       DRData.instans.afspiller.tjekVolumenMindst5tedele(4);
 
     } catch (Exception ex) {
-      Log.e("argh!", ex);
+      Log.rapporterFejl(ex);
     }
-
-
   }
 }
