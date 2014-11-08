@@ -32,6 +32,7 @@ import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.data.Udsendelse;
+import dk.dr.radio.diverse.AnimationAdapter;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
@@ -166,15 +167,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
       anim.setRepeatCount(1); // skalér ind og ud igen
       anim.setRepeatMode(Animation.REVERSE);
       anim.setInterpolator(new DecelerateInterpolator());
-      anim.setAnimationListener(new Animation.AnimationListener() {
-        @Override
-        public void onAnimationStart(Animation animation) {
-        }
-
-        @Override
-        public void onAnimationEnd(Animation animation) {
-        }
-
+      anim.setAnimationListener(new AnimationAdapter() {
         @Override
         public void onAnimationRepeat(Animation animation) {
           startStopKnap.setImageResource(startStopKnapNyImageResource);
