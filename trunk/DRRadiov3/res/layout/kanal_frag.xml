@@ -6,12 +6,12 @@
       android:id="@+id/listView"
       android:divider="@null"
       android:dividerHeight="0px"
-      android:requiresFadingEdge="vertical"
-      android:fadingEdgeLength="4dp"
-      android:cacheColorHint="@color/grå20"
       android:layout_width="fill_parent"
       android:layout_height="fill_parent"/>
   <!--
+      android:requiresFadingEdge="vertical"
+      android:fadingEdgeLength="4dp"
+      android:cacheColorHint="@color/grå20"
 
 
   hurtigscroll

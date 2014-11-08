@@ -162,8 +162,7 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable, AdapterV
       String burl = Basisfragment.skalérBillede(programserie);
       AQuery aq = new AQuery(rod);
       aq.clicked(this);
-      aq.id(R.id.billede)
-      //.width(billedeBr, false).height(billedeHø, false)
+      aq.id(R.id.billede).width(billedeBr, false).height(billedeHø, false)
           .image(burl, true, true, billedeBr, AQuery.INVISIBLE, null, AQuery.FADE_IN, (float) højde9 / bredde16);
 
       aq.id(R.id.titel).typeface(App.skrift_gibson_fed).text(programserie.undertitel);
