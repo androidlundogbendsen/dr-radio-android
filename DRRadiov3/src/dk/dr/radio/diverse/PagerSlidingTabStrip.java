@@ -26,6 +26,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
@@ -33,9 +34,15 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -51,6 +58,7 @@ import dk.dr.radio.v3.R;
 
 public class PagerSlidingTabStrip extends HorizontalScrollView {
 
+  private static final boolean TEKST_DER_FADER_OVER_I_IKONER = true;
   public interface IconTabProvider {
     public int getPageIconResId(int position);
 
@@ -188,6 +196,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     pager.setOnPageChangeListener(pageListener);
 
     notifyDataSetChanged();
+    fadeTekstOgIkoner(pager.getCurrentItem());
   }
 
   public void setOnPageChangeListener(OnPageChangeListener listener) {
@@ -197,16 +206,21 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
   public void notifyDataSetChanged() {
 
     tabsContainer.removeAllViews();
+    PagerAdapter adapter = pager.getAdapter();
 
-    tabCount = pager.getAdapter().getCount();
+    tabCount = adapter.getCount();
 
     for (int i = 0; i < tabCount; i++) {
 
-      if (pager.getAdapter() instanceof IconTabProvider) {
-        IconTabProvider ipa = ((IconTabProvider) pager.getAdapter());
-        addIconTab(i, ipa.getPageIconResId(i), ipa.getPageContentDescription(i));
+      if (adapter instanceof IconTabProvider) {
+        IconTabProvider ipa = ((IconTabProvider) adapter);
+        if (TEKST_DER_FADER_OVER_I_IKONER) {
+          addIconTabBådeTekstOgBillede(i, ipa.getPageIconResId(i), ipa.getPageContentDescription(i));
+        } else {
+          addIconTab(i, ipa.getPageIconResId(i), ipa.getPageContentDescription(i));
+        }
       } else {
-        addTextTab(i, pager.getAdapter().getPageTitle(i).toString());
+        addTextTab(i, adapter.getPageTitle(i).toString());
       }
 
     }
@@ -252,6 +266,31 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     addTab(position, tab);
 
   }
+
+  private void addIconTabBådeTekstOgBillede(final int position, int resId, String title) {
+    FrameLayout tabfl = new FrameLayout(getContext());
+    ImageView tabi = new ImageView(getContext());
+    tabi.setContentDescription(title);
+    tabi.setImageResource(resId);
+    tabi.setVisibility(View.INVISIBLE);
+    TextView tabt = new TextView(getContext());
+    tabt.setText(title);
+    tabt.setGravity(Gravity.CENTER);
+    tabt.setSingleLine();
+
+    tabfl.addView(tabi);
+    tabfl.addView(tabt);
+
+    LayoutParams lp = (LayoutParams) tabi.getLayoutParams();
+    lp.gravity=Gravity.CENTER;
+    lp = (LayoutParams) tabt.getLayoutParams();
+    lp.width=lp.height=ViewGroup.LayoutParams.MATCH_PARENT;
+    lp.gravity=Gravity.CENTER;
+
+    addTab(position, tabfl);
+  }
+
+
 
   private void addTab(final int position, View tab) {
     tab.setFocusable(true);
@@ -402,8 +441,60 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
       if (delegatePageListener != null) {
         delegatePageListener.onPageSelected(position);
       }
+      if (TEKST_DER_FADER_OVER_I_IKONER) {
+        fadeTekstOgIkoner(position);
+      }
     }
 
+  }
+
+  AlphaAnimation fadeInd = new AlphaAnimation(0, 1);
+  AlphaAnimation fadeUd = new AlphaAnimation(1, 0);
+  {
+    AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
+    fadeInd.setDuration(300);
+    fadeUd.setDuration(300);
+    fadeInd.setInterpolator(interpolator);
+    fadeUd.setInterpolator(interpolator);
+  }
+
+  int forrigePosition = -1;
+  private void fadeTekstOgIkoner(int position) {
+    //fadeInd.reset();
+    //fadeUd.reset();
+    Object t = tabsContainer.getChildAt(forrigePosition);
+    if (t instanceof FrameLayout) {
+      final FrameLayout fl = (FrameLayout) t;
+      fl.getChildAt(0).clearAnimation();
+      fl.getChildAt(1).clearAnimation();
+      fl.getChildAt(0).setVisibility(View.INVISIBLE);
+      fl.getChildAt(1).setVisibility(View.VISIBLE);
+        /*
+        fl.getChildAt(0).startAnimation(fadeUd);
+        fl.getChildAt(1).startAnimation(fadeInd);
+        fadeInd.setAnimationListener(new AnimationAdapter() {
+          @Override
+          public void onAnimationEnd(Animation animation) {
+            fl.getChildAt(0).setVisibility(View.INVISIBLE);
+            fl.getChildAt(1).setVisibility(View.VISIBLE);
+          }
+        });
+        */
+    }
+    t = (FrameLayout) tabsContainer.getChildAt(position);
+    if (t instanceof FrameLayout) {
+      final FrameLayout fl = (FrameLayout) t;
+      fl.getChildAt(0).startAnimation(fadeInd);
+      fl.getChildAt(1).startAnimation(fadeUd);
+      fadeUd.setAnimationListener(new AnimationAdapter() {
+        @Override
+        public void onAnimationEnd(Animation animation) {
+          fl.getChildAt(0).setVisibility(View.VISIBLE);
+          fl.getChildAt(1).setVisibility(View.INVISIBLE);
+        }
+      });
+    }
+    forrigePosition = position;
   }
 
   public void setIndicatorColor(int indicatorColor) {
