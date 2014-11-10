@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
+import dk.dr.radio.data.DramaOgBog;
 import dk.dr.radio.data.Programserie;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.CirclePageIndicator;
@@ -36,26 +37,22 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable, AdapterV
   private CirclePageIndicator karruselIndikator;
   private PinnedSectionListView listView;
 
-  final static String[] listesektioner = { "RADIO DRAMA", "LYDBØGER"};
-  boolean[] listesektionerUdvidet = new boolean[listesektioner.length];
+  boolean[] listesektionerUdvidet = new boolean[DramaOgBog.overskrifter.length];
 
   @Override
   public void run() {
     karruselListe.clear();
     liste.clear();
-    if (DRData.instans.dramaOgBog.liste!=null) {
-      liste.add(listesektioner[0]);
-      int n=0;
-      int halvvejs = DRData.instans.dramaOgBog.liste.size()/2;
-      for (Programserie programserie : DRData.instans.dramaOgBog.liste) {
-        n++;
-        if (programserie.antalUdsendelser>0) karruselListe.add(programserie);
-        // Vi lader som om første halvdel er radio drama, anden halvdel er lydbøger
-        if (n<halvvejs && (n<3 || listesektionerUdvidet[0])) liste.add(programserie);
-        if (n==halvvejs && !listesektionerUdvidet[0]) liste.add(0); // VIS FLERE
-        if (n==halvvejs) liste.add(listesektioner[1]); // LYDBØGER
-        if (n>halvvejs && (n<3+halvvejs || listesektionerUdvidet[1])) liste.add(programserie);
-        if (n==DRData.instans.dramaOgBog.liste.size()-1 && !listesektionerUdvidet[1]) liste.add(1); // VIS FLERE
+    if (DRData.instans.dramaOgBog.lister !=null) {
+      for (int sektionsnummer = 0; sektionsnummer < DramaOgBog.overskrifter.length; sektionsnummer++) {
+        liste.add(DramaOgBog.overskrifter[sektionsnummer]+" ("+DRData.instans.dramaOgBog.lister[sektionsnummer].size()+")");
+        int n = 0;
+        for (Programserie programserie : DRData.instans.dramaOgBog.lister[sektionsnummer]) {
+          n++;
+          if (programserie.antalUdsendelser > 0) karruselListe.add(programserie);
+          if (n < 3  || listesektionerUdvidet[sektionsnummer]) liste.add(programserie);
+          if (n == 3 && !listesektionerUdvidet[sektionsnummer]) liste.add(sektionsnummer); // VIS FLERE
+        }
       }
     }
     if (karruselAdapter != null) {
@@ -107,7 +104,7 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable, AdapterV
   Runnable skiftTilNæsteIKarrusellen = new Runnable() {
     @Override
     public void run() {
-      if (viewPager==null) return;
+      if (viewPager==null || karruselListe.size()==0) return;
       int n = (viewPager.getCurrentItem() + 1) % karruselListe.size();
       viewPager.setCurrentItem(n, true);
       App.forgrundstråd.removeCallbacks(skiftTilNæsteIKarrusellen);

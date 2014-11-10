@@ -35,7 +35,8 @@ public class Radiodrama_frag_SLETTES extends Basisfragment implements ViewPager.
   @Override
   public void run() {
     liste.clear();
-    if (DRData.instans.dramaOgBog.liste!=null) liste.addAll(DRData.instans.dramaOgBog.liste);
+    if (DRData.instans.dramaOgBog.lister !=null) liste.addAll(DRData.instans.dramaOgBog.lister[0]);
+    if (DRData.instans.dramaOgBog.lister !=null) liste.addAll(DRData.instans.dramaOgBog.lister[1]);
     if (adapter != null) {
       if (viewPager.getCurrentItem() >= liste.size()) {
         viewPager.setCurrentItem(0);
