@@ -20,14 +20,16 @@
 
     <include
         layout="@layout/kanal_elem0_inkl_billede_titel"
+        android:layout_marginLeft="@dimen/kanalmargen"
+        android:layout_marginRight="@dimen/kanalmargen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingLeft="@dimen/kanalmargen"
+        android:paddingRight="@dimen/kanalmargen"
         android:layout_height="wrap_content">
 
       <LinearLayout

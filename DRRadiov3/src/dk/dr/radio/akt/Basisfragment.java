@@ -118,7 +118,7 @@ Forhold 1:1 for playlistebilleder - og de skal være 1/3-del i højden af de sto
     halvbreddebilleder = metrics.heightPixels < metrics.widthPixels;
     billedeBr = metrics.widthPixels;
     if (halvbreddebilleder) billedeBr = billedeBr / 2; // Halvbreddebilleder ved liggende visning
-    billedeHø = billedeBr * Basisfragment.højde9 / Basisfragment.bredde16;
+    billedeHø = billedeBr * højde9 / bredde16;
   }
 
 
