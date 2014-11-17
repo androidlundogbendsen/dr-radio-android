@@ -135,7 +135,7 @@ public class Grunddata {
     Log.d("tjekUdelukFraHLS(" + model_og_version);
 
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH && !App.testFraMain()) {
-      // Android 2 (og 3) understøtter det ikke
+      Log.d("tjekUdelukFraHLS() - Android 2 (og 3) understøtter ikke HLS");
       udelukHLS = true;
       return;
     }

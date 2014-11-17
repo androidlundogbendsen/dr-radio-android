@@ -35,7 +35,7 @@
         android:entryValues="@array/lydformat_kode"/>
   </PreferenceCategory>
 
-  <PreferenceCategory android:title="Strømforbrug - tjek også telefonens indstillinger"
+  <PreferenceCategory android:title="Strømforbrug (tjek også telefonens indstillinger)"
                       android:summary="Afspilning kan påvirkes af strømbesparende funktioner. Udover nedenstående, så tjek også de strømbesparelse i telefonens generelle indstillinger.">
 
     <CheckBoxPreference
@@ -58,7 +58,8 @@
         android:key="hentKunOverWifi"
         android:title="Hent kun på wifi"
         android:defaultValue="false"
-        android:summaryOn="Udsendelser hentes fremover kun over wifi"/>
+        android:summaryOn="Udsendelser hentes fremover kun over wifi"
+        android:summaryOff="Udsendelser hentes både over telefonnet (3G) og wifi"/>
 
     <ListPreference
         android:key="placeringAfHentedeFiler"

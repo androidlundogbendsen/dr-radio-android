@@ -20,6 +20,7 @@ package dk.dr.radio.akt;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -56,7 +57,7 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
     addPreferencesFromResource(R.xml.indstillinger_udvikling);
 
     // Fix for crash på Android 2.1 - se https://www.bugsense.com/dashboard/project/cd78aa05/errors/1474018028
-    if (DRData.instans.hentedeUdsendelser.virker()) try {
+    if (DRData.instans.hentedeUdsendelser.virker()) {
 
       // Find lydformat
       lydformatlp = (ListPreference) findPreference(Lydkilde.INDST_lydformat);
@@ -64,45 +65,64 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
       lydformatlp.setOnPreferenceChangeListener(this);
       aktueltLydformat = lydformatlp.getValue();
 
-      ArrayList<File> l = HentedeUdsendelser.findMuligeEksternLagerstier();
-      String[] visVærdi = new String[l.size()];
-      String[] værdi = new String[l.size()];
-      for (int i = 0; i < l.size(); i++)
-        try {
-          File dir = l.get(i);
-          String dirs = dir.toString();
-          værdi[i] = dirs;
-          visVærdi[i] = dir.getParent() + " (ikke tilgængelig)";
-          // Find ledig plads
-          boolean fandtesFørMkdirs = dir.exists();
-          dir.mkdirs();
-          StatFs stat = new StatFs(dirs);
-          long blockSize = stat.getBlockSize();
-          long availableBlocks = stat.getAvailableBlocks();
-          if (!fandtesFørMkdirs) dir.delete(); // ryd op
-          visVærdi[i] = dir.getParent() + " (" + Formatter.formatFileSize(App.instans, availableBlocks * blockSize) + " ledig)";
-        } catch (Exception e) {
-          Log.e(e);
+      new AsyncTask() {
+        public String[] visVærdi;
+        public String[] værdi;
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+          try {
+            ArrayList<File> l = HentedeUdsendelser.findMuligeEksternLagerstier();
+            visVærdi = new String[l.size()];
+            værdi = new String[l.size()];
+            for (int i = 0; i < l.size(); i++)
+              try {
+                File dir = l.get(i);
+                String dirs = dir.toString();
+                værdi[i] = dirs;
+                visVærdi[i] = dir.getParent() + " (ikke tilgængelig)";
+                // Find ledig plads
+                boolean fandtesFørMkdirs = dir.exists();
+                dir.mkdirs();
+                StatFs stat = new StatFs(dirs);
+                long blockSize = stat.getBlockSize();
+                long availableBlocks = stat.getAvailableBlocks();
+                if (!fandtesFørMkdirs) dir.delete(); // ryd op
+                visVærdi[i] = dir.getParent() + "\n(" + Formatter.formatFileSize(App.instans, availableBlocks * blockSize) + " ledig)";
+              } catch (Exception e) {
+                Log.e(e);
+              }
+          } catch (Exception ex) {
+            Log.rapporterFejl(ex); // Indsat 17 nov 2014 - fjernes i 2015
+          }
+          return null;
         }
-      ListPreference lp = (ListPreference) findPreference(HentedeUdsendelser.NØGLE_placeringAfHentedeFiler);
-      Log.d("Indstillinger_akt placeringAfHentedeFiler " + Arrays.toString(værdi) + Arrays.toString(visVærdi));
-      lp.setEntries(visVærdi);
-      lp.setEntryValues(værdi);
-      if (visVærdi.length > 0) {
-        if (!App.prefs.contains(HentedeUdsendelser.NØGLE_placeringAfHentedeFiler)) {
-          lp.setValueIndex(0); // Værdi nummer 0 er forvalgt
+
+        @Override
+        protected void onPostExecute(Object o) {
+          try {
+            ListPreference lp = (ListPreference) findPreference(HentedeUdsendelser.NØGLE_placeringAfHentedeFiler);
+            Log.d("Indstillinger_akt placeringAfHentedeFiler " + Arrays.toString(værdi) + Arrays.toString(visVærdi));
+            lp.setEntries(visVærdi);
+            lp.setEntryValues(værdi);
+            if (visVærdi.length > 0) {
+              if (!App.prefs.contains(HentedeUdsendelser.NØGLE_placeringAfHentedeFiler)) {
+                lp.setValueIndex(0); // Værdi nummer 0 er forvalgt
+              }
+            } else {
+              lp.setEnabled(false);
+              int tilladelse = App.instans.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, App.instans.getPackageName());
+              if (tilladelse != PackageManager.PERMISSION_GRANTED) {
+                lp.setSummary(lp.getSummary() + " Fejl - tilladelse til eksternt lager mangler (du skal opdatere app'en)");
+              } else {
+                lp.setSummary(lp.getSummary() + " Fejl - adgang til eksternt lager mangler (indsæt SD-kort)");
+              }
+            }
+          } catch (Exception ex) {
+            Log.rapporterFejl(ex); // Indsat 17 nov 2014 - fjernes i 2015
+          }
         }
-      } else {
-        lp.setEnabled(false);
-        int tilladelse = App.instans.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, App.instans.getPackageName());
-        if (tilladelse != PackageManager.PERMISSION_GRANTED) {
-          lp.setSummary(lp.getSummary() + " Fejl - tilladelse til eksternt lager mangler (du skal opdatere app'en)");
-        } else {
-          lp.setSummary(lp.getSummary() + " Fejl - adgang til eksternt lager mangler (indsæt SD-kort)");
-        }
-      }
-    } catch (Exception ex) {
-      Log.rapporterFejl(ex);
+      }.execute();
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) try {
