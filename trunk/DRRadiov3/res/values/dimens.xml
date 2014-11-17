@@ -14,6 +14,7 @@
 
   <!-- vi har brug for højden på afspilleren når den er udvidet -->
   <dimen name="afspiller_udvidet_højde_gæt">105dp</dimen>
+  <dimen name="kanalmargen">16dp</dimen>
 
 
   <string name="akamaistatistik_device">Phone - Android</string>
