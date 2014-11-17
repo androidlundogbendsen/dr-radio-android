@@ -28,8 +28,8 @@
         android:entryValues="@array/lydkvalitet_kode"/>
     <ListPreference
         android:key="lydformat"
-        android:title="Format"
-        android:summary="Hvis det forvalgte format ikke virker kan du prøve et andet"
+        android:title="Lydformat"
+        android:summary="Hvis du ikke kan få lyd så prøv at vælge MP3 (Shoutcast) her"
         android:defaultValue="auto"
         android:entries="@array/lydformat_tekst"
         android:entryValues="@array/lydformat_kode"/>
@@ -41,14 +41,14 @@
     <CheckBoxPreference
         android:key="wifilås" android:title="Hold wifi tændt"
         android:defaultValue="true"
-        android:summaryOn="Undlad at skrue ned for wifi (bruger mere batteri)"
+        android:summaryOn="Hold internetforbindelse fuldt funktionsdygtig (bruger mere batteri)"
         android:summaryOff="Tillad enheden at skrue ned for wifi. Kan forårsage at afspilningen hakker."/>
 
     <CheckBoxPreference
-        android:key="holdSkærmTændt"
-        android:title="Hold skærmen tændt"
-        android:defaultValue="false"
-        android:summary="Hakker afspilningen efter at skærmen slukker så prøv at krydse af her (bruger mere batteri). Virker ikke hvis du selv slukker skærmen."/>
+        android:key="cpulås" android:title="Hold CPU tændt"
+        android:defaultValue="true"
+        android:summaryOn="Hold CPU aktiv (bruger mere batteri)"
+        android:summaryOff="Tillad enheden at skrue ned for CPU. Kan forårsage at afspilningen hakker."/>
 
   </PreferenceCategory>
 

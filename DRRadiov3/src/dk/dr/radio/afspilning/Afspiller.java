@@ -97,14 +97,12 @@ public class Afspiller {
   private static void sætMediaPlayerLytter(MediaPlayerWrapper mediaPlayer, MediaPlayerLytter lytter) {
     mediaPlayer.setMediaPlayerLytter(lytter);
     if (lytter != null) {
-      if (App.prefs.getBoolean(NØGLEholdSkærmTændt, false))
-        mediaPlayer.setWakeMode(App.instans,PowerManager.SCREEN_DIM_WAKE_LOCK);
-      else if (App.prefs.getBoolean("partielwakelockPåMediaplayer", true))
+      // http://developer.android.com/guide/topics/media/mediaplayer.html#wakelocks
+      if (App.prefs.getBoolean("cpulås", true))
         mediaPlayer.setWakeMode(App.instans,PowerManager.PARTIAL_WAKE_LOCK);
     }
   }
 
-  static final String NØGLEholdSkærmTændt = "holdSkærmTændt";
   private WifiLock wifilock = null;
 
   /**
@@ -119,12 +117,14 @@ public class Afspiller {
     // kanalNavn = p.getString("kanalNavn", "P1");
     // lydUrl = p.getString("lydUrl", "rtsp://live-rtsp.dr.dk/rtplive/_definst_/Channel5_LQ.stream");
 
+    /*
     // Gem værdi hvis den ikke findes, sådan at indstillingsskærm viser det rigtige
     if (!App.prefs.contains(NØGLEholdSkærmTændt)) {
       // Xperia Play har brug for at holde skærmen tændt. Muligvis også andre....
       boolean holdSkærmTændt = "R800i".equals(Build.MODEL);
       App.prefs.edit().putBoolean(NØGLEholdSkærmTændt, holdSkærmTændt).commit();
     }
+    */
 
     wifilock = ((WifiManager) App.instans.getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "DR Radio");
     wifilock.setReferenceCounted(false);
@@ -154,7 +154,6 @@ public class Afspiller {
   private long onErrorTællerNultid;
 
   public void startAfspilning() {
-    vækningIGang = false;
     if (lydkilde.hentetStream == null && !App.erOnline()) {
       App.kortToast("Internetforbindelse mangler");
       return;
@@ -440,6 +439,7 @@ public class Afspiller {
       vækkeurWakeLock = null;
     }
     lyd_afspiller_stop.start();
+    vækningIGang = false;
     App.fjernbetjening.afregistrér();
   }
 
