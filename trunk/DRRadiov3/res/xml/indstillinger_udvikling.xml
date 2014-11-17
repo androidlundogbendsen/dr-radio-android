@@ -10,16 +10,6 @@
 
     <PreferenceScreen android:dependency="udviklerEkstra"
                       android:title="Til udvikling og fejlfinding">
-      <!--       // XXX TODO Eksperiment - skal ud igen -->
-      <CheckBoxPreference
-          android:key="wakelockaltid" android:title="Hold telefon tændt altid"
-          android:summaryOn="test"/>
-
-      <CheckBoxPreference
-          android:key="partielwakelockPåMediaplayer" android:title="wakelockPåMediaplayer"
-          android:defaultValue="true"
-          />
-
 
       <CheckBoxPreference
           android:key="exoplayer" android:title="ExoPlayer"
@@ -68,6 +58,21 @@
           android:summaryOn="Send statistik til DR, om hvad du lytter til. Mener du at app'en tager for meget strøm kan du slå det fra og rapportere om det gør en forskel"
           android:summaryOff="Indsamler ikke statisik. Rapportér venligst om det gør en forskel for dig. Du skal genstarte app'en (evt telefonen) og se meddelelse ved opstart før det er trådt i kraft."
           />
+
+      <!--
+
+        <CheckBoxPreference
+            android:key="wakelockaltid" android:title="Hold telefon tændt altid"
+            android:summaryOn="test"/>
+
+        <CheckBoxPreference
+            android:key="holdSkærmTændt"
+            android:title="Hold skærmen tændt"
+            android:defaultValue="false"
+            android:summary="Hakker afspilningen efter at skærmen slukker så prøv at krydse af her (bruger mere batteri). Virker ikke hvis du selv slukker skærmen."/>
+      </PreferenceScreen>
+      -->
+
     </PreferenceScreen>
   </PreferenceCategory>
 </PreferenceScreen>
