@@ -440,7 +440,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   public void onDestroyView() {
     App.volleyRequestQueue.cancelAll(this);
     afspiller.observatører.remove(this);
-    DRData.instans.hentedeUdsendelser.observatører.add(this);
+    DRData.instans.hentedeUdsendelser.observatører.remove(this);
     DRData.instans.favoritter.observatører.remove(opdaterFavoritter);
     super.onDestroyView();
   }

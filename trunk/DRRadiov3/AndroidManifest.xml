@@ -3,7 +3,7 @@
           package="dk.dr.radio.v3"
           android:installLocation="auto"
           android:versionCode="1"
-          android:versionName="3.1.8 10.nov sektioker i drama og bog">
+          android:versionName="3.1.9 18.nov fix læk oma">
 
 <uses-sdk
       android:minSdkVersion="7"
