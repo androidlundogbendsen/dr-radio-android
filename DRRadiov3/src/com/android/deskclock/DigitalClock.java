@@ -31,7 +31,7 @@ import android.widget.TextView;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 
-import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.v3.R;
 
 /**
@@ -71,6 +71,7 @@ public class DigitalClock extends RelativeLayout {
 
     AmPm(View parent) {
       mAmPm = (TextView) parent.findViewById(R.id.am_pm);
+      mAmPm.setTypeface(App.skrift_gibson);
 
       String[] ampm = new DateFormatSymbols().getAmPmStrings();
       mAmString = ampm[0];
@@ -121,7 +122,7 @@ public class DigitalClock extends RelativeLayout {
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
 
-    Log.d("onAttachedToWindow " + this);
+    //Log.d("onAttachedToWindow " + this);
 
     if (mAttached) return;
     mAttached = true;

@@ -481,7 +481,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         });
         */
     }
-    t = (FrameLayout) tabsContainer.getChildAt(position);
+    t = tabsContainer.getChildAt(position);
     if (t instanceof FrameLayout) {
       final FrameLayout fl = (FrameLayout) t;
       fl.getChildAt(0).startAnimation(fadeInd);
