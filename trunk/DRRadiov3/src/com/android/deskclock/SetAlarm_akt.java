@@ -106,6 +106,7 @@ public class SetAlarm_akt extends PreferenceActivity implements Preference.OnPre
     if (alarm == null) {
       // No alarm means create a new alarm.
       alarm = new Alarm();
+      alarm.kanalo = DRData.instans.grunddata.forvalgtKanal.kode;
     }
     mOriginalAlarm = alarm;
 
@@ -341,13 +342,6 @@ public class SetAlarm_akt extends PreferenceActivity implements Preference.OnPre
    * Display a toast that tells the user how long until the alarm
    * goes off.  This helps prevent "am/pm" mistakes.
    */
-  static void popAlarmSetToast(Context context, int hour, int minute,
-                               Alarm.DaysOfWeek daysOfWeek) {
-    popAlarmSetToast(context,
-        Alarms.calculateAlarm(hour, minute, daysOfWeek)
-            .getTimeInMillis());
-  }
-
   static void popAlarmSetToast(Context context, long timeInMillis) {
     String toastText = formatToast(context, timeInMillis);
     Toast toast = Toast.makeText(context, toastText, Toast.LENGTH_LONG);

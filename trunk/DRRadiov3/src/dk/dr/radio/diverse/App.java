@@ -435,7 +435,7 @@ public class App extends Application {
     boolean nu = erIGang > 0;
     if (fejlsøgning) Log.d("erIGang = " + erIGang);
     if (erIGang < 0) {
-      Log.e(new IllegalStateException("erIGang er " + erIGang));
+      if (App.EMULATOR) Log.e(new IllegalStateException("erIGang er " + erIGang));
       erIGang = 0;
     }
     if (før != nu && aktivitetIForgrunden != null) forgrundstråd.post(setProgressBarIndeterminateVisibility);

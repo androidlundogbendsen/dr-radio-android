@@ -60,10 +60,10 @@ public class AlarmClock_akt extends Activity implements OnItemClickListener {
   private void updateAlarm(boolean enabled, Alarm alarm) {
     alarm.enabled = enabled;
     if (enabled) {
-      SetAlarm_akt.popAlarmSetToast(this, alarm.hour, alarm.minutes,
-          alarm.daysOfWeek);
+      alarm.time = Alarms.calculateAlarm(alarm.hour, alarm.minutes, alarm.daysOfWeek).getTimeInMillis();
+      SetAlarm_akt.popAlarmSetToast(this, alarm.time);
     }
-    Alarms.gemAlarmer(this);
+    Alarms.setAlarm(this, alarm);
   }
 
   private class AlarmTimeAdapter extends BaseAdapter {
@@ -174,11 +174,11 @@ public class AlarmClock_akt extends Activity implements OnItemClickListener {
 
       case R.id.enable_alarm: {
         alarm.enabled = !alarm.enabled;
-        Alarms.setAlarm(this, alarm);
         if (alarm.enabled) {
-          SetAlarm_akt.popAlarmSetToast(this, alarm.hour, alarm.minutes,
-              alarm.daysOfWeek);
+          alarm.time = Alarms.calculateAlarm(alarm.hour, alarm.minutes, alarm.daysOfWeek).getTimeInMillis();
+          SetAlarm_akt.popAlarmSetToast(this, alarm.time);
         }
+        Alarms.setAlarm(this, alarm);
         adapter.notifyDataSetChanged();
         return true;
       }

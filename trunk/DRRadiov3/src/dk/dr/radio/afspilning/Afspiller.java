@@ -738,7 +738,8 @@ public class Afspiller {
             handler.postDelayed(startAfspilningIntern, ventetid);
 
             if (vækningIGang) {
-              vibru(1000);
+              if (n<10) vibru(1000);
+              else ringDenAlarm();
             }
 
           } else {
