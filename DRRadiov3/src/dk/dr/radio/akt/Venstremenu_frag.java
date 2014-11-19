@@ -33,7 +33,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import dk.dr.exoplayer.DRFullPlayerActivity;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
@@ -492,7 +491,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
 
         aq.typeface(App.skrift_gibson).textSize(12);
 
-
+/*
         tilføj(R.layout.venstremenu_elem_overskrift, new Runnable() {
           @Override
           public void run() {
@@ -509,6 +508,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
           }
         });
         aq.id(R.id.tekst).text("ExoPlayer DR2");
+        */
       }
     }
 

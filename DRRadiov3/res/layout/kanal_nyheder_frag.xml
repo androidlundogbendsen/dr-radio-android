@@ -17,7 +17,10 @@
       android:scaleType="centerInside"
       android:src="@drawable/dr_lyd2_stor"
       tools:ignore="ContentDescription"/>
-
+<!-- hvis vi bruger et mindre ikon:
+      android:src="@drawable/dri_lyd2_graa40"
+      tools:ignore="ContentDescription" android:adjustViewBounds="true" android:cropToPadding="false"/>
+-->
 
   <TextView
       android:id="@+id/titel"

@@ -133,9 +133,10 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   @Override
   public void onDestroyView() {
     super.onDestroyView();
-    //TODO: rod = null; aq=null; listView = null; aktuelUdsendelseViewholder = null;
     DRData.instans.afspiller.observatører.remove(this);
     App.netværk.observatører.remove(this);
+    listView.setAdapter(null); // Fix hukommelseslæk
+    rod = null; listView = null; aktuelUdsendelseViewholder = null;
   }
 
 
@@ -648,7 +649,12 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
   @Override
   public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
-    Udsendelse u = (Udsendelse) liste.get(position);
+    Object o = liste.get(position);
+    if (!(o instanceof Udsendelse)) { // fix for fejl set i abetest 18.okt 2014
+      Log.rapporterFejl(new IllegalStateException("ikke en udsendelse: "+o+" for pos="+position));
+      return;
+    }
+    Udsendelse u = (Udsendelse) o;
     if (position == 0 || position == liste.size() - 1) {
       hentSendeplanForDag(u.startTid);
       v.findViewById(R.id.titel).setVisibility(View.GONE);
