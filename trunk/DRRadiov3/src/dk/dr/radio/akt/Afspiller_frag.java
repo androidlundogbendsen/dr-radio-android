@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,10 +23,12 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
 
+import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
@@ -37,7 +40,7 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-public class Afspiller_frag extends Basisfragment implements Runnable, View.OnClickListener {
+public class Afspiller_frag extends Basisfragment implements Runnable, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
   private AQuery aq;
   private ImageView startStopKnap;
   private ProgressBar progressbar;
@@ -47,57 +50,11 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
   private View udvidSkjulOmråde;
   private View rod;
   private View indhold_overskygge;
-/*
-  public View starttidbjælke;
-  public View slutttidbjælke;
 
-  {
-    Viewholder vh = aktuelUdsendelseViewholder;
-    if (!vh.starttidbjælke.isShown() || !getUserVisibleHint()) {
-      if (App.fejlsøgning) Log.d(kanal + " opdaterAktuelUdsendelseViews starttidbjælke ikke synlig");
-      return;
-    }
-    opdaterAktuelUdsendelseViews(vh);
-  }
-
-  private void opdaterAktuelUdsendelseViews(Viewholder vh) {
-    try {
-      Udsendelse u = vh.udsendelse;
-      long passeret = App.serverCurrentTimeMillis() - u.startTid.getTime();
-      long længde = u.slutTid.getTime() - u.startTid.getTime();
-      int passeretPct = længde > 0 ? (int) (passeret * 100 / længde) : 0;
-      //Log.d(getKanal.kode + " passeretPct=" + passeretPct + " af længde=" + længde);
-      LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) vh.starttidbjælke.getLayoutParams();
-      lp.weight = passeretPct;
-      vh.starttidbjælke.setLayoutParams(lp);
-
-      lp = (LinearLayout.LayoutParams) vh.slutttidbjælke.getLayoutParams();
-      lp.weight = 100 - passeretPct;
-      vh.slutttidbjælke.setLayoutParams(lp);
-      if (passeretPct >= 100) {
-        // Hop til næste udsendelse - da det kan ske at denne metode kaldes via ListViews kald til getView()
-        // skal kaldet vente, sådan at vi er sikre på at det ikke sker mens listen er i gang med at rendere
-        final boolean starttidbjælkeVarSynlig = (vh.starttidbjælke.isShown());
-        App.forgrundstråd.post(new Runnable() {
-          @Override
-          public void run() {
-            opdaterListe();
-            if (starttidbjælkeVarSynlig) rulBlødtTilAktuelUdsendelse();
-          }
-        });
-      }
-    } catch (Exception e) {
-      Log.rapporterFejl(e);
-    }
-  }
-
-
-
-    seekBarTekst = aq.id(R.id.seekBarTekst).typeface(App.skrift_gibson).getTextView();
-    seekBarMaxTekst = aq.id(R.id.seekBarMaxTekst).typeface(App.skrift_gibson).getTextView();
-    seekBar = aq.id(R.id.seekBar).getSeekBar();
-    seekBar.setOnSeekBarChangeListener(this);
-
+  private boolean seekBarBetjenesAktivt;
+  private TextView starttid;
+  private TextView slutttid;
+  private SeekBar seekBar;
 
 
 
@@ -106,46 +63,44 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     @Override
     public void run() {
       App.forgrundstråd.removeCallbacks(this);
-      if (seekBar == null) return; // det er set ske i abetest
-      boolean denneUdsSpiller = udsendelse.equals(afspiller.getLydkilde()) && afspiller.getAfspillerstatus() != Status.STOPPET;
-      if (!denneUdsSpiller || App.accessibilityManager.isEnabled()) {
-        seekBar.setVisibility(View.GONE);
-        seekBarTekst.setVisibility(View.GONE);
-        seekBarMaxTekst.setVisibility(View.GONE);
-        return;
-      }
+      App.forgrundstråd.postDelayed(this, 1000);
       try {
+        Afspiller afspiller = DRData.instans.afspiller;
+        /*
+        boolean denneUdsSpiller = udsendelse.equals(afspiller.getLydkilde()) && afspiller.getAfspillerstatus() != Status.STOPPET;
+        if (!denneUdsSpiller || App.accessibilityManager.isEnabled()) {
+          return;
+        }
+        */
+        Udsendelse u = DRData.instans.afspiller.getLydkilde().getUdsendelse();
+        long passeret = App.serverCurrentTimeMillis() - u.startTid.getTime();
+        long længde = u.slutTid.getTime() - u.startTid.getTime();
+        int passeretPct = længde > 0 ? (int) (passeret * 100 / længde) : 0;
+        Log.d(u + " passeretPct=" + passeretPct + " af længde=" + længde);
+        seekBar.setProgress(passeretPct);
         if (!seekBarBetjenesAktivt) { // Kun hvis vi ikke er i gang med at søge i udsendelsen
           int længdeMs = afspiller.getDuration();
           if (længdeMs > 0) {
             seekBar.setVisibility(View.VISIBLE);
             seekBar.setEnabled(true);
             seekBar.setMax(længdeMs);
-            seekBarTekst.setVisibility(View.VISIBLE);
-            seekBarMaxTekst.setVisibility(View.VISIBLE);
-            seekBarMaxTekst.setText(DateUtils.formatElapsedTime(længdeMs / 1000));
+            starttid.setVisibility(View.VISIBLE);
+            slutttid.setVisibility(View.VISIBLE);
+            slutttid.setText(DateUtils.formatElapsedTime(længdeMs / 1000));
             int pos = afspiller.getCurrentPosition();
             Log.d("   pos " + pos + "   " + længdeMs);
             if (pos > 0) { // pos=0 rapporteres efter onSeekComplete, det skal ignoreres
               seekBarTekst_opdater(pos);
               seekBar.setProgress(pos);
-              // Find og fremhævet nummeret der spilles lige nu
-              int spillerNuIndexNy = udsendelse.findPlaylisteElemTilTid(pos, playlisteElemDerSpillerNuIndex);
-              if (playlisteElemDerSpillerNuIndex != spillerNuIndexNy) {
-                playlisteElemDerSpillerNuIndex = spillerNuIndexNy;
-                playlisteElemDerSpillerNu = playlisteElemDerSpillerNuIndex < 0 ? null : udsendelse.playliste.get(playlisteElemDerSpillerNuIndex);
-                adapter.notifyDataSetChanged();
-              }
             }
           } else {
             seekBar.setVisibility(View.VISIBLE);
             seekBar.setEnabled(false);
             seekBar.setProgress(0);
-            seekBarTekst.setVisibility(View.INVISIBLE);
-            seekBarMaxTekst.setVisibility(View.INVISIBLE);
+            starttid.setVisibility(View.INVISIBLE);
+            slutttid.setVisibility(View.INVISIBLE);
           }
         }
-        App.forgrundstråd.postDelayed(this, 1000);
       } catch (Exception e) {
         Log.rapporterFejl(e);
       }
@@ -162,10 +117,10 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
   }
 
   private void seekBarTekst_opdater(int progress) {
-    seekBarTekst.setText(DateUtils.formatElapsedTime(progress / 1000));
+    starttid.setText(DateUtils.formatElapsedTime(progress / 1000));
     int to = seekBar.getThumbOffset();
     int x = (int) ((long) (seekBar.getWidth() - to * 2) * progress / seekBar.getMax());
-    seekBarTekst.setPadding(x, 0, 0, 0);
+    starttid.setPadding(x, 0, 0, 0);
   }
 
 
@@ -182,14 +137,17 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     //seekBarTekst.setVisibility(View.INVISIBLE);
     App.forgrundstråd.postDelayed(opdaterSeekBar, 1000);
   }
-, SeekBar.OnSeekBarChangeListener
-*/
+
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     Log.d("Viser fragment " + this);
     rod = inflater.inflate(R.layout.afspiller_frag, container, false);
     aq = new AQuery(rod);
+    starttid = aq.id(R.id.startid).typeface(App.skrift_gibson).getTextView();
+    slutttid = aq.id(R.id.slutttid).typeface(App.skrift_gibson).getTextView();
+    seekBar = aq.id(R.id.seekBar).getSeekBar();
+    seekBar.setOnSeekBarChangeListener(this);
     rod.setOnClickListener(this); // Fang klik på baggrunden, så de ikke går til det underliggende lag
     startStopKnap = aq.id(R.id.startStopKnap).clicked(this).getImageView();
     udvidSkjulKnap = aq.id(R.id.udvidSkjulKnap).getImageView();
@@ -231,7 +189,6 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     DRData.instans.afspiller.forbindelseobservatører.add(this);
     DRData.instans.afspiller.positionsobservatører.add(this);
     run(); // opdatér views
-
     if (App.accessibilityManager.isEnabled()) setHasOptionsMenu(true);
     return rod;
   }
@@ -267,6 +224,9 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         progressbar.setVisibility(View.INVISIBLE);
         metainformation.setText(k.navn);
         metainformation.setTextColor(App.color.grå40);
+        seekBar.setVisibility(View.GONE);
+        starttid.setVisibility(View.GONE);
+        slutttid.setVisibility(View.GONE);
         break;
       case FORBINDER:
         startStopKnapNyImageResource = R.drawable.afspiller_pause;
@@ -407,6 +367,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
 
   public void udvidSkjulOmråde() {
     if (!viserUdvidetOmråde()) {
+      opdaterSeekBar.run();
       indhold_overskygge.setOnTouchListener(indhold_overskygge_onTouchListener);
       int forrigeNæsteSynlighed = DRData.instans.afspiller.getLydkilde().erDirekte() ? View.GONE : View.VISIBLE;
       aq.id(R.id.forrige).visibility(forrigeNæsteSynlighed).id(R.id.næste).visibility(forrigeNæsteSynlighed);
@@ -435,6 +396,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         udvidSkjulOmråde.setVisibility(View.VISIBLE);
       }
     } else {
+      App.forgrundstråd.removeCallbacks(opdaterSeekBar);
       indhold_overskygge.setOnTouchListener(null);
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
         rod.animate().translationY(udvidSkjulOmråde.getHeight());
