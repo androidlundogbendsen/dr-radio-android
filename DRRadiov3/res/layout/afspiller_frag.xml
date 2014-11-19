@@ -97,46 +97,42 @@
         android:layout_width="match_parent" android:layout_height="3dp"/>
 
 
-    <FrameLayout
-        android:layout_width="match_parent" android:layout_height="wrap_content">
-
-
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="right"
-          android:layout_marginRight="16dp"
-          android:textAppearance="?android:attr/textAppearanceSmall"
-          android:text="42:30"
-          android:focusable="false"
-          android:importantForAccessibility="no"
-          android:contentDescription="@null"
-          android:singleLine="true"
-          android:id="@+id/seekBarMaxTekst"/>
-
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginLeft="16dp"
-          android:textAppearance="?android:attr/textAppearanceSmall"
-          android:text="2:30"
-          android:focusable="false"
-          android:importantForAccessibility="no"
-          android:contentDescription="@null"
-          android:singleLine="true"
-          android:id="@+id/seekBarTekst"/>
-    </FrameLayout>
-
-    <SeekBar
+    <LinearLayout android:orientation="horizontal"
         android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="8dp"
-        android:id="@+id/seekBar"
-        android:max="100"
-        android:progress="60"
-        android:focusable="false"
-        android:progressDrawable="@drawable/seekbar_progress"/>
+        android:gravity="center_vertical">
+      <TextView
+          android:id="@+id/startid"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="16.10"
+          android:textColor="@color/grå40"
+          android:textSize="12sp"
+          android:layout_marginLeft="4dp"
+          tools:ignore="HardcodedText"/>
+
+      <SeekBar
+          android:layout_width="0dp" android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:id="@+id/seekBar"
+          android:max="100"
+          android:progress="60"
+          android:focusable="false"
+          android:progressDrawable="@drawable/seekbar_progress"
+          />
+
+      <TextView
+          android:id="@+id/slutttid"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="16.30"
+          android:importantForAccessibility="no"
+          android:layout_marginRight="4dp"
+          android:textColor="@color/grå20"
+          android:textSize="12sp"
+          tools:ignore="HardcodedText"/>
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -166,13 +162,13 @@
     <View
         android:background="@drawable/stiplet_linje"
         android:layerType="software"
-        android:layout_margin="4dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_width="match_parent" android:layout_height="3dp"/>
 
 
     <LinearLayout
         android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 

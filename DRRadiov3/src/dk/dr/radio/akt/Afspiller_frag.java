@@ -47,6 +47,143 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
   private View udvidSkjulOmråde;
   private View rod;
   private View indhold_overskygge;
+/*
+  public View starttidbjælke;
+  public View slutttidbjælke;
+
+  {
+    Viewholder vh = aktuelUdsendelseViewholder;
+    if (!vh.starttidbjælke.isShown() || !getUserVisibleHint()) {
+      if (App.fejlsøgning) Log.d(kanal + " opdaterAktuelUdsendelseViews starttidbjælke ikke synlig");
+      return;
+    }
+    opdaterAktuelUdsendelseViews(vh);
+  }
+
+  private void opdaterAktuelUdsendelseViews(Viewholder vh) {
+    try {
+      Udsendelse u = vh.udsendelse;
+      long passeret = App.serverCurrentTimeMillis() - u.startTid.getTime();
+      long længde = u.slutTid.getTime() - u.startTid.getTime();
+      int passeretPct = længde > 0 ? (int) (passeret * 100 / længde) : 0;
+      //Log.d(getKanal.kode + " passeretPct=" + passeretPct + " af længde=" + længde);
+      LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) vh.starttidbjælke.getLayoutParams();
+      lp.weight = passeretPct;
+      vh.starttidbjælke.setLayoutParams(lp);
+
+      lp = (LinearLayout.LayoutParams) vh.slutttidbjælke.getLayoutParams();
+      lp.weight = 100 - passeretPct;
+      vh.slutttidbjælke.setLayoutParams(lp);
+      if (passeretPct >= 100) {
+        // Hop til næste udsendelse - da det kan ske at denne metode kaldes via ListViews kald til getView()
+        // skal kaldet vente, sådan at vi er sikre på at det ikke sker mens listen er i gang med at rendere
+        final boolean starttidbjælkeVarSynlig = (vh.starttidbjælke.isShown());
+        App.forgrundstråd.post(new Runnable() {
+          @Override
+          public void run() {
+            opdaterListe();
+            if (starttidbjælkeVarSynlig) rulBlødtTilAktuelUdsendelse();
+          }
+        });
+      }
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
+    }
+  }
+
+
+
+    seekBarTekst = aq.id(R.id.seekBarTekst).typeface(App.skrift_gibson).getTextView();
+    seekBarMaxTekst = aq.id(R.id.seekBarMaxTekst).typeface(App.skrift_gibson).getTextView();
+    seekBar = aq.id(R.id.seekBar).getSeekBar();
+    seekBar.setOnSeekBarChangeListener(this);
+
+
+
+
+  Runnable opdaterSeekBar = new Runnable() {
+
+    @Override
+    public void run() {
+      App.forgrundstråd.removeCallbacks(this);
+      if (seekBar == null) return; // det er set ske i abetest
+      boolean denneUdsSpiller = udsendelse.equals(afspiller.getLydkilde()) && afspiller.getAfspillerstatus() != Status.STOPPET;
+      if (!denneUdsSpiller || App.accessibilityManager.isEnabled()) {
+        seekBar.setVisibility(View.GONE);
+        seekBarTekst.setVisibility(View.GONE);
+        seekBarMaxTekst.setVisibility(View.GONE);
+        return;
+      }
+      try {
+        if (!seekBarBetjenesAktivt) { // Kun hvis vi ikke er i gang med at søge i udsendelsen
+          int længdeMs = afspiller.getDuration();
+          if (længdeMs > 0) {
+            seekBar.setVisibility(View.VISIBLE);
+            seekBar.setEnabled(true);
+            seekBar.setMax(længdeMs);
+            seekBarTekst.setVisibility(View.VISIBLE);
+            seekBarMaxTekst.setVisibility(View.VISIBLE);
+            seekBarMaxTekst.setText(DateUtils.formatElapsedTime(længdeMs / 1000));
+            int pos = afspiller.getCurrentPosition();
+            Log.d("   pos " + pos + "   " + længdeMs);
+            if (pos > 0) { // pos=0 rapporteres efter onSeekComplete, det skal ignoreres
+              seekBarTekst_opdater(pos);
+              seekBar.setProgress(pos);
+              // Find og fremhævet nummeret der spilles lige nu
+              int spillerNuIndexNy = udsendelse.findPlaylisteElemTilTid(pos, playlisteElemDerSpillerNuIndex);
+              if (playlisteElemDerSpillerNuIndex != spillerNuIndexNy) {
+                playlisteElemDerSpillerNuIndex = spillerNuIndexNy;
+                playlisteElemDerSpillerNu = playlisteElemDerSpillerNuIndex < 0 ? null : udsendelse.playliste.get(playlisteElemDerSpillerNuIndex);
+                adapter.notifyDataSetChanged();
+              }
+            }
+          } else {
+            seekBar.setVisibility(View.VISIBLE);
+            seekBar.setEnabled(false);
+            seekBar.setProgress(0);
+            seekBarTekst.setVisibility(View.INVISIBLE);
+            seekBarMaxTekst.setVisibility(View.INVISIBLE);
+          }
+        }
+        App.forgrundstråd.postDelayed(this, 1000);
+      } catch (Exception e) {
+        Log.rapporterFejl(e);
+      }
+    }
+  };
+
+  @Override
+  public void onProgressChanged(SeekBar seekBarx, int progress, boolean fromUser) {
+    if (fromUser) {
+      DRData.instans.afspiller.seekTo(progress);
+      seekBarTekst_opdater(progress);
+      Log.registrérTestet("Søgning i udsendelse", "ja");
+    }
+  }
+
+  private void seekBarTekst_opdater(int progress) {
+    seekBarTekst.setText(DateUtils.formatElapsedTime(progress / 1000));
+    int to = seekBar.getThumbOffset();
+    int x = (int) ((long) (seekBar.getWidth() - to * 2) * progress / seekBar.getMax());
+    seekBarTekst.setPadding(x, 0, 0, 0);
+  }
+
+
+  @Override
+  public void onStartTrackingTouch(SeekBar seekBar) {
+    seekBarBetjenesAktivt = true;
+    //seekBarTekst.setVisibility(View.VISIBLE);
+    App.forgrundstråd.removeCallbacks(opdaterSeekBar);
+  }
+
+  @Override
+  public void onStopTrackingTouch(SeekBar seekBar) {
+    seekBarBetjenesAktivt = false;
+    //seekBarTekst.setVisibility(View.INVISIBLE);
+    App.forgrundstråd.postDelayed(opdaterSeekBar, 1000);
+  }
+, SeekBar.OnSeekBarChangeListener
+*/
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

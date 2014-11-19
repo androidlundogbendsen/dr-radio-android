@@ -6,8 +6,7 @@
     android:layout_height="wrap_content"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:paddingBottom="16dp"
-    android:background="@drawable/knap_graa10_bg"
+    android:paddingBottom="8dp"
     android:orientation="vertical">
 
   <!--
@@ -20,7 +19,7 @@
       android:background="@drawable/stiplet_linje"
       android:layerType="software"
       android:layout_width="match_parent"
-      android:layout_marginBottom="13dp"
+      android:layout_marginBottom="9dp"
       android:layout_height="3dp"/>
 
 
@@ -29,7 +28,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="17.04"
-      android:textColor="@color/grå70"
+      android:textColor="@color/grå40"
       android:textAppearance="?android:attr/textAppearance"
       tools:ignore="HardcodedText"
       />
