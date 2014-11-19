@@ -187,6 +187,11 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
       Viewholder vh;
       int type = getItemViewType(position);
       if (v == null) {
+        if (getActivity()==null) { // Crash set i abetest 19. nov 2014
+          String fejl = "getActivity() var null for "+Programserie_frag.this.toString();
+          Log.rapporterFejl(new IllegalStateException(fejl));
+          return new TextView(App.instans); // skal aldrig vises
+        }
         v = getLayoutInflater(null).inflate(layoutFraType[type], parent, false);
         vh = new Viewholder();
         vh.itemViewType = type;

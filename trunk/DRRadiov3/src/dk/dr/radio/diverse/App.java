@@ -183,7 +183,10 @@ public class App extends Application {
     Network network = new DrBasicNetwork(stack);
     // Vi bruger vores egen DrDiskBasedCache, da den indbyggede i Volley
     // har en opstartstid på flere sekunder
-    File cacheDir = new File(getCacheDir(), "volley");
+    // Mappe ændret fra standardmappen "volley" til "dr_volley" 19. nov 2014.
+    // Det skyldtes at et hukommelsesdump viste, at Volley indekserede alle filerne i standardmappen,
+    // uden om vores implementation, hvilket gav et unødvendigt overhead på ~ 1MB
+    File cacheDir = new File(getCacheDir(), "dr_volley");
     volleyCache = new DrDiskBasedCache(cacheDir);
     volleyRequestQueue = new RequestQueue(volleyCache, network);
     volleyRequestQueue.start();
@@ -482,6 +485,11 @@ public class App extends Application {
       long alder = TIDSSTEMPEL_VED_OPSTART - 7 * 24 * 60 * 60 * 1000;
       int volleySlettet = volleyCache.sletFilerÆldreEnd(alder);
       int aqSlettet = Diverse.sletFilerÆldreEnd(new File(getCacheDir(), "aquery"), alder);
+      // Mappe ændret fra standardmappen "volley" til "dr_volley" 19. nov 2014.
+      // Det skyldtes at et hukommelsesdump viste, at Volley indekserede alle filerne i standardmappen,
+      // uden om vores implementation, hvilket gav et unødvendigt overhead på ~ 1MB
+      File gammelVolleyCacheDir = new File(getCacheDir(), "volley");
+      Diverse.sletFilerÆldreEnd(gammelVolleyCacheDir, alder);
 
       if (fejlsøgning) {
         App.kortToast("volleyCache: " + volleySlettet / 1000 + " kb frigivet");

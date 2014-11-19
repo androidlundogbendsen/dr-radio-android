@@ -675,7 +675,9 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
-      if (!App.PRODUKTION && parent != listView) throw new IllegalStateException(listView + " " + parent);
+      if (parent != listView) { // Set i abetest 18 nov 2014
+        Log.rapporterFejl(new IllegalStateException(listView + " " + parent));
+      }
       Viewholder vh;
       AQuery aq;
       int type = getItemViewType(position);
