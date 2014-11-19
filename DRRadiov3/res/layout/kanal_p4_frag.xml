@@ -1,21 +1,42 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+  <!--
+      designoplæg siger 36dp, men designretningslinjer på Android siger min 48dp i højde9
+      (se http://developer.android.com/design/style/metrics-grids.html)
+              android:layout_height="36dp"
+
+Vi udvider derfor knappens trykområde med teknikken beskrevet i
+http://stackoverflow.com/questions/2949407/can-i-increase-a-buttons-onclick-area-programmatically
+      -->
+  <Button
+      android:id="@+id/hør_live"
+      android:layout_width="wrap_content"
+      android:layout_height="@dimen/hørknap_højde"
+      android:layout_marginLeft="16dp"
+      android:layout_marginRight="16dp"
+      android:layout_marginTop="4dp"
+      android:layout_marginBottom="4dp"
+      android:layout_gravity="center_horizontal"
+      android:paddingLeft="4dp"
+      android:paddingRight="16dp"
+      android:drawableLeft="@drawable/dri_lyd_hvid"
+      android:text=" HØR P3 LIVE"
+      android:textColor="@color/hvid"
+      android:background="@drawable/knap_blaa_bg"/>
+
+  <FrameLayout android:layout_width="match_parent"
+               android:layout_height="0dp"
+               android:layout_weight="1"
+      >
 
   <dk.dr.radio.diverse.PinnedSectionListView
       android:id="@+id/listView"
       android:layout_width="fill_parent"
       android:layout_height="fill_parent"/>
-  <!-- hurtigscroll
-              android:scrollbars="none"
-              android:fastScrollEnabled="true"/>
 
-
-  For mere komplekst tomhedsindikator, brug ViewStub - se
-             http://cyrilmottier.com/2011/06/20/listview-tips-tricks-1-handle-emptiness/
-              android:visibility="gone"
-          android:layout_gravity="center"
-  -->
   <TextView
       android:id="@+id/tom"
       android:layout_width="wrap_content"
@@ -75,3 +96,4 @@
   </LinearLayout>
 </FrameLayout>
 
+</LinearLayout>
