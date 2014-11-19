@@ -20,7 +20,6 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -292,11 +291,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
     if (aktuelUdsendelseViewholder == null) return;
     Viewholder vh = aktuelUdsendelseViewholder;
-    if (!vh.starttidbjælke.isShown() || !getUserVisibleHint()) {
-      if (App.fejlsøgning) Log.d(kanal + " opdaterAktuelUdsendelseViews starttidbjælke ikke synlig");
-      return;
-    }
-    opdaterAktuelUdsendelseViews(vh);
     if (!getUserVisibleHint() || !isResumed()) return;
     opdaterSenestSpillet(vh.aq, vh.udsendelse);
     //MediaPlayer mp = DRData.instans.afspiller.getMediaPlayer();
@@ -366,8 +360,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     public TextView titel;
     public TextView startid;
     public Udsendelse udsendelse;
-    public View starttidbjælke;
-    public View slutttidbjælke;
     public int itemViewType;
   }
 
@@ -438,8 +430,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         vh.itemViewType = type;
         a = vh.aq = new AQuery(v);
         vh.startid = a.id(R.id.startid).typeface(App.skrift_gibson).getTextView();
-        vh.starttidbjælke = a.id(R.id.starttidbjælke).getView();
-        vh.slutttidbjælke = a.id(R.id.slutttidbjælke).getView();
         //a.id(R.id.højttalerikon).clicked(new UdsendelseClickListener(vh));
         a.id(R.id.slutttid).typeface(App.skrift_gibson);
         if (type == TIDLIGERE_SENERE) {
@@ -451,7 +441,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           a.id(R.id.senest_spillet_overskrift).typeface(App.skrift_gibson);
           a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson);
           a.id(R.id.lige_nu).typeface(App.skrift_gibson);
-          v.setBackgroundResource(R.drawable.knap_hvid_bg);
           a.id(R.id.senest_spillet_container).invisible(); // Start uden 'senest spillet, indtil vi har info
         } else {
           vh.titel = a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson_fed).getTextView();
@@ -489,7 +478,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           a.width(bbr,false).height(bbr*bredde16/højde9,false);
           vh.titel.setText(udsendelse.titel.toUpperCase());
 
-          opdaterAktuelUdsendelseViews(aktuelUdsendelseViewholder);
           if (udsendelse.playliste == null) {
             opdaterSenestSpillet(vh.aq, udsendelse);
           } else {
@@ -554,37 +542,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       }
     } else {
       aq.id(R.id.senest_spillet_container).gone();
-    }
-  }
-
-  private void opdaterAktuelUdsendelseViews(Viewholder vh) {
-    try {
-      Udsendelse u = vh.udsendelse;
-      long passeret = App.serverCurrentTimeMillis() - u.startTid.getTime();
-      long længde = u.slutTid.getTime() - u.startTid.getTime();
-      int passeretPct = længde > 0 ? (int) (passeret * 100 / længde) : 0;
-      //Log.d(getKanal.kode + " passeretPct=" + passeretPct + " af længde=" + længde);
-      LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) vh.starttidbjælke.getLayoutParams();
-      lp.weight = passeretPct;
-      vh.starttidbjælke.setLayoutParams(lp);
-
-      lp = (LinearLayout.LayoutParams) vh.slutttidbjælke.getLayoutParams();
-      lp.weight = 100 - passeretPct;
-      vh.slutttidbjælke.setLayoutParams(lp);
-      if (passeretPct >= 100) {
-        // Hop til næste udsendelse - da det kan ske at denne metode kaldes via ListViews kald til getView()
-        // skal kaldet vente, sådan at vi er sikre på at det ikke sker mens listen er i gang med at rendere
-        final boolean starttidbjælkeVarSynlig = (vh.starttidbjælke.isShown());
-        App.forgrundstråd.post(new Runnable() {
-          @Override
-          public void run() {
-            opdaterListe();
-            if (starttidbjælkeVarSynlig) rulBlødtTilAktuelUdsendelse();
-          }
-        });
-      }
-    } catch (Exception e) {
-      Log.rapporterFejl(e);
     }
   }
 
