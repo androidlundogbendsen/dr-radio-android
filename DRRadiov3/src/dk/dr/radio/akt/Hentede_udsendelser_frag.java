@@ -50,7 +50,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
     listView.setEmptyView(emptyView);
     listView.setCacheColorHint(Color.WHITE);
 
-    aq.id(R.id.overskrift).typeface(App.skrift_gibson_fed).text("DOWNLOADEDE UDSENDELSER").getTextView();
+    aq.id(R.id.overskrift).typeface(App.skrift_gibson_fed).text("Downloadede udsendelser").getTextView();
 
 
     hentedeUdsendelser.observatører.add(this);
@@ -112,7 +112,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
         aq = new AQuery(v);
       }
       // Skjul stiplet linje over øverste listeelement
-      aq.id(R.id.stiplet_linje).background(position == 0 ? R.drawable.linje : R.drawable.stiplet_linje);
+      aq.id(R.id.stiplet_linje).background(position == 0 ? 0 : R.drawable.stiplet_linje);
       aq.id(R.id.startStopKnap).tag(udsendelse); // sæt udsendelsen ind som tag, så vi kan se dem i onClick()
       aq.id(R.id.slet).tag(udsendelse);
 

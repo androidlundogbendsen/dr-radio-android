@@ -66,7 +66,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
   private ListView listView;
   private View fragmentContainerView;
 
-  private int mCurrentSelectedPosition = 0;
+  private int mCurrentSelectedPosition = -1;
   private boolean mFromSavedInstanceState;
   private boolean mUserLearnedDrawer;
   private VenstremenuAdapter venstremenuAdapter;
@@ -92,14 +92,14 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     if (savedInstanceState != null) {
       mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
       mFromSavedInstanceState = true;
+      // Select either the default item (0) or the last selected item.
+      sætListemarkering(mCurrentSelectedPosition);
     } else {
-      mCurrentSelectedPosition = FORSIDE_INDEX; //9;
+      //mCurrentSelectedPosition = FORSIDE_INDEX; //9;
       //venstremenuAdapter.vælgMenu(getActivity(), mCurrentSelectedPosition);
+      skjulMenu();
     }
 
-    // Select either the default item (0) or the last selected item.
-    sætListemarkering(mCurrentSelectedPosition);
-    skjulMenu();
   }
 
   @Override
@@ -275,7 +275,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
   }
 
 
-  public static int FORSIDE_INDEX = 3;
+  //public static int FORSIDE_INDEX = 3;
 
   class VenstremenuAdapter extends Basisadapter {
     ArrayList<MenuElement> elem = new ArrayList<MenuElement>();
@@ -377,14 +377,16 @@ public class Venstremenu_frag extends Fragment implements Runnable {
 
       //tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 */
+      /*
       FORSIDE_INDEX = elem.size();
       tilføj(R.layout.venstremenu_elem_overskrift, Kanaler_frag.class);
       aq.id(R.id.tekst).text("Forside");
       aq.typeface(App.skrift_gibson_fed);
+      */
 
       //tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
-      tilføj(R.layout.venstremenu_elem_overskrift, ProgramserierAtilAA_frag.class);
+      tilføj(R.layout.venstremenu_elem_overskrift, ProgramserierAtilAA_frag2.class);
       aq.id(R.id.tekst).text("Alle udsendelser A-Å");
       aq.typeface(App.skrift_gibson_fed);
 
@@ -394,15 +396,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       aq.id(R.id.tekst).text("Drama & Bog");
       aq.typeface(App.skrift_gibson_fed);
 
-      tilføj(R.layout.venstremenu_elem_overskrift, Radiodrama_frag_SLETTES.class);
-      aq.id(R.id.tekst).text("Radio drama x");
-      aq.typeface(App.skrift_gibson_fed);
-
       //tilføj(R.layout.venstremenu_elem_adskiller_tynd);
-
-      tilføj(R.layout.venstremenu_elem_overskrift, P4kanalvalg_frag.class);
-      aq.id(R.id.tekst).text("Vælg P4-område");
-      aq.typeface(App.skrift_gibson_fed);
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
@@ -452,6 +446,12 @@ public class Venstremenu_frag extends Fragment implements Runnable {
 
 
       tilføj(R.layout.venstremenu_elem_adskiller_tynd);
+
+      tilføj(R.layout.venstremenu_elem_overskrift, P4kanalvalg_frag.class);
+      aq.id(R.id.tekst).text("Vælg P4-område");
+      aq.typeface(App.skrift_gibson_fed);
+
+
       tilføj(R.layout.venstremenu_elem_overskrift, new Runnable() {
         @Override
         public void run() {
@@ -509,6 +509,14 @@ public class Venstremenu_frag extends Fragment implements Runnable {
         });
         aq.id(R.id.tekst).text("ExoPlayer DR2");
         */
+        tilføj(R.layout.venstremenu_elem_overskrift, ProgramserierAtilAA_frag.class);
+        aq.id(R.id.tekst).text("Alle udsendelser A-Å x");
+        aq.typeface(App.skrift_gibson_fed);
+
+        tilføj(R.layout.venstremenu_elem_overskrift, Radiodrama_frag_SLETTES.class);
+        aq.id(R.id.tekst).text("Radio drama x");
+        aq.typeface(App.skrift_gibson_fed);
+
       }
     }
 
@@ -532,8 +540,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
         Basisfragment f = e.fragKlasse.newInstance();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.indhold_frag, f);
-        // Tilbageknappen skal gå til forsiden - undtagen hvis vi ER på forsiden
-        if (position != FORSIDE_INDEX) ft.addToBackStack("Venstremenu");
+        ft.addToBackStack("Venstremenu");
         ft.commit();
       } catch (Exception e1) {
         Log.rapporterFejl(e1);

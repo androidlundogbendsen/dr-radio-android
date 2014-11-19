@@ -101,7 +101,7 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
             return;
           }
         }
-        venstremenuFrag.sætListemarkering(Venstremenu_frag.FORSIDE_INDEX); // "Forside
+        //venstremenuFrag.sætListemarkering(Venstremenu_frag.FORSIDE_INDEX); // "Forside
       }
 
       //Log.d("getIntent()="+getIntent().getFlags());

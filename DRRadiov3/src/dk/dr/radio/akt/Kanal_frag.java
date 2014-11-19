@@ -145,6 +145,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     udvikling_checkDrSkrifter(rod, this + " rod");
     DRData.instans.afspiller.observatører.add(this);
     App.netværk.observatører.add(this);
+    run(); // opdater HØR-knap
     // Log.d(this + " onCreateView færdig efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     Log.d("onCreateView " + this);
     return rod;
@@ -293,6 +294,13 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     Viewholder vh = aktuelUdsendelseViewholder;
     if (!getUserVisibleHint() || !isResumed()) return;
     opdaterSenestSpillet(vh.aq, vh.udsendelse);
+
+    if (App.serverCurrentTimeMillis() > vh.udsendelse.slutTid.getTime()) {
+      opdaterListe();
+      if (!App.PRODUKTION) App.kortToast("Kanal_frag opdaterListe()");
+      if (vh.startid.isShown()) rulBlødtTilAktuelUdsendelse();
+    }
+
     //MediaPlayer mp = DRData.instans.afspiller.getMediaPlayer();
     //Log.d("mp pos="+mp.getCurrentPosition() + "  af "+mp.getDuration());
   }
@@ -442,6 +450,9 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson);
           a.id(R.id.lige_nu).typeface(App.skrift_gibson);
           a.id(R.id.senest_spillet_container).invisible(); // Start uden 'senest spillet, indtil vi har info
+          int bbr = billedeBr - getResources().getDimensionPixelSize(R.dimen.kanalmargen)*2;
+          a.id(R.id.billede).width(bbr,false).height(bbr*højde9/bredde16,false);
+          a.id(R.id.billedecontainer).width(bbr,false).height(bbr*højde9/bredde16,false);
         } else {
           vh.titel = a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson_fed).getTextView();
         }
@@ -474,8 +485,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
           String burl = Basisfragment.skalérBillede(udsendelse);
           a.id(R.id.billede).image(burl, true, true, 0, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
-          int bbr = billedeBr - getResources().getDimensionPixelSize(R.dimen.kanalmargen)*2;
-          a.width(bbr,false).height(bbr*bredde16/højde9,false);
           vh.titel.setText(udsendelse.titel.toUpperCase());
 
           if (udsendelse.playliste == null) {
