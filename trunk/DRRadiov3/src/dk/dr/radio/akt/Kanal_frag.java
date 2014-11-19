@@ -18,6 +18,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -57,6 +58,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   private boolean brugerHarNavigeret;
   private int antalHentedeSendeplaner;
   public static Kanal_frag senesteSynligeFragment;
+  private Button hør_live;
 
   @Override
   public String toString() {
@@ -118,6 +120,25 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       }
     });
 
+    aq.id(R.id.hør_live).typeface(App.skrift_gibson).clicked(Kanal_frag.this);
+    // Knappen er meget vigtig, og har derfor et udvidet område hvor det også er den man rammer
+    // se http://developer.android.com/reference/android/view/TouchDelegate.html
+    hør_live = aq.id(R.id.hør_live).getButton();
+    hør_live.post(new Runnable() {
+      final int udvid = getResources().getDimensionPixelSize(R.dimen.hørknap_udvidet_klikområde);
+
+      @Override
+      public void run() {
+        Rect r = new Rect();
+        hør_live.getHitRect(r);
+        r.top -= udvid;
+        r.bottom += udvid;
+        r.right += udvid;
+        r.left -= udvid;
+        //Log.d("hør_udvidet_klikområde=" + r);
+        ((View) hør_live.getParent()).setTouchDelegate(new TouchDelegate(r, hør_live));
+      }
+    });
     //Log.d(this + " onCreateView 3 efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     // Hent sendeplan for den pågældende dag. Døgnskifte sker kl 5, så det kan være dagen før
     hentSendeplanForDag(new Date(App.serverCurrentTimeMillis() - 5 * 60 * 60 * 1000));
@@ -258,6 +279,15 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       };
       App.volleyRequestQueue.add(req);
     }
+
+    boolean spillerDenneKanal = DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET && DRData.instans.afspiller.getLydkilde() == kanal;
+    boolean online = App.netværk.erOnline();
+
+    hør_live.setEnabled(!spillerDenneKanal && online && kanal.streams != null);
+    hør_live.setText(!online ? "Internetforbindelse mangler" :
+            (spillerDenneKanal ? " SPILLER "  + kanal.navn.toUpperCase() : " HØR " + kanal.navn.toUpperCase() + " LIVE"));
+    hør_live.setContentDescription(!online ? "Internetforbindelse mangler" :
+        (spillerDenneKanal ? "Spiller " : "Hør ") + kanal.navn.toUpperCase());
 
 
     if (aktuelUdsendelseViewholder == null) return;
@@ -421,24 +451,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           a.id(R.id.senest_spillet_overskrift).typeface(App.skrift_gibson);
           a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson);
           a.id(R.id.lige_nu).typeface(App.skrift_gibson);
-          a.id(R.id.hør_live).typeface(App.skrift_gibson).clicked(Kanal_frag.this);
-          // Knappen er meget vigtig, og har derfor et udvidet område hvor det også er den man rammer
-          // se http://developer.android.com/reference/android/view/TouchDelegate.html
-          final int udvid = getResources().getDimensionPixelSize(R.dimen.hørknap_udvidet_klikområde);
-          final View hør = a.id(R.id.hør_live).getView();
-          hør.post(new Runnable() {
-            @Override
-            public void run() {
-              Rect r = new Rect();
-              hør.getHitRect(r);
-              r.top -= udvid;
-              r.bottom += udvid;
-              r.right += udvid;
-              r.left -= udvid;
-              //Log.d("hør_udvidet_klikområde=" + r);
-              ((View) hør.getParent()).setTouchDelegate(new TouchDelegate(r, hør));
-            }
-          });
           v.setBackgroundResource(R.drawable.knap_hvid_bg);
           a.id(R.id.senest_spillet_container).invisible(); // Start uden 'senest spillet, indtil vi har info
         } else {
@@ -571,15 +583,6 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           }
         });
       }
-
-      boolean spillerDenneKanal = DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET && DRData.instans.afspiller.getLydkilde() == kanal;
-      boolean online = App.netværk.erOnline();
-      vh.aq.id(R.id.hør_live).enabled(!spillerDenneKanal && online && kanal.streams != null)
-          .text(!online ? "Internetforbindelse mangler" :
-              (spillerDenneKanal ? " SPILLER " : " HØR ") + kanal.navn.toUpperCase() + " LIVE");
-      vh.aq.getView().setContentDescription(!online ? "Internetforbindelse mangler" :
-          (spillerDenneKanal ? "Spiller " : "Hør ") + kanal.navn.toUpperCase());
-
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }

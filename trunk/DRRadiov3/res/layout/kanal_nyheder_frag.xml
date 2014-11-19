@@ -9,6 +9,23 @@
     >
 
 
+  <Button
+      android:id="@+id/hør_live"
+      android:layout_width="wrap_content"
+      android:layout_height="@dimen/hørknap_højde"
+      android:layout_marginLeft="16dp"
+      android:layout_marginRight="16dp"
+      android:layout_marginTop="8dp"
+      android:layout_marginBottom="8dp"
+      android:paddingLeft="4dp"
+      android:paddingRight="16dp"
+      android:drawableLeft="@drawable/dri_lyd_hvid"
+      android:text=" HØR DR NYHEDER LIVE"
+      android:contentDescription="hør D R nyheder live"
+      android:textColor="@color/hvid"
+      android:background="@drawable/knap_blaa_bg"/>
+
+
   <ImageView
       android:layout_width="196dp"
       android:id="@+id/billede"
@@ -36,23 +53,6 @@
       android:paddingRight="4dp"
       android:paddingBottom="0dp"
       android:layout_marginBottom="8dp"/>
-
-
-  <Button
-      android:id="@+id/hør_live"
-      android:layout_width="wrap_content"
-      android:layout_height="@dimen/hørknap_højde"
-      android:layout_marginLeft="16dp"
-      android:layout_marginRight="16dp"
-      android:layout_marginTop="8dp"
-      android:layout_marginBottom="8dp"
-      android:paddingLeft="4dp"
-      android:paddingRight="16dp"
-      android:drawableLeft="@drawable/dri_lyd_hvid"
-      android:text=" HØR DR NYHEDER LIVE"
-      android:contentDescription="hør D R nyheder live"
-      android:textColor="@color/hvid"
-      android:background="@drawable/knap_blaa_bg"/>
 
 
 </LinearLayout>

@@ -65,6 +65,16 @@
       android:layout_weight="1"/>
 
   <!-- style="?android:attr/buttonBarButtonStyle"  -->
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="8dp"
+      android:layout_marginRight="8dp"
+      android:text="DR kan ikke garantere mod tekniske problemer i forbindelse med vækning"
+      android:textColor="@color/grå60"
+      android:drawableLeft="@drawable/dri_advarsel_graa40"
+      android:id="@+id/advarsel"/>
+
   <Button android:id="@+id/done"
           android:focusable="true"
           android:layout_width="fill_parent"
