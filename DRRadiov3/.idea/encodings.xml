@@ -11,9 +11,9 @@
     <file url="file://$PROJECT_DIR$/src/dk/dr/radio/akt/DramaOgBog_frag.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Kanaler_frag.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Programserie_frag.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/dk/dr/radio/akt/ProgramserierAtilAA_frag.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Radiodrama_frag_SLETTES.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Udsendelse_frag.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/dk/dr/radio/skrald/ProgramserierAtilAA_frag.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/dk/dr/radio/skrald/Radiodrama_frag_SLETTES.java" charset="UTF-8" />
   </component>
 </project>
 

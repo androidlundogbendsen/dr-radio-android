@@ -1,4 +1,4 @@
-package dk.dr.radio.akt;
+package dk.dr.radio.skrald;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import dk.dr.radio.akt.Basisfragment;
+import dk.dr.radio.akt.Programserie_frag;
+import dk.dr.radio.akt.Venstremenu_frag;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Programserie;
