@@ -443,7 +443,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
           startActivity(new Intent(getActivity(), AlarmClock_akt.class));
         }
       });
-      aq.id(R.id.tekst).text("Vækning");
+      aq.id(R.id.tekst).text("Vækkeur");
       aq.typeface(App.skrift_gibson_fed);
 
 

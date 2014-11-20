@@ -107,7 +107,9 @@ public class Afproevning {
       if (Kanal.P4kode.equals(kanal.kode)) continue;
       if ("DRN".equals(kanal.kode)) continue; // ikke DR Nyheder
 
-      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(hentStreng(DRData.getKanalUdsendelserUrlFraKode(kanal.kode))), kanal, new Date(), DRData.instans), "0");
+      String datoStr = DRJson.apiDatoFormat.format(new Date());
+      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(
+          hentStreng(DRData.getKanalUdsendelserUrlFraKode(kanal.kode, datoStr))), kanal, new Date(), DRData.instans), "0");
       for (Udsendelse u : kanal.udsendelser) {
         Log.d("\nudsendelse = " + u);
         JSONObject obj = new JSONObject(hentStreng(u.getStreamsUrl()));
@@ -230,7 +232,9 @@ public class Afproevning {
       if (Kanal.P4kode.equals(kanal.kode)) continue;
       if ("DRN".equals(kanal.kode)) continue;
       Log.d("\n=========================================== kanal = " + kanal);
-      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(hentStreng(DRData.getKanalUdsendelserUrlFraKode(kanal.kode))), kanal, new Date(), DRData.instans), "0");
+      String datoStr = DRJson.apiDatoFormat.format(new Date());
+      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(
+          hentStreng(DRData.getKanalUdsendelserUrlFraKode(kanal.kode, datoStr))), kanal, new Date(), DRData.instans), "0");
       for (Udsendelse u : kanal.udsendelser) {
         Log.d("\nudsendelse = " + u);
         Programserie ps = i.programserieFraSlug.get(u.programserieSlug);

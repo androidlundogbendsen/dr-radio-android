@@ -41,5 +41,7 @@
       android:layout_weight="1"
       android:text="4 NYE AFSNIT"
       android:maxLines="2"
-      tools:ignore="HardcodedText"/>
+      tools:ignore="HardcodedText"
+      android:textSize="@dimen/metainfo_skrifstørrelse"
+      android:textColor="@color/grå50"/>
 </LinearLayout>

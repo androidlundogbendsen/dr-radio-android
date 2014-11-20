@@ -253,6 +253,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     tab.setText(title);
     tab.setGravity(Gravity.CENTER);
     tab.setSingleLine();
+    tab.setTypeface(App.skrift_gibson);
 
     addTab(position, tab);
   }
@@ -275,6 +276,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     tabi.setVisibility(View.INVISIBLE);
     TextView tabt = new TextView(getContext());
     tabt.setText(title);
+    tabt.setTypeface(App.skrift_gibson);
     tabt.setGravity(Gravity.CENTER);
     tabt.setSingleLine();
 

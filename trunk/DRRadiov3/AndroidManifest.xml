@@ -3,7 +3,7 @@
           package="dk.dr.radio.v3"
           android:installLocation="auto"
           android:versionCode="1"
-          android:versionName="3.1.9 20.nov mere design4">
+          android:versionName="3.1.9 20.nov mere design5">
 
 <uses-sdk
       android:minSdkVersion="7"

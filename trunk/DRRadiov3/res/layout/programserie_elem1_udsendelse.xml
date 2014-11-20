@@ -35,7 +35,9 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="P3, 55 MIN"
-      tools:ignore="HardcodedText"/>
+      tools:ignore="HardcodedText"
+      android:textSize="@dimen/metainfo_skrifstørrelse"
+      android:textColor="@color/grå50"/>
 
 
 </LinearLayout>

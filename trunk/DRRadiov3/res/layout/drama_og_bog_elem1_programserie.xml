@@ -40,8 +40,9 @@
                 android:id="@+id/antalUdsendelser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/metainfo_skrifstørrelse"
                 android:text="13 AFSNIT"
-                android:textColor="@color/grå70"/>
+                android:textColor="@color/grå50"/>
     </LinearLayout>
 
   </LinearLayout>
