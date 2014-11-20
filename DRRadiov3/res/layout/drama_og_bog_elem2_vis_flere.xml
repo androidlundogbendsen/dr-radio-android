@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/hørknap_højde"
+    android:layout_height="@dimen/vis_flere_knap_højde"
     android:orientation="vertical"
     android:gravity="center"
     >

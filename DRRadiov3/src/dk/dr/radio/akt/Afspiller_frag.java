@@ -75,9 +75,9 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         Udsendelse u = DRData.instans.afspiller.getLydkilde().getUdsendelse();
         long passeret = App.serverCurrentTimeMillis() - u.startTid.getTime();
         long længde = u.slutTid.getTime() - u.startTid.getTime();
-        int passeretPct = længde > 0 ? (int) (passeret * 100 / længde) : 0;
-        Log.d(u + " passeretPct=" + passeretPct + " af længde=" + længde);
-        seekBar.setProgress(passeretPct);
+        //int passeretPct = længde > 0 ? (int) (passeret * 100 / længde) : 0;
+        //Log.d(u + " passeretPct=" + passeretPct + " af længde=" + længde);
+        seekBar.setProgress((int) passeret);
         if (!seekBarBetjenesAktivt) { // Kun hvis vi ikke er i gang med at søge i udsendelsen
           int længdeMs = afspiller.getDuration();
           if (længdeMs > 0) {
@@ -118,9 +118,9 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
 
   private void seekBarTekst_opdater(int progress) {
     starttid.setText(DateUtils.formatElapsedTime(progress / 1000));
-    int to = seekBar.getThumbOffset();
-    int x = (int) ((long) (seekBar.getWidth() - to * 2) * progress / seekBar.getMax());
-    starttid.setPadding(x, 0, 0, 0);
+//    int to = seekBar.getThumbOffset();
+//    int x = (int) ((long) (seekBar.getWidth() - to * 2) * progress / seekBar.getMax());
+//    starttid.setPadding(x, 0, 0, 0);
   }
 
 
