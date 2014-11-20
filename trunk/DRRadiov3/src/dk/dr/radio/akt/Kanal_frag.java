@@ -167,7 +167,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       opdaterListe();
     }
 
-    final String url = DRData.getKanalUdsendelserUrlFraKode(kanal.kode) + "/date/" + datoStr;
+    final String url = DRData.getKanalUdsendelserUrlFraKode(kanal.kode, datoStr);
     if (App.fejlsøgning) Log.d("hentSendeplanForDag url=" + url);
 
     Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
@@ -437,7 +437,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         vh = new Viewholder();
         vh.itemViewType = type;
         a = vh.aq = new AQuery(v);
-        vh.startid = a.id(R.id.startid).typeface(App.skrift_gibson).getTextView();
+        vh.startid = a.id(R.id.starttid).typeface(App.skrift_gibson).getTextView();
         //a.id(R.id.højttalerikon).clicked(new UdsendelseClickListener(vh));
         a.id(R.id.slutttid).typeface(App.skrift_gibson);
         if (type == TIDLIGERE_SENERE) {
@@ -452,7 +452,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           a.id(R.id.senest_spillet_container).invisible(); // Start uden 'senest spillet, indtil vi har info
           int bbr = billedeBr - getResources().getDimensionPixelSize(R.dimen.kanalmargen)*2;
           a.id(R.id.billede).width(bbr,false).height(bbr*højde9/bredde16,false);
-          a.id(R.id.billedecontainer).width(bbr,false).height(bbr*højde9/bredde16,false);
+          a.id(R.id.billedecontainer).width(bbr, false).height(bbr * højde9 / bredde16, false);
         } else {
           vh.titel = a.id(R.id.titel_og_kunstner).typeface(App.skrift_gibson_fed).getTextView();
         }
@@ -619,10 +619,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   @Override
   public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
     Object o = liste.get(position);
-    if (!(o instanceof Udsendelse)) { // fix for fejl set i abetest 18.okt 2014
-      Log.rapporterFejl(new IllegalStateException("ikke en udsendelse: "+o+" for pos="+position));
-      return;
-    }
+    // PinnedSectionListView tillader klik på hængende overskrifter, selvom adapteren siger at det skal den ikke
+    if (!(o instanceof Udsendelse)) return;
     Udsendelse u = (Udsendelse) o;
     if (position == 0 || position == liste.size() - 1) {
       hentSendeplanForDag(u.startTid);

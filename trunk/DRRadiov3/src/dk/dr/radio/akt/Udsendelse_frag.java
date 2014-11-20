@@ -281,7 +281,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
     aq.id(R.id.titel).typeface(App.skrift_gibson_fed).text(udsendelse.titel)
         .getTextView().setContentDescription("\u00A0");  // SLUK for højtlæsning, det varetages af listviewet
-    aq.id(R.id.startid).typeface(App.skrift_gibson)
+    aq.id(R.id.starttid).typeface(App.skrift_gibson)
         .text(udsendelse.startTid == null ? "" : DRJson.datoformat.format(udsendelse.startTid))
         .getTextView().setContentDescription("\u00A0");  // SLUK for højtlæsning, det varetages af listviewet
     aq.id(R.id.hør).clicked(this);
@@ -400,10 +400,10 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         @Override
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
           if (App.fejlsøgning) Log.d("fikSvar playliste(" + fraCache + " " + url + "   " + this);
-          Log.d("UDS fikSvar playliste(" + fraCache + uændret + " " + url);
-          if (uændret) return;
           if (udsendelse.playliste != null && fraCache) return; // så har vi allerede den nyeste liste i MEM
           if (json == null || "null".equals(json)) return; // fejl
+          Log.d("UDS fikSvar playliste(" + fraCache + uændret + " " + url);
+          if (uændret) return;
           udsendelse.playliste = DRJson.parsePlayliste(new JSONArray(json));
           if (!aktuelUdsendelsePåKanalen()) { // Aktuel udsendelse skal have senest spillet nummer øverst
             Collections.reverse(udsendelse.playliste); // andre udsendelser skal have stigende tid nedad
@@ -527,6 +527,20 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   @Override
   public void run() {
     if (udsendelse == null) return; // fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/834728045 ???
+    App.forgrundstråd.removeCallbacks(this);
+
+    int spillerNuIndexNy = -1;
+    if (udsendelse.equals(DRData.instans.afspiller.getLydkilde().getUdsendelse()))
+    {
+      // Find og fremhævet nummeret der spilles lige nu
+      int pos = DRData.instans.afspiller.getCurrentPosition();
+      spillerNuIndexNy = udsendelse.findPlaylisteElemTilTid(pos, playlisteElemDerSpillerNuIndex);
+      App.forgrundstråd.postDelayed(this, DRData.instans.grunddata.opdaterPlaylisteEfterMs);
+    }
+    if (playlisteElemDerSpillerNuIndex != spillerNuIndexNy) {
+      playlisteElemDerSpillerNuIndex = spillerNuIndexNy;
+      playlisteElemDerSpillerNu = playlisteElemDerSpillerNuIndex < 0 ? null : udsendelse.playliste.get(playlisteElemDerSpillerNuIndex);
+    }
     DRData.instans.hentedeUdsendelser.tjekOmHentet(udsendelse);
     adapter.notifyDataSetChanged(); // Opdater knapper etc
   }
@@ -601,18 +615,17 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         vh.itemViewType = type;
         aq = vh.aq = new AQuery(v);
         v.setTag(vh);
-        vh.startid = aq.id(R.id.startid).typeface(App.skrift_gibson).getTextView();
+        vh.startid = aq.id(R.id.starttid).typeface(App.skrift_gibson).getTextView();
         if (type == OVERSKRIFT_PLAYLISTE_INFO || type == OVERSKRIFT_INDSLAG_INFO) {
           aq.id(R.id.playliste).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
           aq.id(R.id.info).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         } else if (type == INFOTEKST) {
           aq.id(R.id.titel).typeface(App.skrift_georgia);
           String forkortInfoStr = udsendelse.beskrivelse;
-          Spannable spannable = new SpannableString(forkortInfoStr);//null;
           if (udsendelse.beskrivelse.length() > 100) {
             forkortInfoStr = forkortInfoStr.substring(0, 100);
             forkortInfoStr += "...(læs mere)";
-            spannable = new SpannableString(forkortInfoStr);
+            SpannableString spannable = new SpannableString(forkortInfoStr);
             spannable.setSpan(new ForegroundColorSpan(App.color.blå), forkortInfoStr.length() - "(læs mere)".length(), forkortInfoStr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             aq.clicked(Udsendelse_frag.this).text(spannable/*forkortInfoStr*/);
           } else {

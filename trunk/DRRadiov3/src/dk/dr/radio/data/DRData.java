@@ -86,8 +86,8 @@ public class DRData {
     return "http://www.dr.dk/tjenester/mu-apps/channel/" + slug + "?includeStreams=true";
   }
 
-  public static String getKanalUdsendelserUrlFraKode(String kode) {
-    return "http://www.dr.dk/tjenester/mu-apps/schedule/" + kode;  // svarer til v3_kanalside__p3.json;
+  public static String getKanalUdsendelserUrlFraKode(String kode, String datoStr) {
+    return "http://www.dr.dk/tjenester/mu-apps/schedule/" + kode  + "/date/" + datoStr;  // svarer til v3_kanalside__p3.json;
   }
 
   public static String getAtilÅUrl() {

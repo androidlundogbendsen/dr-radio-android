@@ -75,12 +75,12 @@
         android:textStyle="bold"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
-        android:layout_above="@+id/startid"
+        android:layout_above="@+id/starttid"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 
     <TextView
-        android:id="@+id/startid"
+        android:id="@+id/starttid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/hvid"
