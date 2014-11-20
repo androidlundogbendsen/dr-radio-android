@@ -36,6 +36,8 @@ import java.util.List;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.skrald.ProgramserierAtilAA_frag;
+import dk.dr.radio.skrald.Radiodrama_frag_SLETTES;
 import dk.dr.radio.v3.R;
 
 
