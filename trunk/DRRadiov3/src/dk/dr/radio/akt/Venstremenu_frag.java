@@ -386,7 +386,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
 
       //tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
-      tilføj(R.layout.venstremenu_elem_overskrift, ProgramserierAtilAA_frag2.class);
+      tilføj(R.layout.venstremenu_elem_overskrift, AlleUdsendelserAtilAA_frag.class);
       aq.id(R.id.tekst).text("Alle udsendelser A-Å");
       aq.typeface(App.skrift_gibson_fed);
 

@@ -24,9 +24,8 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-public class ProgramserierAtilAA_frag2 extends Basisfragment implements AdapterView.OnItemClickListener, Runnable {
+public class AlleUdsendelserAtilAA_frag extends Basisfragment implements AdapterView.OnItemClickListener, Runnable {
 
-  private static final String INDEX = ProgramserierAtilAA_frag.class.getName();
   private ArrayList<Programserie> liste = new ArrayList<Programserie>();
   private ListView listView;
   protected View rod;
@@ -45,7 +44,7 @@ public class ProgramserierAtilAA_frag2 extends Basisfragment implements AdapterV
     );
     listView.setCacheColorHint(Color.WHITE);
 
-    aq.id(R.id.overskrift).typeface(App.skrift_gibson_fed).text("Alle udsendelser A-Å").getTextView();
+    aq.id(R.id.overskrift).typeface(App.skrift_gibson_fed).text("Alle udsendelser").getTextView();
 
     run();
 
@@ -89,13 +88,12 @@ public class ProgramserierAtilAA_frag2 extends Basisfragment implements AdapterV
         if (v == null) v = getLayoutInflater(null).inflate(R.layout.listeelem_2linjer, parent, false);
         AQuery aq = new AQuery(v);
 
-        Object obj = liste.get(position);
-        Programserie ps = (Programserie) obj;
+        Programserie ps = liste.get(position);
         aq.id(R.id.linje1).text(ps.titel).typeface(App.skrift_gibson_fed).textColor(Color.BLACK);
-        int n = 42;
-        String txt = (n == 1 ? n + " ny udsendelse" : n + " nye udsendelser");
+        int n = ps.antalUdsendelser;
+        String txt = n==0 ? "" : n==1 ? n + " udsendelse" : n + " udsendelser";
         aq.id(R.id.linje2).text(txt).typeface(App.skrift_gibson);
-        aq.id(R.id.stiplet_linje).background(position == 0 ? R.drawable.linje : R.drawable.stiplet_linje);
+        aq.id(R.id.stiplet_linje).visibility(position == 0 ? View.INVISIBLE : View.VISIBLE);
         v.setBackgroundResource(0);
 
 

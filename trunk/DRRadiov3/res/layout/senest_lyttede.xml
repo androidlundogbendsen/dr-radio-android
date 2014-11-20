@@ -17,10 +17,9 @@
         />
 
   <View
-      android:background="@color/grå60"
-      android:layerType="software"
+      android:background="@color/grå50"
       android:layout_width="match_parent"
-      android:layout_height="3dp"/>
+      android:layout_height="1dp"/>
 
     <ListView
         android:id="@+id/listView"
@@ -28,6 +27,7 @@
         android:layout_height="fill_parent"
         android:divider="@null"
         android:dividerHeight="0px"
+        android:fastScrollEnabled="true"
         android:requiresFadingEdge="vertical"/>
     <!--
         android:fadingEdgeLength="4dp"

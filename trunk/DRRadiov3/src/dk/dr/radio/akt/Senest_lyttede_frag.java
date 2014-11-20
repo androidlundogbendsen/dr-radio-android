@@ -105,7 +105,6 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
 
       if (v == null) {
         v = getLayoutInflater(null).inflate(R.layout.listeelem_2linjer, parent, false);
-        v.setBackgroundResource(0);
 
         vh = new Viewholder();
         a = vh.aq = new AQuery(v);
@@ -121,7 +120,7 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
       }
 
       // Skjul stiplet linje over øverste listeelement
-      vh.aq.id(R.id.stiplet_linje).background(position == 0 ? R.drawable.linje : R.drawable.stiplet_linje);
+      vh.aq.id(R.id.stiplet_linje).background(position == 0 ? 0 : R.drawable.stiplet_linje);
 
 
       if (sl.lydkilde instanceof Kanal) {
