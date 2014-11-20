@@ -55,7 +55,7 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
     );
     listView.setCacheColorHint(Color.WHITE);
 
-    aq.id(R.id.overskrift).typeface(App.skrift_gibson_fed).text("Dine favoritprogrammer").getTextView();
+    aq.id(R.id.overskrift).typeface(App.skrift_gibson_fed).text("Dine favoritter").getTextView();
 
     favoritter.observatører.add(this);
     run();
@@ -88,20 +88,25 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
         Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
         if (programserie != null) liste.add(programserie);
         else {
-          Log.d("programserieSlug gav ingen værdi: " + programserieSlug);
+          if (DRData.instans.programserieSlugFindesIkke.contains(programserieSlug)) continue;
+          Log.d("programserieSlug gav ingen værdi, henter for " + programserieSlug);
           final int offset = 0;
           String url = DRData.getProgramserieUrl(programserieSlug) + "&offset=" + offset;
           Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
             @Override
             public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
               Log.d("favoritter fikSvar(" + fraCache + " " + url);
-              if (!uændret && json != null && !"null".equals(json)) {
+              if (uændret) return;
+              if (json != null && !"null".equals(json)) {
                 JSONObject data = new JSONObject(json);
                 Programserie programserie = DRJson.parsProgramserie(data, null);
                 JSONArray prg = data.getJSONArray(DRJson.Programs.name());
                 ArrayList<Udsendelse> udsendelser = DRJson.parseUdsendelserForProgramserie(prg, null, DRData.instans);
                 programserie.tilføjUdsendelser(offset, udsendelser);
                 DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
+              } else {
+                DRData.instans.programserieSlugFindesIkke.add(programserieSlug);
+                Log.d("programserieSlugFindesIkke for " + programserieSlug);
               }
               App.forgrundstråd.postDelayed(Favoritprogrammer_frag.this, 250); // Vent 1/4 sekund på eventuelt andre svar
             }
@@ -137,12 +142,12 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
           int n = favoritter.getAntalNyeUdsendelser(ps.slug);
           String txt = (n == 1 ? n + " ny udsendelse" : n + " nye udsendelser");
           aq.id(R.id.linje2).text(txt).typeface(App.skrift_gibson);
-          aq.id(R.id.stiplet_linje).background(position == 0 ? R.drawable.linje : R.drawable.stiplet_linje);
+          aq.id(R.id.stiplet_linje).visibility(position == 0 ? View.INVISIBLE : View.VISIBLE);
         } else {
           Udsendelse udsendelse = (Udsendelse) obj;
           aq.id(R.id.linje1).text(DRJson.datoformat.format(udsendelse.startTid)).typeface(App.skrift_gibson);
           aq.id(R.id.linje2).text(udsendelse.titel).typeface(App.skrift_gibson);
-          aq.id(R.id.stiplet_linje).background(R.drawable.stiplet_linje);
+          aq.id(R.id.stiplet_linje).visibility(View.VISIBLE);
         }
         v.setBackgroundResource(0);
 

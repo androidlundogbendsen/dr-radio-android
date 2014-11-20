@@ -7,7 +7,6 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingBottom="16dp"
-    android:background="@drawable/knap_graa10_bg"
     android:orientation="vertical">
 
   <!--
@@ -28,7 +27,7 @@
       android:id="@+id/linje1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="17.04"
+      android:text="Folkeskolen"
       android:textColor="@color/grå70"
       android:textAppearance="?android:attr/textAppearance"
       tools:ignore="HardcodedText"
@@ -40,7 +39,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_weight="1"
-      android:text="P3 Sporten  |  Polarkreis 18"
+      android:text="4 NYE AFSNIT"
       android:maxLines="2"
       tools:ignore="HardcodedText"/>
 </LinearLayout>

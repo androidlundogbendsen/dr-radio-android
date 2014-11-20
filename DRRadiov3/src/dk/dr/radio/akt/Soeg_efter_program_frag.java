@@ -158,7 +158,6 @@ public class Soeg_efter_program_frag extends Basisfragment implements
     public View getView(int position, View v, ViewGroup parent) {
       try {
         if (v == null) v = getLayoutInflater(null).inflate(R.layout.listeelem_2linjer, parent, false);
-        v.setBackgroundResource(0);
         AQuery aq = new AQuery(v);
         Object obj = liste.get(position);
         if (obj instanceof Programserie) {
@@ -172,6 +171,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
         }
         v.setBackgroundResource(0);
 
+        aq.id(R.id.stiplet_linje).background(position == 0 ? 0 : R.drawable.stiplet_linje);
 
         udvikling_checkDrSkrifter(v, this.getClass() + " ");
       } catch (Exception e) {

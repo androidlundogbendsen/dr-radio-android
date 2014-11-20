@@ -13,6 +13,9 @@
       android:text="Søg efter program"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:paddingTop="@dimen/venstremenu_padding"
+      android:paddingBottom="@dimen/venstremenu_padding"
+      android:layout_gravity="center_vertical"
       android:textStyle="bold"
       android:id="@+id/tekst"/>
 
