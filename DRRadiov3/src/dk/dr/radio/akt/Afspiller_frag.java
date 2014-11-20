@@ -144,7 +144,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     Log.d("Viser fragment " + this);
     rod = inflater.inflate(R.layout.afspiller_frag, container, false);
     aq = new AQuery(rod);
-    starttid = aq.id(R.id.startid).typeface(App.skrift_gibson).getTextView();
+    starttid = aq.id(R.id.starttid).typeface(App.skrift_gibson).getTextView();
     slutttid = aq.id(R.id.slutttid).typeface(App.skrift_gibson).getTextView();
     seekBar = aq.id(R.id.seekBar).getSeekBar();
     seekBar.setOnSeekBarChangeListener(this);
