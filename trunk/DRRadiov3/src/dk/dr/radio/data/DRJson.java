@@ -85,6 +85,12 @@ public enum DRJson {
   public static DateFormat servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
 
   /**
+   * Nogle gange kommer "2014-11-07T14:00:39.871+01:00" !#"!%#!!
+   * http://www.dr.dk/tjenester/mu-apps/series/disse-oejeblikke?type=radio&includePrograms=true&offset=0
+   */
+  public static DateFormat servertidsformat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSz");
+
+  /**
    * parser der kan forstå DRs tidformat: "2014-02-13T10:03:00"
    */
   public static DateFormat servertidsformat_playlise = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -219,7 +225,11 @@ public enum DRJson {
     Udsendelse u = opretUdsendelse(drData, o);
     if (kanal != null) u.kanalSlug = kanal.slug;
     else u.kanalSlug = o.optString(DRJson.ChannelSlug.name());  // Bemærk - kan være tom.
-    u.startTid = servertidsformat.parse(o.getString(DRJson.FirstBroadcast.name()));
+    try {
+      u.startTid = servertidsformat.parse(o.getString(DRJson.FirstBroadcast.name()));
+    } catch (Exception e) {
+      u.startTid = servertidsformat2.parse(o.getString(DRJson.FirstBroadcast.name()));
+    }
     u.startTidKl = klokkenformat.format(u.startTid);
     u.slutTid = new Date(u.startTid.getTime() + o.getInt(DRJson.DurationInSeconds.name()) * 1000);
     return u;
