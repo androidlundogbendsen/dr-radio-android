@@ -95,6 +95,18 @@
 
   </RelativeLayout>
 
+  <TextView
+      android:id="@+id/hør_tekst"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginRight="16dp"
+      android:layout_marginBottom="16dp"
+      android:layout_gravity="bottom|right"
+      android:textColor="@color/hvid"
+      android:background="@color/sort"
+      android:text="Kan endnu\nikke afspilles"
+      android:textSize="12sp"
+      />
   <ImageButton
       android:id="@+id/hør"
       android:layout_width="wrap_content"

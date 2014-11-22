@@ -203,7 +203,6 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
           hentedeUdsendelser.slet(u);
         }
       } else {
-        App.langToast("Eksperiment - tjek hvordan det virker");
         Cursor c = hentedeUdsendelser.getStatusCursor(u);
         if (c != null) {
           hentedeUdsendelser.stop(u);
