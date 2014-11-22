@@ -673,8 +673,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           ImageView im = aq.id(R.id.senest_spillet_kunstnerbillede).getImageView();
           aq.image(skalérDiscoBilledeUrl(ple.billedeUrl, im.getWidth(), im.getHeight()));
         } else {
-          //v.setBackgroundResource(R.drawable.knap_hvid_bg);
-          v.setBackgroundResource(R.drawable.elem_hvid_bg);
+          boolean topseparator = (adapter.getItemViewType(position - 1) == PLAYLISTEELEM_NU);
+          vh.aq.id(R.id.stiplet_linje).visibility(topseparator?View.INVISIBLE:View.VISIBLE);
         }
         aq.id(R.id.hør).visibility(udsendelse.kanNokHøres && ple.offsetMs >= 0 ? View.VISIBLE : View.GONE);
       } else if (type == INDSLAGLISTEELEM) {

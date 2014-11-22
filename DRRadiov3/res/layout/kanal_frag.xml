@@ -37,6 +37,7 @@ http://stackoverflow.com/questions/2949407/can-i-increase-a-buttons-onclick-area
       android:id="@+id/listView"
       android:divider="@null"
       android:dividerHeight="0px"
+      android:cacheColorHint="@color/grå10"
       android:layout_width="fill_parent"
       android:layout_height="fill_parent"/>
 

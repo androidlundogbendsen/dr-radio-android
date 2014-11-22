@@ -7,7 +7,7 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingBottom="16dp"
-    android:background="@drawable/knap_graa10_bg"
+    android:background="@drawable/elem_hvid_bg"
     android:orientation="vertical">
 
   <!--
@@ -61,7 +61,7 @@
         android:id="@+id/hør"
         android:src="@drawable/dri_lyd_blaa"
         tools:ignore="ContentDescription"/>
-  </LinearLayout>
+  </LinearLayout>½
 
 
   <!--
