@@ -112,7 +112,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
   public void onClick(View v) {
     CheckBox favorit = (CheckBox) v;
     DRData.instans.favoritter.sætFavorit(programserieSlug, favorit.isChecked());
-    if (favorit.isChecked()) App.kortToast("Programserien er tilføjet til favoritter");
+    if (favorit.isChecked()) App.kortToast(programserie.titel + " er tilføjet til favoritter");
     Log.registrérTestet("Valg af favoritprogram", programserieSlug);
   }
 

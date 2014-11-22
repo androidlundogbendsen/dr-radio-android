@@ -285,6 +285,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         .text(udsendelse.startTid == null ? "" : DRJson.datoformat.format(udsendelse.startTid))
         .getTextView().setContentDescription("\u00A0");  // SLUK for højtlæsning, det varetages af listviewet
     aq.id(R.id.hør).clicked(this);
+    aq.id(R.id.hør_tekst).typeface(App.skrift_gibson);
     aq.id(R.id.hent).clicked(this).typeface(App.skrift_gibson);
     aq.id(R.id.favorit).clicked(this).typeface(App.skrift_gibson).checked(DRData.instans.favoritter.erFavorit(udsendelse.programserieSlug));
     if (!DRData.instans.hentedeUdsendelser.virker()) aq.gone(); // Understøttes ikke på Android 2.2
@@ -295,62 +296,74 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   private void opdaterTop() {
     AQuery aq = (AQuery) topView.getTag();
     //aq.id(R.id.højttalerikon).visibility(streams ? View.VISIBLE : View.GONE);
+    /*
     boolean lydkildeErDenneUds = udsendelse.equals(afspiller.getLydkilde());
     boolean lydkildeErDenneKanal = kanal == afspiller.getLydkilde().getKanal();
-    boolean erAktuelUdsendelsePåKanalen = aktuelUdsendelsePåKanalen();
+    boolean aktuelUdsendelsePåKanalen = udsendelse.equals(udsendelse.getKanal().getUdsendelse());
+    */
     boolean spiller = afspiller.getAfspillerstatus() == Status.SPILLER;
     boolean forbinder = afspiller.getAfspillerstatus() == Status.FORBINDER;
     boolean erOnline = App.netværk.erOnline();
 
-    aq.id(R.id.hør).visible().enabled(true);
-    if (udsendelse.hentetStream != null)         // Hentede udsendelser
-    {
-      if (lydkildeErDenneUds && (spiller || forbinder)) aq.enabled(false);
-      else {
-        aq.getView().setContentDescription("hør hentet udsendelse");
-        aq.id(R.id.hent).text("hentet");
-      }
-    } else                                        // On demand og direkte udsendelser
-    {
-      if (lydkildeErDenneUds && (spiller || forbinder)) aq.enabled(false);
-        //else if (udsendelse.streamsKlar()) {
-      else if (udsendelse.kanStreames) {
-        if (erOnline) aq.getView().setContentDescription("hør udsendelse");
-        else {
-          aq.enabled(false);
-          aq.id(R.id.hent).text("Internetforbindelse mangler");
-        }
-      } else if (erAktuelUdsendelsePåKanalen) {
-        if (lydkildeErDenneKanal && (spiller || forbinder)) {
-          aq.enabled(false);
-          aq.id(R.id.hent).text("SPILLER " + kanal.navn.toUpperCase() + " LIVE");
-        } else if (erOnline) {
-          aq.getView().setContentDescription("hør " + kanal.navn.toUpperCase());
-          aq.id(R.id.hent).text("HØR " + kanal.navn.toUpperCase() + " LIVE");
-        } else aq.enabled(false).text("Internetforbindelse mangler");
-      }
+    boolean udsendelsenSpillerNu = udsendelse.equals(afspiller.getLydkilde().getUdsendelse()) && (spiller||forbinder);
+    boolean udsendelsenErAktuelPåKanalen = udsendelse.equals(udsendelse.getKanal().getUdsendelse());
+
+    /* Muligheder
+    Udsendelsen spiller lige nu
+
+     */
+    ImageView hør_ikon = aq.id(R.id.hør).getImageView();
+    TextView hør_tekst = aq.id(R.id.hør_tekst).getTextView();
+    if (false);
+    else if (udsendelsenSpillerNu) { // Afspiller / forbinder denne udsendelse
+      hør_ikon.setVisibility(View.GONE);
+      hør_tekst.setVisibility(View.VISIBLE);
+      hør_tekst.setText(spiller ? "AFSPILLER" : "FORBINDER");
     }
+    else if (udsendelse.hentetStream != null) {// Hentet udsendelse
+      hør_ikon.setVisibility(View.VISIBLE);
+      hør_tekst.setVisibility(View.GONE);
+    }
+    else if (!erOnline) {                     // Ej online
+      hør_ikon.setVisibility(View.GONE);
+      hør_tekst.setVisibility(View.VISIBLE);
+      hør_tekst.setText("iNTERNETFORBINDELSE\nMANGLER");
+    }
+    else if (!udsendelse.kanStreames && !udsendelsenErAktuelPåKanalen) {   // On demand og direkte udsendelser
+      hør_ikon.setVisibility(View.GONE);
+      hør_tekst.setVisibility(View.VISIBLE);
+      hør_tekst.setText("KAN ENDNU\nIKKE AFSPILLES");
+    } else {
+      hør_ikon.setVisibility(View.VISIBLE);
+      hør_tekst.setVisibility(View.GONE);
+    }
+    /* skrald
+    aq.id(R.id.hent).text("SPILLER " + kanal.navn.toUpperCase() + " LIVE");
+*/
 
-
-    aq.id(R.id.hent).enabled(
-        DRData.instans.hentedeUdsendelser.virker() && udsendelse.kanHentes);
-    aq.textColorId(udsendelse.streamsKlar() ? R.color.blå : R.color.grå40);
     Cursor c = DRData.instans.hentedeUdsendelser.getStatusCursor(udsendelse);
-    if (c != null) {
-      int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-      String statustekst = HentedeUdsendelser.getStatustekst(c);
-      c.close();
+    aq.id(R.id.hent);
 
+    if (!DRData.instans.hentedeUdsendelser.virker()) {
+      aq.gone();
+    }
+    else if (c != null) {
+      int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
       if (status != DownloadManager.STATUS_SUCCESSFUL && status != DownloadManager.STATUS_FAILED) {
-        aq.id(R.id.hent).text(statustekst);
         App.forgrundstråd.removeCallbacks(this);
         App.forgrundstråd.postDelayed(this, 5000);
       }
-      aq.textColorId(R.color.grå40);
+      String statustekst = HentedeUdsendelser.getStatustekst(c);
+      c.close();
+      if (status == DownloadManager.STATUS_SUCCESSFUL) statustekst = "Hentet";
+
+      aq.text(statustekst.toUpperCase()).enabled(true).textColorId(R.color.grå40);
+    } else if (!udsendelse.kanHentes) {
+      aq.text("KAN IKKE HENTES").enabled(false).textColorId(R.color.grå40);
+    } else if (!udsendelse.streamsKlar()) {
+      aq.text("").enabled(false).textColorId(R.color.grå40);
     } else {
-      if (DRData.instans.hentedeUdsendelser.virker() && !udsendelse.kanHentes) {
-        aq.text("Kan ikke hentes");
-      }
+      aq.text("DOWNLOAD").enabled(true).textColorId(R.color.blå);
     }
     udvikling_checkDrSkrifter(topView, this + " position top");
   }
