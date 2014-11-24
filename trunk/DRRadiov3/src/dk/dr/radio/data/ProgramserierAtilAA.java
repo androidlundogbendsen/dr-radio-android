@@ -32,12 +32,11 @@ public class ProgramserierAtilAA {
         for (int n = 0; n < jsonArray.length(); n++) {
           JSONObject programserieJson = jsonArray.getJSONObject(n);
           String programserieSlug = programserieJson.getString(DRJson.Slug.name());
-          Log.d("\n=========================================== programserieSlug = " + programserieSlug);
+          //Log.d("\n=========================================== programserieSlug = " + programserieSlug);
           Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
-          if (programserie == null) {
-            programserie = new Programserie();
-            DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
-          }
+          if (programserie != null) continue; // Hvis der allerede er et programserie-element fra anden side indeholder den mere information end denne her
+          programserie = new Programserie();
+          DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
           res.add(DRJson.parsProgramserie(programserieJson, programserie));
         }
         Log.d(" res=" + res);

@@ -145,12 +145,14 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
   }
 
   static final int TOP = 0;
-  static final int UDSENDELSE = 1;
-  static final int TIDLIGERE = 2;
+  static final int UDSENDELSE_TOP = 1;
+  static final int UDSENDELSE = 2;
+  static final int TIDLIGERE = 3;
 
   static final int[] layoutFraType = {
       R.layout.programserie_elem0_top,
-      R.layout.programserie_elem1_udsendelse,
+      R.layout.programserie_elem1_nyeste_udsendelse,
+      R.layout.programserie_elem2_udsendelse,
       R.layout.kanal_elem2_tidligere_senere,
   };
 
@@ -162,13 +164,14 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
 
     @Override
     public int getViewTypeCount() {
-      return 3;
+      return layoutFraType.length;
     }
 
     @Override
     public int getItemViewType(int position) {
       Object o = liste.get(position);
       if (o instanceof Integer) return (Integer) o;
+      if (position==1) return UDSENDELSE_TOP;
       return UDSENDELSE;
     }
 
@@ -213,7 +216,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
           aq.id(R.id.titel).typeface(App.skrift_gibson_fed).text(programserie.titel);
           aq.id(R.id.alle_udsendelser).typeface(App.skrift_gibson);
           aq.id(R.id.beskrivelse).text(programserie.beskrivelse).typeface(App.skrift_georgia);
-          Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS);
+          Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES | Linkify.PHONE_NUMBERS);
           aq.id(R.id.favorit).clicked(Programserie_frag.this).typeface(App.skrift_gibson).checked(DRData.instans.favoritter.erFavorit(programserieSlug));
         } else { // if (type == UDSENDELSE eller TIDLIGERE) {
           vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson).getTextView();
@@ -232,11 +235,11 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
         vh.aq.id(R.id.alle_udsendelser)
             .text(lavFedSkriftTil(tekst + " (" + programserie.antalUdsendelser + ")", tekst.length()))
             .getView().setContentDescription(programserie.antalUdsendelser + " udsendelser");
-      } else if (type == UDSENDELSE) {
+      } else if (type==UDSENDELSE || type==UDSENDELSE_TOP) {
         Udsendelse u = (Udsendelse) liste.get(position);
         vh.udsendelse = u;
-        //vh.stiplet_linje.setVisibility(position > 1 ? View.VISIBLE : View.INVISIBLE); // Første stiplede linje væk
-        vh.stiplet_linje.setBackgroundResource(position > 1 ? R.drawable.stiplet_linje : R.drawable.linje); // Første stiplede linje er fuld
+        vh.stiplet_linje.setVisibility(position > 2 ? View.VISIBLE : View.INVISIBLE); // Første stiplede linje på udsendelse væk
+//        vh.stiplet_linje.setBackgroundResource(position > 1 ? R.drawable.stiplet_linje : R.drawable.linje); // Første stiplede linje er fuld
 
         //vh.titel.setText(Html.fromHtml("<b>" + u.titel + "</b>&nbsp; - " + DRJson.datoformat.format(u.startTid)));
         vh.titel.setText(lavFedSkriftTil(u.titel + " - " + DRJson.datoformat.format(u.startTid), u.titel.length()));
