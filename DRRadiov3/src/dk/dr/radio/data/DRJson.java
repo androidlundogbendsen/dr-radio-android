@@ -368,12 +368,12 @@ Description: "I 'Efter fyringerne' lykkes det, gennem private optagelser og inte
   public static Programserie parsProgramserie(JSONObject o, Programserie ps) throws JSONException {
     if (ps == null) ps = new Programserie();
     ps.titel = o.getString(DRJson.Title.name());
-    ps.undertitel = o.optString(DRJson.Subtitle.name());
+    ps.undertitel = o.optString(DRJson.Subtitle.name(), ps.undertitel);
     ps.beskrivelse = o.optString(DRJson.Description.name());
-    ps.billedeUrl = fjernHttpWwwDrDk(o.optString(DRJson.ImageUrl.name(), null));
+    ps.billedeUrl = fjernHttpWwwDrDk(o.optString(DRJson.ImageUrl.name(), ps.billedeUrl));
     ps.slug = o.getString(DRJson.Slug.name());
     ps.urn = o.optString(DRJson.Urn.name());
-    ps.antalUdsendelser = o.optInt(DRJson.TotalPrograms.name());
+    ps.antalUdsendelser = o.optInt(DRJson.TotalPrograms.name(), ps.antalUdsendelser);
     return ps;
   }
 
