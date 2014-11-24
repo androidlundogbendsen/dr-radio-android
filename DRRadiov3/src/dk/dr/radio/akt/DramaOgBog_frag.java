@@ -48,8 +48,9 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable, AdapterV
         liste.add(DramaOgBog.overskrifter[sektionsnummer]+" ("+DRData.instans.dramaOgBog.lister[sektionsnummer].size()+")");
         int n = 0;
         for (Programserie programserie : DRData.instans.dramaOgBog.lister[sektionsnummer]) {
+          //Log.d("DramaOgBogF "+sektionsnummer+" "+n+programserie+" "+programserie.antalUdsendelser+" "+programserie.billedeUrl);
           n++;
-          if (programserie.antalUdsendelser > 0) karruselListe.add(programserie);
+          if (programserie.antalUdsendelser>0 && programserie.billedeUrl!=null) karruselListe.add(programserie);
           if (n < 3  || listesektionerUdvidet[sektionsnummer]) liste.add(programserie);
           if (n == 3 && !listesektionerUdvidet[sektionsnummer]) liste.add(sektionsnummer); // VIS FLERE
         }
@@ -152,11 +153,10 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable, AdapterV
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       programserieSlug = getArguments().getString(DRJson.SeriesSlug.name());
-      Log.d("onCreateView " + this + " viser " + programserieSlug);
       View rod = inflater.inflate(R.layout.kanal_elem0_inkl_billede_titel, container, false);
       programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
-
       String burl = Basisfragment.skalérBillede(programserie);
+      //Log.d("onCreateView " + this + " viser " + programserie+" "+burl);
       AQuery aq = new AQuery(rod);
       aq.clicked(this);
       aq.id(R.id.billede).width(billedeBr, false).height(billedeHø, false)

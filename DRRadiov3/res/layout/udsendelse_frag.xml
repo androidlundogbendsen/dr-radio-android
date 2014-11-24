@@ -6,10 +6,10 @@
       android:id="@+id/listView"
       android:divider="@null"
       android:dividerHeight="0px"
-      android:fastScrollEnabled="true"
       android:layout_width="fill_parent"
       android:layout_height="fill_parent"/>
   <!--
+      android:fastScrollEnabled="true"
       android:requiresFadingEdge="vertical"
       android:fadingEdgeLength="4dp"
       android:cacheColorHint="@color/grå20"

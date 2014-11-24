@@ -37,13 +37,14 @@ public class DramaOgBog {
           for (int n = 0; n < jsonArray.length(); n++) {
             JSONObject programserieJson = jsonArray.getJSONObject(n);
             String programserieSlug = programserieJson.getString(DRJson.Slug.name());
-            Log.d("\n DramaOgBog =========================================== programserieSlug = " + programserieSlug);
+            //Log.d("\n DramaOgBog =========================================== programserieSlug = " + programserieSlug);
             Programserie programserie = DRData.instans.programserieFraSlug.get(programserieSlug);
             if (programserie == null) {
               programserie = new Programserie();
               DRData.instans.programserieFraSlug.put(programserieSlug, programserie);
             }
             res.add(DRJson.parsProgramserie(programserieJson, programserie));
+            Log.d("DramaOgBogD "+sektionsnummer+" "+n+programserie+" "+programserie.antalUdsendelser+" "+programserie.billedeUrl);
           }
           Log.d("parseDramaOgBog "+overskrifter[sektionsnummer]+ " res=" + res);
         }

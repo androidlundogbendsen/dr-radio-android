@@ -7,7 +7,7 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingBottom="16dp"
-    android:background="@drawable/knap_graa10_bg"
+    android:background="@color/grå50"
     android:orientation="vertical">
 
   <View
