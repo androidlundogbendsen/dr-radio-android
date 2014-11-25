@@ -7,7 +7,6 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingBottom="16dp"
-    android:background="@color/grå50"
     android:orientation="vertical">
 
   <View
@@ -18,26 +17,76 @@
       android:layout_marginBottom="13dp"
       android:layout_height="3dp"/>
 
-
-  <TextView
-      android:id="@+id/titel"
+  <LinearLayout
+      android:orientation="vertical"
+      android:padding="16dp"
+      android:background="@color/grå50"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="Pressen på P3 - 17. jan. 2014"
-      android:textAppearance="?android:attr/textAppearanceMedium"
-      android:textStyle="bold"
-      android:textColor="@color/grå80"
-      tools:ignore="HardcodedText"
-      />
+      android:layout_height="wrap_content">
 
-  <TextView
-      android:id="@+id/varighed"
+  <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="match_parent"
+      android:gravity="top"
+      android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0px"
+        android:layout_weight="1"
+        android:layout_height="wrap_content">
+
+
+      <TextView
+          android:id="@+id/titel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Pressen på P3"
+          android:textAppearance="?android:attr/textAppearanceMedium"
+          android:textStyle="bold"
+          android:textColor="@color/hvid"
+          tools:ignore="HardcodedText"
+          />
+
+      <TextView
+          android:id="@+id/dato"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="17. jan. 2014"
+          android:textAppearance="?android:attr/textAppearanceMedium"
+          android:textColor="@color/hvid"
+          tools:ignore="HardcodedText"
+          />
+
+      <TextView
+          android:id="@+id/varighed"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="55 MIN"
+          tools:ignore="HardcodedText"
+          android:textSize="@dimen/metainfo_skrifstørrelse"
+          android:textColor="@color/grå20"/>
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/se_mere"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SE MERE"
+        android:layout_marginRight="16dp"
+        tools:ignore="HardcodedText"
+        android:textColor="@color/blå"/>
+  </LinearLayout>
+  <Button
+      android:id="@+id/hør"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="P3, 55 MIN"
-      tools:ignore="HardcodedText"
-      android:textSize="@dimen/metainfo_skrifstørrelse"
-      android:textColor="@color/grå50"/>
-
+      android:layout_height="@dimen/hørknap_højde"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="16dp"
+      android:drawableLeft="@drawable/dri_lyd_hvid"
+      android:text=" HØR UDSENDELSE"
+      android:textColor="@color/hvid"
+      android:background="@drawable/knap_blaa_bg"/>
+  </LinearLayout>
 
 </LinearLayout>

@@ -18,17 +18,36 @@
       android:layout_marginBottom="13dp"
       android:layout_height="3dp"/>
 
-
-  <TextView
-      android:id="@+id/titel"
+  <LinearLayout
+      android:orientation="horizontal"
       android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0px"
+        android:layout_weight="1"
+        android:layout_height="wrap_content">
+
+
+    <TextView
+      android:id="@+id/titel"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="Pressen på P3 - 17. jan. 2014"
+      android:text="Pressen på P3"
       android:textAppearance="?android:attr/textAppearanceMedium"
       android:textStyle="bold"
-      android:textColor="@color/grå80"
       tools:ignore="HardcodedText"
       />
+
+    <TextView
+        android:id="@+id/dato"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="17. jan. 2014"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        tools:ignore="HardcodedText"
+        />
 
   <TextView
       android:id="@+id/varighed"
@@ -39,5 +58,14 @@
       android:textSize="@dimen/metainfo_skrifstørrelse"
       android:textColor="@color/grå50"/>
 
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/hør"
+        android:src="@drawable/dri_lyd_blaa"
+        tools:ignore="ContentDescription"/>
+  </LinearLayout>
 
 </LinearLayout>

@@ -28,10 +28,14 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
   public String dagsbeskrivelse;
 
   public transient ArrayList<Playlisteelement> playliste;
-  public transient ArrayList<Indslaglisteelement> indslag; // 'Chapters' i API'et, undgå undersættelsen 'kapitler'
-  public boolean kanNokHøres; // API'ets udmelding på, om der er nogle streams eller ej. Desværre er API'et ikke pålideligt, så den eneste måde reelt at vide det er faktisk at hente streamsne
-  public boolean kanStreames; // Efter at streams er hentet, om der er en egnet streams til direkte afspilning
-  public boolean kanHentes;   // Efter at streams er hentet, om der er mulighed for at hente udsendelsen ned til offline brug
+  /** 'Chapters' i API'et, undgå undersættelsen 'kapitler' */
+  public transient ArrayList<Indslaglisteelement> indslag;
+  /** API'ets udmelding på, om der er nogle streams eller ej. Desværre er API'et ikke pålideligt, så den eneste måde reelt at vide det er faktisk at hente streamsne */
+  public boolean kanNokHøres;
+  /** Efter at streams er hentet, om der er en egnet streams til direkte afspilning */
+  public boolean kanStreames;
+  /** Efter at streams er hentet, om der er mulighed for at hente udsendelsen ned til offline brug */
+  public boolean kanHentes;
   public String produktionsnummer;
   public String shareLink;
   //public transient int startposition;// hvis der allerede er lyttet til denne senestLyttet så notér det her så afspilning kan fortsætte herfra
