@@ -110,10 +110,16 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
 
   @Override
   public void onClick(View v) {
-    CheckBox favorit = (CheckBox) v;
-    DRData.instans.favoritter.sætFavorit(programserieSlug, favorit.isChecked());
-    if (favorit.isChecked()) App.kortToast(programserie.titel + " er tilføjet til favoritter");
-    Log.registrérTestet("Valg af favoritprogram", programserieSlug);
+    if (v.getId()==R.id.favorit) {
+      CheckBox favorit = (CheckBox) v;
+      DRData.instans.favoritter.sætFavorit(programserieSlug, favorit.isChecked());
+      if (favorit.isChecked()) App.kortToast(programserie.titel + " er tilføjet til favoritter");
+      Log.registrérTestet("Valg af favoritprogram", programserieSlug);
+    } else {
+      Udsendelse udsendelse = ((Viewholder) v.getTag()).udsendelse;
+      DRData.instans.afspiller.setLydkilde(udsendelse);
+      DRData.instans.afspiller.startAfspilning();
+    }
   }
 
 
@@ -127,6 +133,8 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     public TextView titel;
     public TextView varighed;
     public int itemViewType;
+    public View hør;
+    public TextView dato;
   }
 
   void bygListe() {
@@ -135,6 +143,12 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
       liste.add(TOP);
       if (programserie.getUdsendelser() != null) {
         liste.addAll(programserie.getUdsendelser());
+        førsteUdsendelseDerKanHøresIndex = 1;
+        for (Udsendelse u : programserie.getUdsendelser()) {
+          int varighed = (int) ((u.slutTid.getTime() - u.startTid.getTime()) / 1000 / 60);
+          if (varighed>0) break;
+          førsteUdsendelseDerKanHøresIndex++;
+        }
         if (programserie.getUdsendelser().size() < programserie.antalUdsendelser) {
           Log.d("bygListe() viser TIDLIGERE: " + programserie.getUdsendelser().size() + " < " + programserie.antalUdsendelser);
           liste.add(TIDLIGERE);  // Vis 'tidligere'-listeelement
@@ -148,6 +162,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
   static final int UDSENDELSE_TOP = 1;
   static final int UDSENDELSE = 2;
   static final int TIDLIGERE = 3;
+  private int førsteUdsendelseDerKanHøresIndex;
 
   static final int[] layoutFraType = {
       R.layout.programserie_elem0_top,
@@ -171,7 +186,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     public int getItemViewType(int position) {
       Object o = liste.get(position);
       if (o instanceof Integer) return (Integer) o;
-      if (position==1) return UDSENDELSE_TOP;
+      if (position== førsteUdsendelseDerKanHøresIndex) return UDSENDELSE_TOP;
       return UDSENDELSE;
     }
 
@@ -219,9 +234,12 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
           Linkify.addLinks(aq.getTextView(), Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES | Linkify.PHONE_NUMBERS);
           aq.id(R.id.favorit).clicked(Programserie_frag.this).typeface(App.skrift_gibson).checked(DRData.instans.favoritter.erFavorit(programserieSlug));
         } else { // if (type == UDSENDELSE eller TIDLIGERE) {
-          vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson).getTextView();
+          vh.titel = aq.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
+          vh.dato = aq.id(R.id.dato).typeface(App.skrift_gibson).getTextView();
           vh.varighed = aq.id(R.id.varighed).typeface(App.skrift_gibson).getTextView();
           vh.stiplet_linje = aq.id(R.id.stiplet_linje).getView();
+          aq.id(R.id.se_mere).typeface(App.skrift_gibson);
+          vh.hør = aq.id(R.id.hør).clicked(Programserie_frag.this).typeface(App.skrift_gibson).tag(vh).getView();
         }
       } else {
         vh = (Viewholder) v.getTag();
@@ -242,7 +260,9 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
 //        vh.stiplet_linje.setBackgroundResource(position > 1 ? R.drawable.stiplet_linje : R.drawable.linje); // Første stiplede linje er fuld
 
         //vh.titel.setText(Html.fromHtml("<b>" + u.titel + "</b>&nbsp; - " + DRJson.datoformat.format(u.startTid)));
-        vh.titel.setText(lavFedSkriftTil(u.titel + " - " + DRJson.datoformat.format(u.startTid), u.titel.length()));
+        //vh.titel.setText(lavFedSkriftTil(u.titel + " - " + DRJson.datoformat.format(u.startTid), u.titel.length()));
+        vh.titel.setText(u.titel);
+        vh.dato.setText(DRJson.datoformat.format(u.startTid));
         //Log.d("DRJson.datoformat.format(u.startTid)=" + DRJson.datoformat.format(u.startTid));
 
         //String txt = u.getKanal().navn + ", " + ((u.slutTid.getTime() - u.startTid.getTime())/1000/60 + " MIN");
@@ -262,6 +282,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
         vh.varighed.setText(txt);
         vh.varighed.setContentDescription(txt.toLowerCase());
         vh.varighed.setVisibility(txt.length() > 0 ? View.VISIBLE : View.GONE);
+        vh.hør.setVisibility( varighed > 0 ? View.VISIBLE : View.GONE);
       } else if (type == TIDLIGERE) {
         if (antalHentedeSendeplaner++ < 7) {
           vh.aq.id(R.id.progressBar).visible();   // De første 7 henter vi bare for brugeren
