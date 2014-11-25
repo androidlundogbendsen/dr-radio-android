@@ -4,7 +4,7 @@
           android:paddingLeft="16dp"
           android:paddingTop="@dimen/venstremenu_padding"
           android:paddingBottom="@dimen/venstremenu_padding"
-          android:text="Senest lyttede"
+          android:text="Senest lyttede x"
           android:textStyle="bold"
           android:id="@+id/tekst"/>
     <!--

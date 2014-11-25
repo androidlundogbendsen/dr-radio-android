@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,12 +35,14 @@ public class AlleUdsendelserAtilAA_frag extends Basisfragment implements Adapter
 
     AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
-    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).text(
+    listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).getView());
+    /*.text(
 //        "Ingen favoritter\nGå ind på en programserie og tryk på hjertet for at gøre det til en favorit"
             Html.fromHtml("<b>Saml dine favoritter her</b><br><br>Klik på hjertet på dine yndlingsprogrammer. Du får nem adgang til dine favoritter – og du kan hurtigt se, når der er kommet nye udsendelser.")
 
         ).getView()
     );
+    */
     listView.setCacheColorHint(Color.WHITE);
 
     aq.id(R.id.overskrift).typeface(App.skrift_gibson_fed).text("Alle udsendelser").getTextView();
