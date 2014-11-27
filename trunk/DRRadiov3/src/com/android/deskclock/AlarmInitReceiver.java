@@ -32,7 +32,7 @@ public class AlarmInitReceiver extends BroadcastReceiver {
   public void onReceive(final Context context, Intent intent) {
     final String action = intent.getAction();
     Log.d("AlarmInitReceiver" + action);
-    if (!App.PRODUKTION) App.langToast("AlarmInitReceiver onReceive(" + intent);
+    if (App.fejlsøgning) App.langToast("AlarmInitReceiver onReceive(" + intent);
 
     //final PendingResult result = goAsync();
     final WakeLock wl = AlarmAlertWakeLock.createPartialWakeLock(context);
