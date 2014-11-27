@@ -43,7 +43,7 @@ public class AlarmReceiver extends BroadcastReceiver {
   public void onReceive(final Context context, final Intent intent) {
     try {
       Log.d("AlarmReceiver onReceive(" + intent);
-      if (!App.PRODUKTION) App.langToast("AlarmReceiver onReceive(" + intent);
+      if (App.fejlsøgning) App.langToast("AlarmReceiver onReceive(" + intent);
       DRData.instans.afspiller.vækningIGang = true;
       DRData.instans.afspiller.vækkeurWakeLock = AlarmAlertWakeLock.createPartialWakeLock(context);
       DRData.instans.afspiller.vækkeurWakeLock.acquire(); // preferus temon, eble 120000 ĉi tie,
@@ -82,7 +82,9 @@ public class AlarmReceiver extends BroadcastReceiver {
       } else {
         // Enable the next alert if there is one. The above call to
         // enableAlarm will call setNextAlert so avoid calling it twice.
-        Alarms.setNextAlert(context);
+        alarm.time = 0; // signalerer at næste alarmtid skal beregnes
+        Alarms.setAlarm(context, alarm);
+//        Alarms.setNextAlert(context);
       }
 
       // Intentionally verbose: always log the alarm time to provide useful

@@ -308,7 +308,7 @@ public class AlarmClock_akt extends Basisaktivitet implements OnItemClickListene
   /*
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.deskclock_alarm_list_menu_UBRUGT, menu);
+    getMenuInflater().inflate(R.menu.deskclock_alarm_list_menu_ubrugt, menu);
     return super.onCreateOptionsMenu(menu);
   }
   */
