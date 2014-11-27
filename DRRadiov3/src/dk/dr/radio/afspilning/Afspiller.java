@@ -168,15 +168,22 @@ public class Afspiller {
     }
     if (lydkilde.hentetStream == null && lydkilde.streams == null) {
       Request<?> req = new DrVolleyStringRequest(lydkilde.getStreamsUrl(), new DrVolleyResonseListener() {
+        public boolean startet;
+
         @Override
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
           if (uændret) return; // ingen grund til at parse det igen
           JSONObject o = new JSONObject(json);
           lydkilde.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
+          if (startet) return;
           Log.d("Afspiller hentStreams " + lydkilde + " fraCache=" + fraCache + " k.lydUrl=" + lydkilde.streams);
-          if (onErrorTæller++ > 10)
-            Log.rapporterFejl(new Exception("onErrorTæller++>10, uendelig løkke afværget"), lydkilde);
-          else startAfspilning(); // Opdatér igen
+          if (onErrorTæller++ > 10) {
+            App.kortToast("Internetforbindelse mangler");
+            //Log.rapporterFejl(new Exception("onErrorTæller++>10, uendelig løkke afværget"), lydkilde);
+          } else {
+            startAfspilning(); // Opdatér igen - men kun én gang
+            startet = true;
+          }
         }
 
         @Override
@@ -348,13 +355,14 @@ public class Afspiller {
         setDataSourceTid = System.currentTimeMillis();
         setDataSourceLyd = false;
         try {
-          lydstream = lydkilde.findBedsteStreams(false).get(0);
+          List<Lydstream> bs = lydkilde.findBedsteStreams(false);
 
-          if (lydstream == null) {
-            Log.rapporterFejl(new IllegalStateException("Ingen lydUrl for " + lydkilde + ": " + lydkilde.streams));
+          if (bs.size() == 0) {
+            Log.rapporterFejl(new IllegalStateException("Ingen passende lydUrl for " + lydkilde + ": " + lydkilde.streams));
             App.kortToast("Kunne ikke oprette forbindelse");
             return;
           }
+          lydstream = bs.get(0);
           gemiusStatistik.setLydkilde(lydkilde);
           DRData.instans.senestLyttede.registrérLytning(lydkilde);
           Log.d("mediaPlayer.setDataSource( " + lydstream);
@@ -765,7 +773,7 @@ public class Afspiller {
         } else {
           pauseAfspilning(); // Vi giver op efter 10. forsøg
           App.langToast("Beklager, kan ikke spille radio");
-          App.langToast("Prøv at vælge et andet format i indstillingerne");
+          App.langToast("Tjek din internetforbindelse,\n og prøv eventuelt at vælge et andet lydformat i indstillingerne");
           if (afspillerlyde) afspillerlyd.fejl.start();
         }
       } else {

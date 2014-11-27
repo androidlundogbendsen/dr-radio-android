@@ -1,7 +1,6 @@
 package dk.dr.radio.akt;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +19,7 @@ import java.util.Collections;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
+import dk.dr.radio.data.Grunddata;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.data.SenestLyttede;
@@ -28,7 +28,7 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.v3.R;
 
-public class Senest_lyttede_frag extends Basisfragment implements AdapterView.OnItemClickListener, Runnable {
+public class Senest_lyttede_frag extends Basisfragment implements AdapterView.OnItemClickListener, Runnable, View.OnClickListener {
 
   private ListView listView;
   private ArrayList<SenestLyttede.SenestLyttet> liste = new ArrayList<SenestLyttede.SenestLyttet>();
@@ -47,8 +47,9 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
     overskrift.setVisibility(View.VISIBLE);
 
     udvikling_checkDrSkrifter(rod, this + " rod");
-    DRData.instans.afspiller.observatører.add(this);
-    App.netværk.observatører.add(this);
+    // Vi ændrer ikke i listen imens den vises, så vi behøver ikke observere afspilleren
+    //DRData.instans.afspiller.observatører.add(this);
+    //App.netværk.observatører.add(this);
     opdaterListe();
     return rod;
   }
@@ -56,8 +57,8 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
   @Override
   public void onDestroyView() {
     super.onDestroyView();
-    DRData.instans.afspiller.observatører.remove(this);
-    App.netværk.observatører.remove(this);
+    //DRData.instans.afspiller.observatører.remove(this);
+    //App.netværk.observatører.remove(this);
   }
 
   @Override
@@ -83,10 +84,21 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
     adapter.notifyDataSetChanged();
   }
 
+  @Override
+  public void onClick(View v) {
+    Lydkilde udsendelse = ((Viewholder) v.getTag()).sl.lydkilde;
+    DRData.instans.afspiller.setLydkilde(udsendelse);
+    DRData.instans.afspiller.startAfspilning();
+  }
+
   private static class Viewholder {
     public AQuery aq;
-    public TextView linje1;
-    public TextView linje2;
+    public TextView titel;
+    public TextView dato;
+    public TextView varighed;
+    public View stiplet_linje;
+    public View hør;
+    public SenestLyttede.SenestLyttet sl;
   }
 
 
@@ -100,24 +112,25 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
     public View getView(int position, View v, ViewGroup parent) {
 
       Viewholder vh;
-      AQuery a;
       SenestLyttede.SenestLyttet sl = liste.get(position);
 
       if (v == null) {
-        v = getLayoutInflater(null).inflate(R.layout.listeelem_2linjer, parent, false);
+        v = getLayoutInflater(null).inflate(R.layout.programserie_elem2_udsendelse, parent, false);
 
         vh = new Viewholder();
-        a = vh.aq = new AQuery(v);
-        vh.linje1 = a.id(R.id.linje1).typeface(App.skrift_gibson_fed).textColor(Color.BLACK).getTextView();
-        vh.linje2 = a.id(R.id.linje2).typeface(App.skrift_gibson).getTextView();
-
-
+        AQuery a = vh.aq = new AQuery(v);
+        vh.titel = a.id(R.id.titel).typeface(App.skrift_gibson_fed).getTextView();
+        vh.dato = a.id(R.id.dato).typeface(App.skrift_gibson).getTextView();
+        vh.varighed = a.id(R.id.varighed).typeface(App.skrift_gibson).getTextView();
+        vh.stiplet_linje = a.id(R.id.stiplet_linje).getView();
+        vh.hør = a.id(R.id.hør).tag(vh).clicked(Senest_lyttede_frag.this).typeface(App.skrift_gibson).getView();
         v.setTag(vh);
 
       } else {
         vh = (Viewholder) v.getTag();
-        a = vh.aq;
       }
+      vh.sl = sl;
+      vh.stiplet_linje.setVisibility(position > 2 ? View.VISIBLE : View.INVISIBLE); // Første stiplede linje på udsendelse væk
 
       // Skjul stiplet linje over øverste listeelement
       vh.aq.id(R.id.stiplet_linje).background(position == 0 ? 0 : R.drawable.stiplet_linje);
@@ -125,16 +138,18 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
 
       if (sl.lydkilde instanceof Kanal) {
         Kanal k = (Kanal) sl.lydkilde;
-        vh.linje1.setText(k.navn + " (Direkte)");
-        vh.linje2.setText(k.navn);
+        vh.titel.setText(k.navn + " (Direkte)");
+        vh.dato.setVisibility(View.GONE);
       } else if (sl.lydkilde instanceof Udsendelse) {
         Udsendelse u = (Udsendelse) sl.lydkilde;
-        vh.linje1.setText(u.titel);
+        vh.titel.setText(u.titel);
+        vh.dato.setVisibility(View.VISIBLE);
         Kanal k = u.getKanal();
-        vh.linje2.setText((k == null ? "" : k.navn + " - ") + DRJson.getDagsbeskrivelse(u.startTid).toLowerCase() + " kl " + u.startTidKl);
+        vh.dato.setText((k == Grunddata.ukendtKanal ? "" : (k.navn + " - ")) + DRJson.getDagsbeskrivelse(u.startTid).toLowerCase() + " kl " + u.startTidKl);
       } else {
         Log.rapporterFejl(new Exception("forkert type"), sl.lydkilde);
       }
+      vh.varighed.setText("Lyttet "+DRJson.getDagsbeskrivelse(vh.sl.tidpunkt).toLowerCase() + " kl " + DRJson.klokkenformat.format(vh.sl.tidpunkt));
 
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
 

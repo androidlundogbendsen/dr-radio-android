@@ -42,10 +42,10 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="Pressen på P3"
-          android:textAppearance="?android:attr/textAppearanceMedium"
-          android:textStyle="bold"
-          android:textColor="@color/hvid"
           tools:ignore="HardcodedText"
+          android:textStyle="bold"
+          android:textSize="@dimen/titel_skrifstørrelse"
+          android:textColor="@color/hvid"
           />
 
       <TextView
@@ -53,7 +53,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="17. jan. 2014"
-          android:textAppearance="?android:attr/textAppearanceMedium"
+          android:textSize="@dimen/dato_skrifstørrelse"
           android:textColor="@color/hvid"
           tools:ignore="HardcodedText"
           />
