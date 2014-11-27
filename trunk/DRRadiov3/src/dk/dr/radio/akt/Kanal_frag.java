@@ -297,7 +297,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
     if (App.serverCurrentTimeMillis() > vh.udsendelse.slutTid.getTime()) {
       opdaterListe();
-      if (!App.PRODUKTION) App.kortToast("Kanal_frag opdaterListe()");
+      if (App.fejlsøgning) App.kortToast("Kanal_frag opdaterListe()");
       if (vh.startid.isShown()) rulBlødtTilAktuelUdsendelse();
     }
 

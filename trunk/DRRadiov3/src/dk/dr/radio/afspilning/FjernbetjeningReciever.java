@@ -69,7 +69,7 @@ public class FjernbetjeningReciever extends BroadcastReceiver {
           DRData.instans.afspiller.startAfspilning();
         } else {
           DRData.instans.afspiller.pauseAfspilning();
-          DRData.instans.afspiller.lyd_afspiller_stop.start();
+          if (DRData.instans.afspiller.afspillerlyde) DRData.instans.afspiller.afspillerlyd.stop.start();
         }
     }
   }
