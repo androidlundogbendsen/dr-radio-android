@@ -386,20 +386,6 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       aq.typeface(App.skrift_gibson_fed);
       */
 
-      //tilføj(R.layout.venstremenu_elem_adskiller_tynd);
-
-      tilføj(R.layout.venstremenu_elem_overskrift, AlleUdsendelserAtilAA_frag.class);
-      aq.id(R.id.tekst).text("Alle udsendelser A-Å").typeface(App.skrift_gibson_fed);
-
-
-
-
-      //tilføj(R.layout.venstremenu_elem_adskiller_tynd);
-
-      tilføj(R.layout.venstremenu_elem_overskrift, DramaOgBog_frag.class);
-      aq.id(R.id.tekst).text("Drama & Bog").typeface(App.skrift_gibson_fed);
-
-
       tilføj(R.layout.venstremenu_elem_overskrift, Senest_lyttede_frag.class);
       aq.id(R.id.tekst).text("Senest lyttede").typeface(App.skrift_gibson_fed);
 
@@ -432,7 +418,17 @@ public class Venstremenu_frag extends Fragment implements Runnable {
         aq.id(R.id.tekst).typeface(App.skrift_gibson_fed).id(R.id.tekst2).typeface(App.skrift_gibson);
       }
 
-      tilføj(R.layout.venstremenu_elem_adskiller_tynd);
+
+      tilføj(R.layout.venstremenu_elem_overskrift, DramaOgBog_frag.class);
+      aq.id(R.id.tekst).text("Drama & Bog").typeface(App.skrift_gibson_fed);
+
+
+//      tilføj(R.layout.venstremenu_elem_adskiller_tynd);
+
+      tilføj(R.layout.venstremenu_elem_overskrift, AlleUdsendelserAtilAA_frag.class);
+      aq.id(R.id.tekst).text("Alle udsendelser A-Å").typeface(App.skrift_gibson_fed);
+
+
       tilføj(R.layout.venstremenu_elem_overskrift, new Runnable() {
         @Override
         public void run() {
@@ -442,10 +438,11 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       aq.id(R.id.tekst).text("Vækkeur").typeface(App.skrift_gibson_fed);
 
 
-      tilføj(R.layout.venstremenu_elem_adskiller_tynd);
+      tilføj(R.layout.venstremenu_elem_overskrift, Kontakt_info_om_frag.class);
+      aq.id(R.id.tekst).text("Kontakt / info / om").typeface(App.skrift_gibson_fed);
 
-      tilføj(R.layout.venstremenu_elem_overskrift, P4kanalvalg_frag.class);
-      aq.id(R.id.tekst).text("Vælg P4-område").typeface(App.skrift_gibson_fed);
+
+      tilføj(R.layout.venstremenu_elem_adskiller_tynd);
 
 
       tilføj(R.layout.venstremenu_elem_overskrift, new Runnable() {
@@ -456,10 +453,10 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       });
       aq.id(R.id.tekst).text("Indstillinger").typeface(App.skrift_gibson_fed);
 
+      tilføj(R.layout.venstremenu_elem_overskrift, P4kanalvalg_frag.class);
+      aq.id(R.id.tekst).text("Vælg P4-område").typeface(App.skrift_gibson_fed);
 
 
-      tilføj(R.layout.venstremenu_elem_overskrift, Kontakt_info_om_frag.class);
-      aq.id(R.id.tekst).text("Kontakt / info / om").typeface(App.skrift_gibson_fed);
 
       if (!App.PRODUKTION) {
         tilføj(R.layout.venstremenu_elem_adskiller_tynd);

@@ -232,7 +232,7 @@ public class Alarms {
 
     Kanal nyKanal = DRData.instans.grunddata.kanalFraKode.get(alarm.kanalo);
     if (nyKanal == null) {
-      Log.rapporterFejl(new IllegalStateException("Alarm: Kanal findes ikke!" + alarm.kanalo));
+      Log.rapporterFejl(new IllegalStateException("Alarm: Kanal findes ikke!"), alarm.kanalo + " var ikke i "+DRData.instans.grunddata.kanalFraKode.keySet() );
       nyKanal = DRData.instans.grunddata.forvalgtKanal;
     }
 
