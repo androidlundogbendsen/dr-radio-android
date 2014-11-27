@@ -75,7 +75,7 @@ public class Kanal extends Lydkilde {
   /** Finder den aktuelle udsendelse på kanalen */
   @Override
   public Udsendelse getUdsendelse() {
-    if (udsendelser.size() == 0) return null;
+    if (udsendelser==null || udsendelser.size() == 0) return null;
     Date nu = new Date(App.serverCurrentTimeMillis()); // Kompenseret for forskelle mellem telefonens ur og serverens ur
     // Nicolai: "jeg løber listen igennem fra bunden og op,
     // og så finder jeg den første der har starttid >= nuværende tid + sluttid <= nuværende tid."

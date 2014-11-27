@@ -239,7 +239,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
           vh.varighed = aq.id(R.id.varighed).typeface(App.skrift_gibson).getTextView();
           vh.stiplet_linje = aq.id(R.id.stiplet_linje).getView();
           aq.id(R.id.se_mere).typeface(App.skrift_gibson);
-          vh.hør = aq.id(R.id.hør).clicked(Programserie_frag.this).typeface(App.skrift_gibson).tag(vh).getView();
+          vh.hør = aq.id(R.id.hør).tag(vh).clicked(Programserie_frag.this).typeface(App.skrift_gibson).getView();
         }
       } else {
         vh = (Viewholder) v.getTag();

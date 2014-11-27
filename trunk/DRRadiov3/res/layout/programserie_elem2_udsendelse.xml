@@ -35,19 +35,19 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="Pressen på P3"
-      android:textAppearance="?android:attr/textAppearanceMedium"
-      android:textStyle="bold"
       tools:ignore="HardcodedText"
-      />
+      android:textStyle="bold"
+      android:textSize="@dimen/titel_skrifstørrelse"
+      android:textColor="@color/sort"/>
 
     <TextView
         android:id="@+id/dato"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="17. jan. 2014"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         tools:ignore="HardcodedText"
-        />
+        android:textSize="@dimen/dato_skrifstørrelse"
+        android:textColor="@color/sort"/>
 
   <TextView
       android:id="@+id/varighed"

@@ -30,7 +30,7 @@
           android:layout_height="wrap_content"
           android:text="17.04"
           android:textColor="@color/grå70"
-          android:textAppearance="?android:attr/textAppearanceMedium"
+          android:textSize="@dimen/titel_skrifstørrelse"
           tools:ignore="HardcodedText"
           android:layout_alignParentTop="true"
           android:layout_alignParentLeft="true"

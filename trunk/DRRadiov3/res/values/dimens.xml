@@ -18,6 +18,8 @@
   <dimen name="afspiller_udvidet_højde_gæt">105dp</dimen>
   <dimen name="kanalmargen">16dp</dimen>
   <dimen name="venstremenu_padding">16dp</dimen>
+  <dimen name="titel_skrifstørrelse">18sp</dimen>
+  <dimen name="dato_skrifstørrelse">16sp</dimen>
   <dimen name="metainfo_skrifstørrelse">14sp</dimen>
   <dimen name="vis_flere_knap_højde">36dp</dimen>
 

@@ -434,8 +434,7 @@ public class App extends Application {
     boolean før = erIGang > 0;
     erIGang += netværkErIGang ? 1 : -1;
     boolean nu = erIGang > 0;
-    //if (fejlsøgning)
-      Log.d("erIGang = " + erIGang);
+    if (fejlsøgning) Log.d("erIGang = " + erIGang);
     if (erIGang < 0) {
       if (App.EMULATOR) Log.e(new IllegalStateException("erIGang er " + erIGang));
       erIGang = 0;
