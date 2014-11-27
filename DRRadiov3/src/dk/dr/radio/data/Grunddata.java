@@ -44,7 +44,7 @@ public class Grunddata {
   public Kanal forvalgtKanal;
   public ArrayList<Runnable> observatører = new ArrayList<Runnable>(); // Om grunddata/stamdata ændrer sig
 
-
+  /** find en kanal ud fra kode, f.eks. P1D, P2D, P3, P4F, RØ4, ES4, OD4, KH4, HO4, ÅL4, NV4, ÅB4, TR4, ÅR4, P5D, P6B, P7M, P8J, RAM, DRN */
   public HashMap<String, Kanal> kanalFraKode = new HashMap<String, Kanal>();
   public HashMap<String, Kanal> kanalFraSlug = new LinkedHashMap<String, Kanal>();
   public static final Kanal ukendtKanal = new Kanal();

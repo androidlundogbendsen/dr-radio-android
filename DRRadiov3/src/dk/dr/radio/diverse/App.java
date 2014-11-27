@@ -56,7 +56,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
-import com.android.volley.toolbox.Volley;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.bugsense.trace.BugSenseHandler;
 
@@ -165,7 +164,6 @@ public class App extends Application {
 
 
     // Initialisering af Volley
-    volleyRequestQueue = Volley.newRequestQueue(this);
 
     // Prior to Gingerbread, HttpUrlConnection was unreliable.
     // See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
@@ -436,7 +434,8 @@ public class App extends Application {
     boolean før = erIGang > 0;
     erIGang += netværkErIGang ? 1 : -1;
     boolean nu = erIGang > 0;
-    if (fejlsøgning) Log.d("erIGang = " + erIGang);
+    //if (fejlsøgning)
+      Log.d("erIGang = " + erIGang);
     if (erIGang < 0) {
       if (App.EMULATOR) Log.e(new IllegalStateException("erIGang er " + erIGang));
       erIGang = 0;
