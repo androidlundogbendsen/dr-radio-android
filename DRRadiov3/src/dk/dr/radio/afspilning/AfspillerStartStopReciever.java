@@ -70,7 +70,7 @@ public class AfspillerStartStopReciever extends BroadcastReceiver {
         } else {
           DRData.instans.afspiller.stopAfspilning();
         }
-        DRData.instans.afspiller.lyd_afspiller_stop.start();
+        if (DRData.instans.afspiller.afspillerlyde) DRData.instans.afspiller.afspillerlyd.stop.start();
       }
 
     } catch (Exception ex) {

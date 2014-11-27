@@ -237,7 +237,7 @@ public class Alarms {
     }
 
     String message = nyKanal.navn +"\n"+DateFormat.format(DM24, c);
-    if (!App.PRODUKTION) App.kortToast("Næste alarm sat til:\n"+message);
+    if (App.fejlsøgning) App.kortToast("Næste alarm sat til:\n"+message);
 /*  writing to settings requires android.permission.WRITE_SETTINGS
     Settings.System.putString(App.instans.getContentResolver(), Settings.System.NEXT_ALARM_FORMATTED, message);
     */
