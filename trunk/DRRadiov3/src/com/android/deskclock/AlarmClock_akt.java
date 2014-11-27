@@ -15,7 +15,6 @@
  */
 package com.android.deskclock;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,7 +22,6 @@ import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,6 +37,7 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
+import dk.dr.radio.akt.Basisaktivitet;
 import dk.dr.radio.akt.Basisfragment;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.v3.R;
@@ -46,7 +45,7 @@ import dk.dr.radio.v3.R;
 /**
  * AlarmClock_akt application.
  */
-public class AlarmClock_akt extends Activity implements OnItemClickListener {
+public class AlarmClock_akt extends Basisaktivitet implements OnItemClickListener {
   static final String PREFERENCES = "AlarmClock";
   /**
    * This must be false for production.  If true, turns on logging,
@@ -306,11 +305,13 @@ public class AlarmClock_akt extends Activity implements OnItemClickListener {
     return super.onOptionsItemSelected(item);
   }
 
+  /*
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.deskclock_alarm_list_menu, menu);
+    getMenuInflater().inflate(R.menu.deskclock_alarm_list_menu_UBRUGT, menu);
     return super.onCreateOptionsMenu(menu);
   }
+  */
 
   @Override
   public void onItemClick(AdapterView parent, View v, int pos, long id) {

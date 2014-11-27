@@ -383,4 +383,18 @@ public class SetAlarm_akt extends PreferenceActivity implements Preference.OnPre
     String[] formats = context.getResources().getStringArray(R.array.alarm_set);
     return String.format(formats[index], daySeq, hourSeq, minSeq);
   }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    if (App.fejlsøgning) Log.d(this + " onStart()");
+    App.instans.aktivitetStartet(this);
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    if (App.fejlsøgning) Log.d(this + " onStop()");
+    App.instans.aktivitetStoppet(this);
+  }
 }
