@@ -4,7 +4,6 @@ import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 
@@ -18,15 +17,15 @@ public class DrVolleyStringRequest extends StringRequest {
 
   public DrVolleyStringRequest(String url, final DrVolleyResonseListener listener) {
     super(url, listener, listener);
-    listener.url = url;
     lytter = listener;
+    lytter.url = url;
     /*
      * DRs serverinfrastruktur caches med Varnish, men det kan tage lang tid for den bagvedliggende
      * serverinfrastruktur at svare.
      */
     setRetryPolicy(new DefaultRetryPolicy(4000, 3, 1.5f)); // Ny instans hver gang, da der ændres i den
 
-    final Cache.Entry response = App.volleyRequestQueue.getCache().get(url);
+    Cache.Entry response = App.volleyRequestQueue.getCache().get(url);
     if (response == null) return; // Vi har ikke en cachet udgave
     try {
       //String contentType = response.responseHeaders.get(HTTP.CONTENT_TYPE);
@@ -34,8 +33,14 @@ public class DrVolleyStringRequest extends StringRequest {
       //String charset = contentType==null?HTTP.UTF_8:HttpHeaderParser.parseCharset(response.responseHeaders);
       //lytter.cachetVærdi = new String(response.data, charset);
       lytter.cachetVærdi = new String(response.data, HttpHeaderParser.parseCharset(response.responseHeaders));
+
+      // Vi kalder fikSvar i forgrundstråden - og dermed må forespørgsler ikke foretages direkte
+      // fra en listeopdatering eller fra getView
+      lytter.fikSvar(listener.cachetVærdi, true, false);
     } catch (Exception e) {
       e.printStackTrace();
+      // En fejl i den cachede værdi - smid indholdet af cachen væk, det kan alligevel ikke bruges
+      App.volleyRequestQueue.getCache().remove(url);
       return;
     }
     //Log.d("XXXXXXXXXXXXXX Cache.Entry  e=" + response);
@@ -54,13 +59,6 @@ public class DrVolleyStringRequest extends StringRequest {
       }
     });
     */
-    // Vi kalder fikSvar i forgrundstråden - og dermed må forespørgsler ikke foretages direkte
-    // fra en listeopdatering eller fra getView
-    try {
-      listener.fikSvar(listener.cachetVærdi, true, false);
-    } catch (Exception e) {
-      listener.onErrorResponse(new VolleyError(e));
-    }
   }
 
 
@@ -69,11 +67,6 @@ public class DrVolleyStringRequest extends StringRequest {
    */
   @Override
   protected Response<String> parseNetworkResponse(NetworkResponse response) {
-/*
-    Log.d("YYYY servertid " + response.headers.get("Date"));
-    Log.d("YYYY servertid " + response.headers.get("Expires"));
-    Log.d("YYYY servertid " + response.headers);
-*/
 //    Log.d("YYYY parseNetworkResponse " + response.headers);
     String servertidStr = response.headers.get("Date");
     if (servertidStr != null) { // Er set på nogle ældre enheder
