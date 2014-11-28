@@ -2,7 +2,6 @@ package dk.dr.radio.akt;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -15,6 +14,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -230,8 +230,7 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
 
   @Override
   public void finish() {
-    AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-    int volumen = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+    int volumen = App.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
     // Hvis der er skruet helt ned så stop afspilningen
     if (volumen == 0 && DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET) {
@@ -244,6 +243,26 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
       return;
     }
     super.finish();
+  }
+
+  @Override
+  public boolean onKeyDown(int keyCode, KeyEvent event) {
+    if ((keyCode==KeyEvent.KEYCODE_VOLUME_UP || keyCode==KeyEvent.KEYCODE_VOLUME_UP) && afspillerFrag.viserUdvidetOmråde()) {
+      // Opdatér 10 gange i sekundet mens knapperne bruges
+      App.forgrundstråd.postDelayed(afspillerFrag.lydstyrke, 100);
+      afspillerFrag.lydstyrke.opdateringshastighed = 100;
+    }
+    return super.onKeyDown(keyCode, event);
+  }
+
+  @Override
+  public boolean onKeyUp(int keyCode, KeyEvent event) {
+    if ((keyCode==KeyEvent.KEYCODE_VOLUME_UP || keyCode==KeyEvent.KEYCODE_VOLUME_UP) && afspillerFrag.viserUdvidetOmråde()) {
+      // Opdatér en enkelt gange om 1/10-del sekund
+      App.forgrundstråd.postDelayed(afspillerFrag.lydstyrke, 100);
+      afspillerFrag.lydstyrke.opdateringshastighed = 1000;
+    }
+    return super.onKeyUp(keyCode, event);
   }
 
   @Override
