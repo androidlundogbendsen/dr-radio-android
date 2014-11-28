@@ -744,7 +744,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       );
 //www.dr.dk/p1/mennesker-og-medier/mennesker-og-medier-100
       startActivity(intent);
-      Sidevisning.vist("del_udsendelse", udsendelse.slug);
+      Sidevisning.vist(Sidevisning.DEL, udsendelse.slug);
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }

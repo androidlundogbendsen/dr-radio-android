@@ -1,6 +1,7 @@
 package dk.dr.radio.afspilning;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -25,9 +26,11 @@ import dk.dr.radio.diverse.Log;
 class GemiusStatistik {
 
   static final String RAPPORTERINGSURL = "http://www.dr.dk/mu-online/api/1.0/reporting/gemius";
+  private static final String NØGLE = "Gemius sporingsnøgle";
 
 
   private static SimpleDateFormat servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssSSSZ"); // "2014-07-09T09:54:32.086603Z" +01:00 springes over da kolon i +01:00 er ikke-standard Java
+  private SharedPreferences prefs;
   private JSONObject json;
   private String sporingsnøgle;
 
@@ -58,8 +61,16 @@ class GemiusStatistik {
     json.put("VideoResolution = new Resolution(1024, 768),
     json.put("ScreenColorDepth = 24
 */
-      if (App.prefs != null) {
-        sporingsnøgle = App.prefs.getString("Gemius sporingsnøgle", null);
+      if (App.instans != null) {
+        prefs = App.instans.getSharedPreferences(NØGLE, 0);
+        sporingsnøgle = prefs.getString(NØGLE, null);
+        if (sporingsnøgle==null) {
+          sporingsnøgle = App.prefs.getString(NØGLE, null);
+          if (sporingsnøgle!=null) { // 28 nov 2014 - flyt data fra fælles prefs til separat fil - kan fjernes ultimo 2015
+            App.prefs.edit().remove(NØGLE).commit();
+            prefs.edit().putString(NØGLE, sporingsnøgle).commit();
+          }
+        }
         json.put("CorrelationId", sporingsnøgle);
         Display display = ((WindowManager) App.instans.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         int width = display.getWidth();  // deprecated
@@ -129,7 +140,7 @@ class GemiusStatistik {
           if (nySporingsnøgle.length() > 0 && !nySporingsnøgle.equals(sporingsnøgle)) {
             json.put("CorrelationId", nySporingsnøgle);
             sporingsnøgle = nySporingsnøgle;
-            if (App.prefs != null) App.prefs.edit().putString("Gemius sporingsnøgle", sporingsnøgle).commit();
+            if (prefs != null) prefs.edit().putString(NØGLE, sporingsnøgle).commit();
           }
           if (App.fejlsøgning) Log.d("Gemius res=" + res);
         } catch (IOException ioe) {

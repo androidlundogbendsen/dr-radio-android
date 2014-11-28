@@ -1,5 +1,7 @@
 package dk.dr.radio.data;
 
+import android.content.SharedPreferences;
+
 import com.android.volley.Request;
 
 import org.json.JSONObject;
@@ -24,14 +26,23 @@ public class Favoritter {
   private static final String PREF_NØGLE = "favorit til startdato";
   private HashMap<String, String> favoritTilStartdato;
   private HashMap<String, Integer> favoritTilAntalDagsdato = new HashMap<String, Integer>();
-  private String dato;
   private int antalNyeUdsendelser = -1;
   public List<Runnable> observatører = new ArrayList<Runnable>();
+  private SharedPreferences prefs;
 
 
   private void tjekDataOprettet() {
     if (favoritTilStartdato != null) return;
-    String str = App.prefs.getString(PREF_NØGLE, "");
+    prefs = App.instans.getSharedPreferences(PREF_NØGLE, 0);
+    String str = prefs.getString(PREF_NØGLE, "");
+    if (str.length()==0) { // 28 nov 2014 - flyt data fra fælles prefs til separat fil - kan fjernes ultimo 2015
+      str = App.prefs.getString(PREF_NØGLE, "");
+      if (str.length()!=0) {
+        App.prefs.edit().remove(PREF_NØGLE).commit();
+        prefs.edit().putString(PREF_NØGLE, str).commit();
+      }
+    }
+
     Log.d("Favoritter: læst " + str);
     favoritTilStartdato = strengTilMap(str);
     if (favoritTilStartdato.isEmpty()) antalNyeUdsendelser = 0;
@@ -41,7 +52,7 @@ public class Favoritter {
   private void gem() {
     String str = mapTilStreng(favoritTilStartdato);
     Log.d("Favoritter: gemmer " + str);
-    App.prefs.edit().putString(PREF_NØGLE, str).commit();
+    prefs.edit().putString(PREF_NØGLE, str).commit();
   }
 
   public void sætFavorit(String programserieSlug, boolean checked) {

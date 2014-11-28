@@ -109,6 +109,7 @@ public class App extends Application {
   /** Tidsstempel der kan bruges til at afgøre hvilke filer der faktisk er brugt efter denne opstart */
   private static long TIDSSTEMPEL_VED_OPSTART;
   public static AccessibilityManager accessibilityManager;
+  private static SharedPreferences grunddata_prefs;
 
 
   @SuppressLint("NewApi")
@@ -203,7 +204,17 @@ public class App extends Application {
       // Indlæsning af grunddata/stamdata.
       // Først tjekkes om vi har en udgave i prefs, og ellers bruges den i raw-mappen
       // På et senere tidspunkt henter vi nye grunddata
-      String grunddata = prefs.getString(DRData.GRUNDDATA_URL, null);
+      grunddata_prefs = App.instans.getSharedPreferences("grunddata", 0);
+      String grunddata = grunddata_prefs.getString(DRData.GRUNDDATA_URL, null);
+
+      if (grunddata == null) {
+        grunddata = App.prefs.getString(DRData.GRUNDDATA_URL, null);
+        if (grunddata!=null) { // 28 nov 2014 - flyt data fra fælles prefs til separat fil - kan fjernes ultimo 2015
+          App.prefs.edit().remove(DRData.GRUNDDATA_URL).commit();
+          grunddata_prefs.edit().putString(DRData.GRUNDDATA_URL, grunddata).commit();
+        }
+      }
+
       if (grunddata == null)
         grunddata = Diverse.læsStreng(res.openRawResource(App.PRODUKTION ? R.raw.grunddata : R.raw.grunddata_udvikling));
       DRData.instans.grunddata.parseFællesGrunddata(grunddata);
@@ -394,7 +405,7 @@ public class App extends Application {
         @Override
         public void fikSvar(String nyeGrunddata, boolean fraCache, boolean uændret) throws Exception {
           if (uændret || fraCache) return; // ingen grund til at parse det igen
-          String gamleGrunddata = prefs.getString(DRData.GRUNDDATA_URL, null);
+          String gamleGrunddata = grunddata_prefs.getString(DRData.GRUNDDATA_URL, null);
           if (nyeGrunddata.equals(gamleGrunddata)) return; // Det samme som var i prefs
           Log.d("Vi fik nye grunddata: fraCache=" + fraCache + nyeGrunddata);
           if (!PRODUKTION || App.fejlsøgning) App.kortToast("Vi fik nye grunddata");
@@ -404,7 +415,7 @@ public class App extends Application {
             k.kanallogo_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase().replace('ø', 'o').replace('å', 'a'), "drawable", pn);
           }
           // Er vi nået hertil så gik parsning godt - gem de nye stamdata i prefs, så de også bruges ved næste opstart
-          prefs.edit().putString(DRData.GRUNDDATA_URL, nyeGrunddata).commit();
+          grunddata_prefs.edit().putString(DRData.GRUNDDATA_URL, nyeGrunddata).commit();
         }
       }) {
         public Priority getPriority() {
