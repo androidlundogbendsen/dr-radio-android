@@ -194,6 +194,10 @@
               android:theme="@style/PlayerTheme">
     </activity>
 
+
+    <!-- Gemius-plugin til at måle sidevisninger etc -->
+    <service android:name="com.gemius.sdk.MobilePlugin"/>
+
   </application>
 
 </manifest>

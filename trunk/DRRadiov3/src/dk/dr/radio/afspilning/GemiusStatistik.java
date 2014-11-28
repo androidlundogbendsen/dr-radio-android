@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import dk.dr.radio.data.Diverse;
+import dk.dr.radio.data.Grunddata;
 import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
@@ -101,8 +102,8 @@ class GemiusStatistik {
       json.put("PlayerEvents", new JSONArray(hændelser));
       if (lydkilde != null) {
         json.put("IsLiveStream", lydkilde.erDirekte());
-        json.put("Id", lydkilde.getUdsendelse() != null ? lydkilde.getUdsendelse().slug : "ukendt");
-        json.put("Channel", lydkilde.getKanal() != null ? lydkilde.getKanal().slug : "ukendt");
+        json.put("Id", findSlug(lydkilde.getUdsendelse(), lydkilde));
+        json.put("Channel", findSlug(lydkilde.getKanal(), lydkilde));
       } else {
         if (App.instans != null) { // Hvis dette er en kørende app, så rapporter en fejl med dette
           Log.rapporterFejl(new IllegalStateException("Gemius lydkilde er null"));
@@ -132,13 +133,26 @@ class GemiusStatistik {
           }
           if (App.fejlsøgning) Log.d("Gemius res=" + res);
         } catch (IOException ioe) {
-          if (!App.fejlsøgning) Log.d("data json=" + data);
+          Log.d("data json=" + data);
           Log.e(ioe);
         } catch (Exception e) {
-          Log.rapporterFejl(e);
+          Log.rapporterFejl(e, "data json=" + data);
         }
       }
     }).start();
+  }
+
+  /**
+   * Find slug ud fra en lydkilde
+   * @param lk lydkilden
+   * @param lk0 hvis den ikke kan findes ud fra lk, så prøv den her lydkilde
+   * @return slug, eller "ukendt"
+   */
+  private String findSlug(Lydkilde lk, Lydkilde lk0) {
+    if (lk==null || lk==Grunddata.ukendtKanal) return findSlug(lk0, null);
+    if (lk.slug!=null && lk.slug.length()>0) return lk.slug;
+    if (lk0 != null) return findSlug(lk0, null);
+    return "ukendt";
   }
 
 

@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import dk.dr.radio.akt.Basisaktivitet;
 import dk.dr.radio.akt.Hovedaktivitet;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.Sidevisning;
 
 
 /**
@@ -38,6 +39,7 @@ public class VisFragment_akt extends Basisaktivitet {
       // Vis fragmentet i FrameLayoutet
       Log.d("Viser fragment " + f + " med arg " + b);
       getSupportFragmentManager().beginTransaction().add(android.R.id.input, f).commit();
+      Sidevisning.vist(f.getClass());
     } catch (Exception ex) {
       ex.printStackTrace();
     }

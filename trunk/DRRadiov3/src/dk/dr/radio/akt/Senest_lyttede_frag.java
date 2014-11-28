@@ -26,6 +26,7 @@ import dk.dr.radio.data.SenestLyttede;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.Sidevisning;
 import dk.dr.radio.v3.R;
 
 public class Senest_lyttede_frag extends Basisfragment implements AdapterView.OnItemClickListener, Runnable, View.OnClickListener {
@@ -181,6 +182,7 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
         .addToBackStack(null)
         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         .commit();
+    Sidevisning.vist(Udsendelse_frag.class, k.slug);
   }
 }
 

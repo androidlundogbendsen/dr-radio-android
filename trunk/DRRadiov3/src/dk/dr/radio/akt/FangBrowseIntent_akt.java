@@ -18,6 +18,7 @@ import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.Sidevisning;
 import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
 import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 
@@ -41,6 +42,7 @@ public class FangBrowseIntent_akt extends Activity {
     } else try {
       // Ok, der var en URL med i intentet
       Log.d(" viser " + urlFraIntent);
+      Sidevisning.vist(FangBrowseIntent_akt.class, urlFraIntent);
       Log.d("Intent var " + i);
       ProgressBar progressBar = new ProgressBar(this);
       setContentView(progressBar);
@@ -66,6 +68,7 @@ public class FangBrowseIntent_akt extends Activity {
             .putExtra(Hovedaktivitet.SPØRG_OM_STOP, false);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+        Sidevisning.vist(Kanaler_frag.class);
         finish();
       } else {
         throw new IllegalStateException("ingen match??!?");
@@ -144,6 +147,7 @@ public class FangBrowseIntent_akt extends Activity {
         .putExtra(Hovedaktivitet.SPØRG_OM_STOP, false);
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     startActivity(intent);
+    Sidevisning.vist(Udsendelse_frag.class, udsendelse.slug);
     luk();
   }
 

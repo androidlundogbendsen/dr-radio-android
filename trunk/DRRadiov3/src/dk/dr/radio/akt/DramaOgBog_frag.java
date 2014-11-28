@@ -27,6 +27,7 @@ import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.CirclePageIndicator;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.PinnedSectionListView;
+import dk.dr.radio.diverse.Sidevisning;
 import dk.dr.radio.v3.R;
 
 public class DramaOgBog_frag extends Basisfragment implements Runnable, AdapterView.OnItemClickListener {
@@ -255,6 +256,7 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable, AdapterV
         .addToBackStack(null)
         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         .commit();
+    Sidevisning.vist(Programserie_frag.class, programserie.slug);
   }
 
   @Override

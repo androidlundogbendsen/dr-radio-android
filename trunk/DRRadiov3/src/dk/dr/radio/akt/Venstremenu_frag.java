@@ -36,6 +36,7 @@ import java.util.List;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.Sidevisning;
 import dk.dr.radio.skrald.ProgramserierAtilAA_frag;
 import dk.dr.radio.skrald.Radiodrama_frag_SLETTES;
 import dk.dr.radio.v3.R;
@@ -449,6 +450,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
         @Override
         public void run() {
           startActivity(new Intent(getActivity(), Indstillinger_akt.class));
+          Sidevisning.vist(Indstillinger_akt.class);
         }
       });
       aq.id(R.id.tekst).text("Indstillinger").typeface(App.skrift_gibson_fed);
@@ -522,6 +524,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
         ft.replace(R.id.indhold_frag, f);
         ft.addToBackStack("Venstremenu");
         ft.commit();
+        Sidevisning.vist(f.getClass());
       } catch (Exception e1) {
         Log.rapporterFejl(e1);
       }

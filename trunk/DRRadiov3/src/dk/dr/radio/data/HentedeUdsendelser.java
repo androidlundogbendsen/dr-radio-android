@@ -29,6 +29,7 @@ import dk.dr.radio.akt.Hovedaktivitet;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.Serialisering;
+import dk.dr.radio.diverse.Sidevisning;
 import dk.dr.radio.v3.R;
 
 /**
@@ -318,6 +319,7 @@ public class HentedeUdsendelser {
         c.close();
         DRData.instans.hentedeUdsendelser.gemListe();
         for (Runnable obs : new ArrayList<Runnable>(DRData.instans.hentedeUdsendelser.observatører)) obs.run();
+        Sidevisning.vist(HentedeUdsendelser.class, u.slug);
       } catch (Exception e) {
         Log.rapporterFejl(e);
       }
@@ -342,6 +344,7 @@ public class HentedeUdsendelser {
           i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
           context.startActivity(i);
         }
+        Sidevisning.vist(HentedeUdsendelser.class);
 
 /*
         Intent dm = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);

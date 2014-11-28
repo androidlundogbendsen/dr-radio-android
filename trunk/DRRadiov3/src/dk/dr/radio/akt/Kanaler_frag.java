@@ -15,6 +15,7 @@ import dk.dr.radio.data.Kanal;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.PagerSlidingTabStrip;
+import dk.dr.radio.diverse.Sidevisning;
 import dk.dr.radio.v3.R;
 
 public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChangeListener, Runnable {
@@ -61,6 +62,7 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
       int kanalindex = kanaler.indexOf(DRData.instans.afspiller.getLydkilde().getKanal());
       if (kanalindex == -1) kanalindex = 3; // Hvis vi ikke rammer nogen af de overordnede kanaler, så er det P4
       viewPager.setCurrentItem(kanalindex);
+      Sidevisning.vist(Kanal_frag.class, kanaler.get(kanalindex).slug);
     }
     kanalfaneblade = (PagerSlidingTabStrip) rod.findViewById(R.id.tabs);
     kanalfaneblade.setViewPager(viewPager);
@@ -98,6 +100,7 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
     Log.d("onPageSelected( " + position);
     // Husk foretrukken getKanal
     App.prefs.edit().putString(App.FORETRUKKEN_KANAL, kanaler.get(position).kode).commit();
+    Sidevisning.vist(Kanal_frag.class, kanaler.get(position).slug);
   }
 
   @Override
