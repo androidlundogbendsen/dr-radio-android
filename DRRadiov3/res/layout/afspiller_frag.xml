@@ -87,7 +87,8 @@
   <LinearLayout
       android:id="@+id/udvidSkjulOmråde"
       android:orientation="vertical"
-      android:layout_width="match_parent" android:layout_height="wrap_content">
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
 
 
     <View
@@ -98,7 +99,8 @@
 
 
     <LinearLayout android:orientation="horizontal"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical">
       <TextView
           android:id="@+id/starttid"
@@ -137,7 +139,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_width="match_parent" android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
       <ImageView
           android:id="@+id/forrige"
