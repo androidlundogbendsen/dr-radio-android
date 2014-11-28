@@ -106,6 +106,7 @@ public class Afspiller {
   private Lydkilde lydkilde;
   public boolean vækningIGang;
   public PowerManager.WakeLock vækkeurWakeLock;
+  AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
 
   private static void sætMediaPlayerLytter(MediaPlayerWrapper mediaPlayer, MediaPlayerLytter lytter) {
     mediaPlayer.setMediaPlayerLytter(lytter);
@@ -222,7 +223,6 @@ public class Afspiller {
         mWakeLock.acquire();
       }
 
-      AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
         // Se http://developer.android.com/training/managing-audio/audio-focus.html
         int result = audioManager.requestAudioFocus(getOnAudioFocusChangeListener(),
@@ -248,7 +248,6 @@ public class Afspiller {
 
   /** Sørg for at volumen er skruet op til en minimumsværdi, angivet i 5'tedele af fuld styrke */
   public void tjekVolumenMindst5tedele(int min5) {
-    AudioManager audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
     int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
     int nu = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
     if (nu < min5 * max / 5) {
@@ -402,11 +401,11 @@ public class Afspiller {
             gammelMediaPlayer.stop();
           } catch (IllegalStateException e) {
           }
-          Log.d("gammelMediaPlayer.reset()");
+          Log.d("P gammelMediaPlayer.reset() "+gammelMediaPlayer);
           gammelMediaPlayer.reset();
-          Log.d("gammelMediaPlayer.release()");
+          Log.d("P gammelMediaPlayer.release()");
           gammelMediaPlayer.release();
-          Log.d("gammelMediaPlayer færdig");
+          Log.d("P gammelMediaPlayer færdig");
         } catch (Exception e) {
           Log.rapporterFejl(e);
         }
@@ -662,7 +661,12 @@ public class Afspiller {
           try { // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/825188032
             Log.d("mediaPlayer.start() " + mpTils());
             int startposition = DRData.instans.senestLyttede.getStartposition(lydkilde);
-            Log.d("mediaPlayer genoptager afspilning ved " + startposition);
+            int varighed = mediaPlayer.getDuration();
+            Log.d("mediaPlayer genoptager afspilning ved " + startposition + " varighed="+varighed);
+            if (varighed>0 && startposition>95*varighed/100) {
+              Log.d("mediaPlayer nej, det er for langt henne, starter ved starten");
+              startposition = 0;
+            }
             gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Play, startposition / 1000);
             if (startposition > 0) {
               if (mediaPlayer instanceof ExoPlayerWrapper) {
@@ -698,11 +702,13 @@ public class Afspiller {
         sætMediaPlayerLytter(gammelMediaPlayer, null); // afregistrér alle lyttere
         new Thread() {
           public void run() {
-            Log.d("gammelMediaPlayer.reset()");
-            gammelMediaPlayer.reset();
-            Log.d("gammelMediaPlayer.release()");
-            gammelMediaPlayer.release();
-            Log.d("gammelMediaPlayer.release()");
+            try {
+              Log.d("COMPL gammelMediaPlayer.reset() "+gammelMediaPlayer);
+              gammelMediaPlayer.reset();
+              Log.d("COMPL gammelMediaPlayer.release()");
+              gammelMediaPlayer.release();
+              Log.d("COMPL gammelMediaPlayer.release()");
+            } catch (Exception e) { Log.d(e); }
           }
         }.start();
 
@@ -800,8 +806,7 @@ public class Afspiller {
     @Override
     public void run() {
       App.forgrundstråd.removeCallbacks(this);
-      AudioManager ar = (AudioManager) App.instans.getSystemService(App.AUDIO_SERVICE);
-      Log.d("tjekLydAktiv " + ar.isMusicActive() + " " + mediaPlayer.isPlaying() + " " + getCurrentPosition() + " " + getDuration() + " " + new Date());
+      Log.d("tjekLydAktiv " + audioManager.isMusicActive() + " " + mediaPlayer.isPlaying() + " " + getCurrentPosition() + " " + getDuration() + " " + new Date());
       App.forgrundstråd.postDelayed(this, 10000);
     }
   };

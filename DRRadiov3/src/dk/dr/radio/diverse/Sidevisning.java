@@ -50,7 +50,7 @@ public class Sidevisning {
   private final static HashSet<String> besøgt = new HashSet<String>();
   private static Intent intent;
 
-  private static void vist(String side, String slug) {
+  public static void vist(String side, String slug) {
     // Gemius sidevisningsstatistik
     String data = "side=" + side + (slug == null ? "" : "|slug=" + slug);
     besøgt.add(side);
@@ -58,6 +58,7 @@ public class Sidevisning {
     if (intent==null) {
       String nøgle = App.instans.getString(R.string.gemius_sidevisninsstatistik_nøgle);
       if (nøgle.length()==0) return; // Nøgle til indrapportering mangler
+      if (!App.prefs.getBoolean("Rapportér statistik", true)) return; // statistikrapportering fravalgt
       intent = new Intent(App.instans, MobilePlugin.class);
       intent.putExtra(MobilePlugin.IDENTIFIER, nøgle);
       intent.putExtra(MobilePlugin.SERVERPREFIX, "main");

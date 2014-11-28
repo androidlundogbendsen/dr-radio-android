@@ -38,6 +38,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -90,6 +91,7 @@ public class App extends Application {
   public static ConnectivityManager connectivityManager;
   public static String versionsnavn = "(ukendt)";
   public static NotificationManager notificationManager;
+  public static AudioManager audioManager;
   public static boolean fejlsøgning = false;
   public static Handler forgrundstråd;
   public static Typeface skrift_gibson;
@@ -123,6 +125,7 @@ public class App extends Application {
     forgrundstråd = new Handler();
     connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
     prefs = PreferenceManager.getDefaultSharedPreferences(this);
     fejlsøgning = prefs.getBoolean("fejlsøgning", false);
     res = App.instans.getResources();
