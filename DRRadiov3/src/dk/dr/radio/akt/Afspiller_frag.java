@@ -52,7 +52,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
   private View udvidSkjulOmråde;
   private View rod;
   private View indhold_overskygge;
-  private Lydstyrke lydstyrke = new Lydstyrke();
+  Lydstyrke lydstyrke = new Lydstyrke();
 
   private boolean seekBarBetjenesAktivt;
   private TextView starttid;
@@ -68,7 +68,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
       App.forgrundstråd.removeCallbacks(this);
       try {
         Afspiller afspiller = DRData.instans.afspiller;
-        if (afspiller.getAfspillerstatus()!=Status.STOPPET) App.forgrundstråd.postDelayed(this, 1000);
+        if (afspiller.getAfspillerstatus()!=Status.STOPPET && viserUdvidetOmråde()) App.forgrundstråd.postDelayed(this, 1000);
         /*
         boolean denneUdsSpiller = udsendelse.equals(afspiller.getLydkilde()) && afspiller.getAfspillerstatus() != Status.STOPPET;
         if (!denneUdsSpiller || App.accessibilityManager.isEnabled()) {
@@ -154,7 +154,6 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     aq = new AQuery(rod);
     starttid = aq.id(R.id.starttid).typeface(App.skrift_gibson).getTextView();
     slutttid = aq.id(R.id.slutttid).typeface(App.skrift_gibson).getTextView();
-    lydstyrke.init(aq.id(R.id.lydstyrke).getSeekBar());
     seekBar = aq.id(R.id.seekBar).getSeekBar();
     seekBar.setOnSeekBarChangeListener(this);
     rod.setOnClickListener(this); // Fang klik på baggrunden, så de ikke går til det underliggende lag
@@ -197,6 +196,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     DRData.instans.afspiller.observatører.add(this);
     DRData.instans.afspiller.forbindelseobservatører.add(this);
     DRData.instans.afspiller.positionsobservatører.add(this);
+    lydstyrke.init(aq.id(R.id.lydstyrke).getSeekBar());
     run(); // opdatér views
     if (App.accessibilityManager.isEnabled()) setHasOptionsMenu(true);
     return rod;
@@ -376,6 +376,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     if (!viserUdvidetOmråde()) {
       Sidevisning.vist(Afspiller_frag.class);
       opdaterSeekBar.run();
+      lydstyrke.run();
       indhold_overskygge.setOnTouchListener(indhold_overskygge_onTouchListener);
       int forrigeNæsteSynlighed = DRData.instans.afspiller.getLydkilde().erDirekte() ? View.GONE : View.VISIBLE;
       aq.id(R.id.forrige).visibility(forrigeNæsteSynlighed).id(R.id.næste).visibility(forrigeNæsteSynlighed);
@@ -405,6 +406,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
       }
     } else {
       App.forgrundstråd.removeCallbacks(opdaterSeekBar);
+      App.forgrundstråd.removeCallbacks(lydstyrke);
       indhold_overskygge.setOnTouchListener(null);
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
         rod.animate().translationY(udvidSkjulOmråde.getHeight());
@@ -472,12 +474,14 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     } // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/825688064
   }
 
-  private static class Lydstyrke implements Runnable {
+  class Lydstyrke implements Runnable, SeekBar.OnSeekBarChangeListener {
     public SeekBar seekBar;
+    public int opdateringshastighed = 1000;
 
     public void init(SeekBar seekBar) {
       this.seekBar = seekBar;
       seekBar.setMax(App.audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+      seekBar.setOnSeekBarChangeListener(this);
       run();
     }
 
@@ -485,6 +489,24 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     public void run() {
       int nu = App.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
       seekBar.setProgress(nu);
+      Log.d("Lydstyrke "+nu);
+      App.forgrundstråd.removeCallbacks(this);
+      if (!viserUdvidetOmråde()) return;
+      App.forgrundstråd.postDelayed(this, opdateringshastighed); // opdater 1 gang i sekundet
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+      if (!fromUser) return;
+      App.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, AudioManager.FLAG_SHOW_UI);
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
     }
   }
 }

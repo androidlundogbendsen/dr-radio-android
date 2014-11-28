@@ -177,6 +177,7 @@
 
       <ImageView
           android:src="@drawable/dri_lyd_graa40"
+          android:layout_margin="4dp"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"/>
 
@@ -193,6 +194,8 @@
 
       <ImageView
           android:src="@drawable/dri_indstillinger_graa40"
+          android:layout_margin="4dp"
+          android:visibility="invisible"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"/>
 
