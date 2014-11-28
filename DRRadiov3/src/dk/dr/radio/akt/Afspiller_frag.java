@@ -3,6 +3,7 @@ package dk.dr.radio.akt;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -38,6 +39,7 @@ import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.AnimationAdapter;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.Sidevisning;
 import dk.dr.radio.v3.R;
 
 public class Afspiller_frag extends Basisfragment implements Runnable, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
@@ -50,6 +52,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
   private View udvidSkjulOmråde;
   private View rod;
   private View indhold_overskygge;
+  private Lydstyrke lydstyrke = new Lydstyrke();
 
   private boolean seekBarBetjenesAktivt;
   private TextView starttid;
@@ -63,9 +66,9 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     @Override
     public void run() {
       App.forgrundstråd.removeCallbacks(this);
-      App.forgrundstråd.postDelayed(this, 1000);
       try {
         Afspiller afspiller = DRData.instans.afspiller;
+        if (afspiller.getAfspillerstatus()!=Status.STOPPET) App.forgrundstråd.postDelayed(this, 1000);
         /*
         boolean denneUdsSpiller = udsendelse.equals(afspiller.getLydkilde()) && afspiller.getAfspillerstatus() != Status.STOPPET;
         if (!denneUdsSpiller || App.accessibilityManager.isEnabled()) {
@@ -73,32 +76,45 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         }
         */
         Udsendelse u = DRData.instans.afspiller.getLydkilde().getUdsendelse();
-        long passeret = App.serverCurrentTimeMillis() - u.startTid.getTime();
-        long længde = u.slutTid.getTime() - u.startTid.getTime();
+        //long passeret = App.serverCurrentTimeMillis() - u.startTid.getTime();
+        //long længde = u.slutTid.getTime() - u.startTid.getTime();
         //int passeretPct = længde > 0 ? (int) (passeret * 100 / længde) : 0;
         //Log.d(u + " passeretPct=" + passeretPct + " af længde=" + længde);
-        seekBar.setProgress((int) passeret);
+        //seekBar.setProgress((int) passeret);
         if (!seekBarBetjenesAktivt) { // Kun hvis vi ikke er i gang med at søge i udsendelsen
-          int længdeMs = afspiller.getDuration();
-          if (længdeMs > 0) {
+
+          if (afspiller.getLydkilde().erDirekte()) {
+            if (u!=null) {
+              seekBar.setVisibility(View.VISIBLE);
+              seekBar.setEnabled(false);
+              starttid.setVisibility(View.VISIBLE);
+              slutttid.setVisibility(View.VISIBLE);
+              int længdeMs = (int) (u.slutTid.getTime() - u.startTid.getTime());
+              seekBar.setMax(længdeMs);
+              starttid.setText(u.startTidKl);
+              slutttid.setText(u.slutTidKl);
+              seekBar.setProgress((int) (App.serverCurrentTimeMillis() - u.startTid.getTime()));
+            } else {
+              seekBar.setVisibility(View.VISIBLE);
+              seekBar.setEnabled(false);
+              starttid.setVisibility(View.VISIBLE);
+              slutttid.setVisibility(View.VISIBLE);
+            }
+
+          } else {
             seekBar.setVisibility(View.VISIBLE);
             seekBar.setEnabled(true);
-            seekBar.setMax(længdeMs);
             starttid.setVisibility(View.VISIBLE);
             slutttid.setVisibility(View.VISIBLE);
+            int længdeMs = afspiller.getDuration();
+            if (længdeMs>0) seekBar.setMax(længdeMs);
             slutttid.setText(DateUtils.formatElapsedTime(længdeMs / 1000));
             int pos = afspiller.getCurrentPosition();
             Log.d("   pos " + pos + "   " + længdeMs);
             if (pos > 0) { // pos=0 rapporteres efter onSeekComplete, det skal ignoreres
-              seekBarTekst_opdater(pos);
+              starttid.setText(DateUtils.formatElapsedTime(pos / 1000));
               seekBar.setProgress(pos);
             }
-          } else {
-            seekBar.setVisibility(View.VISIBLE);
-            seekBar.setEnabled(false);
-            seekBar.setProgress(0);
-            starttid.setVisibility(View.INVISIBLE);
-            slutttid.setVisibility(View.INVISIBLE);
           }
         }
       } catch (Exception e) {
@@ -111,16 +127,8 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
   public void onProgressChanged(SeekBar seekBarx, int progress, boolean fromUser) {
     if (fromUser) {
       DRData.instans.afspiller.seekTo(progress);
-      seekBarTekst_opdater(progress);
-      Log.registrérTestet("Søgning i udsendelse", "ja");
+      starttid.setText(DateUtils.formatElapsedTime(progress / 1000));
     }
-  }
-
-  private void seekBarTekst_opdater(int progress) {
-    starttid.setText(DateUtils.formatElapsedTime(progress / 1000));
-//    int to = seekBar.getThumbOffset();
-//    int x = (int) ((long) (seekBar.getWidth() - to * 2) * progress / seekBar.getMax());
-//    starttid.setPadding(x, 0, 0, 0);
   }
 
 
@@ -146,6 +154,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
     aq = new AQuery(rod);
     starttid = aq.id(R.id.starttid).typeface(App.skrift_gibson).getTextView();
     slutttid = aq.id(R.id.slutttid).typeface(App.skrift_gibson).getTextView();
+    lydstyrke.init(aq.id(R.id.lydstyrke).getSeekBar());
     seekBar = aq.id(R.id.seekBar).getSeekBar();
     seekBar.setOnSeekBarChangeListener(this);
     rod.setOnClickListener(this); // Fang klik på baggrunden, så de ikke går til det underliggende lag
@@ -207,6 +216,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
 
   @Override
   public void run() {
+    App.forgrundstråd.postDelayed(opdaterSeekBar, 1000);
     Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
     Kanal k = lydkilde.getKanal();
     if (k == null) return;
@@ -224,9 +234,6 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         progressbar.setVisibility(View.INVISIBLE);
         metainformation.setText(k.navn);
         metainformation.setTextColor(App.color.grå40);
-        seekBar.setVisibility(View.GONE);
-        starttid.setVisibility(View.GONE);
-        slutttid.setVisibility(View.GONE);
         break;
       case FORBINDER:
         startStopKnapNyImageResource = R.drawable.afspiller_pause;
@@ -367,6 +374,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
 
   public void udvidSkjulOmråde() {
     if (!viserUdvidetOmråde()) {
+      Sidevisning.vist(Afspiller_frag.class);
       opdaterSeekBar.run();
       indhold_overskygge.setOnTouchListener(indhold_overskygge_onTouchListener);
       int forrigeNæsteSynlighed = DRData.instans.afspiller.getLydkilde().erDirekte() ? View.GONE : View.VISIBLE;
@@ -443,6 +451,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         fm.beginTransaction()
             .replace(R.id.indhold_frag, new Kanaler_frag())
             .commit();
+        Sidevisning.vist(Kanaler_frag.class);
       } else {
         Udsendelse udsendelse = lydkilde.getUdsendelse();
         Fragment f = new Udsendelse_frag();
@@ -456,9 +465,26 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
             .addToBackStack(null)
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .commit();
+        Sidevisning.vist(Udsendelse_frag.class, udsendelse.slug);
       }
     } catch (Exception e) {
       Log.rapporterFejl(e);
     } // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/825688064
+  }
+
+  private static class Lydstyrke implements Runnable {
+    public SeekBar seekBar;
+
+    public void init(SeekBar seekBar) {
+      this.seekBar = seekBar;
+      seekBar.setMax(App.audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+      run();
+    }
+
+    @Override
+    public void run() {
+      int nu = App.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+      seekBar.setProgress(nu);
+    }
   }
 }
