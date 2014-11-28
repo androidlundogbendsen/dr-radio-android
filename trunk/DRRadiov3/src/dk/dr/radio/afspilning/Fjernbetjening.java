@@ -21,10 +21,8 @@ package dk.dr.radio.afspilning;
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.RemoteControlClient;
 import android.media.RemoteControlClient.MetadataEditor;
@@ -48,14 +46,12 @@ import dk.dr.radio.diverse.Log;
 public class Fjernbetjening implements Runnable {
 
   private final ComponentName eventReceiver;
-  private final AudioManager audioManager;
   private RemoteControlClient remoteControlClient;
   private Udsendelse forrigeUdsendelse;
 
   public Fjernbetjening() {
     DRData.instans.afspiller.positionsobservatører.add(this);
     eventReceiver = new ComponentName(App.instans.getPackageName(), FjernbetjeningReciever.class.getName());
-    audioManager = (AudioManager) App.instans.getSystemService(Context.AUDIO_SERVICE);
   }
 
 
@@ -128,7 +124,7 @@ public class Fjernbetjening implements Runnable {
   @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
   public void registrér() {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) return;
-    audioManager.registerMediaButtonEventReceiver(eventReceiver);
+    App.audioManager.registerMediaButtonEventReceiver(eventReceiver);
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) return;
 
     Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON).setComponent(eventReceiver);
@@ -141,17 +137,17 @@ public class Fjernbetjening implements Runnable {
             | RemoteControlClient.FLAG_KEY_MEDIA_STOP
             | RemoteControlClient.FLAG_KEY_MEDIA_PLAY
     );
-    audioManager.registerRemoteControlClient(remoteControlClient);
+    App.audioManager.registerRemoteControlClient(remoteControlClient);
   }
 
   @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
   public void afregistrér() {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) return;
-    audioManager.unregisterMediaButtonEventReceiver(eventReceiver);
+    App.audioManager.unregisterMediaButtonEventReceiver(eventReceiver);
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) return;
 
     remoteControlClient.editMetadata(true).apply();
     remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_STOPPED);
-    audioManager.unregisterRemoteControlClient(remoteControlClient);
+    App.audioManager.unregisterRemoteControlClient(remoteControlClient);
   }
 }
