@@ -27,6 +27,7 @@ import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.Sidevisning;
 import dk.dr.radio.v3.R;
 
 public class Hovedaktivitet extends Basisaktivitet implements Runnable {
@@ -80,11 +81,13 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
         getSupportFragmentManager().beginTransaction()
             .replace(R.id.indhold_frag, f)
             .commit();
+        // Ingen App.sidevisning(..) her, det skal kalderen klare (der er måske en slug der også skal gemmes)
       } else {
         // Startet op fra hjemmeskærm eller notifikation
         getSupportFragmentManager().beginTransaction()
             .replace(R.id.indhold_frag, new Kanaler_frag())
             .commit();
+        Sidevisning.vist(Kanaler_frag.class);
         // Hvis det ikke er en direkte udsendelse, så hop ind i den pågældende udsendelsesside
         if (DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET) {
           Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
@@ -98,6 +101,7 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
                 .replace(R.id.indhold_frag, f)
                 .addToBackStack("Udsendelse")
                 .commit();
+            Sidevisning.vist(Udsendelse_frag.class, udsendelse.slug);
             return;
           }
         }
@@ -218,6 +222,7 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
       // Tilbageknappen skal gå til forsiden - undtagen hvis vi ER på forsiden
       ft.addToBackStack("Venstremenu");
       ft.commit();
+      Sidevisning.vist(Soeg_efter_program_frag.class);
       return true;
     }
     return super.onOptionsItemSelected(item);

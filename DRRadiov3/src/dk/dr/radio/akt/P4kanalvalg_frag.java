@@ -36,6 +36,7 @@ import java.util.List;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Sidevisning;
 import dk.dr.radio.v3.R;
 
 public class P4kanalvalg_frag extends Basisfragment implements AdapterView.OnItemClickListener {
@@ -168,6 +169,7 @@ public class P4kanalvalg_frag extends Basisfragment implements AdapterView.OnIte
     // Fjern backstak - så vi starter forfra i 'roden'
     fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     fm.beginTransaction().replace(R.id.indhold_frag, new Kanaler_frag()).commit();
+    Sidevisning.vist(Kanaler_frag.class);
     //Toast.makeText(this, "Klik på "+position+" "+getKanal.longName, Toast.LENGTH_LONG).show();
 
     //if (kanalkode.equals(DRData.instans.aktuelKanal.kode)) setResult(RESULT_CANCELED);

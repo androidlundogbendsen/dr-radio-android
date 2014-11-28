@@ -21,6 +21,7 @@ import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Programserie;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.Sidevisning;
 import dk.dr.radio.v3.R;
 
 public class AlleUdsendelserAtilAA_frag extends Basisfragment implements AdapterView.OnItemClickListener, Runnable {
@@ -119,6 +120,7 @@ public class AlleUdsendelserAtilAA_frag extends Basisfragment implements Adapter
           .addToBackStack(null)
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
           .commit();
+    Sidevisning.vist(Programserie_frag.class, programserie.slug);
 
   }
 

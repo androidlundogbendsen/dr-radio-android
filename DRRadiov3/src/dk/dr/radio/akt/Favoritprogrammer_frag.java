@@ -29,6 +29,7 @@ import dk.dr.radio.data.Programserie;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.Sidevisning;
 import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
 import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 import dk.dr.radio.v3.R;
@@ -175,6 +176,7 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
           .addToBackStack(null)
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
           .commit();
+      Sidevisning.vist(Programserie_frag.class, programserie.slug);
 
     } else {
       Udsendelse udsendelse = (Udsendelse) obj;
@@ -189,6 +191,7 @@ public class Favoritprogrammer_frag extends Basisfragment implements AdapterView
           .addToBackStack(null)
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
           .commit();
+      Sidevisning.vist(Udsendelse_frag.class, udsendelse.slug);
 
     }
 

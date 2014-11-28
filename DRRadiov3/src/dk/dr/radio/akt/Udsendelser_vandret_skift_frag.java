@@ -25,6 +25,7 @@ import dk.dr.radio.data.Programserie;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.Sidevisning;
 import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
 import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 import dk.dr.radio.v3.R;
@@ -67,6 +68,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
       ft.replace(R.id.indhold_frag, new Kanaler_frag());
       ft.addToBackStack(null);
       ft.commit();
+      Sidevisning.vist(Kanaler_frag.class);
 
       return rod;
     }
@@ -204,6 +206,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     if (programserie != null && position == liste.size() - 1 && antalHentedeSendeplaner++ < 7) { // Hent flere udsendelser
       hentUdsendelser(programserie.getUdsendelser() == null ? 0 : programserie.getUdsendelser().size());
     }
+    Sidevisning.vist(Udsendelse_frag.class, liste.get(position).slug);
   }
 
   @Override

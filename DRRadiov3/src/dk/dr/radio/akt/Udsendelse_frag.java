@@ -53,6 +53,7 @@ import dk.dr.radio.data.Playlisteelement;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.Sidevisning;
 import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
 import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 import dk.dr.radio.v3.R;
@@ -743,6 +744,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       );
 //www.dr.dk/p1/mennesker-og-medier/mennesker-og-medier-100
       startActivity(intent);
+      Sidevisning.vist("del_udsendelse", udsendelse.slug);
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
@@ -782,6 +784,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         ft.replace(R.id.indhold_frag, new Hentede_udsendelser_frag());
         ft.addToBackStack(null);
         ft.commit();
+        Sidevisning.vist(Hentede_udsendelser_frag.class);
       } catch (Exception e1) {
         Log.rapporterFejl(e1);
       }
@@ -888,6 +891,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           .addToBackStack(null)
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
           .commit();
+      Sidevisning.vist(Programserie_frag.class, udsendelse.programserieSlug);
     }
   }
 }

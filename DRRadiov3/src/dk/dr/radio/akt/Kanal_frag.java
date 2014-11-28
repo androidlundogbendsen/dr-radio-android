@@ -43,6 +43,7 @@ import dk.dr.radio.data.Playlisteelement;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.Sidevisning;
 import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
 import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
 import dk.dr.radio.v3.R;
@@ -583,6 +584,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       getActivity().getSupportFragmentManager().beginTransaction()
           .replace(R.id.indhold_frag, new P4kanalvalg_frag())
           .commit();
+      Sidevisning.vist(P4kanalvalg_frag.class);
 
     } else if (v.getId() == R.id.p4_ok) {
       rod.findViewById(R.id.p4_vi_gætter_på_dialog).setVisibility(View.GONE);
@@ -647,6 +649,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           .addToBackStack(null)
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
           .commitAllowingStateLoss(); // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/830038058
+      Sidevisning.vist(Udsendelse_frag.class, u.slug);
     }
   }
 }
