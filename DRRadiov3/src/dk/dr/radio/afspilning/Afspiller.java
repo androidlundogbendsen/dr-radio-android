@@ -425,6 +425,10 @@ public class Afspiller {
     pauseAfspilningIntern();
     if (wifilock != null) wifilock.release();
     gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Pause, pos / 1000);
+    if (vækkeurWakeLock != null) {
+      vækkeurWakeLock.release();
+      vækkeurWakeLock = null;
+    }
   }
 
   /**

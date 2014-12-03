@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +25,7 @@ import dk.dr.radio.data.Lydstream;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.P4Stedplacering;
+import dk.dr.radio.v3.R;
 
 public class Basisaktivitet extends ActionBarActivity {
   protected final AQuery aq = new AQuery(this);
@@ -33,6 +35,12 @@ public class Basisaktivitet extends ActionBarActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+    ActionBar actionBar = getSupportActionBar();
+    if (actionBar!=null) {
+      actionBar.setLogo(R.drawable.dr_logo);
+      actionBar.setDisplayShowHomeEnabled(true);
+      actionBar.setDisplayShowTitleEnabled(false);
+    }
   }
 
   @Override
