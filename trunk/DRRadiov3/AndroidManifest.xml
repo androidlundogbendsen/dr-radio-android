@@ -3,11 +3,11 @@
           package="dk.dr.radio.v3"
           android:installLocation="auto"
           android:versionCode="1"
-          android:versionName="3.1.10 28.nov lydstyrke 121">
+          android:versionName="3.1.10 2 dec nyt ikonsæt2 123">
 
 <uses-sdk
       android:minSdkVersion="7"
-      android:targetSdkVersion="19"/>
+      android:targetSdkVersion="21"/>
 
 
   <!-- Nødvendigt til vækkeur -->
@@ -68,6 +68,7 @@
 
 
     <activity
+        android:theme="@style/Theme.Indstillinger"
         android:name="dk.dr.radio.akt.Indstillinger_akt"
         android:label="DR Radio Indstillinger">
       <!-- Gør aktivitet synlig i forbindelse med at brugeren gennemser sit dataforbrug -->
@@ -162,6 +163,7 @@
 
 
     <activity android:name="com.android.deskclock.SetAlarm_akt"
+              android:theme="@style/Theme.Indstillinger"
               android:label="@string/set_alarm"
               android:configChanges="orientation|keyboardHidden|keyboard|navigation"/>
 

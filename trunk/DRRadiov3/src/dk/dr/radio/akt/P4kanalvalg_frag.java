@@ -104,7 +104,7 @@ public class P4kanalvalg_frag extends Basisfragment implements AdapterView.OnIte
       //Log.d("billedebilledebilledebillede"+billede+ikon+textView);
       // Sæt åbne/luk-ikon for P4 og højttalerikon for getKanal
       if (DRData.instans.afspiller.getLydkilde().getKanal().kode.equals(kanalkode)) {
-        ikon.image(R.drawable.dri_lyd2_blaa);
+        ikon.image(R.drawable.dri_lyd_blaa);
         //ikon.blindetekst = "Spiller nu";
       } else {
 
