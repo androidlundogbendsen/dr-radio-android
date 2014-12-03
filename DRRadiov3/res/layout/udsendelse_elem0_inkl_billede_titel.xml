@@ -115,7 +115,7 @@
       android:layout_marginBottom="16dp"
       android:layout_gravity="bottom|right"
       android:contentDescription="hør udsendelse"
-      android:src="@drawable/dri_lyd2_hvid"
+      android:src="@drawable/dri_lyd_hvid"
       android:background="@drawable/knap_blaa_bg"
       />
   <!--
