@@ -31,7 +31,7 @@ public class AlarmAlertWakeLock {
     //return pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, Log.LOGTAG);
     if (App.PRODUKTION) App.kortToast("createPartialWakeLock");
 
-    return pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK
+    return pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK
         | PowerManager.ON_AFTER_RELEASE
         | PowerManager.ACQUIRE_CAUSES_WAKEUP, AlarmAlertWakeLock.class.getName());
 
