@@ -131,10 +131,7 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
         vh = (Viewholder) v.getTag();
       }
       vh.sl = sl;
-      vh.stiplet_linje.setVisibility(position > 2 ? View.VISIBLE : View.INVISIBLE); // Første stiplede linje på udsendelse væk
-
-      // Skjul stiplet linje over øverste listeelement
-      vh.aq.id(R.id.stiplet_linje).background(position == 0 ? 0 : R.drawable.stiplet_linje);
+      vh.stiplet_linje.setVisibility(position > 0 ? View.VISIBLE : View.INVISIBLE); // Første stiplede linje på udsendelse væk
 
 
       if (sl.lydkilde instanceof Kanal) {
@@ -150,7 +147,7 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
       } else {
         Log.rapporterFejl(new Exception("forkert type"), sl.lydkilde);
       }
-      vh.varighed.setText("Lyttet "+DRJson.getDagsbeskrivelse(vh.sl.tidpunkt).toLowerCase() + " kl " + DRJson.klokkenformat.format(vh.sl.tidpunkt));
+      vh.varighed.setText(("Lyttet "+DRJson.getDagsbeskrivelse(vh.sl.tidpunkt).toLowerCase() + " kl " + DRJson.klokkenformat.format(vh.sl.tidpunkt)).toUpperCase());
 
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
 

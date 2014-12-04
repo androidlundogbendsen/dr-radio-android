@@ -267,7 +267,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     AQuery aq = new AQuery(v);
     v.setTag(aq);
     String burl = Basisfragment.skalérBillede(udsendelse);
-    aq.id(R.id.billede).width(billedeBr, false).height(billedeHø, false).image(burl, true, true, billedeBr, 0, null, AQuery.FADE_IN, (float) højde9 / bredde16);
+    aq.id(R.id.billede).width(billedeBr, false).height(billedeHø, false).image(burl, true, true, billedeBr, 0, null, AQuery.FADE_IN_NETWORK, (float) højde9 / bredde16);
     aq.id(R.id.lige_nu).gone();
     aq.id(R.id.info).typeface(App.skrift_gibson);
     //Log.d("kanal JPER " + kanal.p4underkanal);

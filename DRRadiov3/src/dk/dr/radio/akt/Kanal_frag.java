@@ -286,7 +286,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
     hør_live.setEnabled(!spillerDenneKanal && online && kanal.streams != null);
     hør_live.setText(!online ? "Internetforbindelse mangler" :
-            (spillerDenneKanal ? " SPILLER "  + kanal.navn.toUpperCase() : " HØR " + kanal.navn.toUpperCase() + " LIVE"));
+            (spillerDenneKanal ? " SPILLER "  + kanal.navn.toUpperCase() : " HØR " + kanal.navn.toUpperCase()));
     hør_live.setContentDescription(!online ? "Internetforbindelse mangler" :
         (spillerDenneKanal ? "Spiller " : "Hør ") + kanal.navn.toUpperCase());
 
