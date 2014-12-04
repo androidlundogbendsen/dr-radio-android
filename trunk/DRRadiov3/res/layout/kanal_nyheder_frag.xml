@@ -20,8 +20,8 @@
       android:paddingLeft="4dp"
       android:paddingRight="16dp"
       android:drawableLeft="@drawable/dri_lyd_hvid"
-      android:text=" HØR DR NYHEDER LIVE"
-      android:contentDescription="hør D R nyheder live"
+      android:text=" HØR DR NYHEDER"
+      android:contentDescription="hør D R nyheder"
       android:textColor="@color/hvid"
       android:background="@drawable/knap_blaa_bg"/>
 

@@ -131,7 +131,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
       int iAlt = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)) / 1000000;
       int hentet = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)) / 1000000;
       c.close();
-      aq.id(R.id.linje2).text(DRJson.datoformat.format(udsendelse.startTid) + " - " + statustekst);
+      aq.id(R.id.linje2).text(DRJson.datoformat.format(udsendelse.startTid).toUpperCase() + " - " + statustekst.toUpperCase());
 
       if (status != DownloadManager.STATUS_SUCCESSFUL && status != DownloadManager.STATUS_FAILED) {
         // Genopfrisk hele listen om 1 sekund
