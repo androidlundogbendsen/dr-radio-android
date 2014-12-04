@@ -179,7 +179,7 @@ public class Alarms {
           if (alarmo.length() == 0) continue;
           alarmer.add(new Alarm(alarmo));
         } catch (Exception e) {
-          Log.rapporterFejl(e);
+          Log.e(e);
         }
     }
   }

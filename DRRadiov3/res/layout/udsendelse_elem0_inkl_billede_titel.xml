@@ -40,7 +40,7 @@
       android:orientation="horizontal">
 
     <ImageView
-        android:id="@+id/logo"
+        android:id="@+id/kanallogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/skrald__kanallogo_p3"
@@ -57,9 +57,9 @@
         android:layout_marginLeft="4dp"
         android:shadowColor="@color/hvid"
         android:shadowRadius="4"
-        android:layout_alignBottom="@+id/logo"
-        android:layout_toRightOf="@+id/logo"
-        android:layout_toEndOf="@+id/logo"/>
+        android:layout_alignBottom="@+id/kanallogo"
+        android:layout_toRightOf="@+id/kanallogo"
+        android:layout_toEndOf="@+id/kanallogo"/>
 
 
     <TextView

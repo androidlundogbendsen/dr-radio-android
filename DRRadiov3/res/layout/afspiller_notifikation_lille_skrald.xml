@@ -7,7 +7,7 @@
               android:gravity="center_vertical">
 
   <ImageView
-      android:id="@+id/logo"
+      android:id="@+id/kanallogo"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignParentLeft="true"
@@ -31,7 +31,7 @@
         android:textStyle="bold"
         android:maxLines="2"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/logo"/>
+        android:layout_toRightOf="@+id/kanallogo"/>
 
     <TextView
         android:id="@+id/metainformation"
@@ -41,7 +41,7 @@
         android:textColor="@color/hvid"
         android:visibility="visible"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/logo"/>
+        android:layout_toRightOf="@+id/kanallogo"/>
   </LinearLayout>
 
   <ProgressBar

@@ -46,7 +46,7 @@
         android:layout_height="wrap_content">
 
       <ImageView
-          android:id="@+id/logo"
+          android:id="@+id/kanallogo"
           android:layout_width="64dp"
           android:layout_height="44dp"
           android:scaleType="center"

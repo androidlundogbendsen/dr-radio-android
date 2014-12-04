@@ -227,8 +227,8 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
           String burl = Basisfragment.skalérBillede(programserie);
           aq.id(R.id.billede).width(3*billedeBr/4, false).height(3*billedeHø/4, false).image(burl, true, true, 0, AQuery.INVISIBLE, null, AQuery.FADE_IN, (float) højde9 / bredde16);
 
-          if (kanal == null) aq.id(R.id.logo).gone();
-          else aq.id(R.id.logo).image(kanal.kanallogo_resid).getView().setContentDescription(kanal.navn);
+          if (kanal == null) aq.id(R.id.kanallogo).gone();
+          else aq.id(R.id.kanallogo).image(kanal.kanallogo_resid).getView().setContentDescription(kanal.navn);
           aq.id(R.id.titel).typeface(App.skrift_gibson_fed).text(programserie.titel);
           aq.id(R.id.alle_udsendelser).typeface(App.skrift_gibson);
           aq.id(R.id.beskrivelse).text(programserie.beskrivelse).typeface(App.skrift_georgia);

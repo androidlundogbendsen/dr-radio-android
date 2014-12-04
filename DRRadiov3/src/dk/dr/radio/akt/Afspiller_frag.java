@@ -46,7 +46,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
   private AQuery aq;
   private ImageView startStopKnap;
   private ProgressBar progressbar;
-  private TextView titel;
+  private TextView kanallogoOgDirektetekst;
   private TextView metainformation;
   private ImageView udvidSkjulKnap;
   private View udvidSkjulOmråde;
@@ -173,8 +173,8 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
 
     udvidSkjulOmråde = aq.id(R.id.udvidSkjulOmråde).gone().getView();
     progressbar = aq.id(R.id.progressBar).getProgressBar();
-    titel = aq.id(R.id.titel).clicked(this).typeface(App.skrift_gibson_fed).getTextView();
-    metainformation = aq.id(R.id.metainformation).clicked(this).typeface(App.skrift_gibson).getTextView();
+    kanallogoOgDirektetekst = aq.id(R.id.kanallogoOgDirektetekst).clicked(this).typeface(App.skrift_gibson).getTextView();
+    metainformation = aq.id(R.id.metainformation).clicked(this).typeface(App.skrift_gibson_fed).getTextView();
     // Knappen er meget vigtig, og har derfor et udvidet område hvor det også er den man rammer
     // se http://developer.android.com/reference/android/view/TouchDelegate.html
     final int udvid = getResources().getDimensionPixelSize(R.dimen.hørknap_udvidet_klikområde);
@@ -218,53 +218,42 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
   public void run() {
     App.forgrundstråd.postDelayed(opdaterSeekBar, 1000);
     Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
-    Kanal k = lydkilde.getKanal();
-    if (k == null) return;
-    Status status = DRData.instans.afspiller.getAfspillerstatus();
-    if (lydkilde.erDirekte()) {
-      titel.setText(k.navn + " Live");
-    } else {
-      Udsendelse udsendelse = lydkilde.getUdsendelse();
-      titel.setText(udsendelse == null ? k.navn : udsendelse.titel);
+    Kanal kanal = lydkilde.getKanal();
+    if (kanal == null) {
+      Log.rapporterFejl(new IllegalStateException("kanal er null for "+lydkilde+ " "+lydkilde.getClass()));
+      return;
     }
+    Udsendelse udsendelse = lydkilde.getUdsendelse();
+    Status status = DRData.instans.afspiller.getAfspillerstatus();
+    kanallogoOgDirektetekst.setCompoundDrawablesWithIntrinsicBounds(kanal.kanallogo_resid, 0, 0, 0);
+    if (lydkilde.erDirekte()) {
+      kanallogoOgDirektetekst.setText("  LIVE");
+    } else {
+      kanallogoOgDirektetekst.setText("");
+    }
+    metainformation.setText(udsendelse!=null?udsendelse.titel:kanal.navn);
     switch (status) {
       case STOPPET:
         startStopKnapNyImageResource = R.drawable.afspiller_spil;
         startStopKnap.setContentDescription("Start afspilning");
-        progressbar.setVisibility(View.INVISIBLE);
-        metainformation.setText(k.navn);
-        metainformation.setTextColor(App.color.grå40);
+        progressbar.setVisibility(View.GONE);
         break;
       case FORBINDER:
         startStopKnapNyImageResource = R.drawable.afspiller_pause;
         startStopKnap.setContentDescription("Stop afspilning");
         progressbar.setVisibility(View.VISIBLE);
         int fpct = DRData.instans.afspiller.getForbinderProcent();
-        metainformation.setTextColor(App.color.blå);
         metainformation.setText("Forbinder " + (fpct > 0 ? fpct : ""));
         break;
       case SPILLER:
         startStopKnapNyImageResource = R.drawable.afspiller_pause;
         startStopKnap.setContentDescription("Stop afspilning");
-        progressbar.setVisibility(View.INVISIBLE);
-        metainformation.setTextColor(App.color.blå);
-        metainformation.setText(k.navn);
+        progressbar.setVisibility(View.GONE);
         break;
     }
     if (startStopKnapImageResource == 0) {
       startStopKnap.setImageResource(startStopKnapNyImageResource);
     } else if (startStopKnapImageResource != startStopKnapNyImageResource) {
-
-      /*
-      if (App.prefs.getBoolean("startStopKnapAnim", false)) {
-        anim = new RotateAnimation(0f, 180f, 0, 0);
-        //r.setStartOffset(1000);
-        anim.setDuration(200);
-        anim.setRepeatCount(1);
-        anim.setRepeatMode(RotateAnimation.REVERSE);
-        anim.setInterpolator(new AccelerateInterpolator());
-      } else {
-      */
       Animation anim;
       anim = new ScaleAnimation(1, 1.2f, 1, 1.2f, startStopKnap.getWidth() / 2, startStopKnap.getHeight() / 2);
       anim.setDuration(100);
@@ -292,7 +281,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
       MenuItem menuItem = menu.findItem(R.id.startStopKnap);
 
       if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
-        menuItem.setTitle("Start " + titel.getText());
+        menuItem.setTitle("Start " + kanallogoOgDirektetekst.getText());
       } else {
         menuItem.setTitle("Stop afspilning");
         menuItem.setIcon(R.drawable.dri_radio_stop_graa40);
@@ -442,7 +431,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
       DRData.instans.afspiller.forrige();
     } else if (v.getId() == R.id.næste) {
       DRData.instans.afspiller.næste();
-    } else if (v==titel || v==metainformation) try {
+    } else if (v== kanallogoOgDirektetekst || v==metainformation) try {
       // Ved klik på baggrunden skal kanalforside eller aktuel udsendelsesside vises
       Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
       FragmentManager fm = getFragmentManager();
