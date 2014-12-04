@@ -273,10 +273,10 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     //Log.d("kanal JPER " + kanal.p4underkanal);
     if (kanal.p4underkanal) {
       //Log.d("kanal JPER1 " + kanal.slug.substring(0, 2));
-      aq.id(R.id.logo).image(R.drawable.kanalappendix_p4f);
+      aq.id(R.id.kanallogo).image(R.drawable.kanalappendix_p4f);
       aq.id(R.id.p4navn).text(kanal.navn.replace("P4", "")).typeface(App.skrift_gibson_fed);
     } else {
-      aq.id(R.id.logo).image(kanal.kanallogo_resid);
+      aq.id(R.id.kanallogo).image(kanal.kanallogo_resid);
       aq.id(R.id.p4navn).text("");
     }
 
@@ -333,7 +333,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     else if (!udsendelse.kanStreames && !udsendelsenErAktuelPåKanalen) {   // On demand og direkte udsendelser
       hør_ikon.setVisibility(View.GONE);
       hør_tekst.setVisibility(View.VISIBLE);
-      hør_tekst.setText("KAN ENDNU\nIKKE AFSPILLES");
+      hør_tekst.setText("KAN IKKE\nAFSPILLES");
     } else {
       hør_ikon.setVisibility(View.VISIBLE);
       hør_tekst.setVisibility(View.GONE);

@@ -110,7 +110,7 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
 
   @Override
   public boolean isPlaying() {
-    return player.getPlaybackState()== ExoPlayer.STATE_READY;
+    return player!=null && player.getPlaybackState()== ExoPlayer.STATE_READY;
   }
 
   /**
