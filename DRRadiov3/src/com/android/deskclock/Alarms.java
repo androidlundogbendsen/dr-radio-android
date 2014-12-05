@@ -63,6 +63,7 @@ public class Alarms {
   private final static String M12 = "h:mm aa";
   // Shared with DigitalClock
   final static String M24 = "kk:mm";
+  public static long næsteAktiveAlarm;
 
   /**
    * Creates a new Alarm and fills in the given alarm's id.
@@ -200,9 +201,12 @@ public class Alarms {
     final Alarm alarm = calculateNextAlert(context);
     if (alarm != null) {
       enableAlert(context, alarm, alarm.time);
+      næsteAktiveAlarm = alarm.time;
     } else {
       disableAlert(context);
+      næsteAktiveAlarm = 0;
     }
+    if (!App.PRODUKTION) App.kortToast("enAlarmErAktiv  "+ næsteAktiveAlarm);
   }
 
   /**

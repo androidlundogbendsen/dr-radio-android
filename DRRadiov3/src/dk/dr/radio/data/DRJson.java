@@ -109,8 +109,9 @@ public enum DRJson {
   public static final Locale dansk = new Locale("da", "DA");
   public static final DateFormat klokkenformat = new SimpleDateFormat("HH:mm", dansk);
   public static final DateFormat datoformat = new SimpleDateFormat("d. MMM yyyy", dansk);
-  public static final DateFormat ugedagformat = new SimpleDateFormat("EEEE d. MMM yyyy", dansk);
-  public static String iDagDatoStr, iMorgenDatoStr, iGårDatoStr, iOvermorgenDatoStr, iForgårsDatoStr;
+  private static final DateFormat ugedagformat = new SimpleDateFormat("EEEE d. MMM", dansk);
+  private static final DateFormat årformat = new SimpleDateFormat("yyyy", dansk);
+  public static String iDagDatoStr, iMorgenDatoStr, iGårDatoStr, iOvermorgenDatoStr, iForgårsDatoStr, iÅrDatoStr;
   public static final String I_DAG = "I DAG";
   private static HashMap<String, String> datoTilBeskrivelse = new HashMap<String, String>();
 
@@ -123,6 +124,7 @@ public enum DRJson {
     iOvermorgenDatoStr = datoformat.format(new Date(nu + 2 * 24 * 60 * 60 * 1000));
     iGårDatoStr = datoformat.format(new Date(nu - 24 * 60 * 60 * 1000));
     iForgårsDatoStr = datoformat.format(new Date(nu - 2 * 24 * 60 * 60 * 1000));
+    iÅrDatoStr = årformat.format(new Date(nu));
     datoTilBeskrivelse.clear();
   }
 
@@ -195,13 +197,15 @@ public enum DRJson {
     // Se også String.intern()
     String dagsbeskrivelse = datoTilBeskrivelse.get(datoStr0);
     if (dagsbeskrivelse == null) {
-      dagsbeskrivelse = ugedagformat.format(tid);
+      dagsbeskrivelse = ugedagformat.format(tid).toUpperCase();
+      String år = årformat.format(tid);
       if (datoStr0.equals(iDagDatoStr)) dagsbeskrivelse = I_DAG; // ingenting
       else if (datoStr0.equals(iMorgenDatoStr)) dagsbeskrivelse = "I MORGEN - " + dagsbeskrivelse;
       else if (datoStr0.equals(iOvermorgenDatoStr)) dagsbeskrivelse = "I OVERMORGEN - " + dagsbeskrivelse;
       else if (datoStr0.equals(iGårDatoStr)) dagsbeskrivelse = "I GÅR"; // "I GÅR - "+dagsbeskrivelse;
       else if (datoStr0.equals(iForgårsDatoStr)) dagsbeskrivelse = "I FORGÅRS - " + dagsbeskrivelse;
-      else dagsbeskrivelse = dagsbeskrivelse.toUpperCase();
+      else if (år.equals(iÅrDatoStr)) dagsbeskrivelse = dagsbeskrivelse;
+      else dagsbeskrivelse = dagsbeskrivelse + " " + år;
       datoTilBeskrivelse.put(datoStr0, dagsbeskrivelse);
     }
     return dagsbeskrivelse;

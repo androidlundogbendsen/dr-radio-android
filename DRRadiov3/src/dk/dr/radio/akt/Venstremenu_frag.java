@@ -26,14 +26,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.deskclock.AlarmClock_akt;
+import com.android.deskclock.Alarms;
 import com.androidquery.AQuery;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import dk.dr.radio.data.DRData;
+import dk.dr.radio.data.DRJson;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.Sidevisning;
@@ -119,6 +122,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     listView.setItemChecked(mCurrentSelectedPosition, true);
     DRData.instans.favoritter.observatører.add(this);
     DRData.instans.hentedeUdsendelser.observatører.add(this);
+    Alarms.setNextAlert(getActivity());
     return listView;
   }
 
@@ -141,6 +145,12 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     venstremenuAdapter.notifyDataSetChanged();
   }
 
+  @Override
+  public void onResume() {
+    super.onResume();
+    // Dette sikter at AKTIV vises korrekt for vækning
+    if (venstremenuAdapter!=null) venstremenuAdapter.notifyDataSetChanged();
+  }
 
   public boolean isDrawerOpen() {
     return drawerLayout != null && drawerLayout.isDrawerOpen(fragmentContainerView);
@@ -430,13 +440,27 @@ public class Venstremenu_frag extends Fragment implements Runnable {
       aq.id(R.id.tekst).text("Alle udsendelser A-Å").typeface(App.skrift_gibson_fed);
 
 
-      tilføj(R.layout.venstremenu_elem_overskrift, new Runnable() {
+      tilføj(new MenuElement(layoutInflater.inflate(R.layout.venstremenu_elem_favoritprogrammer, null),
+          new Runnable() {
+            @Override
+            public void run() {
+              startActivity(new Intent(getActivity(), AlarmClock_akt.class));
+            }
+          }
+          , null) {
         @Override
-        public void run() {
-          startActivity(new Intent(getActivity(), AlarmClock_akt.class));
+        public View getView() {
+          TextView tekst2 = (TextView) view.findViewById(R.id.tekst2);
+          if (Alarms.næsteAktiveAlarm==0) tekst2.setText("");
+          else {
+            Date d = new Date(Alarms.næsteAktiveAlarm);
+            tekst2.setText(DRJson.getDagsbeskrivelse(d).toLowerCase()+" kl "+ DRJson.klokkenformat.format(d));
+          }
+          return view;
         }
       });
       aq.id(R.id.tekst).text("Vækkeur").typeface(App.skrift_gibson_fed);
+      aq.id(R.id.tekst2).typeface(App.skrift_gibson).textColor(getResources().getColor(R.color.rød));
 
 
       tilføj(R.layout.venstremenu_elem_overskrift, Kontakt_info_om_frag.class);
