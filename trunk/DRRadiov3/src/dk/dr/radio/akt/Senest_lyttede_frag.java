@@ -147,7 +147,7 @@ public class Senest_lyttede_frag extends Basisfragment implements AdapterView.On
       } else {
         Log.rapporterFejl(new Exception("forkert type"), sl.lydkilde);
       }
-      vh.varighed.setText(("Lyttet "+DRJson.getDagsbeskrivelse(vh.sl.tidpunkt).toLowerCase() + " kl " + DRJson.klokkenformat.format(vh.sl.tidpunkt)).toUpperCase());
+      vh.varighed.setText(("Lyttet "+DRJson.getDagsbeskrivelse(vh.sl.tidpunkt) + " kl " + DRJson.klokkenformat.format(vh.sl.tidpunkt)).toUpperCase());
 
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
 
