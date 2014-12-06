@@ -3,14 +3,15 @@
 <resources>
 
   <style name="Theme.Dr" parent="@style/Theme.AppCompat.Light">
-    <item name="actionBarStyle">@style/ActionBar.Solid.Dr</item>
     <item name="android:windowBackground">@color/hvid</item>
+    <item name="windowActionBar">false</item>
     <!--
     <item name="homeAsUpIndicator">@drawable/abc_ic_ab_back_holo_dark</item>
     -->
     <!--
     <item name="android:windowActionBarOverlay">true</item>
     <item name="windowActionBarOverlay">true</item>
+    <item name="actionBarStyle">@style/ActionBar.Solid.Dr</item>
     -->
     <item name="android:textColor">@color/sort</item>
   </style>
@@ -22,9 +23,8 @@
 
   <style name="Theme.Indstillinger" parent="@android:style/Theme.Light">
     <item name="android:windowBackground">@color/hvid</item>
-    <item name="android:windowNoTitle">false</item>
-    <item name="android:windowActionBar">true</item>
-    <item name="windowActionBar">true</item>
+    <item name="android:windowActionBar">false</item>
+    <item name="windowActionBar">false</item>
   </style>
 
 </resources>

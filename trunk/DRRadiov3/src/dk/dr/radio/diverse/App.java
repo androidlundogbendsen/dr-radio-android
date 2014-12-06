@@ -47,7 +47,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
 
@@ -68,6 +67,7 @@ import java.util.Date;
 
 import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.afspilning.Fjernbetjening;
+import dk.dr.radio.akt.Basisaktivitet;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Diverse;
@@ -459,8 +459,8 @@ public class App extends Application {
 
   private static Runnable setProgressBarIndeterminateVisibility = new Runnable() {
     public void run() {
-      if (aktivitetIForgrunden instanceof ActionBarActivity) {
-        ((ActionBarActivity) aktivitetIForgrunden).setSupportProgressBarIndeterminateVisibility(erIGang > 0);
+      if (aktivitetIForgrunden instanceof Basisaktivitet) {
+        ((Basisaktivitet) aktivitetIForgrunden).sætProgressBar(erIGang > 0);
       }
     }
   };

@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -43,10 +42,6 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    // android:logo="@drawable/dr_logo" ignoreres på Android 2, sæt det derfor også her:
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-      getSupportActionBar().setLogo(R.drawable.dr_logo);
-    }
 
     if (App.prefs.getBoolean("tving_lodret_visning", true)) {
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -55,10 +50,6 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
     Basisfragment.sætBilledeDimensioner(getResources().getDisplayMetrics());
 
     setContentView(R.layout.hoved_akt);
-    setTitle("D R Radio"); // til blinde, for at undgå at "DR Radio" bliver udtalt som "Doktor Radio"
-
-    //ActionBar actionBar = getSupportActionBar();
-    //actionBar.setDisplayShowTitleEnabled(false);
 
     venstremenuFrag = (Venstremenu_frag) getSupportFragmentManager().findFragmentById(R.id.venstremenu_frag);
 

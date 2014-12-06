@@ -117,7 +117,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
         venstremenuAdapter.vælgMenu(getActivity(), position);
       }
     });
-    venstremenuAdapter = new VenstremenuAdapter(getActionBar().getThemedContext());
+    venstremenuAdapter = new VenstremenuAdapter(getActivity());
     listView.setAdapter(venstremenuAdapter);
     listView.setItemChecked(mCurrentSelectedPosition, true);
     DRData.instans.favoritter.observatører.add(this);
