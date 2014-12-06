@@ -21,6 +21,25 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
+  <android.support.v7.widget.Toolbar
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/toolbar"
+      android:layout_height="?attr/actionBarSize"
+      android:layout_width="match_parent"
+      android:background="@color/grå70"
+      >
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:indeterminate="true"
+        android:visibility="visible" />
+
+  </android.support.v7.widget.Toolbar>
+
+
   <LinearLayout
       android:id="@+id/add_alarm"
       android:clickable="true"
