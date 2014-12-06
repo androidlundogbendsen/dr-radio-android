@@ -19,6 +19,7 @@
 package dk.dr.radio.akt;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -126,7 +127,9 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) try {
-      getActionBar().setDisplayHomeAsUpEnabled(true);
+      ActionBar ab = getActionBar();
+      ab.setDisplayHomeAsUpEnabled(true);
+//      ab.set
     } catch (Exception e) {
       Log.rapporterFejl(e);
     } // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/824608029

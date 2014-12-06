@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -29,7 +30,6 @@ import dk.dr.radio.v3.R;
 
 public class Basisaktivitet extends ActionBarActivity {
   protected final AQuery aq = new AQuery(this);
-  private Toolbar actionBar;
   private ProgressBar progressBar;
 
 
@@ -52,11 +52,15 @@ public class Basisaktivitet extends ActionBarActivity {
   public void setContentView(int layoutResID) {
     setTitle("D R Radio"); // til blinde, for at undgå at "DR Radio" bliver udtalt som "Doktor Radio"
     super.setContentView(layoutResID);
-    actionBar = (Toolbar) findViewById(R.id.toolbar);
-    if (actionBar!=null) {
-      actionBar.setLogo(R.drawable.dr_logo);
-      setSupportActionBar(actionBar);
-      getSupportActionBar().setDisplayShowTitleEnabled(false);
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    if (toolbar!=null) {
+      toolbar.setLogo(R.drawable.dr_logo);
+      setSupportActionBar(toolbar);
+      ActionBar ab = getSupportActionBar();
+      ab.setDisplayShowTitleEnabled(false);
+      ab.setDisplayHomeAsUpEnabled(true);
+      ab.setHomeButtonEnabled(true);
+
       //actionBar.setTitle(""); // tom - vi bruger logo
       progressBar = (ProgressBar) findViewById(R.id.progressBar);
     }
