@@ -19,10 +19,8 @@
 package dk.dr.radio.akt;
 
 import android.Manifest;
-import android.app.ActionBar;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StatFs;
@@ -30,8 +28,10 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.format.Formatter;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,6 +53,19 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setContentView(R.layout.indstillinger_akt);
+
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    toolbar.setLogo(R.drawable.dr_logo);
+    toolbar.setTitle(getTitle());
+    toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha));
+    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        finish();
+      }
+    });
+
     App.prefs.edit().putBoolean("fejlsøgning", App.fejlsøgning);
     addPreferencesFromResource(R.xml.indstillinger);
     addPreferencesFromResource(R.xml.indstillinger_udvikling);
@@ -125,14 +138,6 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
         }
       }.execute();
     }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) try {
-      ActionBar ab = getActionBar();
-      ab.setDisplayHomeAsUpEnabled(true);
-//      ab.set
-    } catch (Exception e) {
-      Log.rapporterFejl(e);
-    } // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/824608029
   }
 
   @Override

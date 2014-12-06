@@ -28,6 +28,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
+import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
@@ -69,6 +70,17 @@ public class SetAlarm_akt extends PreferenceActivity implements Preference.OnPre
 
     // Override the default content view.
     setContentView(R.layout.deskclock_set_alarm);
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    toolbar.setLogo(R.drawable.dr_logo);
+    toolbar.setTitle(getTitle());
+    toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha));
+    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        finish();
+      }
+    });
+
     EditText label = (EditText) getLayoutInflater().inflate(R.layout.deskclock_alarm_label, null);
 
     ListView list = (ListView) findViewById(android.R.id.list);
