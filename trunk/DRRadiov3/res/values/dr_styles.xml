@@ -12,19 +12,13 @@
     <item name="android:windowActionBarOverlay">true</item>
     <item name="windowActionBarOverlay">true</item>
     <item name="actionBarStyle">@style/ActionBar.Solid.Dr</item>
+    <item name="android:windowActionBar">false</item>
+    <item name="windowActionBar">false</item>
     -->
     <item name="android:textColor">@color/sort</item>
   </style>
 
-  <style name="ActionBar.Solid.Dr" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-    <item name="background">@color/grå70</item>
-    <item name="displayOptions">showHome|useLogo</item>
-  </style>
-
-  <style name="Theme.Indstillinger" parent="@android:style/Theme.Light">
-    <item name="android:windowBackground">@color/hvid</item>
-    <item name="android:windowActionBar">false</item>
-    <item name="windowActionBar">false</item>
+  <style name="Theme.Indstillinger" parent="@style/Theme.AppCompat.Light">
   </style>
 
 </resources>
