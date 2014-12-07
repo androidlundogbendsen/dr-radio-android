@@ -44,7 +44,9 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable, AdapterV
   public void run() {
     karruselListe.clear();
     liste.clear();
-    if (DRData.instans.dramaOgBog.lister !=null) {
+    if (DRData.instans.dramaOgBog.lister == null) {
+      DRData.instans.dramaOgBog.startHentData();
+    } else {
       for (int sektionsnummer = 0; sektionsnummer < DramaOgBog.overskrifter.length; sektionsnummer++) {
         liste.add(DramaOgBog.overskrifter[sektionsnummer]+" ("+DRData.instans.dramaOgBog.lister[sektionsnummer].size()+")");
         int n = 0;
