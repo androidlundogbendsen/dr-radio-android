@@ -330,6 +330,7 @@ public class App extends Application {
    * Dette sker når app'en er synlig og telefonen er online
    */
   private Runnable udeståendeInitialisering = new Runnable() {
+    int forsinkelse = 15000;
     @Override
     public void run() {
       if (!erOnline()) return;
@@ -375,7 +376,10 @@ public class App extends Application {
       }
 
       if (!færdig) {
-        App.forgrundstråd.postDelayed(this, 15000); // prøv igen om 15 sekunder og se om alle data er klar der
+        Log.d("Onlineinitialisering ikke færdig - prøver igen om " + forsinkelse/1000 +" sekunder");
+        App.forgrundstråd.removeCallbacks(this);
+        App.forgrundstråd.postDelayed(this, forsinkelse); // prøv igen om 15 sekunder og se om alle data er klar der
+        forsinkelse = 15*forsinkelse/10;
       }
 
       if (prefs.getString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, null) == null) {
@@ -385,8 +389,8 @@ public class App extends Application {
       if (færdig) {
         netværk.observatører.remove(this); // Hold ikke mere øje med om vi kommer online
         udeståendeInitialisering = null;
+        Log.d("Onlineinitialisering færdig");
       }
-      Log.d("Onlineinitialisering færdig=" + færdig);
     }
   };
 

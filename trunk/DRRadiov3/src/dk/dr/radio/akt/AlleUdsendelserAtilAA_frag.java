@@ -64,7 +64,11 @@ public class AlleUdsendelserAtilAA_frag extends Basisfragment implements Adapter
   public void run() {
     App.forgrundstråd.removeCallbacks(this); // Ingen gentagne kald
     liste.clear();
-    if (DRData.instans.programserierAtilÅ.liste!=null) liste.addAll(DRData.instans.programserierAtilÅ.liste);
+    if (DRData.instans.programserierAtilÅ.liste == null) {
+      DRData.instans.programserierAtilÅ.startHentData();
+    } else {
+      liste.addAll(DRData.instans.programserierAtilÅ.liste);
+    }
     if (adapter != null) {
       adapter.notifyDataSetChanged();
     }
