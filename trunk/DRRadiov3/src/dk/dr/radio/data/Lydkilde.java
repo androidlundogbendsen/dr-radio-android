@@ -113,4 +113,6 @@ public abstract class Lydkilde implements Serializable {
   public abstract boolean erDirekte();
 
   public abstract Udsendelse getUdsendelse();
+
+  public abstract String getNavn();
 }

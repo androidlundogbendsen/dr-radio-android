@@ -85,6 +85,11 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
   }
 
   @Override
+  public String getNavn() {
+    return titel;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof Udsendelse)) return false;

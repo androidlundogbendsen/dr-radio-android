@@ -95,4 +95,9 @@ public class Kanal extends Lydkilde {
     if (nu.before(udsendelser.get(0).slutTid)) return udsendelser.get(0);
     return null;
   }
+
+  @Override
+  public String getNavn() {
+    return navn;
+  }
 }
