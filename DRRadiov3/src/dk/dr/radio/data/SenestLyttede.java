@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 import dk.dr.radio.diverse.App;
@@ -33,6 +34,16 @@ public class SenestLyttede {
     if (liste != null) return;
     if (new File(FILNAVN).exists()) try {
       liste = (LinkedHashMap<String, SenestLyttet>) Serialisering.hent(FILNAVN);
+      for (Iterator<SenestLyttet> sli = liste.values().iterator(); sli.hasNext(); ) {
+        SenestLyttet sl = sli.next();
+        if (sl.lydkilde instanceof Kanal) {
+          // Serialiserede kanaler skal altid erstattes med instansværdier
+          Kanal serialiseretKanal = (Kanal) sl.lydkilde;
+          sl.lydkilde = DRData.instans.grunddata.kanalFraKode.get(serialiseretKanal.kode);
+          // Forsvundne kanaler fjernes bare
+          if (sl.lydkilde==null || sl.lydkilde==Grunddata.ukendtKanal) sli.remove();
+        }
+      }
       return;
     } catch (ClassCastException e) {
       Log.d("SenestLyttede: " + e);
@@ -64,15 +75,19 @@ public class SenestLyttede {
   }
 
   public void registrérLytning(Lydkilde lydkilde) {
-    tjekDataOprettet();
-    SenestLyttet senestLyttet = liste.remove(lydkilde.slug);
-    if (senestLyttet == null) senestLyttet = new SenestLyttet();
-    senestLyttet.lydkilde = lydkilde;
-    senestLyttet.tidpunkt = new Date(App.serverCurrentTimeMillis());
-    liste.put(lydkilde.slug, senestLyttet);
-    if (liste.size() > 50) liste.remove(0); // Husk kun de seneste 50
-    App.forgrundstråd.removeCallbacks(gemListe);
-    App.forgrundstråd.postDelayed(gemListe, 10000); // Gem listen om 10 sekunder
+    if (lydkilde instanceof Kanal || lydkilde instanceof Udsendelse) {
+      tjekDataOprettet();
+      SenestLyttet senestLyttet = liste.remove(lydkilde.slug);
+      if (senestLyttet == null) senestLyttet = new SenestLyttet();
+      senestLyttet.lydkilde = lydkilde;
+      senestLyttet.tidpunkt = new Date(App.serverCurrentTimeMillis());
+      liste.put(lydkilde.slug, senestLyttet);
+      if (liste.size() > 50) liste.remove(0); // Husk kun de seneste 50
+      App.forgrundstråd.removeCallbacks(gemListe);
+      App.forgrundstråd.postDelayed(gemListe, 10000); // Gem listen om 10 sekunder
+    } else {
+      Log.d("SenestLyttede: ignorer lytning der ikker er en kanal eller udsendelse: "+lydkilde);
+    }
   }
 
   public void sætStartposition(Lydkilde lydkilde, int pos) {
