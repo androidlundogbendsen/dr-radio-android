@@ -35,7 +35,7 @@ public class Kanal extends Lydkilde {
   public String kode; // P3
   public static final String P4kode = "P4F";
   public String navn;
-  public int kanallogo_resid;
+  public transient int kanallogo_resid;
   public boolean p4underkanal;
   public transient ArrayList<Udsendelse> udsendelser = new ArrayList<Udsendelse>();
   public transient SortedMap<String, ArrayList<Udsendelse>> udsendelserPerDag = new TreeMap<String, ArrayList<Udsendelse>>();
