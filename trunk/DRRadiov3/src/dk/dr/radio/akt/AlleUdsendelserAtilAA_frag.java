@@ -48,6 +48,7 @@ public class AlleUdsendelserAtilAA_frag extends Basisfragment implements Adapter
 
     aq.id(R.id.overskrift).typeface(App.skrift_gibson_fed).text("Alle udsendelser").getTextView();
 
+    DRData.instans.programserierAtilÅ.observatører.add(this);
     run();
 
     udvikling_checkDrSkrifter(rod, this + " rod");
@@ -56,6 +57,7 @@ public class AlleUdsendelserAtilAA_frag extends Basisfragment implements Adapter
 
   @Override
   public void onDestroyView() {
+    DRData.instans.programserierAtilÅ.observatører.add(this);
     super.onDestroyView();
   }
 
@@ -66,6 +68,7 @@ public class AlleUdsendelserAtilAA_frag extends Basisfragment implements Adapter
     liste.clear();
     if (DRData.instans.programserierAtilÅ.liste == null) {
       DRData.instans.programserierAtilÅ.startHentData();
+      return; // run() kaldes igen når der er data
     } else {
       liste.addAll(DRData.instans.programserierAtilÅ.liste);
     }
