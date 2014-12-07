@@ -364,17 +364,6 @@ public class App extends Application {
       }
 
 
-      if (DRData.instans.programserierAtilÅ.liste == null) {
-        færdig = false;
-        DRData.instans.programserierAtilÅ.startHentData();
-      }
-
-
-      if (DRData.instans.dramaOgBog.lister == null) {
-        færdig = false;
-        DRData.instans.dramaOgBog.startHentData();
-      }
-
       if (!færdig) {
         Log.d("Onlineinitialisering ikke færdig - prøver igen om " + forsinkelse/1000 +" sekunder");
         App.forgrundstråd.removeCallbacks(this);

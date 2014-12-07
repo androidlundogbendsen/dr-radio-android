@@ -46,6 +46,7 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable, AdapterV
     liste.clear();
     if (DRData.instans.dramaOgBog.lister == null) {
       DRData.instans.dramaOgBog.startHentData();
+      return; // run() kaldes igen når der er data
     } else {
       for (int sektionsnummer = 0; sektionsnummer < DramaOgBog.overskrifter.length; sektionsnummer++) {
         liste.add(DramaOgBog.overskrifter[sektionsnummer]+" ("+DRData.instans.dramaOgBog.lister[sektionsnummer].size()+")");
@@ -72,7 +73,6 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable, AdapterV
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     Log.d("onCreateView " + this);
     View rod = inflater.inflate(R.layout.drama_og_bog_frag, container, false);
-    run();
     karruselAdapter = new KarruselAdapter(getChildFragmentManager());
     viewPager = (ViewPager) rod.findViewById(R.id.pager);
     viewPager.setAdapter(karruselAdapter);
@@ -86,6 +86,7 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable, AdapterV
     karruselIndikator.setStrokeColor(0);
     karruselIndikator.setStrokeWidth(0);
     DRData.instans.dramaOgBog.observatører.add(this);
+    run();
     viewPager.setOnTouchListener(new View.OnTouchListener() {
       @Override
       public boolean onTouch(View v, MotionEvent event) {
