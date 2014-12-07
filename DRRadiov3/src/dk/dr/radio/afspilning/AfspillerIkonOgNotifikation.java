@@ -112,40 +112,35 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
 
     Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
     Kanal kanal = lydkilde.getKanal();
-
-    //boolean live =  && status != Status.STOPPET;
-    if (lydkilde.erDirekte()) {
-      remoteViews.setTextViewText(R.id.titel, kanal.navn + " Live");
-    } else {
-      Udsendelse udsendelse = lydkilde.getUdsendelse();
-      remoteViews.setTextViewText(R.id.titel, udsendelse == null ? kanal.navn : udsendelse.titel);
-    }
-    remoteViews.setTextViewText(R.id.metainformation, kanal.navn);
+    Udsendelse udsendelse = lydkilde.getUdsendelse();
+    remoteViews.setImageViewResource(R.id.kanallogo, kanal.kanallogo_resid);
+    remoteViews.setViewVisibility(R.id.direktetekst, lydkilde.erDirekte()?View.VISIBLE:View.GONE);
+    remoteViews.setImageViewResource(R.id.kanallogo, kanal.kanallogo_resid);
+    remoteViews.setTextViewText(R.id.metainformation, udsendelse!=null?udsendelse.titel:kanal.navn);
     if (Build.VERSION.SDK_INT >= 15) {
       remoteViews.setContentDescription(R.id.metainformation, "D R Radio " + kanal.navn);
     }
-
     switch (DRData.instans.afspiller.getAfspillerstatus()) {
       case STOPPET:
-        remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.ic_action_play);
+        remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_spil);
         if (Build.VERSION.SDK_INT >= 15) remoteViews.setContentDescription(R.id.startStopKnap, "Start afspilning");
         remoteViews.setViewVisibility(R.id.progressBar, View.GONE);
-        remoteViews.setTextColor(R.id.metainformation, App.color.grå60);
+        //remoteViews.setTextColor(R.id.metainformation, App.color.grå60);
         break;
       case FORBINDER:
-        remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.ic_action_pause);
+        remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_pause);
         if (Build.VERSION.SDK_INT >= 15) remoteViews.setContentDescription(R.id.startStopKnap, "Stop afspilning");
         remoteViews.setViewVisibility(R.id.progressBar, View.VISIBLE);
         int fpct = DRData.instans.afspiller.getForbinderProcent();
-        //remoteViews.setTextViewText(R.id.metainformation, "Forbinder " + (fpct > 0 ? fpct : ""));
-        remoteViews.setTextColor(R.id.metainformation, type == TYPE_hjemmeskærm ? App.color.grå60 : App.color.blå);
+        remoteViews.setTextViewText(R.id.metainformation, "Forbinder " + (fpct > 0 ? fpct : ""));
+        //remoteViews.setTextColor(R.id.metainformation, type == TYPE_hjemmeskærm ? App.color.grå60 : App.color.blå);
         break;
       case SPILLER:
         //  App.kortToast("SPILLER " + k.navn);
-        remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.ic_action_pause);
+        remoteViews.setImageViewResource(R.id.startStopKnap, R.drawable.afspiller_pause);
         if (Build.VERSION.SDK_INT >= 15) remoteViews.setContentDescription(R.id.startStopKnap, "Stop afspilning");
         remoteViews.setViewVisibility(R.id.progressBar, View.GONE);
-        remoteViews.setTextColor(R.id.metainformation, type == TYPE_hjemmeskærm ? App.color.grå60 : App.color.grå60);
+        //remoteViews.setTextColor(R.id.metainformation, type == TYPE_hjemmeskærm ? App.color.grå60 : App.color.grå60);
         break;
     }
 

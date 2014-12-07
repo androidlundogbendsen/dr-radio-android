@@ -206,7 +206,7 @@ public class Alarms {
       disableAlert(context);
       næsteAktiveAlarm = 0;
     }
-    if (!App.PRODUKTION) App.kortToast("enAlarmErAktiv  "+ næsteAktiveAlarm);
+    //if (!App.PRODUKTION) App.kortToast("enAlarmErAktiv  "+ næsteAktiveAlarm);
   }
 
   /**

@@ -46,7 +46,8 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
   private AQuery aq;
   private ImageView startStopKnap;
   private ProgressBar progressbar;
-  private TextView kanallogoOgDirektetekst;
+  private ImageView kanallogo;
+  private TextView direktetekst;
   private TextView metainformation;
   private ImageView udvidSkjulKnap;
   private View udvidSkjulOmråde;
@@ -173,7 +174,8 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
 
     udvidSkjulOmråde = aq.id(R.id.udvidSkjulOmråde).gone().getView();
     progressbar = aq.id(R.id.progressBar).getProgressBar();
-    kanallogoOgDirektetekst = aq.id(R.id.kanallogoOgDirektetekst).clicked(this).typeface(App.skrift_gibson).getTextView();
+    kanallogo = aq.id(R.id.kanallogo).clicked(this).typeface(App.skrift_gibson).getImageView();
+    direktetekst = aq.id(R.id.direktetekst).clicked(this).typeface(App.skrift_gibson).getTextView();
     metainformation = aq.id(R.id.metainformation).clicked(this).typeface(App.skrift_gibson_fed).getTextView();
     // Knappen er meget vigtig, og har derfor et udvidet område hvor det også er den man rammer
     // se http://developer.android.com/reference/android/view/TouchDelegate.html
@@ -224,15 +226,10 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
       return;
     }
     Udsendelse udsendelse = lydkilde.getUdsendelse();
-    Status status = DRData.instans.afspiller.getAfspillerstatus();
-    kanallogoOgDirektetekst.setCompoundDrawablesWithIntrinsicBounds(kanal.kanallogo_resid, 0, 0, 0);
-    if (lydkilde.erDirekte()) {
-      kanallogoOgDirektetekst.setText("  LIVE");
-    } else {
-      kanallogoOgDirektetekst.setText("");
-    }
+    kanallogo.setImageResource(kanal.kanallogo_resid);
+    direktetekst.setVisibility(lydkilde.erDirekte()?View.VISIBLE:View.GONE);
     metainformation.setText(udsendelse!=null?udsendelse.titel:kanal.navn);
-    switch (status) {
+    switch (DRData.instans.afspiller.getAfspillerstatus()) {
       case STOPPET:
         startStopKnapNyImageResource = R.drawable.afspiller_spil;
         startStopKnap.setContentDescription("Start afspilning");
@@ -281,7 +278,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
       MenuItem menuItem = menu.findItem(R.id.startStopKnap);
 
       if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
-        menuItem.setTitle("Start " + kanallogoOgDirektetekst.getText());
+        menuItem.setTitle("Start " + DRData.instans.afspiller.getLydkilde());
       } else {
         menuItem.setTitle("Stop afspilning");
         menuItem.setIcon(R.drawable.dri_radio_stop_graa40);
@@ -431,7 +428,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
       DRData.instans.afspiller.forrige();
     } else if (v.getId() == R.id.næste) {
       DRData.instans.afspiller.næste();
-    } else if (v== kanallogoOgDirektetekst || v==metainformation) try {
+    } else if (v== kanallogo || v==direktetekst || v==metainformation) try {
       // Ved klik på baggrunden skal kanalforside eller aktuel udsendelsesside vises
       Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
       FragmentManager fm = getFragmentManager();

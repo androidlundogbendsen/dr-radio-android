@@ -39,4 +39,9 @@ public class AlarmLydkilde extends Lydkilde {
   public Udsendelse getUdsendelse() {
     return orgLydkilde.getUdsendelse();
   }
+
+  @Override
+  public String getNavn() {
+    return "alarm";
+  }
 }
