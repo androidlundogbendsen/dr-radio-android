@@ -329,7 +329,7 @@ public class App extends Application {
    * Initialisering af resterende data.
    * Dette sker når app'en er synlig og telefonen er online
    */
-  private Runnable udeståendeInitialisering = new Runnable() {
+  private Runnable onlineinitialisering = new Runnable() {
     int forsinkelse = 15000;
     @Override
     public void run() {
@@ -388,7 +388,7 @@ public class App extends Application {
       }
       if (færdig) {
         netværk.observatører.remove(this); // Hold ikke mere øje med om vi kommer online
-        udeståendeInitialisering = null;
+        onlineinitialisering = null;
         Log.d("Onlineinitialisering færdig");
       }
     }
@@ -457,11 +457,11 @@ public class App extends Application {
       if (App.EMULATOR) Log.e(new IllegalStateException("erIGang er " + erIGang));
       erIGang = 0;
     }
-    if (før != nu && aktivitetIForgrunden != null) forgrundstråd.post(setProgressBarIndeterminateVisibility);
+    if (før != nu && aktivitetIForgrunden != null) forgrundstråd.post(sætProgressbar);
     // Fejltjek
   }
 
-  private static Runnable setProgressBarIndeterminateVisibility = new Runnable() {
+  private static Runnable sætProgressbar = new Runnable() {
     public void run() {
       if (aktivitetIForgrunden instanceof Basisaktivitet) {
         ((Basisaktivitet) aktivitetIForgrunden).sætProgressBar(erIGang > 0);
@@ -470,14 +470,13 @@ public class App extends Application {
   };
 
   public void aktivitetStartet(Activity akt) {
-    //((NotificationManager) getSystemService("notification")).cancelAll();
-    setProgressBarIndeterminateVisibility.run();
     senesteAktivitetIForgrunden = aktivitetIForgrunden = akt;
-    if (udeståendeInitialisering != null) {
+    sætProgressbar.run();
+    if (onlineinitialisering != null) {
       if (App.erOnline()) {
-        App.forgrundstråd.postDelayed(udeståendeInitialisering, 250); // Initialisér onlinedata
+        App.forgrundstråd.postDelayed(onlineinitialisering, 250); // Initialisér onlinedata
       } else {
-        App.netværk.observatører.add(udeståendeInitialisering); // Vent på at vi kommer online og lav så et tjek
+        App.netværk.observatører.add(onlineinitialisering); // Vent på at vi kommer online og lav så et tjek
       }
     }
     if (kørFørsteGangAppIkkeMereErSynlig != null) forgrundstråd.removeCallbacks(kørFørsteGangAppIkkeMereErSynlig);
@@ -515,6 +514,7 @@ public class App extends Application {
     }
   };
 
+  private static Toast forrigeToast;
   public static void langToast(String txt) {
     Log.d("langToast(" + txt);
     if (aktivitetIForgrunden == null) txt = "DR Radio:\n" + txt;
@@ -522,7 +522,9 @@ public class App extends Application {
     forgrundstråd.post(new Runnable() {
       @Override
       public void run() {
-        Toast.makeText(instans, txt2, Toast.LENGTH_LONG).show();
+        if (forrigeToast!=null) forrigeToast.cancel();
+        forrigeToast = Toast.makeText(instans, txt2, Toast.LENGTH_LONG);
+        forrigeToast.show();
       }
     });
   }
@@ -534,7 +536,9 @@ public class App extends Application {
     forgrundstråd.post(new Runnable() {
       @Override
       public void run() {
-        Toast.makeText(instans, txt2, Toast.LENGTH_SHORT).show();
+        if (forrigeToast!=null) forrigeToast.cancel();
+        forrigeToast = Toast.makeText(instans, txt2, Toast.LENGTH_SHORT);
+        forrigeToast.show();
       }
     });
   }

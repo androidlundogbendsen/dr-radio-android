@@ -179,7 +179,7 @@ public class Afspiller {
           if (startet) return;
           Log.d("Afspiller hentStreams " + lydkilde + " fraCache=" + fraCache + " k.lydUrl=" + lydkilde.streams);
           if (onErrorTæller++ > 10) {
-            App.kortToast("Internetforbindelse mangler");
+            App.kortToast("Internetforbindelse til DR mangler");
             //Log.rapporterFejl(new Exception("onErrorTæller++>10, uendelig løkke afværget"), lydkilde);
           } else {
             startAfspilning(); // Opdatér igen - men kun én gang
@@ -189,7 +189,7 @@ public class Afspiller {
 
         @Override
         protected void fikFejl(VolleyError error) {
-          App.kortToast("Internetforbindelse mangler");
+          App.kortToast("Kan ikke få forbindelse til DR");
           if (vækningIGang) ringDenAlarm();
           super.fikFejl(error);
         }
