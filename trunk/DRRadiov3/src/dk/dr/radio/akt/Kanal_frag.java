@@ -120,10 +120,9 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       }
     });
 
-    aq.id(R.id.hør_live).typeface(App.skrift_gibson).clicked(Kanal_frag.this);
     // Knappen er meget vigtig, og har derfor et udvidet område hvor det også er den man rammer
     // se http://developer.android.com/reference/android/view/TouchDelegate.html
-    hør_live = aq.id(R.id.hør_live).getButton();
+    hør_live = aq.id(R.id.hør_live).typeface(App.skrift_gibson).clicked(this).getButton();
     hør_live.post(new Runnable() {
       final int udvid = getResources().getDimensionPixelSize(R.dimen.hørknap_udvidet_klikområde);
 
@@ -139,6 +138,9 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         ((View) hør_live.getParent()).setTouchDelegate(new TouchDelegate(r, hør_live));
       }
     });
+    // Klikker man på den hvide baggrund rulles til aktuel udsendelse
+    aq.id(R.id.rulTilAktuelUdsendelse).clicked(this);
+
     //Log.d(this + " onCreateView 3 efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
     // Hent sendeplan for den pågældende dag. Døgnskifte sker kl 5, så det kan være dagen før
     hentSendeplanForDag(new Date(App.serverCurrentTimeMillis() - 5 * 60 * 60 * 1000));
@@ -591,6 +593,8 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       App.prefs.edit().putString(App.P4_FORETRUKKEN_AF_BRUGER, kanal.kode).commit();
     } else if (kanal.streams == null) {
       Log.rapporterOgvisFejl(getActivity(), new IllegalStateException("kanal.streams er null"));
+    } else if (v.getId() == R.id.rulTilAktuelUdsendelse) {
+      rulBlødtTilAktuelUdsendelse();
     } else {
       // hør_udvidet_klikområde eller hør
       hør(kanal, getActivity());

@@ -58,7 +58,7 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     toolbar.setLogo(R.drawable.dr_logo);
     toolbar.setTitle(getTitle());
-    toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha));
+    toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
     toolbar.setNavigationOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
