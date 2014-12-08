@@ -113,9 +113,13 @@ public class AfspillerIkonOgNotifikation extends AppWidgetProvider {
     Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
     Kanal kanal = lydkilde.getKanal();
     Udsendelse udsendelse = lydkilde.getUdsendelse();
-    remoteViews.setImageViewResource(R.id.kanallogo, kanal.kanallogo_resid);
+    if (kanal.kanallogo_resid==0) {
+      remoteViews.setViewVisibility(R.id.kanallogo, View.GONE);
+    } else {
+      remoteViews.setViewVisibility(R.id.kanallogo, View.VISIBLE);
+      remoteViews.setImageViewResource(R.id.kanallogo, kanal.kanallogo_resid);
+    }
     remoteViews.setViewVisibility(R.id.direktetekst, lydkilde.erDirekte()?View.VISIBLE:View.GONE);
-    remoteViews.setImageViewResource(R.id.kanallogo, kanal.kanallogo_resid);
     remoteViews.setTextViewText(R.id.metainformation, udsendelse!=null?udsendelse.titel:kanal.navn);
     if (Build.VERSION.SDK_INT >= 15) {
       remoteViews.setContentDescription(R.id.metainformation, "D R Radio " + kanal.navn);
