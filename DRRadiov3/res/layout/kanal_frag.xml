@@ -1,6 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
-              android:id="@+id/rulTilAktuelUdsendelse"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
@@ -12,6 +11,13 @@
 Vi udvider derfor knappens trykområde med teknikken beskrevet i
 http://stackoverflow.com/questions/2949407/can-i-increase-a-buttons-onclick-area-programmatically
       -->
+  <LinearLayout
+      android:id="@+id/rulTilAktuelUdsendelse"
+      android:orientation="vertical"
+      android:background="@drawable/elem_hvid_bg"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
   <Button
       android:id="@+id/hør_live"
       android:layout_width="wrap_content"
@@ -25,6 +31,7 @@ http://stackoverflow.com/questions/2949407/can-i-increase-a-buttons-onclick-area
       android:text=" HØR P3"
       android:textColor="@color/hvid"
       android:background="@drawable/knap_blaa_bg"/>
+  </LinearLayout>
 
 <FrameLayout android:layout_width="match_parent"
              android:layout_height="0dp"
