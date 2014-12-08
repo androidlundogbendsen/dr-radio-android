@@ -3,7 +3,7 @@
           package="dk.dr.radio.v3"
           android:installLocation="auto"
           android:versionCode="1"
-android:versionName="3.1.10 7 dec notifikation 130"
+android:versionName="3.2 8.dec diverse 131"
     >
 
 <uses-sdk
@@ -69,7 +69,6 @@ android:versionName="3.1.10 7 dec notifikation 130"
 
 
     <activity
-        android:theme="@style/Theme.Indstillinger"
         android:name="dk.dr.radio.akt.Indstillinger_akt"
         android:label="DR Radio Indstillinger">
       <!-- Gør aktivitet synlig i forbindelse med at brugeren gennemser sit dataforbrug -->
@@ -164,7 +163,6 @@ android:versionName="3.1.10 7 dec notifikation 130"
 
 
     <activity android:name="com.android.deskclock.SetAlarm_akt"
-              android:theme="@style/Theme.Indstillinger"
               android:label="@string/set_alarm"
               android:configChanges="orientation|keyboardHidden|keyboard|navigation"/>
 

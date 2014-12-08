@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
+              android:id="@+id/rulTilAktuelUdsendelse"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
@@ -28,7 +29,7 @@ http://stackoverflow.com/questions/2949407/can-i-increase-a-buttons-onclick-area
 <FrameLayout android:layout_width="match_parent"
              android:layout_height="0dp"
              android:layout_weight="1"
-             android:background="@drawable/knap_graa10_bg"
+             android:background="@color/grå10"
           >
 
   <dk.dr.radio.diverse.PinnedSectionListView

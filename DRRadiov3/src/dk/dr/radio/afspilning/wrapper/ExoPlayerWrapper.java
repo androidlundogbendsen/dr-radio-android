@@ -94,7 +94,7 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
 
   @Override
   public void stop() {
-    player.getPlayerControl().pause();
+    if (player!=null) player.getPlayerControl().pause();
     stayAwake(false);
   }
 
@@ -114,10 +114,7 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
   }
 
   /**
-   * Set the low-level power management behavior for this MediaPlayer.  This
-   * can be used when the MediaPlayer is not playing through a SurfaceHolder
-   * set with {@link #setDisplay(android.view.SurfaceHolder)} and thus can use the
-   * high-level {@link #setScreenOnWhilePlaying(boolean)} feature.
+   * Set the low-level power management behavior for this MediaPlayer.
    *
    * <p>This function has the MediaPlayer access the low-level power manager
    * service to control the device's power usage while playing is occurring.
