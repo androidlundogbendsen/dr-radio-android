@@ -36,16 +36,6 @@ public class Basisaktivitet extends ActionBarActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    /*
-    supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-    ActionBar actionBar = getSupportActionBar();
-    if (actionBar!=null) {
-      actionBar.setLogo(R.drawable.dr_logo);
-      actionBar.setDisplayShowHomeEnabled(true);
-      actionBar.setDisplayShowTitleEnabled(false);
-    }
-    */
   }
 
   @Override

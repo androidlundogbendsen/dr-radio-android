@@ -142,14 +142,18 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     liste.clear();
     if (programserie != null) {
       liste.add(TOP);
-      if (programserie.getUdsendelser() != null) {
-        liste.addAll(programserie.getUdsendelser());
-        førsteUdsendelseDerKanHøresIndex = 1;
-        for (Udsendelse u : programserie.getUdsendelser()) {
+      ArrayList<Udsendelse> l = programserie.getUdsendelser();
+      if (l != null) {
+        førsteUdsendelseDerKanHøresIndex = 0;
+        for (Udsendelse u : l) {
           int varighed = (int) ((u.slutTid.getTime() - u.startTid.getTime()) / 1000 / 60);
           if (varighed>0) break;
           førsteUdsendelseDerKanHøresIndex++;
         }
+        for (int n=førsteUdsendelseDerKanHøresIndex; n<l.size(); n++) {
+          liste.add(l.get(n));
+        }
+        førsteUdsendelseDerKanHøresIndex = 1;
         if (programserie.getUdsendelser().size() < programserie.antalUdsendelser) {
           Log.d("bygListe() viser TIDLIGERE: " + programserie.getUdsendelser().size() + " < " + programserie.antalUdsendelser);
           liste.add(TIDLIGERE);  // Vis 'tidligere'-listeelement
@@ -239,7 +243,6 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
           vh.dato = aq.id(R.id.dato).typeface(App.skrift_gibson).getTextView();
           vh.varighed = aq.id(R.id.varighed).typeface(App.skrift_gibson).getTextView();
           vh.stiplet_linje = aq.id(R.id.stiplet_linje).getView();
-          aq.id(R.id.se_mere).typeface(App.skrift_gibson);
           vh.hør = aq.id(R.id.hør).tag(vh).clicked(Programserie_frag.this).typeface(App.skrift_gibson).getView();
         }
       } else {
@@ -257,7 +260,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
       } else if (type==UDSENDELSE || type==UDSENDELSE_TOP) {
         Udsendelse u = (Udsendelse) liste.get(position);
         vh.udsendelse = u;
-        vh.stiplet_linje.setVisibility(position > 2 ? View.VISIBLE : View.INVISIBLE); // Første stiplede linje på udsendelse væk
+        //vh.stiplet_linje.setVisibility(position > 1 ? View.VISIBLE : View.INVISIBLE); // Første stiplede linje på udsendelse væk
 //        vh.stiplet_linje.setBackgroundResource(position > 1 ? R.drawable.stiplet_linje : R.drawable.linje); // Første stiplede linje er fuld
 
         //vh.titel.setText(Html.fromHtml("<b>" + u.titel + "</b>&nbsp; - " + DRJson.datoformat.format(u.startTid)));
@@ -309,9 +312,9 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
 
   @Override
   public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
-    if (position == 0) return;
-    if (position <= programserie.getUdsendelser().size()) {
-      Udsendelse udsendelse = programserie.getUdsendelser().get(position - 1);
+    Object o = liste.get(position);
+    if (o instanceof Udsendelse) {
+      Udsendelse udsendelse = (Udsendelse) o;
       // Vis normalt et Udsendelser_vandret_skift_frag med flere udsendelser
       // Hvis tilgængelighed er slået til (eller bladring slået fra) vises blot ét Udsendelse_frag
       Fragment f =
