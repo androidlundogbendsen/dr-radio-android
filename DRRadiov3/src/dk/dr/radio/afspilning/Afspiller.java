@@ -406,9 +406,8 @@ public class Afspiller {
           Log.d("P gammelMediaPlayer.release()");
           gammelMediaPlayer.release();
           Log.d("P gammelMediaPlayer færdig");
-        } catch (Exception e) {
-          Log.rapporterFejl(e);
-        }
+        } catch (IllegalStateException e) { e.printStackTrace();
+        } catch (Exception e) { Log.rapporterFejl(e); }
       }
     }.start();
 

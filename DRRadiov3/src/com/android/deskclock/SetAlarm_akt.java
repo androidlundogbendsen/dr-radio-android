@@ -72,7 +72,7 @@ public class SetAlarm_akt extends PreferenceActivity implements Preference.OnPre
     setContentView(R.layout.deskclock_set_alarm);
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     toolbar.setLogo(R.drawable.dr_logo);
-    toolbar.setTitle(getTitle());
+    toolbar.setTitle("Angiv vækning");
     toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
     toolbar.setNavigationOnClickListener(new View.OnClickListener() {
       @Override

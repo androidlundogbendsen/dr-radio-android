@@ -9,14 +9,6 @@
     android:paddingBottom="16dp"
     android:orientation="vertical">
 
-  <View
-      android:id="@+id/stiplet_linje"
-      android:background="@drawable/stiplet_linje"
-      android:layerType="software"
-      android:layout_width="match_parent"
-      android:layout_marginBottom="13dp"
-      android:layout_height="3dp"/>
-
   <LinearLayout
       android:orientation="vertical"
       android:padding="16dp"
@@ -25,17 +17,10 @@
       android:layout_height="wrap_content">
 
   <LinearLayout
-      android:orientation="horizontal"
-      android:layout_width="match_parent"
+      android:orientation="vertical"
+      android:layout_width="wrap_content"
       android:gravity="top"
       android:layout_height="wrap_content">
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="0px"
-        android:layout_weight="1"
-        android:layout_height="wrap_content">
-
 
       <TextView
           android:id="@+id/titel"
@@ -67,15 +52,6 @@
           android:textSize="@dimen/metainfo_skrifstørrelse"
           android:textColor="@color/grå20"/>
 
-    </LinearLayout>
-    <TextView
-        android:id="@+id/se_mere"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SE MERE"
-        android:layout_marginRight="16dp"
-        tools:ignore="HardcodedText"
-        android:textColor="@color/blå"/>
   </LinearLayout>
   <Button
       android:id="@+id/hør"
@@ -84,8 +60,10 @@
       android:layout_gravity="center_horizontal"
       android:layout_marginTop="16dp"
       android:drawableLeft="@drawable/dri_lyd_hvid"
-      android:text=" HØR UDSENDELSE"
+      android:text=" HØR UDSENDELSE "
       android:textColor="@color/hvid"
+      android:focusable="false"
+      android:focusableInTouchMode="false"
       android:background="@drawable/knap_blaa_bg"/>
   </LinearLayout>
 

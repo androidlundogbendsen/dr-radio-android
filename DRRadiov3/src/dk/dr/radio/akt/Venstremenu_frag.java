@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -17,6 +16,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -148,7 +148,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
   @Override
   public void onResume() {
     super.onResume();
-    // Dette sikter at AKTIV vises korrekt for vækning
+    // Dette sikrer at teksten for næste vækning vises korrekt
     if (venstremenuAdapter!=null) venstremenuAdapter.notifyDataSetChanged();
   }
 
@@ -173,7 +173,8 @@ public class Venstremenu_frag extends Fragment implements Runnable {
     // between the navigation drawer and the action bar app icon.
     mDrawerToggle = new ActionBarDrawerToggle(getActivity(),                    /* host Activity */
         Venstremenu_frag.this.drawerLayout,                    /* DrawerLayout object */
-        R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
+//        (android.support.v7.widget.Toolbar) getActivity().findViewById(toolbarId),
+//        R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
         R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
         R.string.navigation_drawer_close  /* "close drawer" description for accessibility */) {
       @Override
@@ -241,6 +242,7 @@ public class Venstremenu_frag extends Fragment implements Runnable {
   }
 
   public void sætListemarkering(int position) {
+    position = -1; // NB! Markering er slået fra, da venstremenuen kun ses på forsiden
     mCurrentSelectedPosition = position;
     if (listView != null) {
       listView.setItemChecked(position, true);
@@ -447,8 +449,9 @@ public class Venstremenu_frag extends Fragment implements Runnable {
         @Override
         public View getView() {
           TextView tekst2 = (TextView) view.findViewById(R.id.tekst2);
-          if (Alarms.næsteAktiveAlarm==0) tekst2.setText("");
+          if (Alarms.næsteAktiveAlarm==0) tekst2.setVisibility(View.GONE);
           else {
+            tekst2.setVisibility(View.VISIBLE);
             Date d = new Date(Alarms.næsteAktiveAlarm);
             tekst2.setText(DRJson.getDagsbeskrivelse(d).toLowerCase()+" kl "+ DRJson.klokkenformat.format(d));
           }
