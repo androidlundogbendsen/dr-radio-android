@@ -132,7 +132,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
 
   private void opdaterListe() {
     if (viewPager == null) return;
-    Udsendelse udsFør = liste.get(viewPager.getCurrentItem());
+    Udsendelse udsFør = liste.size()>viewPager.getCurrentItem() ? liste.get(viewPager.getCurrentItem()) : null;
     liste.clear();
     liste.addAll(programserie.getUdsendelser());
     if (Programserie.findUdsendelseIndexFraSlug(liste, startudsendelse.slug) < 0) {
@@ -143,7 +143,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
         hentUdsendelser(programserie.getUdsendelser().size());
       }
     }
-    int nEft = Programserie.findUdsendelseIndexFraSlug(liste, udsFør.slug);
+    int nEft = udsFør==null?0:Programserie.findUdsendelseIndexFraSlug(liste, udsFør.slug);
     if (nEft < 0) nEft = liste.size() - 1; // startudsendelsen
     adapter.notifyDataSetChanged();
     Log.d("xxx setCurrentItem " + viewPager.getCurrentItem() + "   nEft=" + nEft);

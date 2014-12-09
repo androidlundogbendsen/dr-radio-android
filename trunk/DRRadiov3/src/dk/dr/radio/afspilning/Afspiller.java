@@ -280,10 +280,12 @@ public class Afspiller {
             // Kommer ved f.eks. en SMS eller taleinstruktion i Google Maps
             case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK):
               Log.d("JPER duck");
-              // Vi 'dukker' lyden mens den vigtigere lyd høres
-              // Sæt lydstyrken ned til en 1/3-del
-              lydstyreFørDuck = am.getStreamVolume(AudioManager.STREAM_MUSIC);
-              am.setStreamVolume(AudioManager.STREAM_MUSIC, (lydstyreFørDuck + 2) / 3, 0);
+              if (afspillerstatus != Status.STOPPET) {
+                // Vi 'dukker' lyden mens den vigtigere lyd høres
+                // Sæt lydstyrken ned til en 1/3-del
+                lydstyreFørDuck = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+                am.setStreamVolume(AudioManager.STREAM_MUSIC, (lydstyreFørDuck + 2) / 3, 0);
+              }
               break;
 
             // Dette sker ved f.eks. opkald

@@ -79,11 +79,12 @@ public class HentedeUdsendelser {
       if (data.udsendelser == null) { // Feltet data.udsendelser kom med 2. okt 2014 - tjek kan slettes efter sommer 2015
         data.udsendelser = new ArrayList<Udsendelse>(data.udsendelseFraDownloadId.values());
       }
+      return;
     } catch (Exception e) {
       Log.rapporterFejl(e);
-      data = new Data();
-      gemListe(); // For at undgå at fejlen rapporteres mere end 1 gang
     }
+    data = new Data();
+    gemListe(); // For at undgå at fejlen rapporteres mere end 1 gang
   }
 
   private void gemListe() {
