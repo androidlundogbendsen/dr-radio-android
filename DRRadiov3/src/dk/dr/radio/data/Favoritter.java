@@ -109,7 +109,7 @@ public class Favoritter {
               JSONObject data = new JSONObject(json);
               favoritTilAntalDagsdato.put(programserieSlug, data.getInt("TotalPrograms"));
             }
-            Log.d("favoritter fikSvar(" + fraCache + " " + url + " " + json + " så nu er favoritTilAntalDagsdato=" + favoritTilAntalDagsdato);
+            //Log.d("favoritter fikSvar(" + fraCache + " " + url + " " + json + " så nu er favoritTilAntalDagsdato=" + favoritTilAntalDagsdato);
             App.forgrundstråd.postDelayed(beregnAntalNyeUdsendelser, 500); // Vent 1/2 sekund på eventuelt andre svar
           }
         }) {
