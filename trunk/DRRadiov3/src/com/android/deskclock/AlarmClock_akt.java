@@ -153,8 +153,7 @@ public class AlarmClock_akt extends Basisaktivitet implements OnItemClickListene
       return super.onContextItemSelected(item);
     }
     final Alarm alarm = Alarms.alarmer.get(pos);
-    switch (item.getItemId()) {
-      case R.id.delete_alarm: {
+    if (item.getItemId()==R.id.delete_alarm) {
         // Confirm that the alarm will be deleted.
         new AlertDialog.Builder(this)
             .setTitle(getString(R.string.delete_alarm))
@@ -171,7 +170,7 @@ public class AlarmClock_akt extends Basisaktivitet implements OnItemClickListene
         return true;
       }
 
-      case R.id.enable_alarm: {
+    if (item.getItemId()==R.id.enable_alarm) {
         alarm.enabled = !alarm.enabled;
         if (alarm.enabled) {
           alarm.time = Alarms.calculateAlarm(alarm.hour, alarm.minutes, alarm.daysOfWeek).getTimeInMillis();
@@ -182,14 +181,11 @@ public class AlarmClock_akt extends Basisaktivitet implements OnItemClickListene
         return true;
       }
 
-      case R.id.edit_alarm: {
+    if (item.getItemId()==R.id.edit_alarm) {
         Intent intent = new Intent(this, SetAlarm_akt.class);
         intent.putExtra(Alarms.ALARM_INTENT_EXTRA, alarm.toString());
         startActivity(intent);
         return true;
-      }
-      default:
-        break;
     }
     return super.onContextItemSelected(item);
   }
@@ -289,18 +285,17 @@ public class AlarmClock_akt extends Basisaktivitet implements OnItemClickListene
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case android.R.id.home:
+      if (item.getItemId()==android.R.id.home) {
         finish();
         return true;
-      case R.id.menu_item_add_alarm:
+      }
+      if (item.getItemId()==R.id.menu_item_add_alarm) {
         addNewAlarm();
         return true;
-      case R.id.menu_item_done:
-        finish();
-        return true;
-      default:
-        break;
+      }
+    if (item.getItemId()==R.id.menu_item_done) {
+      finish();
+      return true;
     }
     return super.onOptionsItemSelected(item);
   }
