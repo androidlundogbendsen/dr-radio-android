@@ -6,7 +6,7 @@
 android:versionName="3.2 8.dec design-ripples, lev.ikon+fix 134"
     >
 
-<uses-sdk
+  <uses-sdk
       android:minSdkVersion="7"
       android:targetSdkVersion="21"/>
 
@@ -19,9 +19,9 @@ android:versionName="3.2 8.dec design-ripples, lev.ikon+fix 134"
   <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
   <uses-permission android:name="android.permission.WAKE_LOCK"/>
-
   <!-- For at kunne gemme podcasts -->
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
   <!-- akamai -->
   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
@@ -38,7 +38,7 @@ android:versionName="3.2 8.dec design-ripples, lev.ikon+fix 134"
       >
 
     <!--
-    Version 3 har brug for
+    Version 3 havde brug for
     android.permission.ACCESS_NETWORK_STATE
     android.permission.INTERNET
     android.permission.READ_PHONE_STATE
@@ -61,12 +61,6 @@ android:versionName="3.2 8.dec design-ripples, lev.ikon+fix 134"
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
-    <activity android:name="dk.dr.radio.skrald.VisFragment_akt">
-      <meta-data
-          android:name="android.support.PARENT_ACTIVITY"
-          android:value="dk.dr.radio.akt.Hovedaktivitet"/>
-    </activity>
-
 
     <activity
         android:name="dk.dr.radio.akt.Indstillinger_akt"
@@ -153,12 +147,6 @@ android:versionName="3.2 8.dec design-ripples, lev.ikon+fix 134"
               android:label="@string/alarm_list_title"
               android:configChanges="orientation|keyboardHidden|keyboard|navigation"
         >
-      <!--
-<intent-filter>
-<action android:name="android.intent.action.MAIN"/>
-<category android:name="android.intent.category.LAUNCHER"/>
-</intent-filter>
--->
     </activity>
 
 
@@ -182,18 +170,16 @@ android:versionName="3.2 8.dec design-ripples, lev.ikon+fix 134"
         vi ønsker at lave et simpelt vækkeur, så disse er droppet
         <action android:name="android.intent.action.TIME_SET"/>
         <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
-        <action android:name="android.intent.action.LOCALE_CHANGED"/>
-        -->
+        <action android:name="android.intent.action.LOCALE_CHANGED"/>   -->
       </intent-filter>
     </receiver>
 
     <!-- Eksperiment - bruge ExoPlayer i stedet for indbygget MediaPlayer
--->
     <activity android:name="dk.dr.exoplayer.DRFullPlayerActivity"
               android:configChanges="keyboardHidden|orientation|screenSize"
               android:label="@string/application_name"
               android:theme="@style/PlayerTheme">
-    </activity>
+    </activity>  -->
 
 
     <!-- Gemius-plugin til at måle sidevisninger etc -->
