@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="gemiusSDK">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../DRRadiov3/libs/gemiusSDK.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

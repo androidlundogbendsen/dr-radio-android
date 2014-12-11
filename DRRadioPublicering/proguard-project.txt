@@ -21,8 +21,12 @@
 
 
 # Slår obfuskering fra. Det gør det meget nemmere at læse stakspor, men gør APK'en ca 100kb større.
--dontobfuscate
+#-dontobfuscate
 
+# Allow obfuscation of android.support.v7.internal.view.menu.**
+# to avoid problem on Samsung 4.2.2 devices with appcompat v21
+# see https://code.google.com/p/android/issues/detail?id=78377
+#-keep,allowshrinking class !android.support.v7.internal.view.menu.**,android.support.** {*;}
 
 # Referes fra AQuery, men bruges ikke
 -dontwarn oauth.signpost.**
@@ -38,3 +42,9 @@ public <init>(android.content.Context, android.util.AttributeSet, int);
 -keepclassmembers class * implements java.io.Serializable {
 private static final long serialVersionUID;
 }
+
+# Det koster knapt 80kb hat huske linjenumre - ser desværre ud til at det er en alt-eller-intet
+#-keepattributes SourceFile,LineNumberTable
+
+# Behold dk.dr.* som de er
+-keep,allowshrinking class dk.dr.**,com.android.deskclock.* {*;}
