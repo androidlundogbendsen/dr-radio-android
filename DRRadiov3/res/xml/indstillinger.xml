@@ -105,14 +105,6 @@
          android:summaryOn="Den nye ExoPlayer benyttes. Nogle funktioner, bl.a. valg af musiknummer, og at en udsende fortsætter hvor den sidst blev stoppet, er ikke implementeret"
          android:summaryOff="Den indbyggede MediaPlayer benyttes"/>
 
-     <CheckBoxPreference
-         android:key="fjernbetjening_baggrundsbillede_med_aquery"
-         android:title="fjernbetjening_baggrundsbillede_med_aquery"
-         android:defaultValue="false"
-         android:summary="Kun til udviklerbrug"/>
-
-
-
      <!-- 	<EditTextPreference android:key="udviklerKontakt" android:title="Kontakt"
          android:summary="Skriv din e-postadresse hvis du vil kunne kontaktes i forbindelse
          med udvikling" android:defaultValue="" /> -->
@@ -147,20 +139,6 @@
          android:summaryOn="Send statistik til DR, om hvad du lytter til. Mener du at app'en tager for meget strøm kan du slå det fra og rapportere om det gør en forskel"
          android:summaryOff="Indsamler ikke statisik. Rapportér venligst om det gør en forskel for dig. Du skal genstarte app'en (evt telefonen) og se meddelelse ved opstart før det er trådt i kraft."
          />
-
-     <!--
-
-       <CheckBoxPreference
-           android:key="wakelockaltid" android:title="Hold telefon tændt altid"
-           android:summaryOn="test"/>
-
-       <CheckBoxPreference
-           android:key="holdSkærmTændt"
-           android:title="Hold skærmen tændt"
-           android:defaultValue="false"
-           android:summary="Hakker afspilningen efter at skærmen slukker så prøv at krydse af her (bruger mere batteri). Virker ikke hvis du selv slukker skærmen."/>
-     </PreferenceScreen>
-     -->
 
    </PreferenceScreen>
 
