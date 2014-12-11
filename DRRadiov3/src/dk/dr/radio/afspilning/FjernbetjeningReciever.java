@@ -47,7 +47,7 @@ public class FjernbetjeningReciever extends BroadcastReceiver {
       case KeyEvent.KEYCODE_MEDIA_STOP:
       case KeyEvent.KEYCODE_MEDIA_PAUSE:
         if (DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET) {
-          DRData.instans.afspiller.stopAfspilning();
+          DRData.instans.afspiller.pauseAfspilning();
         }
         break;
       case KeyEvent.KEYCODE_MEDIA_PLAY:

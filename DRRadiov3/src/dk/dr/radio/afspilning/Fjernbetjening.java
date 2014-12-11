@@ -45,13 +45,13 @@ import dk.dr.radio.diverse.Log;
  */
 public class Fjernbetjening implements Runnable {
 
-  private final ComponentName eventReceiver;
+  private final ComponentName fjernbetjeningReciever;
   private RemoteControlClient remoteControlClient;
   private Udsendelse forrigeUdsendelse;
 
   public Fjernbetjening() {
     DRData.instans.afspiller.positionsobservatører.add(this);
-    eventReceiver = new ComponentName(App.instans.getPackageName(), FjernbetjeningReciever.class.getName());
+    fjernbetjeningReciever = new ComponentName(App.instans.getPackageName(), FjernbetjeningReciever.class.getName());
   }
 
 
@@ -70,17 +70,6 @@ public class Fjernbetjening implements Runnable {
     Udsendelse u = lk.getUdsendelse();
     Log.d("Fjernbetjening opdaterBillede " + lk + " k=" + k + " u=" + u + " d=" + lk.erDirekte());
     if (lk.erDirekte()) {
-      /*
-      Bitmap bm = null;
-      // Undgå at afkode billedet hver gang:
-      // bm = BitmapFactory.decodeResource(App.instans.getResources(), k.kanallogo_resid);
-      // i stedet henter vi den som en BitmapDrawable, den er nemlig cachet
-      Drawable dr = App.instans.getResources().getDrawable(k.kanallogo_resid);
-      if (dr instanceof BitmapDrawable) {
-        bm = ((BitmapDrawable) dr).getBitmap();
-      }
-          .putBitmap(MetadataEditor.BITMAP_KEY_ARTWORK, bm)
-      */
       remoteControlClient.editMetadata(false)
           .putString(MediaMetadataRetriever.METADATA_KEY_TITLE, u == null ? null : u.titel)
           .putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, "DR " + k.navn + " Direkte")
@@ -124,10 +113,10 @@ public class Fjernbetjening implements Runnable {
   @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
   public void registrér() {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) return;
-    App.audioManager.registerMediaButtonEventReceiver(eventReceiver);
+    App.audioManager.registerMediaButtonEventReceiver(fjernbetjeningReciever);
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) return;
 
-    Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON).setComponent(eventReceiver);
+    Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON).setComponent(fjernbetjeningReciever);
     PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(App.instans, 0, mediaButtonIntent, 0);
     // create and register the remote control client
     remoteControlClient = new RemoteControlClient(mediaPendingIntent);
@@ -143,7 +132,7 @@ public class Fjernbetjening implements Runnable {
   @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
   public void afregistrér() {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) return;
-    App.audioManager.unregisterMediaButtonEventReceiver(eventReceiver);
+    App.audioManager.unregisterMediaButtonEventReceiver(fjernbetjeningReciever);
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) return;
 
     remoteControlClient.editMetadata(true).apply();
