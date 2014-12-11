@@ -3,7 +3,7 @@
           package="dk.dr.radio.v3"
           android:installLocation="auto"
           android:versionCode="1"
-android:versionName="3.2 8.dec design-ripples, lev.ikon+fix 134"
+android:versionName="3.2 11.dec design-ripples, offline-alarm 135"
     >
 
   <uses-sdk
