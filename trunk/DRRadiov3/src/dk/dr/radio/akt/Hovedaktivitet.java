@@ -148,9 +148,16 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
   }
 
   Runnable visSkjulSkilt_ingen_forbindelse = new Runnable() {
+    public TextView ingen_forbindelse;
+
     @Override
     public void run() {
-      findViewById(R.id.ingen_forbindelse).setVisibility(App.netværk.erOnline() ? View.GONE : View.VISIBLE);
+      if (ingen_forbindelse==null) {
+        ingen_forbindelse = (TextView) findViewById(R.id.ingen_forbindelse);
+        ingen_forbindelse.setTypeface(App.skrift_gibson);
+      }
+
+      ingen_forbindelse.setVisibility(App.netværk.erOnline() ? View.GONE : View.VISIBLE);
     }
   };
 

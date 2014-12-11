@@ -31,7 +31,6 @@ import android.os.Build;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
-import com.androidquery.callback.BitmapAjaxCallback;
 
 import dk.dr.radio.akt.Basisfragment;
 import dk.dr.radio.data.DRData;
@@ -114,23 +113,18 @@ public class Fjernbetjening implements Runnable {
         final String burl = Basisfragment.skalérBillede(u);
         Log.d("Fjernbetjening asynk artwork\n" + burl);
         // Hent med AQuery, da det sandsynligvis allerede har en cachet udgave
-        Bitmap bm = BitmapAjaxCallback.getMemoryCached(burl, 0);
-        if (bm!=null) {
-          Log.d("Fjernbetjening AQ synk artwork " + bm + "\n" + burl);
-          remoteControlClient.editMetadata(false)
-              .putBitmap(MetadataEditor.BITMAP_KEY_ARTWORK, bm)
-              .apply();
-        } else {
-          new AQuery(App.instans).ajax(burl, Bitmap.class, new AjaxCallback<Bitmap>() {
-            @Override
-            public void callback(String url, Bitmap bm, AjaxStatus status) {
-              Log.d("Fjernbetjening AQ asynk artwork " + status.getCode() + " " + bm + "\n" + burl);
-              remoteControlClient.editMetadata(false)
-                  .putBitmap(MetadataEditor.BITMAP_KEY_ARTWORK, bm)
-                  .apply();
-            }
-          });
-        }
+        // NB Brug ikke: Bitmap bm = BitmapAjaxCallback.getMemoryCached(burl, 0); - giver senere java.lang.RuntimeException: Canvas: trying to use a recycled bitmap senere
+        new AQuery(App.instans).ajax(burl, Bitmap.class, new AjaxCallback<Bitmap>() {
+          @Override
+          public void callback(String url, Bitmap bm, AjaxStatus status) {
+            Log.d("Fjernbetjening AQ asynk artwork " + status.getCode() + " " + bm + "\n" + burl);
+            //bm = Bitmap.createBitmap(bm); // undgå java.lang.RuntimeException: Canvas: trying to use a recycled bitmap senere
+            remoteControlClient.editMetadata(false)
+                .putBitmap(MetadataEditor.BITMAP_KEY_ARTWORK, bm)
+                .apply();
+          }
+        });
+
 /* Volley-kode der gør det tilsvarende
         App.volleyRequestQueue.add(new ImageRequest(burl,
             new Response.Listener<Bitmap>() {
