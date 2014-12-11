@@ -69,6 +69,11 @@ public class MediaPlayerProxyWrapper implements MediaPlayerWrapper {
   }
 
   @Override
+  public void setVolume(float leftVolume, float rightVolume) {
+    mediaPlayer.setVolume(leftVolume, rightVolume);
+  }
+
+  @Override
   public void setWakeMode(Context ctx, int screenDimWakeLock) {
     mediaPlayer.setWakeMode(ctx, screenDimWakeLock);
   }

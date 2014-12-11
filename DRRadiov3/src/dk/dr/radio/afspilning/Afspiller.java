@@ -269,7 +269,7 @@ public class Afspiller {
     if (onAudioFocusChangeListener == null)
       onAudioFocusChangeListener = new OnAudioFocusChangeListener() {
 
-        private int lydstyreFørDuck = -1;
+        //private int lydstyreFørDuck = -1;
 
         @TargetApi(Build.VERSION_CODES.FROYO)
         public void onAudioFocusChange(int focusChange) {
@@ -283,8 +283,9 @@ public class Afspiller {
               if (afspillerstatus != Status.STOPPET) {
                 // Vi 'dukker' lyden mens den vigtigere lyd høres
                 // Sæt lydstyrken ned til en 1/3-del
-                lydstyreFørDuck = am.getStreamVolume(AudioManager.STREAM_MUSIC);
-                am.setStreamVolume(AudioManager.STREAM_MUSIC, (lydstyreFørDuck + 2) / 3, 0);
+                //lydstyreFørDuck = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+                //am.setStreamVolume(AudioManager.STREAM_MUSIC, (lydstyreFørDuck + 2) / 3, 0);
+                mediaPlayer.setVolume(0.1f, 0.1f); // logaritmisk skala - 0.1 svarer til 1/3-del
               }
               break;
 
@@ -312,9 +313,10 @@ public class Afspiller {
                 if (afspilningPåPause) startAfspilningIntern();
               } else {
                 // Genskab lydstyrke før den blev dukket
-                if (lydstyreFørDuck > 0) {
-                  am.setStreamVolume(AudioManager.STREAM_MUSIC, lydstyreFørDuck, 0);
-                }
+                mediaPlayer.setVolume(1f, 1f);
+                //if (lydstyreFørDuck > 0) {
+                //  am.setStreamVolume(AudioManager.STREAM_MUSIC, lydstyreFørDuck, 0);
+                //}
                 // Genstart ikke afspilning, der spilles allerede!
                 //startAfspilningIntern();
               }
