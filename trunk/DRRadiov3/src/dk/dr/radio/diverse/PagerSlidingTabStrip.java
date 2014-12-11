@@ -215,7 +215,9 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
       if (adapter instanceof IconTabProvider) {
         IconTabProvider ipa = ((IconTabProvider) adapter);
         if (TEKST_DER_FADER_OVER_I_IKONER) {
-          addIconTabBådeTekstOgBillede(i, ipa.getPageIconResId(i), ipa.getPageContentDescription(i));
+          int resId = ipa.getPageIconResId(i);
+          if (resId!=0) addIconTabBådeTekstOgBillede(i, resId, ipa.getPageContentDescription(i));
+          else addTextTab(i, adapter.getPageTitle(i).toString());
         } else {
           addIconTab(i, ipa.getPageIconResId(i), ipa.getPageContentDescription(i));
         }
