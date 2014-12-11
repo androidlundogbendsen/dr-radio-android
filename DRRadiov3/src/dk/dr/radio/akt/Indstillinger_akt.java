@@ -68,7 +68,6 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
 
     App.prefs.edit().putBoolean("fejlsøgning", App.fejlsøgning);
     addPreferencesFromResource(R.xml.indstillinger);
-    addPreferencesFromResource(R.xml.indstillinger_udvikling);
 
     // Fix for crash på Android 2.1 - se https://www.bugsense.com/dashboard/project/cd78aa05/errors/1474018028
     if (DRData.instans.hentedeUdsendelser.virker()) {
@@ -138,6 +137,10 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
         }
       }.execute();
     }
+
+    // Statistik må ikke kunne slås fra i produktion
+    findPreference("Rapportér statistik").setEnabled(!App.PRODUKTION);
+
   }
 
   @Override

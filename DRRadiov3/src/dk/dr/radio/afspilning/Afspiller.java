@@ -344,7 +344,6 @@ public class Afspiller {
   }
 
   synchronized private void startAfspilningIntern() {
-    App.fjernbetjening.opdaterBillede(); // TODO - opdateres en gang i minuttet
     afspillerstatus = Status.FORBINDER;
     afspilningPåPause = false;
     sendOnAfspilningForbinder(-1);

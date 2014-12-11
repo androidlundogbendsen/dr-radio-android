@@ -13,6 +13,7 @@
         "kontakt_modtagere": ["android@lundogbendsen.dk" ],
         "kontakt_titel": "Angående DR Radio BETA",
         "kontakt_brugerspørgsmål": "\n",
+        "fjernbetjening_baggrundsbillede_med_aquery": false,
 
         "XXXXdrift_statusmeddelelse": "Ændringer i DR Radio BETA\
         <small>Hent officiel udgave <a href='https://play.google.com/store/apps/details?id=dk.dr.radio'>her</a>.<br/>\

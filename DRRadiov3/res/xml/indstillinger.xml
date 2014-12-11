@@ -17,6 +17,12 @@
       android:summaryOff="Start afspilning automatisk, når appen åbnes"
       android:summaryOn="Afspilning starter automatisk, når appen åbnes"/>
 
+  <CheckBoxPreference
+      android:key="tving_lodret_visning" android:title="Blokér vandret visning"
+      android:defaultValue="true"
+      android:summaryOn="Tving folk til at rejse deres tablet/telefon op"
+      android:summaryOff="Tillad vandret visning (kræver genstart)"/>
+
   <PreferenceCategory android:title="Lyd">
 
     <ListPreference
@@ -34,6 +40,9 @@
         android:entries="@array/lydformat_tekst"
         android:entryValues="@array/lydformat_kode"/>
   </PreferenceCategory>
+
+ <PreferenceScreen android:title="Avanceret">
+
 
   <PreferenceCategory android:title="Strømforbrug (tjek også telefonens indstillinger)"
                       android:summary="Afspilning kan påvirkes af strømbesparende funktioner. Udover nedenstående, så tjek også de strømbesparelse i telefonens generelle indstillinger.">
@@ -69,5 +78,97 @@
         />
 
   </PreferenceCategory>
+
+
+
+
+   <PreferenceCategory android:title="Kun til udviklere">
+
+
+   <CheckBoxPreference
+       android:key="udviklerEkstra" android:title="Udvikler"
+       android:defaultValue="false"
+       android:summary="Vis ekstra muligheder til udvikling og fejlfinding"
+       />
+
+   <PreferenceScreen android:dependency="udviklerEkstra"
+                     android:title="Til udvikling og fejlfinding">
+
+     <CheckBoxPreference
+         android:key="afspillerlyde" android:title="Afspillerlyde"
+         android:summaryOn="Afspil lyde, der fortæller når en afspilning starter og slutter"
+         />
+
+
+     <CheckBoxPreference
+         android:key="exoplayer" android:title="ExoPlayer"
+         android:summaryOn="Den nye ExoPlayer benyttes. Nogle funktioner, bl.a. valg af musiknummer, og at en udsende fortsætter hvor den sidst blev stoppet, er ikke implementeret"
+         android:summaryOff="Den indbyggede MediaPlayer benyttes"/>
+
+     <CheckBoxPreference
+         android:key="fjernbetjening_baggrundsbillede_med_aquery"
+         android:title="fjernbetjening_baggrundsbillede_med_aquery"
+         android:defaultValue="false"
+         android:summary="Kun til udviklerbrug"/>
+
+
+
+     <!-- 	<EditTextPreference android:key="udviklerKontakt" android:title="Kontakt"
+         android:summary="Skriv din e-postadresse hvis du vil kunne kontaktes i forbindelse
+         med udvikling" android:defaultValue="" /> -->
+
+     <CheckBoxPreference
+         android:key="fejlsøgning" android:title="Fejlsøgning"
+         android:defaultValue="false" android:summaryOff=""
+         android:summaryOn="Sæt app i fejlsøgningstilstand (også efter genstart)"/>
+
+     <CheckBoxPreference
+         android:key="manuelStreamvalg"
+         android:title="Manuelt streamvalg"
+         android:defaultValue="false"
+         android:summary="Vælg manuelt mellem de tilgængelige streams"/>
+
+     <CheckBoxPreference
+         android:key="udsendelser_bladr"
+         android:title="Swipe mellem udsendelser"
+         android:defaultValue="true"
+         android:summary="Swipe for at bladre mellem udsendelser fra samme programserie"/>
+
+     <CheckBoxPreference
+         android:key="vispager_title_strip"
+         android:title="Titel på udsendelser"
+         android:defaultValue="false"
+         android:summary="Vis faneblade med titler for nemmere at bladre mellem udsendelser i en programserie"/>
+
+     <CheckBoxPreference
+         android:title="Rapportér statistik"
+         android:key="Rapportér statistik"
+         android:defaultValue="true"
+         android:summaryOn="Send statistik til DR, om hvad du lytter til. Mener du at app'en tager for meget strøm kan du slå det fra og rapportere om det gør en forskel"
+         android:summaryOff="Indsamler ikke statisik. Rapportér venligst om det gør en forskel for dig. Du skal genstarte app'en (evt telefonen) og se meddelelse ved opstart før det er trådt i kraft."
+         />
+
+     <!--
+
+       <CheckBoxPreference
+           android:key="wakelockaltid" android:title="Hold telefon tændt altid"
+           android:summaryOn="test"/>
+
+       <CheckBoxPreference
+           android:key="holdSkærmTændt"
+           android:title="Hold skærmen tændt"
+           android:defaultValue="false"
+           android:summary="Hakker afspilningen efter at skærmen slukker så prøv at krydse af her (bruger mere batteri). Virker ikke hvis du selv slukker skærmen."/>
+     </PreferenceScreen>
+     -->
+
+   </PreferenceScreen>
+
+
+  </PreferenceCategory>
+
+
+
+ </PreferenceScreen>
 
 </PreferenceScreen>
