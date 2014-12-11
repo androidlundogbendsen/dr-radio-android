@@ -33,4 +33,6 @@ public interface MediaPlayerWrapper {
   void setMediaPlayerLytter(MediaPlayerLytter lytter);
 
   boolean isPlaying();
+
+  void setVolume(float leftVolume, float rightVolume);
 }

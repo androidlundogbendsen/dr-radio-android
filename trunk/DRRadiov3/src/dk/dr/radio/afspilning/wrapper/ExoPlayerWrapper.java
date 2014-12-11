@@ -15,6 +15,7 @@ import dk.dr.exoplayer.DemoPlayer;
 import dk.dr.exoplayer.EventLogger;
 import dk.dr.exoplayer.HlsRendererBuilder;
 import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
 
 /**
  * Wrapper til ExoPlayer.
@@ -111,6 +112,11 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
   @Override
   public boolean isPlaying() {
     return player!=null && player.getPlaybackState()== ExoPlayer.STATE_READY;
+  }
+
+  @Override
+  public void setVolume(float leftVolume, float rightVolume) {
+    Log.e(new IllegalArgumentException("ikke implementeret"));
   }
 
   /**
