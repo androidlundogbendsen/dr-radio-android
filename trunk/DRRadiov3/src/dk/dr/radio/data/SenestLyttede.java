@@ -101,12 +101,9 @@ public class SenestLyttede {
   }
 
   public int getStartposition(Lydkilde lydkilde) {
-    try {
-      return liste.get(lydkilde.slug).positionMs;
-    } catch (Exception e) {
-      Log.rapporterFejl(e, lydkilde);
-    }
-    return 0;
+    SenestLyttet sl = liste.get(lydkilde.slug);
+    if (sl==null) return 0; // kan ske for en dk.dr.radio.afspilning.AlarmLydkilde
+    return sl.positionMs;
   }
 
 }

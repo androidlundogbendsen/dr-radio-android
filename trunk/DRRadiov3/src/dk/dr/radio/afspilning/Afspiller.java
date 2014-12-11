@@ -165,25 +165,24 @@ public class Afspiller {
   public void startAfspilning() {
     if (lydkilde.hentetStream == null && !App.erOnline()) {
       App.kortToast("Internetforbindelse mangler");
+      if (vækningIGang) ringDenAlarm();
       return;
     }
     if (lydkilde.hentetStream == null && lydkilde.streams == null) {
       Request<?> req = new DrVolleyStringRequest(lydkilde.getStreamsUrl(), new DrVolleyResonseListener() {
-        public boolean startet;
 
         @Override
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
           if (uændret) return; // ingen grund til at parse det igen
           JSONObject o = new JSONObject(json);
           lydkilde.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
-          if (startet) return;
           Log.d("Afspiller hentStreams " + lydkilde + " fraCache=" + fraCache + " k.lydUrl=" + lydkilde.streams);
-          if (onErrorTæller++ > 10) {
+          if (onErrorTæller++>2) {
             App.kortToast("Internetforbindelse til DR mangler");
             //Log.rapporterFejl(new Exception("onErrorTæller++>10, uendelig løkke afværget"), lydkilde);
+            if (vækningIGang) ringDenAlarm();
           } else {
             startAfspilning(); // Opdatér igen - men kun én gang
-            startet = true;
           }
         }
 
@@ -214,13 +213,6 @@ public class Afspiller {
       App.instans.startService(new Intent(App.instans, HoldAppIHukommelsenService.class));
       if (App.prefs.getBoolean("wifilås", true) && wifilock != null) {
         wifilock.acquire();
-      }
-
-      // XXX TODO Eksperiment - skal ud igen
-      if (App.prefs.getBoolean("wakelockaltid", false)) {
-        PowerManager pm = (PowerManager)App.instans.getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, "ExoPlayer");
-        mWakeLock.acquire();
       }
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
@@ -736,6 +728,10 @@ public class Afspiller {
       //Log.d("onError(" + MedieafspillerInfo.fejlkodeTilStreng(hvad) + "(" + hvad + ") " + extra+ " onErrorTæller="+onErrorTæller);
       Log.d("onError(" + hvad + ") " + extra + " onErrorTæller=" + onErrorTæller);
 
+      if (vækningIGang) {
+        ringDenAlarm();
+        return true;
+      }
 
       if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN && hvad == MediaPlayer.MEDIA_ERROR_UNKNOWN
           && "GT-I9300".equals(Build.MODEL) && mediaPlayer.isPlaying()) {
@@ -768,19 +764,11 @@ public class Afspiller {
             Log.d("Ventetid før vi prøver igen: " + ventetid + "  n=" + n + " " + onErrorTæller);
             handler.postDelayed(startAfspilningIntern, ventetid);
 
-            if (vækningIGang) {
-              if (n<10) vibru(1000);
-              else ringDenAlarm();
-            }
-
           } else {
             Log.d("Vent på at vi kommer online igen");
             onErrorTællerNultid = System.currentTimeMillis();
             App.netværk.observatører.add(venterPåAtKommeOnline);
             if (afspillerlyde) afspillerlyd.fejl.start();
-            if (vækningIGang) {
-              ringDenAlarm();
-            }
           }
         } else {
           pauseAfspilning(); // Vi giver op efter 10. forsøg

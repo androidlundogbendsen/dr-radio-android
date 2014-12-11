@@ -27,10 +27,9 @@ import android.media.MediaMetadataRetriever;
 import android.media.RemoteControlClient;
 import android.media.RemoteControlClient.MetadataEditor;
 import android.os.Build;
-import android.widget.ImageView;
 
-import com.android.volley.Response;
-import com.android.volley.toolbox.ImageRequest;
+import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 
@@ -51,6 +50,7 @@ public class Fjernbetjening implements Runnable {
   private final ComponentName fjernbetjeningReciever;
   private RemoteControlClient remoteControlClient;
   private Udsendelse forrigeUdsendelse;
+  private Kanal forrigeKanal;
 
   public Fjernbetjening() {
     DRData.instans.afspiller.positionsobservatører.add(this);
@@ -67,30 +67,36 @@ public class Fjernbetjening implements Runnable {
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
   public void opdaterBillede() {
-    if (DRData.instans.afspiller.getAfspillerstatus()!=Status.SPILLER) return;
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) return;
+    if (remoteControlClient==null) return; // ikke registreret
 
     Lydkilde lk = DRData.instans.afspiller.getLydkilde();
     Kanal k = lk.getKanal();
     Udsendelse u = lk.getUdsendelse();
-    Log.d("Fjernbetjening opdaterBillede " + lk + " k=" + k + " u=" + u + " d=" + lk.erDirekte());
-    if (lk.erDirekte()) {
-      remoteControlClient.editMetadata(false)
-          .putString(MediaMetadataRetriever.METADATA_KEY_TITLE, u == null ? "" : u.titel)
-          .putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, k.navn + " direkte")
-//          .putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, )
-          .apply();
-    } else {
-      remoteControlClient.editMetadata(false)
-          .putString(MediaMetadataRetriever.METADATA_KEY_TITLE, u.titel)
-          .putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, k == null ? "DR" : "DR " + k.navn)
-          .putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, u.playliste == null || u.playliste.size() == 0 ? "" : u.playliste.get(0).kunstner)
-          .apply();
+    if (u==null) {
+      Log.d("TODO - hent info for aktuel udsendelse på kanal "+k);
+      // TODO: Hent sendeplan for den pågældende dag. Døgnskifte sker kl 5, så det kan være dagen før:
+      //Kanaler_frag.hentSendeplanForDag(new Date(App.serverCurrentTimeMillis() - 5 * 60 * 60 * 1000));
     }
 
-    if (u != forrigeUdsendelse) {
-      // Skift baggrundsbillede
+    if (u != forrigeUdsendelse || k!=forrigeKanal) {
       forrigeUdsendelse = u;
+      forrigeKanal = k;
+      // Skift baggrundsbillede
+      Log.d("Fjernbetjening opdater " + lk + " k=" + k + " u=" + u + " d=" + lk.erDirekte());
+      if (lk.erDirekte()) {
+        remoteControlClient.editMetadata(false)
+            .putString(MediaMetadataRetriever.METADATA_KEY_TITLE, u == null ? "" : u.titel)
+            .putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, k.navn + " direkte")
+//          .putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, )
+            .apply();
+      } else {
+        remoteControlClient.editMetadata(false)
+            .putString(MediaMetadataRetriever.METADATA_KEY_TITLE, u.titel)
+            .putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, k == null ? "DR" : "DR " + k.navn)
+            .putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, u.playliste == null || u.playliste.size() == 0 ? "" : u.playliste.get(0).kunstner)
+            .apply();
+      }
 
       if (u==null) {
         if (Build.VERSION.SDK_INT==Build.VERSION_CODES.KITKAT) {
@@ -106,36 +112,37 @@ public class Fjernbetjening implements Runnable {
       } else {
 
         final String burl = Basisfragment.skalérBillede(u);
-        Log.d("asynk artwork\n" + burl);
-        if (DRData.instans.grunddata.android_json.optBoolean("fjernbetjening_baggrundsbillede_med_aquery")
-            || App.prefs.getBoolean("fjernbetjening_baggrundsbillede_med_aquery", false)) {
-
-          if (App.fejlsøgning || App.EMULATOR) App.kortToast("fjernbetjening_baggrundsbillede_med_aquery");
-
-          new BitmapAjaxCallback() {
+        Log.d("Fjernbetjening asynk artwork\n" + burl);
+        // Hent med AQuery, da det sandsynligvis allerede har en cachet udgave
+        Bitmap bm = BitmapAjaxCallback.getMemoryCached(burl, 0);
+        if (bm!=null) {
+          Log.d("Fjernbetjening AQ synk artwork " + bm + "\n" + burl);
+          remoteControlClient.editMetadata(false)
+              .putBitmap(MetadataEditor.BITMAP_KEY_ARTWORK, bm)
+              .apply();
+        } else {
+          new AQuery(App.instans).ajax(burl, Bitmap.class, new AjaxCallback<Bitmap>() {
             @Override
-            protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status) {
-              Log.d("asynk artwork " + bm.getHeight() + "\n" + burl);
+            public void callback(String url, Bitmap bm, AjaxStatus status) {
+              Log.d("Fjernbetjening AQ asynk artwork " + status.getCode() + " " + bm + "\n" + burl);
               remoteControlClient.editMetadata(false)
                   .putBitmap(MetadataEditor.BITMAP_KEY_ARTWORK, bm)
                   .apply();
-              if (App.fejlsøgning || App.EMULATOR) App.kortToast("AQ fik " + bm.getHeight());
             }
-          }.imageView(new ImageView(App.senesteAktivitetIForgrunden)).url(burl).async(App.senesteAktivitetIForgrunden);
-
-        } else {
-
-          App.volleyRequestQueue.add(new ImageRequest(burl,
-              new Response.Listener<Bitmap>() {
-                @Override
-                public void onResponse(Bitmap bm) {
-                  Log.d("asynk artwork " + bm.getHeight() + "\n" + burl);
-                  remoteControlClient.editMetadata(false)
-                      .putBitmap(MetadataEditor.BITMAP_KEY_ARTWORK, bm)
-                      .apply();
-                }
-              }, 0, 0, null, null));
+          });
         }
+/* Volley-kode der gør det tilsvarende
+        App.volleyRequestQueue.add(new ImageRequest(burl,
+            new Response.Listener<Bitmap>() {
+              @Override
+              public void onResponse(Bitmap bm) {
+                Log.d("Fjernbetjening VO asynk artwork " + bm.getHeight() + "\n" + burl);
+                remoteControlClient.editMetadata(false)
+                    .putBitmap(MetadataEditor.BITMAP_KEY_ARTWORK, bm)
+                    .apply();
+              }
+            }, 0, 0, null, null));
+            */
       }
     }
 
@@ -170,12 +177,15 @@ public class Fjernbetjening implements Runnable {
   @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
   public void afregistrér() {
     forrigeUdsendelse = null;
+    forrigeKanal = null;
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) return;
+    if (remoteControlClient==null) return; // fix for https://mint.splunk.com/dashboard/project/c0eec1ee/errors/2693548072
     App.audioManager.unregisterMediaButtonEventReceiver(fjernbetjeningReciever);
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) return;
 
     remoteControlClient.editMetadata(true).apply();
     remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_STOPPED);
     App.audioManager.unregisterRemoteControlClient(remoteControlClient);
+    remoteControlClient = null;
   }
 }
