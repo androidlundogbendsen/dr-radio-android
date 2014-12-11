@@ -23,7 +23,6 @@ public abstract class DrVolleyResonseListener implements Response.Listener<Strin
 
   public DrVolleyResonseListener() {
     startetHerfra = new Exception();
-    App.sætErIGang(true);
   }
 
   @Override
@@ -31,7 +30,7 @@ public abstract class DrVolleyResonseListener implements Response.Listener<Strin
     try {
       boolean uændret = response != null && response.equals(cachetVærdi);
       fikSvar(response, false, uændret);
-      App.sætErIGang(false);
+      App.sætErIGang(false, url);
     } catch (Exception e) {
       Log.e(e);
       onErrorResponse(new VolleyError(e));
@@ -40,7 +39,7 @@ public abstract class DrVolleyResonseListener implements Response.Listener<Strin
 
   @Override
   public final void onErrorResponse(VolleyError error) {
-    App.sætErIGang(false);
+    App.sætErIGang(false, url);
     fikFejl(error);
   }
 
@@ -68,6 +67,7 @@ public abstract class DrVolleyResonseListener implements Response.Listener<Strin
    * Kaldes (fra DrVolleyStringRequest) hvis forespørgslen blev annulleret
    */
   void annulleret() {
-    App.sætErIGang(false);
+    Log.d("annulleret for " + url);
+    App.sætErIGang(false, url);
   }
 }

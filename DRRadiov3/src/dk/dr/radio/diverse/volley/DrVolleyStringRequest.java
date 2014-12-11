@@ -19,6 +19,7 @@ public class DrVolleyStringRequest extends StringRequest {
     super(url, listener, listener);
     lytter = listener;
     lytter.url = url;
+    App.sætErIGang(true, url);
     /*
      * DRs serverinfrastruktur caches med Varnish, men det kan tage lang tid for den bagvedliggende
      * serverinfrastruktur at svare.

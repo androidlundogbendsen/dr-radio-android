@@ -64,6 +64,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Date;
+import java.util.LinkedHashMap;
 
 import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.afspilning.Fjernbetjening;
@@ -85,6 +86,7 @@ public class App extends Application {
   public static final String FORETRUKKEN_KANAL = "FORETRUKKEN_kanal";
   public static final String NØGLE_advaretOmInstalleretPåSDKort = "erInstalleretPåSDKort";
   public static final boolean PRODUKTION = false;
+  private static final String DRAMA_OG_BOG__A_Å_INDLÆST = "DRAMA_OG_BOG__A_Å_INDLÆST";
   public static boolean EMULATOR = true; // Sæt i onCreate(), ellers virker det ikke i std Java
   public static App instans;
   public static SharedPreferences prefs;
@@ -297,7 +299,7 @@ public class App extends Application {
     if (App.erInstalleretPåSDKort && prefs.getBoolean(NØGLE_advaretOmInstalleretPåSDKort, false)) {
       AlertDialog.Builder dialog = new AlertDialog.Builder(akt);
       dialog.setTitle("SD-kort");
-      dialog.setIcon(R.drawable.ic_dr_icon);
+      dialog.setIcon(R.drawable.dri_advarsel_hvid);
       dialog.setMessage("Vækning fungerer muligvis ikke altid, når DR Radio er flyttet til SD-kort");
       dialog.setPositiveButton(android.R.string.ok, new AlertDialog.OnClickListener() {
         public void onClick(DialogInterface arg0, int arg1) {
@@ -372,8 +374,25 @@ public class App extends Application {
       }
 
       if (prefs.getString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, null) == null) {
+        if (DRData.instans.grunddata.android_json.optBoolean("P4stedplacering", false)) {
+          færdig = false;
+          startP4stedplacering();
+        } else {
+          prefs.edit().putString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, "defekt").commit();
+        }
+      }
+
+      // Forsøg at indlæse Drama&Bog og alle kanaler A-Å én gang ved opstart
+      // Der er givetvis en del der sjældent bruger disse funktioner,
+      // og hvis telefonen tror den er online men man ikke kan få forbindelse,
+      // kan der komme rigtig mange store anomdninger i kø
+      //  - det gøres kun én gang, hvilket skulle dække de fleste scenarier
+      // TODO den rigtige løsning burde være at svarene for Drama&Bog og A-Å bliver hængende i cachen, tjekket her burde være om de er i cachen eller ej
+      if (færdig && !prefs.getBoolean(DRAMA_OG_BOG__A_Å_INDLÆST, false)) {
+        prefs.edit().putBoolean(DRAMA_OG_BOG__A_Å_INDLÆST, true);
         færdig = false;
-        startP4stedplacering();
+        DRData.instans.dramaOgBog.startHentData();
+        DRData.instans.programserierAtilÅ.startHentData();
       }
       if (færdig) {
         netværk.observatører.remove(this); // Hold ikke mere øje med om vi kommer online
@@ -432,18 +451,26 @@ public class App extends Application {
   public static Activity senesteAktivitetIForgrunden = null;
   private static int erIGang = 0;
 
+  private static LinkedHashMap<String, Integer> hvadErIGang = new LinkedHashMap<String, Integer>();
   /**
    * Signalerer over for brugeren at netværskommunikation er påbegyndt eller afsluttet.
    * Forårsager at det 'drejende hjul' (ProgressBar) vises på den aktivitet der er synlig p.t.
    * @param netværkErIGang true for påbegyndt og false for afsluttet.
    */
-  public static synchronized void sætErIGang(boolean netværkErIGang) {
+  public static synchronized void sætErIGang(boolean netværkErIGang, String hvad) {
     boolean før = erIGang > 0;
+    if (App.EMULATOR) {
+      Integer antal = hvadErIGang.get(hvad);
+      antal = (antal==null?0:antal) + (netværkErIGang?1:-1);
+      hvadErIGang.put(hvad, antal);
+      if (antal>1) Log.d("sætErIGang: "+hvad+" har "+antal+" samtidige anmodninger");
+      if (antal<0) Log.e(new IllegalStateException("erIGang manglede " + hvad));
+    }
     erIGang += netværkErIGang ? 1 : -1;
     boolean nu = erIGang > 0;
     if (fejlsøgning) Log.d("erIGang = " + erIGang);
     if (erIGang < 0) {
-      if (App.EMULATOR) Log.e(new IllegalStateException("erIGang er " + erIGang));
+      if (App.EMULATOR) Log.e(new IllegalStateException("erIGang er " + erIGang + " hvadErIGang="+hvadErIGang));
       erIGang = 0;
     }
     if (før != nu && aktivitetIForgrunden != null) forgrundstråd.post(sætProgressbar);
@@ -486,14 +513,14 @@ public class App extends Application {
     public void run() {
       if (aktivitetIForgrunden != null) return;
       if (App.fejlsøgning) App.kortToast("kørFørsteGangAppIkkeMereErSynlig");
-      long alder = TIDSSTEMPEL_VED_OPSTART - 7 * 24 * 60 * 60 * 1000;
-      int volleySlettet = volleyCache.sletFilerÆldreEnd(alder);
-      int aqSlettet = Diverse.sletFilerÆldreEnd(new File(getCacheDir(), "aquery"), alder);
+      final int DAGE = 24 * 60 * 60 * 1000;
+      int volleySlettet = volleyCache.sletFilerÆldreEnd(TIDSSTEMPEL_VED_OPSTART-10*DAGE);
+      int aqSlettet = Diverse.sletFilerÆldreEnd(new File(getCacheDir(), "aquery"), TIDSSTEMPEL_VED_OPSTART-4*DAGE);
       // Mappe ændret fra standardmappen "volley" til "dr_volley" 19. nov 2014.
       // Det skyldtes at et hukommelsesdump viste, at Volley indekserede alle filerne i standardmappen,
       // uden om vores implementation, hvilket gav et unødvendigt overhead på ~ 1MB
       File gammelVolleyCacheDir = new File(getCacheDir(), "volley");
-      Diverse.sletFilerÆldreEnd(gammelVolleyCacheDir, alder);
+      Diverse.sletFilerÆldreEnd(gammelVolleyCacheDir, TIDSSTEMPEL_VED_OPSTART-7*DAGE);
 
       if (fejlsøgning) {
         App.kortToast("volleyCache: " + volleySlettet / 1000 + " kb frigivet");
@@ -511,7 +538,8 @@ public class App extends Application {
     forgrundstråd.post(new Runnable() {
       @Override
       public void run() {
-        if (forrigeToast!=null) forrigeToast.cancel();
+        // lange toasts bør blive hængende
+        if (forrigeToast!=null && forrigeToast.getDuration()==Toast.LENGTH_SHORT && !App.fejlsøgning && !App.EMULATOR) forrigeToast.cancel();
         forrigeToast = Toast.makeText(instans, txt2, Toast.LENGTH_LONG);
         forrigeToast.show();
       }
@@ -525,7 +553,8 @@ public class App extends Application {
     forgrundstråd.post(new Runnable() {
       @Override
       public void run() {
-        if (forrigeToast!=null) forrigeToast.cancel();
+        // lange toasts bør blive hængende
+        if (forrigeToast!=null && forrigeToast.getDuration()==Toast.LENGTH_SHORT && !App.fejlsøgning && !App.EMULATOR) forrigeToast.cancel();
         forrigeToast = Toast.makeText(instans, txt2, Toast.LENGTH_SHORT);
         forrigeToast.show();
       }
