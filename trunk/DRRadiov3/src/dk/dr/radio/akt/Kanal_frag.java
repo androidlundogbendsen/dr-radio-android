@@ -177,7 +177,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
       @Override
       public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
-        if (getActivity() == null || uændret) return;
+        if (uændret || listView==null || getActivity() == null) return;
         if (kanal.harUdsendelserForDag(datoStr) && fraCache) return; // så er værdierne i RAMen gode nok
         //Log.d(kanal + " hentSendeplanForDag fikSvar for url " + url + " fraCache=" + fraCache + " efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
         if (json != null && !"null".equals(json)) {

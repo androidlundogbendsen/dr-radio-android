@@ -461,6 +461,7 @@ public class Afspiller {
 
 
   public void setLydkilde(Lydkilde lydkilde) {
+    Log.d("setLydkilde(" + lydkilde);
     if (lydkilde == this.lydkilde) return;
     if (lydkilde == null) {
       Log.rapporterFejl(new IllegalStateException("setLydkilde(null"));
@@ -475,7 +476,13 @@ public class Afspiller {
       String kanalkode = App.tjekP4OgVælgUnderkanal(((Kanal) lydkilde).kode);
       lydkilde = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
     }
-    Log.d("setLydkilde(" + lydkilde);
+    // TODO konsistenstjek - fjern efter et par måneder i drift (dec 2014)
+    if (lydkilde.hentetStream==null && lydkilde instanceof Udsendelse) {
+      DRData.instans.hentedeUdsendelser.tjekOmHentet((Udsendelse) lydkilde);
+      if (lydkilde.hentetStream!=null) {
+        Log.rapporterFejl(new IllegalStateException("Sen opdagelse af hentet udsendelse "), lydkilde);
+      }
+    }
 
 
     if ((afspillerstatus == Status.SPILLER) || (afspillerstatus == Status.FORBINDER)) {
@@ -484,7 +491,7 @@ public class Afspiller {
       try {
         startAfspilning(); // sætter afspilleren til den nye lydkildes position
       } catch (Exception e) {
-        Log.rapporterFejl(e); // TODO fjern efter et par måneder i drift
+        Log.rapporterFejl(e); // TODO fjern efter et par måneder i drift (nov 2014)
       }
     } else {
       this.lydkilde = lydkilde;

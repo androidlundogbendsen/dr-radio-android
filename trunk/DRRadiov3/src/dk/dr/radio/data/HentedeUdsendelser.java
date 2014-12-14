@@ -79,12 +79,23 @@ public class HentedeUdsendelser {
       if (data.udsendelser == null) { // Feltet data.udsendelser kom med 2. okt 2014 - tjek kan slettes efter sommer 2015
         data.udsendelser = new ArrayList<Udsendelse>(data.udsendelseFraDownloadId.values());
       }
+      // Sæt korrekt hentetStream på alle hentede udsendelser
+      for (Udsendelse serialiseretUds : data.udsendelser) {
+        Udsendelse u = DRData.instans.udsendelseFraSlug.get(serialiseretUds.slug);
+        if (u==null) {
+          // Serialiserede udsendelser skal med i slug-listen
+          DRData.instans.udsendelseFraSlug.put(serialiseretUds.slug, serialiseretUds);
+          tjekOmHentet(serialiseretUds);
+        } else {
+          tjekOmHentet(u);
+        }
+      }
       return;
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
     data = new Data();
-    gemListe(); // For at undgå at fejlen rapporteres mere end 1 gang
+    gemListe(); // For at undgå at fejl rapporteres mere end 1 gang
   }
 
   private void gemListe() {
