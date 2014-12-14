@@ -47,7 +47,7 @@
         android:duplicateParentState="true"
         android:gravity="center"
         android:scaleType="center"
-        android:src="@android:drawable/ic_input_add"/>
+        android:src="@drawable/dri_tilfoej_blaa"/>
 
     <TextView
         android:id="@+id/tilføj_alarm"
@@ -86,8 +86,12 @@
       android:id="@+id/advarsel"/>
 
   <Button android:id="@+id/done"
+          android:layout_gravity="center_horizontal"
           android:focusable="true"
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
+          android:layout_width="match_parent"
+          android:layout_height="32dp"
+          android:layout_margin="8dp"
+          android:textSize="@dimen/metainfo_skrifstørrelse"
+          android:background="@drawable/knap_blaa_bg"
           android:text="@string/done"/>
 </LinearLayout>

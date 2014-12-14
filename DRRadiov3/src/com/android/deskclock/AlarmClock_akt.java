@@ -232,6 +232,8 @@ public class AlarmClock_akt extends Basisaktivitet implements OnItemClickListene
     }
     doneButton.setTypeface(App.skrift_gibson);
     ((TextView) findViewById(R.id.tilføj_alarm)).setTypeface(App.skrift_gibson);
+    ((TextView) findViewById(R.id.advarsel)).setTypeface(App.skrift_gibson);
+    Basisfragment.udvikling_checkDrSkrifter(findViewById(R.id.base_layout), ""+this);
   }
 
   @Override
