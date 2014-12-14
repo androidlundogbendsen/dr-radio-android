@@ -65,6 +65,7 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
       Sidevisning.vist(Kanal_frag.class, kanaler.get(kanalindex).slug);
     }
     kanalfaneblade = (PagerSlidingTabStrip) rod.findViewById(R.id.tabs);
+    kanalfaneblade.setTextSize(getResources().getDimensionPixelSize(R.dimen.metainfo_skrifstørrelse));
     kanalfaneblade.setViewPager(viewPager);
     kanalfaneblade.setOnPageChangeListener(this);
     DRData.instans.grunddata.observatører.add(this);

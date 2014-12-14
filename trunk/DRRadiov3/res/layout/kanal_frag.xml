@@ -22,7 +22,7 @@ http://stackoverflow.com/questions/2949407/can-i-increase-a-buttons-onclick-area
       android:id="@+id/hør_live"
       android:layout_width="wrap_content"
       android:layout_height="@dimen/hørknap_højde"
-      android:layout_marginTop="8dp"
+      android:layout_marginTop="4dp"
       android:layout_marginBottom="8dp"
       android:layout_gravity="center"
       android:paddingLeft="4dp"
@@ -30,6 +30,7 @@ http://stackoverflow.com/questions/2949407/can-i-increase-a-buttons-onclick-area
       android:drawableLeft="@drawable/dri_lyd_hvid"
       android:text=" HØR P3"
       android:textColor="@color/hvid"
+      android:textSize="@dimen/metainfo_skrifstørrelse"
       android:background="@drawable/knap_blaa_bg"/>
   </LinearLayout>
 

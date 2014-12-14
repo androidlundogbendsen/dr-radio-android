@@ -58,9 +58,12 @@
     <Button android:id="@+id/alarm_revert"
             android:focusable="true"
             android:layout_width="0dip"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@android:string/cancel"/>
+            android:layout_height="32dp"
+            android:layout_margin="8dp"
+            android:textSize="@dimen/metainfo_skrifstørrelse"
+            android:background="@drawable/knap_blaa_bg"
+            android:text="ANNULLER"/>
 
     <!--
                 style="?android:attr/buttonBarButtonStyle"
@@ -68,8 +71,11 @@
     <Button android:id="@+id/alarm_delete"
             android:focusable="true"
             android:layout_width="0dip"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_height="32dp"
+            android:layout_margin="8dp"
+            android:textSize="@dimen/metainfo_skrifstørrelse"
+            android:background="@drawable/knap_blaa_bg"
             android:text="@string/delete"/>
     <!--
                 style="?android:attr/buttonBarButtonStyle"
@@ -77,8 +83,11 @@
     <Button android:id="@+id/alarm_save"
             android:focusable="true"
             android:layout_width="0dip"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_height="32dp"
+            android:layout_margin="8dp"
+            android:textSize="@dimen/metainfo_skrifstørrelse"
+            android:background="@drawable/knap_blaa_bg"
             android:text="@android:string/ok"/>
 
   </LinearLayout>

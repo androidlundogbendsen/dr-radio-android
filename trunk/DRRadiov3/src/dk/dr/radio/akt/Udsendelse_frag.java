@@ -636,11 +636,11 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         } else if (type == INFOTEKST) {
           aq.id(R.id.titel).typeface(App.skrift_georgia);
           String forkortInfoStr = udsendelse.beskrivelse;
-          if (udsendelse.beskrivelse.length() > 100) {
-            forkortInfoStr = forkortInfoStr.substring(0, 100);
-            forkortInfoStr += "...(læs mere)";
+          if (udsendelse.beskrivelse.length() > 110) {
+            forkortInfoStr = forkortInfoStr.substring(0, 110);
+            forkortInfoStr += "...(VIS MERE)";
             SpannableString spannable = new SpannableString(forkortInfoStr);
-            spannable.setSpan(new ForegroundColorSpan(App.color.blå), forkortInfoStr.length() - "(læs mere)".length(), forkortInfoStr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new ForegroundColorSpan(App.color.blå), forkortInfoStr.length() - "(VIS MERE)".length(), forkortInfoStr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             aq.clicked(Udsendelse_frag.this).text(spannable/*forkortInfoStr*/);
           } else {
             aq.text(forkortInfoStr);

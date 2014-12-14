@@ -255,7 +255,8 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
       if (type == TOP) {
         String tekst = "ALLE UDSENDELSER";
         vh.aq.id(R.id.alle_udsendelser)
-            .text(lavFedSkriftTil(tekst + " (" + programserie.antalUdsendelser + ")", tekst.length()))
+            .text(tekst + " (" + programserie.antalUdsendelser + ")")
+//            .text(lavFedSkriftTil(tekst + " (" + programserie.antalUdsendelser + ")", tekst.length()))
             .getView().setContentDescription(programserie.antalUdsendelser + " udsendelser");
       } else if (type==UDSENDELSE || type==UDSENDELSE_TOP) {
         Udsendelse u = (Udsendelse) liste.get(position);

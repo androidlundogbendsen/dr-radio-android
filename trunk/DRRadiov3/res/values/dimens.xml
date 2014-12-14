@@ -10,7 +10,7 @@
   <dimen name="kanalvisning_aktuelUdsendelse_topmargen">0dp</dimen>
 
   <!-- små skærme skal have lille 'spil'-knap. Dens trykområde bliver udvidet til 44dp af en TouchDelegate -->
-  <dimen name="hørknap_højde">24dp</dimen>
+  <dimen name="hørknap_højde">28sp</dimen>
   <dimen name="hørknap_udvidet_klikområde">12dp</dimen>
   <dimen name="afspiller_kollapset_højde">56dp</dimen>
 
