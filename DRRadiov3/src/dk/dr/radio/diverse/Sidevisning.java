@@ -23,6 +23,7 @@ import dk.dr.radio.akt.Programserie_frag;
 import dk.dr.radio.akt.Senest_lyttede_frag;
 import dk.dr.radio.akt.Soeg_efter_program_frag;
 import dk.dr.radio.akt.Udsendelse_frag;
+import dk.dr.radio.data.HentedeUdsendelser;
 import dk.dr.radio.v3.R;
 
 /**
@@ -41,6 +42,7 @@ public class Sidevisning {
     m.put(FangBrowseIntent_akt.class, "fang_browser");
     m.put(Favoritprogrammer_frag.class, "favoritter");
     m.put(Hentede_udsendelser_frag.class, "hentede_udsendelser");
+    m.put(HentedeUdsendelser.class, "hentet_en_udsendelse");
     m.put(Indstillinger_akt.class, "indstillinger");
     m.put(Kanal_frag.class, "kanal");
     m.put(Kanaler_frag.class, "kanaler");
