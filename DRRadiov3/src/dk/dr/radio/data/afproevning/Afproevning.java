@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import dk.dr.radio.data.DRBackendTidsformater;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Diverse;
@@ -47,7 +48,7 @@ public class Afproevning {
 
   public static void main(String[] a) throws Exception {
     FilCache.init(new File("/tmp/drradio-cache"));
-    DRJson.servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // +01:00 springes over da kolon i +01:00 er ikke-standard Java
+    DRBackendTidsformater.servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // +01:00 springes over da kolon i +01:00 er ikke-standard Java
 //    tjekUdelukFraHLS();
     tjekHentAlleUdsendelser();
   }
@@ -149,7 +150,7 @@ public class Afproevning {
   public static void hent_a_til_å_og_radiodrama(String[] a) throws Exception {
     DRData i = DRData.instans = new DRData();
     FilCache.init(new File("/tmp/drradio-cache"));
-    DRJson.servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // +01:00 springes over da kolon i +01:00 er ikke-standard Java
+    DRBackendTidsformater.servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // +01:00 springes over da kolon i +01:00 er ikke-standard Java
     i.grunddata = new Grunddata();
     i.grunddata.parseFællesGrunddata(Diverse.læsStreng(new FileInputStream("../DRRadiov3/res/raw/grunddata.json")));
     hentSupplerendeData(i.grunddata);

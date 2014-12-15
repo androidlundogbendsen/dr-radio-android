@@ -87,10 +87,10 @@ public class Kanal extends Lydkilde {
       }
     }
     Log.e(new IllegalStateException("Ingen aktuel udsendelse fundet!"));
-    Log.d("nu = " + nu + "  - " + nu.getTime() + " " + DRJson.servertidsformat.format(nu));
+    Log.d("nu = " + nu + "  - " + nu.getTime() + " " + DRBackendTidsformater.servertidsformat.format(nu));
     for (int n = 0; n < udsendelser.size(); n++) {
       Udsendelse u = udsendelser.get(n);
-      Log.d(n + " " + u.startTid.before(nu) + nu.before(u.slutTid) + "  " + u + " " + DRJson.servertidsformat.format(u.startTid) + " - " + DRJson.servertidsformat.format(u.slutTid));
+      Log.d(n + " " + u.startTid.before(nu) + nu.before(u.slutTid) + "  " + u + " " + DRBackendTidsformater.servertidsformat.format(u.startTid) + " - " + DRBackendTidsformater.servertidsformat.format(u.slutTid));
     }
     if (nu.before(udsendelser.get(0).slutTid)) return udsendelser.get(0);
     return null;
