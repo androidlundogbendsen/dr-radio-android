@@ -1,7 +1,9 @@
 package dk.dr.radio.akt;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.DownloadManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -104,8 +106,9 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
         v = getLayoutInflater(null).inflate(R.layout.hentede_udsendelser_listeelem_2linjer, parent, false);
         v.setBackgroundResource(0);
         aq = new AQuery(v);
-        aq.id(R.id.slet).clicked(Hentede_udsendelser_frag.this);
         aq.id(R.id.startStopKnap).clicked(Hentede_udsendelser_frag.this);
+        aq.id(R.id.slet).clicked(Hentede_udsendelser_frag.this);
+        aq.id(R.id.hør).clicked(Hentede_udsendelser_frag.this);
 //            .getView().setOnTouchListener(farvKnapNårDenErTrykketNed);
         aq.id(R.id.linje1).typeface(App.skrift_gibson_fed);
         aq.id(R.id.linje2).typeface(App.skrift_gibson);
@@ -116,6 +119,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
       aq.id(R.id.stiplet_linje).visibility(position == 0 ? View.INVISIBLE : View.VISIBLE);
       aq.id(R.id.startStopKnap).tag(udsendelse); // sæt udsendelsen ind som tag, så vi kan se dem i onClick()
       aq.id(R.id.slet).tag(udsendelse);
+      aq.id(R.id.hør).tag(udsendelse);
 
       Cursor c = hentedeUdsendelser.getStatusCursor(udsendelse);
       if (c == null) {
@@ -187,23 +191,37 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
   public void onClick(View v) {
     try {
       final Udsendelse u = (Udsendelse) v.getTag();
-      if (v.getId() == R.id.slet) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-          // Animeret fjernelse af listeelement
-          int pos = liste.indexOf(u);
-          final View le = listView.getChildAt(pos);
-          le.animate().alpha(0).translationX(le.getWidth()).withEndAction(new Runnable() {
-            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-            @Override
-            public void run() {
-              le.setAlpha(1);
-              le.setTranslationX(0);
-              hentedeUdsendelser.slet(u);
-            }
-          });
-        } else {
-          hentedeUdsendelser.slet(u);
-        }
+      if (v.getId() == R.id.hør) {
+        DRData.instans.afspiller.setLydkilde(u);
+        DRData.instans.afspiller.startAfspilning();
+      } else if (v.getId() == R.id.slet) {
+        new AlertDialog.Builder(getActivity())
+            .setTitle("Slet udsendelse")
+            .setMessage("Vil du slette denne udsendele?\nDu kan altid hente den igen.")
+            .setPositiveButton(android.R.string.ok,
+                new DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface d, int w) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                      // Animeret fjernelse af listeelement
+                      int pos = liste.indexOf(u);
+                      final View le = listView.getChildAt(pos);
+                      le.animate().alpha(0).translationX(le.getWidth()).withEndAction(new Runnable() {
+                        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+                        @Override
+                        public void run() {
+                          le.setAlpha(1);
+                          le.setTranslationX(0);
+                          hentedeUdsendelser.slet(u);
+                        }
+                      });
+                    } else {
+                      hentedeUdsendelser.slet(u);
+                    }
+                  }
+                })
+            .setNegativeButton(android.R.string.cancel, null)
+            .show();
+
       } else {
         Cursor c = hentedeUdsendelser.getStatusCursor(u);
         if (c != null) {

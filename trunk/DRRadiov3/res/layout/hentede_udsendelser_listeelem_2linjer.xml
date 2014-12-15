@@ -7,7 +7,6 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingBottom="16dp"
-    android:background="@drawable/knap_graa10_bg"
     android:orientation="vertical"
     android:descendantFocusability="blocksDescendants"
     >
@@ -67,24 +66,33 @@
           tools:ignore="HardcodedText"/>
     </LinearLayout>
 
-    <ImageView
+    <ImageButton
         android:layout_width="44dp"
         android:layout_height="44dp"
         android:id="@+id/startStopKnap"
         android:contentDescription="pause"
+        android:background="@drawable/elem_hvid_bg"
         android:src="@drawable/dri_radio_pause_graa40"/>
 
     <ImageButton
         android:layout_width="44dp"
         android:layout_height="44dp"
+        android:layout_marginLeft="8dp"
         android:id="@+id/slet"
         android:contentDescription="slet udsendelse"
-        android:src="@drawable/hentede_uds_skraldespand"/>
-    /*
-    android:layout_width="44dp"
-    android:layout_height="44dp"
-    android:src="@android:drawable/ic_menu_delete"/>
-    */
+        android:background="@drawable/elem_hvid_bg"
+        android:src="@drawable/dri_skraldespand_graa40"
+        />
+
+    <ImageButton
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginLeft="8dp"
+        android:id="@+id/hør"
+        android:src="@drawable/dri_lyd_blaa"
+        android:background="@drawable/elem_hvid_bg"
+        tools:ignore="ContentDescription"/>
+
   </LinearLayout>
 
 

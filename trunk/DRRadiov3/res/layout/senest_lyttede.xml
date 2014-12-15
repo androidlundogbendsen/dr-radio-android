@@ -27,7 +27,6 @@
         android:layout_height="fill_parent"
         android:divider="@null"
         android:dividerHeight="0px"
-        android:fastScrollEnabled="true"
         android:requiresFadingEdge="vertical"/>
     <!--
         android:fadingEdgeLength="4dp"

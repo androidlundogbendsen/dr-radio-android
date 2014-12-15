@@ -233,7 +233,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
     // Anullér forrige søgning
     App.volleyRequestQueue.cancelAll(this);
 
-    søgStr = søgFelt.getText().toString();
+    søgStr = søgFelt.getText().toString().trim();
     if (søgStr.length() == 0) {
       tomStr.setText("");
       liste.clear();
@@ -252,6 +252,19 @@ public class Soeg_efter_program_frag extends Basisfragment implements
             udsendelseListe = DRJson.parseUdsendelserForProgramserie(data, null, DRData.instans);
             liste.clear();
             liste.addAll(programserieListe);
+            /* hvad mon det er på iOS der gør at funktionen søger flere data frem? Ikke nedenstående
+            HashSet<String> psx = new HashSet<String>();
+            for (Programserie ps : programserieListe) psx.add(ps.slug);
+            for (Udsendelse u : udsendelseListe) if (!psx.contains(u.programserieSlug)) {
+              Programserie ps = DRData.instans.programserieFraSlug.get(u.programserieSlug);
+              if (ps!=null) {
+                liste.add(ps);
+                psx.add(ps.slug);
+              } else {
+                liste.add(u);
+              }
+            }
+            */
             liste.addAll(udsendelseListe);
             Log.d("liste = " + liste);
             adapter.notifyDataSetChanged();
