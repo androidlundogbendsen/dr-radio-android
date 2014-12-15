@@ -374,7 +374,7 @@ public class App extends Application {
       }
 
       if (prefs.getString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, null) == null) {
-        if (DRData.instans.grunddata.android_json.optBoolean("P4stedplacering", false)) {
+        if (DRData.instans.grunddata.android_json.optBoolean("P4stedplacering", true)) {
           færdig = false;
           startP4stedplacering();
         } else {
