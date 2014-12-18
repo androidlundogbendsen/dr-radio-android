@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
 /**
@@ -71,6 +72,7 @@ public class DRBackendTidsformater {
         } catch (Exception ex) { Log.d("Kunne ikke heller ikke parse "+tid+" med "+tidsformat.format(juleaften)+" "+ex); }
       }
       Log.rapporterFejl(new IllegalArgumentException("åh nej, der kom endnu et servertidsformat, vi ikke kender! "+tid));
+      if (App.EMULATOR) throw new Error(); // Stop med et crash i emulatoren
       // Giv juleaften, bare for at gøre *etellerandet* !!   :-(
       return juleaften;
     }

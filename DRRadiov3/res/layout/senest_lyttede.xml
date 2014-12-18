@@ -24,7 +24,8 @@
     <ListView
         android:id="@+id/listView"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="0px"
+        android:layout_weight="1"
         android:divider="@null"
         android:dividerHeight="0px"
         android:requiresFadingEdge="vertical"/>
@@ -47,5 +48,17 @@ For mere kompleks tomhedsindikator, brug ViewStub - se
         android:padding="20dp"
         android:text="Indlæser, vent venligst..."
         android:textSize="18sp"/>
+<!--
+  <TextView
+      android:id="@+id/supplerende_info"
+      android:drawableLeft="@drawable/dri_advarsel_graa40"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:gravity="center_vertical"
+      android:text="Udsendelser hentes kun når du er på et trådløst internet (wifi). Indstillinger"
+      android:textSize="18sp"
+      />
+-->
 </LinearLayout>
 

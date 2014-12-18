@@ -24,6 +24,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -123,6 +125,8 @@ public class Grunddata {
     Log.d("parseKanaler " + kanaler + " - P4:" + p4koder);
     android_json = json.getJSONObject("android");
     tjekUdelukFraHLS(Build.MODEL + " " + Build.PRODUCT + "/" + Build.VERSION.SDK_INT);
+    DRBackendTidsformater.servertidsformatAndre = parseDRBackendTidsformater(android_json.optJSONArray("servertidsformatAndre"), DRBackendTidsformater.servertidsformatAndre);
+    DRBackendTidsformater.servertidsformatPlaylisteAndre = parseDRBackendTidsformater(android_json.optJSONArray("servertidsformatPlaylisteAndre"), DRBackendTidsformater.servertidsformatPlaylisteAndre);
     if (forvalgtKanal == null) forvalgtKanal = kanaler.get(2); // Det er nok P3 :-)
     for (Runnable r : new ArrayList<Runnable>(observatører)) r.run();
   }
@@ -152,5 +156,14 @@ public class Grunddata {
     } catch (Exception e) {
       Log.e(e);
     } // Ikke kritisk
+  }
+
+  private DateFormat[] parseDRBackendTidsformater(JSONArray servertidsformatAndreJson, DateFormat[] servertidsformatAndre) throws JSONException {
+    if (servertidsformatAndreJson==null) return  servertidsformatAndre;
+    DateFormat[] res = new DateFormat[servertidsformatAndreJson.length()];
+    for (int i=0; i<res.length; i++) {
+      res[i] = new SimpleDateFormat(servertidsformatAndreJson.getString(i));
+    }
+    return res;
   }
 }

@@ -53,7 +53,7 @@
       <PreferenceCategory android:title="Hentede udsendelser">
         <ListPreference
             android:key="placeringAfHentedeFiler"
-            android:title="Placering"
+            android:title="Placering af hentede udsendelser"
             android:dialogTitle="Gem udsendelser på"
             android:summary="Vælg hvor på telefonen du vil gemme udsendelser til offline brug."
             />
@@ -62,8 +62,8 @@
             android:key="hentKunOverWifi"
             android:title="Hent kun på wifi"
             android:defaultValue="false"
-            android:summaryOn="Udsendelser hentes fremover kun over wifi"
-            android:summaryOff="Udsendelser hentes både over telefonnet (3G/4G) og wifi"/>
+            android:summaryOn="Udsendelser hentes kun over wifi fremover.\n(er en udsendelse i gang med at blive hentet skal du stoppe og genoptage hentning af den før det træder i kraft)"
+            android:summaryOff="Udsendelser hentes både over telefonnet (3G/4G) og wifi."/>
 
       </PreferenceCategory>
 

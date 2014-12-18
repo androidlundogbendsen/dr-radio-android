@@ -668,7 +668,7 @@ public class Afspiller {
             int startposition = DRData.instans.senestLyttede.getStartposition(lydkilde);
             int varighed = mediaPlayer.getDuration();
             Log.d("mediaPlayer genoptager afspilning ved " + startposition + " varighed="+varighed);
-            if (varighed>0 && startposition>95*varighed/100) {
+            if (varighed>0 && startposition>0.95*varighed) {
               Log.d("mediaPlayer nej, det er for langt henne, starter ved starten");
               startposition = 0;
             }
