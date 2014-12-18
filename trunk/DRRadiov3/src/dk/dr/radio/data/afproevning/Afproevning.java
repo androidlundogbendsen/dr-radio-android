@@ -36,6 +36,7 @@ import dk.dr.radio.data.Grunddata;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Programserie;
 import dk.dr.radio.data.Udsendelse;
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
 // For at køre denne klasse, skal noget a la det følgende ind i VM Options i værktøjet
@@ -49,8 +50,10 @@ public class Afproevning {
   public static void main(String[] a) throws Exception {
     FilCache.init(new File("/tmp/drradio-cache"));
     DRBackendTidsformater.servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // +01:00 springes over da kolon i +01:00 er ikke-standard Java
-//    tjekUdelukFraHLS();
+    System.out.println("App.instans="+ App.instans);
+    tjekUdelukFraHLS();
     tjekHentAlleUdsendelser();
+    tjek_hent_a_til_å_og_radiodrama();
   }
 
 
@@ -117,17 +120,16 @@ public class Afproevning {
         //Log.d(obj.toString(2));
         boolean MANGLER_SeriesSlug = !obj.has(DRJson.SeriesSlug.name());
 
-        /*
         u.streams = DRJson.parsStreams(obj.getJSONArray(DRJson.Streams.name()));
         if (u.streams.size() == 0) Log.d("Ingen lydstreams");
 
         try {
-          u.playliste = DRJson.parsePlayliste(new JSONArray(hentStreng(u.getPlaylisteUrl())));
+          u.playliste = DRJson.parsePlayliste(new JSONArray(hentStreng(DRData.getPlaylisteUrl(u.slug))));
           Log.d("u.playliste= " + u.playliste);
         } catch (IOException e) {
           e.printStackTrace();
         }
-        */
+
         boolean gavNull = false;
         Programserie ps = i.programserieFraSlug.get(u.programserieSlug);
         if (ps == null) {
@@ -147,7 +149,7 @@ public class Afproevning {
     }
   }
 
-  public static void hent_a_til_å_og_radiodrama(String[] a) throws Exception {
+  public static void tjek_hent_a_til_å_og_radiodrama() throws Exception {
     DRData i = DRData.instans = new DRData();
     FilCache.init(new File("/tmp/drradio-cache"));
     DRBackendTidsformater.servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // +01:00 springes over da kolon i +01:00 er ikke-standard Java
@@ -192,8 +194,8 @@ public class Afproevning {
 
     }
 
-    System.exit(0);
-
+//    System.exit(0);
+/* JSON-format er ændret
     // RadioDrama
     // Virker ikke:
     //JSONArray jsonArray = new JSONArray(hentStreng("http://www.dr.dk/tjenester/mu-apps/radio-drama?type=radio&includePrograms=true"));
@@ -224,35 +226,9 @@ public class Afproevning {
       Log.d(programserie.slug + " = " + programserie.getUdsendelser());
     }
     Log.d("res=" + res);
+*/
 
-
-    System.exit(0);
-
-
-    for (Kanal kanal : i.grunddata.kanaler) {
-      if (Kanal.P4kode.equals(kanal.kode)) continue;
-      if ("DRN".equals(kanal.kode)) continue;
-      Log.d("\n=========================================== kanal = " + kanal);
-      String datoStr = DRJson.apiDatoFormat.format(new Date());
-      kanal.setUdsendelserForDag(DRJson.parseUdsendelserForKanal(new JSONArray(
-          hentStreng(DRData.getKanalUdsendelserUrlFraKode(kanal.kode, datoStr))), kanal, new Date(), DRData.instans), "0");
-      for (Udsendelse u : kanal.udsendelser) {
-        Log.d("\nudsendelse = " + u);
-        Programserie ps = i.programserieFraSlug.get(u.programserieSlug);
-        if (ps == null) {
-          String str = hentStreng(DRData.getProgramserieUrl(u.programserieSlug));
-          if ("null".equals(str)) continue;
-          JSONObject data = new JSONObject(str);
-          ps = DRJson.parsProgramserie(data, null);
-          JSONArray prg = data.getJSONArray(DRJson.Programs.name());
-          ArrayList<Udsendelse> udsendelser = DRJson.parseUdsendelserForProgramserie(prg, kanal, DRData.instans);
-          ps.tilføjUdsendelser(0, udsendelser);
-          i.programserieFraSlug.put(u.programserieSlug, ps);
-        }
-        Log.d(ps.slug + " " + ps);
-        System.exit(0);
-      }
-    }
+  //  System.exit(0);
   }
 
 
