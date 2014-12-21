@@ -3,7 +3,7 @@
           package="dk.dr.radio.v3"
           android:installLocation="auto"
           android:versionCode="1"
-android:versionName="3.2 15.dec upålideligt servertidsformat 142"
+android:versionName="3.2 21.dec småting 143"
     >
 
   <uses-sdk
@@ -64,7 +64,8 @@ android:versionName="3.2 15.dec upålideligt servertidsformat 142"
 
     <activity
         android:name="dk.dr.radio.akt.Indstillinger_akt"
-        android:label="DR Radio Indstillinger">
+        android:theme="@style/Theme.Indstillinger"
+        android:label="D R Radio Indstillinger">
       <!-- Gør aktivitet synlig i forbindelse med at brugeren gennemser sit dataforbrug -->
       <intent-filter>
         <action android:name="android.intent.action.MANAGE_NETWORK_USAGE"/>
