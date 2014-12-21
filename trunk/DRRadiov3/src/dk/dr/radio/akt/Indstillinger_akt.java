@@ -69,15 +69,16 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
     App.prefs.edit().putBoolean("fejlsøgning", App.fejlsøgning);
     addPreferencesFromResource(R.xml.indstillinger);
 
+    // Find lydformat
+    lydformatlp = (ListPreference) findPreference(Lydkilde.INDST_lydformat);
+    lydformatlp.setEnabled(!DRData.instans.grunddata.udelukHLS);
+    lydformatlp.setOnPreferenceChangeListener(this);
+    aktueltLydformat = lydformatlp.getValue();
+
     // Fix for crash på Android 2.1 - se https://www.bugsense.com/dashboard/project/cd78aa05/errors/1474018028
-    if (DRData.instans.hentedeUdsendelser.virker()) {
-
-      // Find lydformat
-      lydformatlp = (ListPreference) findPreference(Lydkilde.INDST_lydformat);
-      lydformatlp.setEnabled(!DRData.instans.grunddata.udelukHLS);
-      lydformatlp.setOnPreferenceChangeListener(this);
-      aktueltLydformat = lydformatlp.getValue();
-
+    if (!DRData.instans.hentedeUdsendelser.virker()) {
+      findPreference(HentedeUdsendelser.NØGLE_placeringAfHentedeFiler).setEnabled(false);
+    } else {
       new AsyncTask() {
         public String[] visVærdi;
         public String[] værdi;

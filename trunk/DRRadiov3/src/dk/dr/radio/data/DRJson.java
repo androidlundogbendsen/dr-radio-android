@@ -211,7 +211,7 @@ public enum DRJson {
 
   public static Udsendelse parseUdsendelseForProgramseriexx(Kanal kanal, DRData drData, JSONObject o) throws JSONException, ParseException {
     Udsendelse u = opretUdsendelse(drData, o);
-    if (kanal != null) u.kanalSlug = kanal.slug;
+    if (kanal != null && kanal.slug.length()>0) u.kanalSlug = kanal.slug;
     else u.kanalSlug = o.optString(DRJson.ChannelSlug.name());  // Bemærk - kan være tom.
     u.startTid = DRBackendTidsformater.parseUpålideigtServertidsformat(o.getString(DRJson.FirstBroadcast.name()));
     u.startTidKl = klokkenformat.format(u.startTid);

@@ -233,6 +233,14 @@ public class Afspiller {
 
     } else Log.d(" forkert status=" + afspillerstatus);
 
+    // Hvis det er en favorit så opdater favoritter så der ikke mere optræder nye udsendelser i denne programserie
+    if (lydkilde instanceof Udsendelse) {
+      String programserieSlug = ((Udsendelse) lydkilde).programserieSlug;
+      if (DRData.instans.favoritter.erFavorit(programserieSlug)) {
+        DRData.instans.favoritter.sætFavorit(programserieSlug, true);
+      }
+    }
+
     afspillerlyde = App.prefs.getBoolean("afspillerlyde", false);
     if (afspillerlyde && afspillerlyd==null) afspillerlyd = new Afspillerlyd();
     if (afspillerlyde) afspillerlyd.start.start();
