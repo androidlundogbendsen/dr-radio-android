@@ -150,6 +150,11 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
           if (varighed>0) break;
           førsteUdsendelseDerKanHøresIndex++;
         }
+        // Udsendelsesserie hvor ingen udsendelser kan høres - her viser vi alle udsendelserne
+        if (førsteUdsendelseDerKanHøresIndex==l.size()) {
+          førsteUdsendelseDerKanHøresIndex=0;
+          liste.addAll(l);
+        }
         for (int n=førsteUdsendelseDerKanHøresIndex; n<l.size(); n++) {
           liste.add(l.get(n));
         }

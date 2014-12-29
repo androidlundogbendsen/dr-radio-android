@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="dk.dr.radio"
           android:installLocation="auto"
-          android:versionCode="40"
-          android:versionName="3.1"
+          android:versionCode="43"
+          android:versionName="3.5"
     >
 
   <uses-sdk
