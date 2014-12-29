@@ -45,7 +45,7 @@ public class Programserie { //implements Serializable {
       }
       udsendelserSorteret.addAll(uds);
       if (!Arrays.equals(udsendelserListe.toArray(), udsendelserSorteret.toArray())) {
-        Log.d("tilføjUdsendelser INKONSISTENS??!?nu:\nlisten:" + udsendelserListe + "\nsorter:" + udsendelserSorteret);
+        Log.d("tilføjUdsendelser INKONSISTENS? nu:\nlisten:" + udsendelserListe + "\nsorter:" + udsendelserSorteret);
       }
 //      udsendelserListe.clear();
 //      udsendelserListe.addAll(udsendelserSorteret);
