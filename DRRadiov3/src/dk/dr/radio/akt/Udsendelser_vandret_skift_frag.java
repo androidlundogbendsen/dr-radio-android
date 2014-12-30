@@ -36,7 +36,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
 
   private Udsendelse startudsendelse;
   private Programserie programserie;
-  private ArrayList<Udsendelse> liste = new ArrayList<Udsendelse>();
+  private ArrayList<Udsendelse> liste;
   private Kanal kanal;
   private UdsendelserAdapter adapter;
   private int antalHentedeSendeplaner;
@@ -77,26 +77,29 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
 
 
     viewPager = (ViewPager) rod.findViewById(R.id.pager);
-    viewPager.setId(123);
+    viewPager.setId(123); // TODO hvorfor? fjern eller forklar hvorfor R.id.pager ikke er god nok
     pager_title_strip = rod.findViewById(R.id.pager_title_strip);
     // Da ViewPager er indlejret i et fragment skal adapteren virke på den indlejrede (child)
     // fragmentmanageren - ikke på aktivitens (getFragmentManager)
     adapter = new UdsendelserAdapter(getChildFragmentManager());
     DRJson.opdateriDagIMorgenIGårDatoStr(App.serverCurrentTimeMillis());
 
-    liste.clear(); // undgå dubletter i tilfælde af at onCreateView kaldes flere gange
+    liste = new ArrayList<Udsendelse>();
     if (programserie == null) {
       liste.add(startudsendelse);
+      adapter.liste2 = liste;
       viewPager.setAdapter(adapter);
       hentUdsendelser(0);
     } else {
       int n = Programserie.findUdsendelseIndexFraSlug(liste, startudsendelse.slug);
       if (n < 0) {
         liste.add(startudsendelse);
+        adapter.liste2 = liste;
         viewPager.setAdapter(adapter);
         hentUdsendelser(0);
       } else {
         liste.addAll(programserie.getUdsendelser());
+        adapter.liste2 = liste;
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(n);
       }
@@ -133,7 +136,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
   private void opdaterListe() {
     if (viewPager == null) return;
     Udsendelse udsFør = liste.size()>viewPager.getCurrentItem() ? liste.get(viewPager.getCurrentItem()) : null;
-    liste.clear();
+    liste = new ArrayList<Udsendelse>();
     liste.addAll(programserie.getUdsendelser());
     if (Programserie.findUdsendelseIndexFraSlug(liste, startudsendelse.slug) < 0) {
       liste.add(startudsendelse);
@@ -145,8 +148,9 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     }
     int nEft = udsFør==null?0:Programserie.findUdsendelseIndexFraSlug(liste, udsFør.slug);
     if (nEft < 0) nEft = liste.size() - 1; // startudsendelsen
+    adapter.liste2 = liste;
     adapter.notifyDataSetChanged();
-    Log.d("xxx setCurrentItem " + viewPager.getCurrentItem() + "   nEft=" + nEft);
+    if (App.fejlsøgning) Log.d("xxx setCurrentItem " + viewPager.getCurrentItem() + "   nEft=" + nEft);
     viewPager.setCurrentItem(nEft, false); // - burde ikke være nødvendig, vi har defineret getItemPosition
     vispager_title_strip();
 /*
@@ -216,13 +220,15 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
   //  public class UdsendelserAdapter extends FragmentPagerAdapter {
   public class UdsendelserAdapter extends FragmentStatePagerAdapter {
 
+    public ArrayList<Udsendelse> liste2;
+
     public UdsendelserAdapter(FragmentManager fm) {
       super(fm);
     }
 
     @Override
     public Fragment getItem(int position) {
-      Udsendelse u = liste.get(position);
+      Udsendelse u = liste2.get(position);
       Fragment f = new Udsendelse_frag();
       f.setArguments(new Intent()
           .putExtra(Kanal_frag.P_kode, kanal.kode)
@@ -263,12 +269,12 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
      */
     @Override
     public int getCount() {
-      return liste.size();
+      return liste2.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-      Udsendelse u = liste.get(position);
+      Udsendelse u = liste2.get(position);
       String dato = DRJson.datoformat.format(u.startTid);
       if (dato.equals(DRJson.iDagDatoStr)) dato = "i dag";
       else if (dato.equals(DRJson.iMorgenDatoStr)) dato = "i morgen";

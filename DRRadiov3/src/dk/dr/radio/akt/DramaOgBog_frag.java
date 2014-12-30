@@ -269,8 +269,10 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable, AdapterV
       int n = (Integer) o;
       listesektionerUdvidet[n] = !listesektionerUdvidet[n];
       run();
-    } else {
+    } else if (o instanceof Programserie) {
       åbn(this, (Programserie) o);
+    } else {
+      Log.rapporterFejl(new IllegalStateException("onItemClick på "+o.getClass()), o+" pos "+position);
     }
   }
 }

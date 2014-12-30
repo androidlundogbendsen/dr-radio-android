@@ -179,7 +179,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
         if (uændret || listView==null || getActivity() == null) return;
         if (kanal.harUdsendelserForDag(datoStr) && fraCache) return; // så er værdierne i RAMen gode nok
-        //Log.d(kanal + " hentSendeplanForDag fikSvar for url " + url + " fraCache=" + fraCache + " efter " + (System.currentTimeMillis() - App.opstartstidspunkt) + " ms");
+        // Log.d(kanal + " hentSendeplanForDag fikSvar for url " + url + " fraCache=" + fraCache+":\n"+json);
         if (json != null && !"null".equals(json)) {
           int næstøversteSynligPos = listView.getFirstVisiblePosition() + 1;
           if (!brugerHarNavigeret || næstøversteSynligPos >= liste.size()) {

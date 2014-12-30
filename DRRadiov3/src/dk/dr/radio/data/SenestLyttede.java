@@ -1,7 +1,6 @@
 package dk.dr.radio.data;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Iterator;
@@ -69,7 +68,7 @@ public class SenestLyttede {
         Serialisering.gem(liste, FILNAVN);
         if (!App.PRODUKTION) Log.d("SenestLyttede: " + liste);
         Log.d("SenestLyttede: Gemning tog " + (System.currentTimeMillis() - tid) + " ms - filstr:" + new File(FILNAVN).length());
-      } catch (IOException e) {
+      } catch (Exception e) { // her kan ske en java.util.ConcurrentModificationException hvis forgrundstråden ændrer i listen samtidigt
         Log.rapporterFejl(e);
       }
     }
