@@ -22,7 +22,7 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
 
   private ViewPager viewPager;
   private KanalAdapter adapter;
-  private ArrayList<Kanal> kanaler = new ArrayList<Kanal>();
+  private ArrayList<Kanal> kanaler;
 
 
   private Venstremenu_frag venstremenuFrag;
@@ -32,11 +32,12 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
 
   @Override
   public void run() {
-    kanaler.clear();
+    kanaler = new ArrayList<Kanal>();
     for (Kanal k : DRData.instans.grunddata.kanaler) {
       if (!k.p4underkanal) kanaler.add(k);
     }
     if (adapter != null) {
+      adapter.kanaler2 = kanaler;
       if (viewPager.getCurrentItem() >= kanaler.size()) {
         viewPager.setCurrentItem(0);
       }
@@ -52,6 +53,7 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
 
     run();
     adapter = new KanalAdapter(getChildFragmentManager());
+    adapter.kanaler2 = kanaler;
     viewPager = (ViewPager) rod.findViewById(R.id.pager);
     viewPager.setAdapter(adapter);
 
@@ -120,6 +122,7 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
   }
 
   public class KanalAdapter extends FragmentPagerAdapter implements PagerSlidingTabStrip.IconTabProvider {
+    public ArrayList<Kanal> kanaler2;
     //public class KanalAdapter extends FragmentStatePagerAdapter implements PagerSlidingTabStrip.IconTabProvider {
 
     public KanalAdapter(FragmentManager fm) {
@@ -131,32 +134,32 @@ public class Kanaler_frag extends Basisfragment implements ViewPager.OnPageChang
 
     @Override
     public Basisfragment getItem(int position) {
-      Basisfragment f = position < kanaler.size() - 1 ? new Kanal_frag() : new Kanal_nyheder_frag();
+      Basisfragment f = position < kanaler2.size() - 1 ? new Kanal_frag() : new Kanal_nyheder_frag();
       Bundle b = new Bundle();
-      b.putString(Kanal_frag.P_kode, kanaler.get(position).kode);
+      b.putString(Kanal_frag.P_kode, kanaler2.get(position).kode);
       f.setArguments(b);
       return f;
     }
 
     @Override
     public int getCount() {
-      return kanaler.size();
+      return kanaler2.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-      return kanaler.get(position).navn;
+      return kanaler2.get(position).navn;
     }
 
 
     @Override
     public int getPageIconResId(int position) {
-      return kanaler.get(position).kanallogo_resid;
+      return kanaler2.get(position).kanallogo_resid;
     }
 
     @Override
     public String getPageContentDescription(int position) {
-      return kanaler.get(position).navn;
+      return kanaler2.get(position).navn;
     }
   }
 }

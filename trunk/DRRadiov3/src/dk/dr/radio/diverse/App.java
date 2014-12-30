@@ -464,7 +464,8 @@ public class App extends Application {
       antal = (antal==null?0:antal) + (netværkErIGang?1:-1);
       hvadErIGang.put(hvad, antal);
       if (antal>1) Log.d("sætErIGang: "+hvad+" har "+antal+" samtidige anmodninger");
-      if (antal<0) Log.e(new IllegalStateException("erIGang manglede " + hvad));
+      else if (antal<0) Log.e(new IllegalStateException("erIGang manglede " + hvad));
+      else if (netværkErIGang) Log.d("sætErIGang: "+hvad);
     }
     erIGang += netværkErIGang ? 1 : -1;
     boolean nu = erIGang > 0;
