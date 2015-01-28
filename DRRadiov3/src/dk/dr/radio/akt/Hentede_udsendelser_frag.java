@@ -205,6 +205,11 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
                       // Animeret fjernelse af listeelement
                       int pos = liste.indexOf(u);
                       final View le = listView.getChildAt(pos);
+                      if (le==null) { // fix for https://mint.splunk.com/dashboard/project/cd78aa05/errors/2732198295
+                        hentedeUdsendelser.slet(u);
+                        Log.rapporterFejl(new NullPointerException("sletning index "+pos+" på liste med "+liste.size()+" elementer"));
+                        return;
+                      }
                       le.animate().alpha(0).translationX(le.getWidth()).withEndAction(new Runnable() {
                         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
                         @Override

@@ -399,6 +399,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   };
 
   private boolean aktuelUdsendelsePåKanalen() {
+    if (udsendelse==null) return false; // fix for https://mint.splunk.com/dashboard/project/cd78aa05/errors/2727978247
     boolean res = udsendelse.equals(udsendelse.getKanal().getUdsendelse());
     //Log.d("aktuelUdsendelsePåKanalen()? " + res + " " + udsendelse + " " + udsendelse.getKanal() + ":" + udsendelse.getKanal().getUdsendelse());
     return res;

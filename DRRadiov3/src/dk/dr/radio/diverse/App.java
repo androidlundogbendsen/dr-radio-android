@@ -426,6 +426,8 @@ public class App extends Application {
           for (final Kanal k : DRData.instans.grunddata.kanaler) {
             k.kanallogo_resid = res.getIdentifier("kanalappendix_" + k.kode.toLowerCase().replace('ø', 'o').replace('å', 'a'), "drawable", pn);
           }
+          // fix for https://mint.splunk.com/dashboard/project/cd78aa05/errors/2774928662
+          for (Runnable r : DRData.instans.grunddata.observatører) r.run();
           // Er vi nået hertil så gik parsning godt - gem de nye stamdata i prefs, så de også bruges ved næste opstart
           grunddata_prefs.edit().putString(DRData.GRUNDDATA_URL, nyeGrunddata).commit();
         }

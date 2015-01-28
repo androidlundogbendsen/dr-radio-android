@@ -639,7 +639,13 @@ public class Afspiller {
       while (k.p4underkanal && DRData.instans.grunddata.kanaler.get(index).p4underkanal) index++; // skip underkanaler
       k = DRData.instans.grunddata.kanaler.get(index);
       // Tjek om vi er kommet til P4 - vælg brugerens foretrukne underkanal
-      k = DRData.instans.grunddata.kanalFraKode.get(App.tjekP4OgVælgUnderkanal(k.kode));
+      String kanalkode = App.tjekP4OgVælgUnderkanal(k.kode);
+      k = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
+      if (k==null) {
+        Log.rapporterFejl(new IllegalStateException(
+            "næste() fra "+lydkilde.getKanal().kode+" gav null i="+index+" kk="+kanalkode));
+        return;
+      }
       setLydkilde(k);
       return;
     }

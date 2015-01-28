@@ -154,6 +154,8 @@ public class Fjernbetjening implements Runnable {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) return;
     App.audioManager.registerMediaButtonEventReceiver(fjernbetjeningReciever);
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) return;
+    // 'det er irriterende at den ændre billedet på lock - screen, det skal være muligt at disable dette.'
+    if (!App.prefs.getBoolean("fjernbetjening", true)) return;
 
     Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON).setComponent(fjernbetjeningReciever);
     PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(App.instans, 0, mediaButtonIntent, 0);
