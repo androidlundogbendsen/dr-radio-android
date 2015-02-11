@@ -33,64 +33,22 @@
         <target>android-10</target>
       </config>
     </shared>
-    <layouts>
-      <layout url="file://$PROJECT_DIR$/res/layout/element_billede_med_titeloverlaegning.xml">
-        <config>
-          <device>Nexus 4</device>
-          <theme>@style/AppTheme</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/res/layout/element_tidligere_senere.xml">
-        <config>
-          <device>jacob</device>
-          <theme>@style/CustomActionBarTheme</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/res/layout/kanalvisning_aktuel.xml">
-        <config>
-          <device>Nexus 4</device>
-          <theme>@style/AppTheme</theme>
-        </config>
-      </layout>
-    </layouts>
   </component>
   <component name="AndroidLogFilters">
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="app: dk.dr.radio.v3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" readonly="true" id="2970307e-d894-4b23-8f88-a25447213762" name="Default" comment="Forbedrede Actionbar-faner">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/copyright" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dictionaries" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/scopes" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/values-v14" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.name" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/DRRadiov3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/ant.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dictionaries/j.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/libs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/values/styles_drxx_ab.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/values-v14/styles_drxx_ab.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    <list default="true" readonly="true" id="2970307e-d894-4b23-8f88-a25447213762" name="Default" comment="Fjernet gamle appcompat-biblioteker der lå og rodede rund i DRRadiov3/libs/-mappen">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/android_support_v4.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/android_support_v7_appcompat.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/libs/android-support-v4.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/libs/android-support-v7-appcompat.jar" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DRRadiov3.iml" afterPath="$PROJECT_DIR$/DRRadiov3.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/libs.xml" afterPath="$PROJECT_DIR$/.idea/libraries/libs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project.properties" afterPath="$PROJECT_DIR$/project.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
-    <list id="6008a0ea-af5e-4861-bf76-3a60647723e2" name="Skal ikke versioneres" comment="Skal ikke versioneres">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/Gibson-Regular.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/Gibson-SemiBold.otf" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/bugsense.xml" afterPath="$PROJECT_DIR$/res/values/bugsense.xml" />
-    </list>
+    <list id="6008a0ea-af5e-4861-bf76-3a60647723e2" name="Skal ikke versioneres" comment="Skal ikke versioneres" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -106,8 +64,8 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
-    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" converted="true" />
+    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true" converted="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
         <option name="NOTIFY_UNCAUGHT" value="true" />
@@ -143,9 +101,8 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
-    <breakpoint_rules />
-    <ui_properties />
+    <breakpoint_rules converted="true" />
+    <ui_properties converted="true" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
@@ -153,101 +110,72 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="tab_selected_focused_drxx_ab.9.png" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_selected_focused_drxx_ab.9.png">
-          <provider editor-type-id="images">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="ninepatcheditor">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tab_selected_pressed_drxx_ab.9.png" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_selected_pressed_drxx_ab.9.png">
-          <provider editor-type-id="images">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="ninepatcheditor">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tab_unselected_focused_drxx_ab.9.png" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_unselected_focused_drxx_ab.9.png">
-          <provider selected="true" editor-type-id="images">
-            <state />
-          </provider>
-          <provider editor-type-id="ninepatcheditor">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tab_unselected_pressed_drxx_ab.9.png" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_unselected_pressed_drxx_ab.9.png">
-          <provider editor-type-id="images">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="ninepatcheditor">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tab_unselected_drxx_ab.9.png" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_unselected_drxx_ab.9.png">
-          <provider selected="true" editor-type-id="images">
-            <state />
-          </provider>
-          <provider editor-type-id="ninepatcheditor">
-            <state />
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Kanaler_frag.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Kanaler_frag.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="11" selection-start="1026" selection-end="1026" vertical-scroll-proportion="-2.4" vertical-offset="120" max-vertical-offset="2220">
+            <state vertical-scroll-proportion="0.0" vertical-offset="576" max-vertical-offset="2752">
+              <caret line="36" column="11" selection-start-line="36" selection-start-column="11" selection-end-line="36" selection-end-column="11" />
               <folding />
             </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ab_stacked_solid_drxx_ab.9.png" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/ab_stacked_solid_drxx_ab.9.png">
-          <provider editor-type-id="images">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="ninepatcheditor">
-            <state />
           </provider>
         </entry>
       </file>
       <file leaf-file-name="Hovedaktivitet.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Hovedaktivitet.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="101" column="14" selection-start="3074" selection-end="3074" vertical-scroll-proportion="-12.12" vertical-offset="1092" max-vertical-offset="1590">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1184" max-vertical-offset="4752">
+              <caret line="101" column="14" selection-start-line="101" selection-start-column="14" selection-end-line="101" selection-end-column="14" />
+              <folding>
+                <element signature="e#4229#4479#0" expanded="true" />
+                <element signature="e#4468#4469#0" expanded="true" />
+                <element signature="e#7064#7527#0" expanded="true" />
+                <element signature="e#7518#7519#0" expanded="true" />
+                <element signature="e#10316#10515#0" expanded="true" />
+                <element signature="e#10508#10509#0" expanded="true" />
+                <element signature="e#10567#10715#0" expanded="true" />
+                <element signature="e#10708#10709#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Basisaktivitet.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Basisaktivitet.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2688">
+              <caret line="10" column="35" selection-start-line="10" selection-start-column="35" selection-end-line="10" selection-end-column="35" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ab_transparent_drxx_ab.9.png" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/ab_transparent_drxx_ab.9.png">
-          <provider editor-type-id="images">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="ninepatcheditor">
-            <state />
+      <file leaf-file-name="SetAlarm_akt.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/android/deskclock/SetAlarm_akt.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6160">
+              <caret line="30" column="16" selection-start-line="30" selection-start-column="16" selection-end-line="30" selection-end-column="16" />
+              <folding />
+            </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tab_selected_drxx_ab.9.png" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_selected_drxx_ab.9.png">
-          <provider editor-type-id="images">
-            <state />
+      <file leaf-file-name="VisFragment_akt.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/skrald/VisFragment_akt.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.19591837" vertical-offset="0" max-vertical-offset="976">
+              <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+              <folding />
+            </state>
           </provider>
-          <provider selected="true" editor-type-id="ninepatcheditor">
-            <state />
+        </entry>
+      </file>
+      <file leaf-file-name="Toolbar.class" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$PROJECT_DIR$/../appcompat/libs/android-support-v7-appcompat.jar!/android/support/v7/widget/Toolbar.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-3.2" vertical-offset="0" max-vertical-offset="4832">
+              <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+              <folding />
+            </state>
           </provider>
         </entry>
       </file>
@@ -329,8 +257,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="87" />
-    <option name="y" value="39" />
+    <option name="x" value="160" />
+    <option name="y" value="24" />
     <option name="width" value="1292" />
     <option name="height" value="1004" />
   </component>
@@ -377,7 +305,7 @@
     <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+    <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -389,7 +317,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -408,45 +335,15 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DRRadiov3" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DRRadiov3" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DRRadiov3" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DRRadiov3" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="values" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
+      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
@@ -455,7 +352,7 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
     <property name="ExportedModule" value="DRRadiov3" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../DRRadio" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="AndroidLayoutSelectedEditor" value="android-designer" />
     <property name="project.structure.side.proportion" value="0.20000002" />
     <property name="MemberChooser.copyJavadoc" value="false" />
@@ -640,19 +537,6 @@
       <listeners />
       <method />
     </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <method />
-    </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" />
       <option name="VM_PARAMETERS" />
@@ -755,23 +639,8 @@
       <AnalysisUIOptions />
     </option>
   </component>
-  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="true" cleanupOnStartRun="true" SSL_PROTOCOLS="all">
-    <option name="USER" value="" />
-    <option name="PASSWORD" value="" />
-    <option name="mySSHConnectionTimeout" value="30000" />
-    <option name="mySSHReadTimeout" value="30000" />
-    <option name="LAST_MERGED_REVISION" />
-    <option name="MERGE_DRY_RUN" value="false" />
-    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
-    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
-    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
-    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
-    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
-    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
-    <option name="FORCE_UPDATE" value="false" />
-    <option name="IGNORE_EXTERNALS" value="false" />
-    <configuration useDefault="true">$USER_HOME$/.subversion</configuration>
-    <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
+  <component name="SvnConfiguration" myUseAcceleration="nothing" myAutoUpdateAfterCommit="true" cleanupOnStartRun="true">
+    <configuration>$USER_HOME$/.subversion</configuration>
     <supportedVersion>125</supportedVersion>
   </component>
   <component name="SvnFileUrlMappingImpl">
@@ -780,6 +649,10 @@
         <SvnCopyRootSimple>
           <option name="myVcsRoot" value="$PROJECT_DIR$" />
           <option name="myCopyRoot" value="$PROJECT_DIR$" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="$PROJECT_DIR$/.idea" />
+          <option name="myCopyRoot" value="$PROJECT_DIR$/.idea" />
         </SvnCopyRootSimple>
         <SvnCopyRootSimple>
           <option name="myVcsRoot" value="$PROJECT_DIR$/../appcompat" />
@@ -955,37 +828,38 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="87" y="39" width="1292" height="1004" extended-state="0" />
+    <frame x="160" y="24" width="1292" height="1004" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27245206" sideWeight="0.6956522" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30138445" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2704339" sideWeight="0.6956522" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.12279294" sideWeight="0.6714801" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329602" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3895349" sideWeight="0.625" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5017544" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5170517" sideWeight="0.2965806" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22077923" sideWeight="0.3339383" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295838" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4011628" sideWeight="0.4982554" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27906978" sideWeight="0.7034194" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4004525" sideWeight="0.4982554" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27828056" sideWeight="0.7034194" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22077923" sideWeight="0.67150635" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30448717" sideWeight="0.6956522" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2992" sideWeight="0.6956522" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.44186047" sideWeight="0.73621774" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="SVN Properties" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295838" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.12279294" sideWeight="0.6714801" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3895349" sideWeight="0.625" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.196875" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -994,6 +868,9 @@
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
       <collection />
     </option>
   </component>
@@ -1006,7 +883,6 @@
       <TodoPanelSettings />
     </option>
     <confirmMoveToFailedCommit value="1" />
-    <MESSAGE value="Programserie kan nu vises&#10;Navngivning" />
     <MESSAGE value="Pæn visnin af kanal&#10;Billede med titeloverlægning ind&#10;Udviklerflag kan slås til i venstremenu&#10;" />
     <MESSAGE value="Nyt appikon&#10;Gibson skrifter&#10;Layoutarbejde&#10;Farver" />
     <MESSAGE value="Nyt appikon&#10;Gibson skrifter&#10;Layoutarbejde&#10;Farver&#10;Parsning af kanalfeed" />
@@ -1031,7 +907,8 @@
     <MESSAGE value="Fix: datoformater i spillelister formateres anderledes end andre datoer&#10;Grimt fix, skal fjernes igen: Da programAPI ikke er datostabilt og caches flere steder. skal det spørges 3 gange på den samme URL, for at være sikker på at få friske data&#10;&#10;" />
     <MESSAGE value="Fix billedskalerings-URL for disco-server&#10;Brug datostabilt API, slå caching til (og forespørg kun én gang)'&#10;opdater kun Aktuel Udsendelse hvis den er synlig&#10;(Actionbar faner driller stadig)" />
     <MESSAGE value="Forbedrede Actionbar-faner" />
-    <option name="LAST_COMMIT_MESSAGE" value="Forbedrede Actionbar-faner" />
+    <MESSAGE value="Fjernet gamle appcompat-biblioteker der lå og rodede rund i DRRadiov3/libs/-mappen" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fjernet gamle appcompat-biblioteker der lå og rodede rund i DRRadiov3/libs/-mappen" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
@@ -1043,236 +920,116 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Programserie_frag.java">
+    <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Kanaler_frag.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="57" column="30" selection-start="1929" selection-end="1929" vertical-scroll-proportion="0.0" vertical-offset="338" max-vertical-offset="2220" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/sources/android-18/org/json/JSONObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="512" column="18" selection-start="18642" selection-end="18642" vertical-scroll-proportion="0.0" vertical-offset="7289" max-vertical-offset="10695" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/sources/android-18/java/util/concurrent/ThreadPoolExecutor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1087" column="0" selection-start="42615" selection-end="42615" vertical-scroll-proportion="0.0" vertical-offset="16079" max-vertical-offset="30330" />
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/android-query-full.0.26.7.jar!/com/androidquery/util/AQUtility.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="136" column="6" selection-start="3082" selection-end="3082" vertical-scroll-proportion="0.0" vertical-offset="1061" max-vertical-offset="10440" />
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/android-query-full.0.26.7.jar!/com/androidquery/callback/AbstractAjaxCallback.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="579" column="13" selection-start="14606" selection-end="14606" vertical-scroll-proportion="0.0" vertical-offset="6865" max-vertical-offset="31485" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/values/styles.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="17" selection-start="1230" selection-end="1230" vertical-scroll-proportion="0.0" vertical-offset="315" max-vertical-offset="1185">
+        <state vertical-scroll-proportion="0.0" vertical-offset="576" max-vertical-offset="2752">
+          <caret line="36" column="11" selection-start-line="36" selection-start-column="11" selection-end-line="36" selection-end-column="11" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/sources/android-18/android/widget/LinearLayout.java">
+    <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Hovedaktivitet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="912" column="19" selection-start="35156" selection-end="35156" vertical-scroll-proportion="0.0" vertical-offset="12810" max-vertical-offset="27585" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1616" max-vertical-offset="5184">
+          <caret line="101" column="14" selection-start-line="101" selection-start-column="14" selection-end-line="101" selection-end-column="14" />
+          <folding>
+            <element signature="e#4229#4479#0" expanded="true" />
+            <element signature="e#4468#4469#0" expanded="true" />
+            <element signature="e#7064#7527#0" expanded="true" />
+            <element signature="e#7518#7519#0" expanded="true" />
+            <element signature="e#10316#10515#0" expanded="true" />
+            <element signature="e#10508#10509#0" expanded="true" />
+            <element signature="e#10567#10715#0" expanded="true" />
+            <element signature="e#10708#10709#0" expanded="true" />
+          </folding>
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/sources/android-18/android/database/DataSetObservable.java">
+    <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Programserie_frag.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="16" selection-start="1146" selection-end="1146" vertical-scroll-proportion="-9.0" vertical-offset="0" max-vertical-offset="690" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="338" max-vertical-offset="2220">
+          <caret line="57" column="30" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/sources/android-18/android/widget/BaseAdapter.java">
+    <entry file="jar://$PROJECT_DIR$/libs/android-query-full.0.26.7.jar!/com/androidquery/util/AQUtility.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="31" selection-start="1798" selection-end="1798" vertical-scroll-proportion="-10.92" vertical-offset="207" max-vertical-offset="1110" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1061" max-vertical-offset="10440">
+          <caret line="136" column="6" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/libs/android-query-full.0.26.7.jar!/com/androidquery/callback/AbstractAjaxCallback.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="6865" max-vertical-offset="31485">
+          <caret line="579" column="13" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="jar://$PROJECT_DIR$/libs/android-query-full.0.26.7.jar!/com/androidquery/AbstractAQuery.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="700" column="14" selection-start="15254" selection-end="15254" vertical-scroll-proportion="-7.12" vertical-offset="9062" max-vertical-offset="40425" />
+        <state vertical-scroll-proportion="-7.12" vertical-offset="9062" max-vertical-offset="40425">
+          <caret line="700" column="14" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/data/DRJson.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="89" column="58" selection-start="2486" selection-end="2500" vertical-scroll-proportion="-6.2" vertical-offset="1015" max-vertical-offset="1965" />
+        <state vertical-scroll-proportion="-6.2" vertical-offset="1015" max-vertical-offset="1965">
+          <caret line="89" column="58" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/data/Udsendelse.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="18" selection-start="687" selection-end="687" vertical-scroll-proportion="-8.2" vertical-offset="260" max-vertical-offset="750" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/diverse/ui/Basisfragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="0" selection-start="379" selection-end="379" vertical-scroll-proportion="-6.6" vertical-offset="0" max-vertical-offset="2190" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/sources/android-18/android/app/Fragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="994" column="0" selection-start="37713" selection-end="37713" vertical-scroll-proportion="-12.6" vertical-offset="13560" max-vertical-offset="27660" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/sources/android-18/android/graphics/drawable/Drawable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="393" column="28" selection-start="15188" selection-end="15188" vertical-scroll-proportion="0.0" vertical-offset="5895" max-vertical-offset="15255" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/sources/android-18/android/view/View.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5624" column="0" selection-start="216181" selection-end="216181" vertical-scroll-proportion="0.0" vertical-offset="84360" max-vertical-offset="281970" />
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/android-support-v4.jar!/android/support/v4/app/Fragment.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="136" column="14" selection-start="5058" selection-end="5058" vertical-scroll-proportion="0.0" vertical-offset="2040" max-vertical-offset="4080" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/data/stamdata/Kanal.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="56" column="21" selection-start="1753" selection-end="1753" vertical-scroll-proportion="0.0" vertical-offset="840" max-vertical-offset="1890">
-          <folding />
+        <state vertical-scroll-proportion="-8.2" vertical-offset="260" max-vertical-offset="750">
+          <caret line="34" column="18" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Udsendelse_frag.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="166" column="38" selection-start="6468" selection-end="6468" vertical-scroll-proportion="0.0" vertical-offset="2490" max-vertical-offset="3330" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Kanalvisning_frag.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="90" column="85" selection-start="3192" selection-end="3192" vertical-scroll-proportion="0.0" vertical-offset="1350" max-vertical-offset="6105">
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="2490" max-vertical-offset="3330">
+          <caret line="166" column="38" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/values/dr_dimens.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="0" selection-start="51" selection-end="51" vertical-scroll-proportion="0.0" vertical-offset="30" max-vertical-offset="210">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/om_drradio_akt.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="43" selection-start="1511" selection-end="1511" vertical-scroll-proportion="0.0" vertical-offset="283" max-vertical-offset="1065">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../appcompat/res/values-v14/styles_base.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="60" column="59" selection-start="2267" selection-end="2267" vertical-scroll-proportion="-10.28" vertical-offset="643" max-vertical-offset="3510">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/platforms/android-18/data/res/values/styles.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1191" column="0" selection-start="54337" selection-end="54399" vertical-scroll-proportion="-10.88" vertical-offset="17593" max-vertical-offset="37785" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../appcompat/res/values/dimens.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="17" selection-start="1169" selection-end="1169" vertical-scroll-proportion="-10.0" vertical-offset="140" max-vertical-offset="1005">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable/actionbar_background.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="751">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable/gradient.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="751">
+        <state vertical-scroll-proportion="-10.0" vertical-offset="140" max-vertical-offset="1005">
+          <caret line="26" column="17" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/drawable/knap_blaa_bg.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="751">
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="751">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/drawable/knap_hvid_bg.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="751">
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="751">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../appcompat/res/values/themes.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="79" column="17" selection-start="3941" selection-end="3941" vertical-scroll-proportion="-10.0" vertical-offset="935" max-vertical-offset="2985">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable/skrald_tab_indicator_ab_drxx_ab.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="645">
+        <state vertical-scroll-proportion="-10.0" vertical-offset="935" max-vertical-offset="2985">
+          <caret line="79" column="17" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../appcompat/res/values/styles.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="17" selection-start="1288" selection-end="1288" vertical-scroll-proportion="0.0" vertical-offset="283" max-vertical-offset="3765">
+        <state vertical-scroll-proportion="0.0" vertical-offset="283" max-vertical-offset="3765">
+          <caret line="32" column="17" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../android-sdk-linux_86/platforms/android-18/data/res/drawable-hdpi/divider_horizontal_dark.9.png">
-      <provider editor-type-id="images">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="ninepatcheditor">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable/dr_kanalindikator.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="2" selection-start="447" selection-end="447" vertical-scroll-proportion="-3.0" vertical-offset="90" max-vertical-offset="645">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/values/dr_colors.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="17" selection-start="308" selection-end="308" vertical-scroll-proportion="-4.8" vertical-offset="0" max-vertical-offset="360">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/values/styles_drxx_ab.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="3" selection-start="1585" selection-end="1585" vertical-scroll-proportion="-13.12" vertical-offset="227" max-vertical-offset="750">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/values-v14/styles_drxx_ab.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="81" selection-start="1247" selection-end="1247" vertical-scroll-proportion="-7.12" vertical-offset="257" max-vertical-offset="1080">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/ic_drawer.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/ic_launcher.png">
@@ -1280,97 +1037,69 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable-mdpi/dr_logo.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="0" selection-start="1056" selection-end="1056" vertical-scroll-proportion="-11.44" vertical-offset="149" max-vertical-offset="1590">
-          <folding>
-            <element signature="e#915#933#0" expanded="true" />
-            <element signature="e#1347#1365#0" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="-11.44" vertical-offset="149" max-vertical-offset="1590">
+          <caret line="29" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Hovedaktivitet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="101" column="14" selection-start="3074" selection-end="3074" vertical-scroll-proportion="-12.12" vertical-offset="1092" max-vertical-offset="1590">
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1184" max-vertical-offset="4720">
+          <caret line="101" column="14" selection-start-line="101" selection-start-column="14" selection-end-line="101" selection-end-column="14" />
+          <folding>
+            <element signature="e#4229#4479#0" expanded="true" />
+            <element signature="e#4468#4469#0" expanded="true" />
+            <element signature="e#7064#7527#0" expanded="true" />
+            <element signature="e#7518#7519#0" expanded="true" />
+            <element signature="e#10316#10515#0" expanded="true" />
+            <element signature="e#10508#10509#0" expanded="true" />
+            <element signature="e#10567#10715#0" expanded="true" />
+            <element signature="e#10708#10709#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Kanaler_frag.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="11" selection-start="1026" selection-end="1026" vertical-scroll-proportion="-2.4" vertical-offset="120" max-vertical-offset="2220">
+        <state vertical-scroll-proportion="0.0" vertical-offset="576" max-vertical-offset="2752">
+          <caret line="36" column="11" selection-start-line="36" selection-start-column="11" selection-end-line="36" selection-end-column="11" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/ab_stacked_solid_drxx_ab.9.png">
-      <provider editor-type-id="images">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="ninepatcheditor">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/ab_transparent_drxx_ab.9.png">
-      <provider editor-type-id="images">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="ninepatcheditor">
-        <state />
+    <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/akt/Basisaktivitet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2688">
+          <caret line="10" column="35" selection-start-line="10" selection-start-column="35" selection-end-line="10" selection-end-column="35" />
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_selected_drxx_ab.9.png">
-      <provider editor-type-id="images">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="ninepatcheditor">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_selected_focused_drxx_ab.9.png">
-      <provider editor-type-id="images">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="ninepatcheditor">
-        <state />
+    <entry file="jar://$PROJECT_DIR$/../appcompat/libs/android-support-v7-appcompat.jar!/android/support/v7/widget/Toolbar.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.2" vertical-offset="0" max-vertical-offset="4832">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_unselected_drxx_ab.9.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-      <provider editor-type-id="ninepatcheditor">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_selected_pressed_drxx_ab.9.png">
-      <provider editor-type-id="images">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="ninepatcheditor">
-        <state />
+    <entry file="file://$PROJECT_DIR$/src/com/android/deskclock/SetAlarm_akt.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6160">
+          <caret line="30" column="16" selection-start-line="30" selection-start-column="16" selection-end-line="30" selection-end-column="16" />
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_unselected_focused_drxx_ab.9.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-      <provider editor-type-id="ninepatcheditor">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/tab_unselected_pressed_drxx_ab.9.png">
-      <provider editor-type-id="images">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="ninepatcheditor">
-        <state />
+    <entry file="file://$PROJECT_DIR$/src/dk/dr/radio/skrald/VisFragment_akt.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.19591837" vertical-offset="0" max-vertical-offset="976">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+          <folding />
+        </state>
       </provider>
     </entry>
   </component>
@@ -1427,12 +1156,11 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>appcompat</last-edited>
+          <last-edited>DRRadiov3</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
                 <option value="0.20000002" />
-                <option value="0.6" />
               </list>
             </option>
           </splitter-proportions>
