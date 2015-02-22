@@ -32,7 +32,7 @@ public abstract class DrVolleyResonseListener implements Response.Listener<Strin
       fikSvar(response, false, uændret);
       App.sætErIGang(false, url);
     } catch (Exception e) {
-      Log.e(e);
+      Log.e(url, e);
       onErrorResponse(new VolleyError(e));
     }
   }

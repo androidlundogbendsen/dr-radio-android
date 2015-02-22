@@ -85,7 +85,7 @@ public class App extends Application {
   public static final String P4_FORETRUKKEN_AF_BRUGER = "P4_FORETRUKKEN_AF_BRUGER";
   public static final String FORETRUKKEN_KANAL = "FORETRUKKEN_kanal";
   public static final String NØGLE_advaretOmInstalleretPåSDKort = "erInstalleretPåSDKort";
-  public static final boolean PRODUKTION = true;
+  public static final boolean PRODUKTION = false;
   private static final String DRAMA_OG_BOG__A_Å_INDLÆST = "DRAMA_OG_BOG__A_Å_INDLÆST";
   public static boolean EMULATOR = true; // Sæt i onCreate(), ellers virker det ikke i std Java
   public static App instans;
@@ -140,6 +140,11 @@ public class App extends Application {
     }
     String packageName = getPackageName();
     try {
+      if ("dk.dr.radio".equals(packageName)) {
+        if (!PRODUKTION) App.langToast("Sæt PRODUKTIONs-flaget");
+      } else {
+        if (PRODUKTION) App.langToast("Testudgave - fjern PRODUKTIONs-flaget");
+      }
       //noinspection ConstantConditions
       PackageInfo pi = getPackageManager().getPackageInfo(packageName, 0);
       App.versionsnavn = packageName + "/" + pi.versionName;
