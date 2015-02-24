@@ -90,6 +90,7 @@ public class Grunddata {
       k.navn = j.getString("title");
       k.urn = j.getString("urn");
       k.slug = j.optString("slug", "p4");
+      k.ingenPlaylister = j.optBoolean("hideLatestTrack", false);
       k.p4underkanal = parserP4underkanaler;
       kanaler.add(k);
       if (parserP4underkanaler) p4koder.add(k.kode);

@@ -409,16 +409,17 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     @Override
     public void run() {
       App.forgrundstråd.removeCallbacks(opdaterSpillelisteRunnable);
-      if (!getUserVisibleHint() || !isResumed()) return;
+      if (!getUserVisibleHint() || !isResumed() || kanal.ingenPlaylister) return;
       //new Exception("startOpdaterSpilleliste() for "+this).printStackTrace();
       Request<?> req = new DrVolleyStringRequest(DRData.getPlaylisteUrl(udsendelse.slug), new DrVolleyResonseListener() {
         @Override
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
           if (App.fejlsøgning) Log.d("fikSvar playliste(" + fraCache + " " + url + "   " + this);
-          if (udsendelse.playliste != null && fraCache) return; // så har vi allerede den nyeste liste i MEM
+          // Fix: Senest spillet blev ikke opdateret.
+          //if (udsendelse.playliste != null && fraCache) return; // så har vi allerede den nyeste liste i MEM
+          if (udsendelse.playliste != null && uændret) return;
           if (json == null || "null".equals(json)) return; // fejl
           Log.d("UDS fikSvar playliste(" + fraCache + uændret + " " + url);
-          if (uændret) return;
           udsendelse.playliste = DRJson.parsePlayliste(new JSONArray(json));
           if (!aktuelUdsendelsePåKanalen()) { // Aktuel udsendelse skal have senest spillet nummer øverst
             Collections.reverse(udsendelse.playliste); // andre udsendelser skal have stigende tid nedad
@@ -433,7 +434,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         }
       }.setTag(Udsendelse_frag.this);
       App.volleyRequestQueue.add(req);
-      if (aktuelUdsendelsePåKanalen()) {
+      if (aktuelUdsendelsePåKanalen() && getUserVisibleHint()) {
         App.forgrundstråd.postDelayed(opdaterSpillelisteRunnable, DRData.instans.grunddata.opdaterPlaylisteEfterMs);
       }
     }
