@@ -558,12 +558,17 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   }
 
   private void opdaterSenestSpillet(final AQuery aq2, final Udsendelse u2) {
+    if (kanal.ingenPlaylister) { // P1s programmer har aldrig "senest spillet" info
+      opdaterSenestSpilletViews(aq2, u2);
+      return;
+    }
     Request<?> req = new DrVolleyStringRequest(DRData.getPlaylisteUrl(u2.slug), new DrVolleyResonseListener() {
       @Override
       public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
         if (App.fejlsøgning) Log.d("KAN fikSvar playliste(" + fraCache + uændret + " " + url);
-        if (getActivity() == null || uændret) return;
-        if (u2.playliste != null && fraCache) return; // så har vi allerede den nyeste liste i MEM
+        if (getActivity() == null) return;
+        // Fix: Senest spillet blev ikke opdateret.
+        if (u2.playliste != null && uændret) return; // så har vi allerede den nyeste liste i MEM
         if (json != null && !"null".equals(json)) {
           u2.playliste = DRJson.parsePlayliste(new JSONArray(json));
         }
