@@ -222,6 +222,11 @@ public class App extends Application {
         }
       }
 
+      if (App.prefs.contains("stamdata23") || App.prefs.contains("stamdata24")) {
+        // 24 feb 2015 - fjern gamle stamdata fra prefs - kan fjernes primo 2016
+        App.prefs.edit().remove("stamdata22").remove("stamdata23").remove("stamdata24").commit();
+      }
+
       if (grunddata == null)
         grunddata = Diverse.læsStreng(res.openRawResource(App.PRODUKTION ? R.raw.grunddata : R.raw.grunddata_udvikling));
       DRData.instans.grunddata.parseFællesGrunddata(grunddata);
