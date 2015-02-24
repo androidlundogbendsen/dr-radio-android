@@ -15,6 +15,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ByteArrayPool;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.PoolingByteArrayOutputStream;
 
@@ -35,6 +36,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
 /**
@@ -89,6 +91,17 @@ public class DrBasicNetwork implements Network {
         int statusCode = statusLine.getStatusCode();
 
         responseHeaders = convertHeaders(httpResponse.getAllHeaders());
+
+        // vi aflæser servertiden og korrigere hvis klientens ur ikke passer med serverens
+        // indstil Klokke Fra Servertid
+        String servertidStr = responseHeaders.get("Date");
+        if (servertidStr != null) { // Er set på nogle ældre enheder
+          long servertid = HttpHeaderParser.parseDateAsEpoch(servertidStr);
+          if (servertid > 0) {
+            App.sætServerCurrentTimeMillis(servertid);
+          }
+        }
+
         // Handle cache validation.
         if (statusCode == HttpStatus.SC_NOT_MODIFIED) {
           return new NetworkResponse(HttpStatus.SC_NOT_MODIFIED,

@@ -2,15 +2,13 @@ package dk.dr.radio.diverse.volley;
 
 import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 
 import dk.dr.radio.diverse.App;
 
 /**
- * Created by j on 13-03-14.
+ * Oprettet af Jacob Nordfalk d 13-03-14.
  */
 public class DrVolleyStringRequest extends StringRequest {
   private final DrVolleyResonseListener lytter;
@@ -62,23 +60,6 @@ public class DrVolleyStringRequest extends StringRequest {
     */
   }
 
-
-  /**
-   * Omdefineret så vi kan aflæse servertiden og korrigere hvis klientens ur ikke passer med serverens
-   */
-  @Override
-  protected Response<String> parseNetworkResponse(NetworkResponse response) {
-//    Log.d("YYYY parseNetworkResponse " + response.headers);
-    String servertidStr = response.headers.get("Date");
-    if (servertidStr != null) { // Er set på nogle ældre enheder
-      long servertid = HttpHeaderParser.parseDateAsEpoch(servertidStr);
-      if (servertid > 0) {
-        App.sætServerCurrentTimeMillis(servertid);
-      }
-    }
-
-    return super.parseNetworkResponse(response);
-  }
 
   @Override
   public void cancel() {
