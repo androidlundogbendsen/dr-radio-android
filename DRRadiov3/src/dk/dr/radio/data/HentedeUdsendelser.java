@@ -112,13 +112,13 @@ public class HentedeUdsendelser {
   public void hent(Udsendelse udsendelse) {
     tjekDataOprettet();
     try {
-      String url = udsendelse.findBedsteStreamUrl(true);
-      if (url == null) {
+      List<Lydstream> prioriteretListe = udsendelse.findBedsteStreams(true);
+      if (prioriteretListe == null || prioriteretListe.size() < 1) {
         Log.rapporterFejl(new IllegalStateException("ingen streamurl"), udsendelse.slug);
         App.langToast("Beklager, udsendelsen kunne ikke hentes");
         return;
       }
-      Uri uri = Uri.parse(url);
+      Uri uri = Uri.parse(prioriteretListe.get(0).url);
       Log.d("uri=" + uri);
 
       String brugervalg = App.prefs.getString(NØGLE_placeringAfHentedeFiler, null);

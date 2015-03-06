@@ -50,7 +50,7 @@ public class Afproevning {
   public static void main(String[] a) throws Exception {
     FilCache.init(new File("/tmp/drradio-cache"));
     DRBackendTidsformater.servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // +01:00 springes over da kolon i +01:00 er ikke-standard Java
-    System.out.println("App.instans="+ App.instans);
+    System.out.println("App.instans=" + App.instans);
     tjekUdelukFraHLS();
     tjekHentAlleUdsendelser();
     tjek_hent_a_til_å_og_radiodrama();
@@ -74,9 +74,7 @@ public class Afproevning {
         String url = k.getStreamsUrl();
         String data = hentStreng(url);
         JSONObject o = new JSONObject(data);
-        //k.slug = o.getString(DRJson.Slug.name());
-        //kanalFraSlug.put(k.slug, k);
-        k.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
+        k.setStreams(o);
         //Log.d(k.kode + " k.lydUrl=" + k.streams);
       } catch (Exception e) {
         Log.e(e);
@@ -90,13 +88,19 @@ public class Afproevning {
     i.grunddata = new Grunddata();
     i.grunddata.parseFællesGrunddata(Diverse.læsStreng(new FileInputStream("../DRRadiov3/res/raw/grunddata.json")));
     i.grunddata.android_json.put("udeluk_HLS", "C6603 .*/18, IdeaPadA10 A10/17, LIFETAB_E7312 LIFETAB_E7310/17, LIFETAB_E10310/.*");
-    i.grunddata.udelukHLS=false;
-    i.grunddata.tjekUdelukFraHLS("C6603 C6603/18"); if (i.grunddata.udelukHLS!=true) throw new Exception();
-    i.grunddata.tjekUdelukFraHLS("C6603 C6603/17"); if (i.grunddata.udelukHLS==true) throw new Exception();
-    i.grunddata.tjekUdelukFraHLS("IdeaPadA10 A10/17"); if (i.grunddata.udelukHLS!=true) throw new Exception();
-    i.grunddata.tjekUdelukFraHLS("IdeaPadA10 A10/23"); if (i.grunddata.udelukHLS==true) throw new Exception();
-    i.grunddata.tjekUdelukFraHLS("IdeaPadA10 A11/17"); if (i.grunddata.udelukHLS==true) throw new Exception();
-    i.grunddata.tjekUdelukFraHLS("LIFETAB_E10310/16"); if (i.grunddata.udelukHLS!=true) throw new Exception();
+    i.grunddata.udelukHLS = false;
+    i.grunddata.tjekUdelukFraHLS("C6603 C6603/18");
+    if (i.grunddata.udelukHLS != true) throw new Exception();
+    i.grunddata.tjekUdelukFraHLS("C6603 C6603/17");
+    if (i.grunddata.udelukHLS == true) throw new Exception();
+    i.grunddata.tjekUdelukFraHLS("IdeaPadA10 A10/17");
+    if (i.grunddata.udelukHLS != true) throw new Exception();
+    i.grunddata.tjekUdelukFraHLS("IdeaPadA10 A10/23");
+    if (i.grunddata.udelukHLS == true) throw new Exception();
+    i.grunddata.tjekUdelukFraHLS("IdeaPadA10 A11/17");
+    if (i.grunddata.udelukHLS == true) throw new Exception();
+    i.grunddata.tjekUdelukFraHLS("LIFETAB_E10310/16");
+    if (i.grunddata.udelukHLS != true) throw new Exception();
   }
 
   public static void tjekHentAlleUdsendelser() throws Exception {
@@ -121,8 +125,8 @@ public class Afproevning {
         //Log.d(obj.toString(2));
         boolean MANGLER_SeriesSlug = !obj.has(DRJson.SeriesSlug.name());
 
-        u.streams = DRJson.parsStreams(obj.getJSONArray(DRJson.Streams.name()));
-        if (u.streams.size() == 0) Log.d("Ingen lydstreams");
+        u.setStreams(obj);
+        if (!u.harStreams()) Log.d("Ingen lydstreams");
 
         try {
           u.playliste = DRJson.parsePlayliste(new JSONArray(hentStreng(DRData.getPlaylisteUrl(u.slug))));
@@ -145,7 +149,8 @@ public class Afproevning {
             i.programserieFraSlug.put(u.programserieSlug, ps);
           }
         }
-        if (MANGLER_SeriesSlug) Log.d("MANGLER_SeriesSlug "+u+ " gavNull="+gavNull +"  fra dagsprogram ="+u.programserieSlug);
+        if (MANGLER_SeriesSlug)
+          Log.d("MANGLER_SeriesSlug " + u + " gavNull=" + gavNull + "  fra dagsprogram =" + u.programserieSlug);
       }
     }
   }
@@ -229,7 +234,7 @@ public class Afproevning {
     Log.d("res=" + res);
 */
 
-  //  System.exit(0);
+    //  System.exit(0);
   }
 
 

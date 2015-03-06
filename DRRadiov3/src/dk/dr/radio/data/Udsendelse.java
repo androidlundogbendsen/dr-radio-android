@@ -1,8 +1,12 @@
 package dk.dr.radio.data;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Date;
 
+import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
 /**
@@ -126,7 +130,6 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
     } else if (offsetMs < playliste.get(indeks).offsetMs - 10000) {
       indeks = 0; // offsetMs mere end 10 sekunder tidligere end startgæt => søg fra starten
     }
-    ;
 
     // Søg nu fremad til næste nummer er for langt
     while (indeks < playliste.size() - 1 && playliste.get(indeks + 1).offsetMs < offsetMs) {
@@ -134,5 +137,20 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
       indeks++;
     }
     return indeks;
+  }
+
+  @Override
+  public void setStreams(JSONObject o) throws JSONException {
+    super.setStreams(o);
+    if (!App.PRODUKTION) {
+      boolean kanHøresNy = findBedsteStreams(false).size() > 0;
+      boolean kanHentesNy = findBedsteStreams(true).size() > 0;
+      if (kanHentes && !kanHentesNy)
+        Log.rapporterFejl(new IllegalArgumentException("API løj om kanHentes for " + o.optString(DRJson.Slug.name())));
+      if (kanHøres && !kanHøresNy)
+        Log.rapporterFejl(new IllegalArgumentException("API løj om kanHøres for " + o.optString(DRJson.Slug.name())));
+    }
+    kanHøres = findBedsteStreams(false).size() > 0;
+    kanHentes = findBedsteStreams(true).size() > 0;
   }
 }
