@@ -405,7 +405,7 @@ public class HentedeUdsendelser {
           udsendelse.hentetStream = new Lydstream();
           udsendelse.hentetStream.url = uri;
           udsendelse.hentetStream.score = 500; // Rigtig god!
-          udsendelse.kanNokHøres = udsendelse.kanStreames = true;
+          udsendelse.kanHøres = true;
           Log.registrérTestet("Afspille hentet udsendelse", udsendelse.slug);
         } else {
 //          Log.rapporterFejl(new IllegalStateException("Fil " + file + "  fandtes ikke alligevel??! for " + udsendelse));

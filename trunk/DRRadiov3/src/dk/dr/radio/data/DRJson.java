@@ -28,8 +28,23 @@ public enum DRJson {
   Streams,
   Uri, Played, Artist, Image,
   Type, Kind, Quality, Kbps, ChannelSlug, TotalPrograms, Programs,
-  FirstBroadcast, Watchable, DurationInSeconds, Format, OffsetMs,
-  ProductionNumber, ShareLink, Episode, Chapters, Subtitle;
+  FirstBroadcast, DurationInSeconds, Format, OffsetMs,
+  ProductionNumber, ShareLink, Episode, Chapters, Subtitle,
+
+  /**
+   * "Watchable indikerer om der er nogle resourcer (og deraf streams) tilgængelige,
+   * så det er egentlig en Streamable-property:
+   * Watchable = (pc.PrimaryAssetKind == "AudioResource" || pc.PrimaryAssetKind == "VideoResource")"
+   */
+  Watchable,
+  /**
+   * Om en udsendelse kan streames.
+   * "Attribut der angiver om du formentlig kan streame et program.
+   * Når jeg skriver formentlig, så er det fordi den ikke tjekker på platform men bare generelt — iOS kan fx ikke streame f4m, men den vil stadig vise Playable da den type findes. Dog er det yderst sjældent at f4m vil være der og ikke m3u8"
+   */
+  Playable,
+  /* Om en udsendelse kan hentes. Som #Watchable */
+  Downloadable;
 
   /*
     public enum StreamType {
@@ -158,7 +173,7 @@ public enum DRJson {
       JSONObject o = jsonArray.getJSONObject(n);
       Udsendelse u = opretUdsendelse(drData, o);
       u.kanalSlug = kanal.slug;// o.optString(DRJson.ChannelSlug.name(), kanal.slug);  // Bemærk - kan være tom.
-      u.kanNokHøres = o.getBoolean(DRJson.Watchable.name());
+      u.kanHøres = o.getBoolean(DRJson.Watchable.name());
       u.startTid = DRBackendTidsformater.parseUpålideigtServertidsformat(o.getString(DRJson.StartTime.name()));
       u.startTidKl = klokkenformat.format(u.startTid);
       u.slutTid = DRBackendTidsformater.parseUpålideigtServertidsformat(o.getString(DRJson.EndTime.name()));
@@ -216,6 +231,16 @@ public enum DRJson {
     u.startTid = DRBackendTidsformater.parseUpålideigtServertidsformat(o.getString(DRJson.FirstBroadcast.name()));
     u.startTidKl = klokkenformat.format(u.startTid);
     u.slutTid = new Date(u.startTid.getTime() + o.getInt(DRJson.DurationInSeconds.name()) * 1000);
+
+    if (!App.PRODUKTION && (!o.has(DRJson.Playable.name()) || !o.has(DRJson.Playable.name())))
+      Log.rapporterFejl(new IllegalStateException("Mangler Playable eller Downloadable"), o.toString());
+    u.kanHøres = o.optBoolean(DRJson.Playable.name());
+    u.kanHentes = o.optBoolean(DRJson.Downloadable.name());
+    /** Hvis HLS ikke understøttes må vi bruge vi hentningsURL (mp3) til streaming */
+    if (DRData.instans.grunddata.udelukHLS) {
+      u.kanHøres = u.kanHentes;
+    }
+
     return u;
   }
 
