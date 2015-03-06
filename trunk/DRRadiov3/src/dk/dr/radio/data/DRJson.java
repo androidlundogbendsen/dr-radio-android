@@ -138,7 +138,7 @@ public enum DRJson {
    * Fjerner http://www.dr.dk i URL'er
    */
   private static String fjernHttpWwwDrDk(String url) {
-    if (url!=null && url.startsWith(HTTP_WWW_DR_DK)) {
+    if (url != null && url.startsWith(HTTP_WWW_DR_DK)) {
       return url.substring(HTTP_WWW_DR_DK_lgd);
     }
     return url;
@@ -226,7 +226,7 @@ public enum DRJson {
 
   public static Udsendelse parseUdsendelseForProgramseriexx(Kanal kanal, DRData drData, JSONObject o) throws JSONException, ParseException {
     Udsendelse u = opretUdsendelse(drData, o);
-    if (kanal != null && kanal.slug.length()>0) u.kanalSlug = kanal.slug;
+    if (kanal != null && kanal.slug.length() > 0) u.kanalSlug = kanal.slug;
     else u.kanalSlug = o.optString(DRJson.ChannelSlug.name());  // Bemærk - kan være tom.
     u.startTid = DRBackendTidsformater.parseUpålideigtServertidsformat(o.getString(DRJson.FirstBroadcast.name()));
     u.startTidKl = klokkenformat.format(u.startTid);
@@ -236,7 +236,7 @@ public enum DRJson {
       Log.rapporterFejl(new IllegalStateException("Mangler Playable eller Downloadable"), o.toString());
     u.kanHøres = o.optBoolean(DRJson.Playable.name());
     u.kanHentes = o.optBoolean(DRJson.Downloadable.name());
-    /** Hvis HLS ikke understøttes må vi bruge vi hentningsURL (mp3) til streaming */
+    // Hvis HLS ikke understøttes må vi bruge vi hentningsURL (mp3) til streaming
     if (DRData.instans.grunddata.udelukHLS) {
       u.kanHøres = u.kanHentes;
     }

@@ -112,10 +112,8 @@ public class FangBrowseIntent_akt extends Activity {
           if (json != null && !"null".equals(json)) {
             JSONObject o = new JSONObject(json);
             Udsendelse udsendelse2 = DRJson.parseUdsendelseForProgramseriexx(null, DRData.instans, o);
-            udsendelse2.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
+            udsendelse2.setStreams(o);
             udsendelse2.indslag = DRJson.parsIndslag(o.optJSONArray(DRJson.Chapters.name()));
-            udsendelse2.kanHøres = udsendelse2.findBedsteStreams(false).size() > 0;
-            udsendelse2.kanHentes = udsendelse2.findBedsteStreams(true).size() > 0;
             udsendelse2.produktionsnummer = o.optString(DRJson.ProductionNumber.name());
             udsendelse2.shareLink = o.optString(DRJson.ShareLink.name());
 

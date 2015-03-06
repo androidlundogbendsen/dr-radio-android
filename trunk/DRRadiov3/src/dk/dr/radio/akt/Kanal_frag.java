@@ -264,15 +264,14 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     App.forgrundstråd.removeCallbacks(this);
     App.forgrundstråd.postDelayed(this, DRData.instans.grunddata.opdaterPlaylisteEfterMs);
 
-    if (kanal.streams == null) { // ikke && App.erOnline(), det kan være vi har en cachet udgave
+    if (!kanal.harStreams()) { // ikke && App.erOnline(), det kan være vi har en cachet udgave
       Request<?> req = new DrVolleyStringRequest(kanal.getStreamsUrl(), new DrVolleyResonseListener() {
         @Override
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
           if (uændret) return; // ingen grund til at parse det igen
           JSONObject o = new JSONObject(json);
-          kanal.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
-          if (App.fejlsøgning)
-            Log.d("hentSupplerendeDataBg " + kanal.kode + " fraCache=" + fraCache + " => " + kanal.slug + " k.lydUrl=" + kanal.streams);
+          kanal.setStreams(o);
+          Log.d("hentStreams Kanal_frag fraCache=" + fraCache + " => " + kanal);
           run(); // Opdatér igen
         }
       }) {
@@ -286,7 +285,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     boolean spillerDenneKanal = DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET && DRData.instans.afspiller.getLydkilde() == kanal;
     boolean online = App.netværk.erOnline();
 
-    hør_live.setEnabled(!spillerDenneKanal && online && kanal.streams != null);
+    hør_live.setEnabled(online && kanal.harStreams() && !spillerDenneKanal);
     hør_live.setText(!online ? "Internetforbindelse mangler" :
             (spillerDenneKanal ? " SPILLER "  + kanal.navn.toUpperCase() : " HØR " + kanal.navn.toUpperCase()));
     hør_live.setContentDescription(!online ? "Internetforbindelse mangler" :
@@ -596,7 +595,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     } else if (v.getId() == R.id.p4_ok) {
       rod.findViewById(R.id.p4_vi_gætter_på_dialog).setVisibility(View.GONE);
       App.prefs.edit().putString(App.P4_FORETRUKKEN_AF_BRUGER, kanal.kode).commit();
-    } else if (kanal.streams == null) {
+    } else if (!kanal.harStreams()) {
       Log.rapporterOgvisFejl(getActivity(), new IllegalStateException("kanal.streams er null"));
     } else if (v.getId() == R.id.rulTilAktuelUdsendelse) {
       rulBlødtTilAktuelUdsendelse();
@@ -608,7 +607,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   }
 
   public static void hør(final Kanal kanal, Activity akt) {
-    if (App.fejlsøgning) App.kortToast("kanal.streams=" + kanal.streams);
+    if (App.fejlsøgning) App.kortToast("kanal=" + kanal);
     if (App.prefs.getBoolean("manuelStreamvalg", false)) {
       kanal.nulstilForetrukkenStream();
       final List<Lydstream> lydstreamList = kanal.findBedsteStreams(false);

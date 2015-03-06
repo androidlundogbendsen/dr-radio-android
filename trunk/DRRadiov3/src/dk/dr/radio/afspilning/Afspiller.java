@@ -54,7 +54,6 @@ import dk.dr.radio.afspilning.wrapper.ExoPlayerWrapper;
 import dk.dr.radio.afspilning.wrapper.MediaPlayerLytter;
 import dk.dr.radio.afspilning.wrapper.MediaPlayerWrapper;
 import dk.dr.radio.data.DRData;
-import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Lydkilde;
 import dk.dr.radio.data.Lydstream;
@@ -168,15 +167,15 @@ public class Afspiller {
       if (vækningIGang) ringDenAlarm();
       return;
     }
-    if (lydkilde.hentetStream == null && lydkilde.streams == null) {
+    if (!lydkilde.harStreams()) {
       Request<?> req = new DrVolleyStringRequest(lydkilde.getStreamsUrl(), new DrVolleyResonseListener() {
 
         @Override
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
           if (uændret) return; // ingen grund til at parse det igen
           JSONObject o = new JSONObject(json);
-          lydkilde.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
-          Log.d("Afspiller hentStreams " + lydkilde + " fraCache=" + fraCache + " k.lydUrl=" + lydkilde.streams);
+          lydkilde.setStreams(o);
+          Log.d("hentStreams afsp fraCache=" + fraCache + " => " + lydkilde);
           if (onErrorTæller++>2) {
             App.kortToast("Internetforbindelse til DR mangler");
             //Log.rapporterFejl(new Exception("onErrorTæller++>10, uendelig løkke afværget"), lydkilde);
@@ -360,7 +359,7 @@ public class Afspiller {
           List<Lydstream> bs = lydkilde.findBedsteStreams(false);
 
           if (bs.size() == 0) {
-            Log.rapporterFejl(new IllegalStateException("Ingen passende lydUrl for " + lydkilde + ": " + lydkilde.streams));
+            Log.rapporterFejl(new IllegalStateException("Ingen passende lydUrl for " + lydkilde));
             App.kortToast("Kunne ikke oprette forbindelse");
             return;
           }

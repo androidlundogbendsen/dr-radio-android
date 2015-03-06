@@ -70,7 +70,6 @@ import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.afspilning.Fjernbetjening;
 import dk.dr.radio.akt.Basisaktivitet;
 import dk.dr.radio.data.DRData;
-import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Diverse;
 import dk.dr.radio.data.Grunddata;
 import dk.dr.radio.data.Kanal;
@@ -247,15 +246,15 @@ public class App extends Application {
         Log.d("forvalgtKanal=" + aktuelKanal);
       }
 
-      if (aktuelKanal.streams == null) { // ikke && App.erOnline(), det kan være vi har en cachet udgave
+      if (!aktuelKanal.harStreams()) { // ikke && App.erOnline(), det kan være vi har en cachet udgave
         final Kanal kanal = aktuelKanal;
         Request<?> req = new DrVolleyStringRequest(aktuelKanal.getStreamsUrl(), new DrVolleyResonseListener() {
           @Override
           public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
             if (uændret) return; // ingen grund til at parse det igen
             JSONObject o = new JSONObject(json);
-            kanal.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
-            Log.d("hentSupplerendeDataBgX " + kanal.kode + " fraCache=" + fraCache + " => " + kanal.slug + " k.lydUrl=" + kanal.streams);
+            kanal.setStreams(o);
+            Log.d("hentStreams akt fraCache=" + fraCache + " => " + kanal);
           }
         }) {
           public Priority getPriority() {
@@ -350,16 +349,16 @@ public class App extends Application {
       Log.d("Onlineinitialisering starter efter " + (System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
 
       if (App.netværk.status == Netvaerksstatus.Status.WIFI) { // Tjek at alle kanaler har deres streamsurler
-        for (final Kanal k : DRData.instans.grunddata.kanaler) {
-          if (k.streams != null) continue;
+        for (final Kanal kanal : DRData.instans.grunddata.kanaler) {
+          if (kanal.harStreams()) continue;
           //        Log.d("run()1 " + (System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
-          Request<?> req = new DrVolleyStringRequest(k.getStreamsUrl(), new DrVolleyResonseListener() {
+          Request<?> req = new DrVolleyStringRequest(kanal.getStreamsUrl(), new DrVolleyResonseListener() {
             @Override
             public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
               if (uændret) return;
               JSONObject o = new JSONObject(json);
-              k.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
-              Log.d("hentSupplerendeDataBg " + k.kode + " fraCache=" + fraCache + " => " + k.slug + " k.lydUrl=" + k.streams);
+              kanal.setStreams(o);
+              Log.d("hentStreams app fraCache=" + fraCache + " => " + kanal);
             }
           }) {
             public Priority getPriority() {

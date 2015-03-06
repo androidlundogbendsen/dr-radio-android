@@ -1,5 +1,8 @@
 package dk.dr.radio.data;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +23,7 @@ public abstract class Lydkilde implements Serializable {
 
   public String urn;   // Bemærk - kan være tom!
   public String slug;  // Bemærk - kan være tom!
-  public transient ArrayList<Lydstream> streams;
+  transient ArrayList<Lydstream> streams;
   public transient Lydstream hentetStream;
   public static final String INDST_lydformat = "lydformat";
 
@@ -29,12 +32,6 @@ public abstract class Lydkilde implements Serializable {
     if (o == null) return false;
     if (o instanceof Lydkilde && slug != null) return slug.equals(((Lydkilde) o).slug);
     return super.equals(o);
-  }
-
-  public String findBedsteStreamUrl(boolean tilHentning) {
-    List<Lydstream> prioriteretListe = findBedsteStreams(tilHentning);
-    if (prioriteretListe.size() == 0) return null;
-    return prioriteretListe.get(0).url;
   }
 
   public void nulstilForetrukkenStream() {
@@ -115,4 +112,17 @@ public abstract class Lydkilde implements Serializable {
   public abstract Udsendelse getUdsendelse();
 
   public abstract String getNavn();
+
+  public void setStreams(JSONObject o) throws JSONException {
+    streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
+  }
+
+  public boolean harStreams() {
+    return streams != null || hentetStream != null;
+  }
+
+  @Override
+  public String toString() {
+    return slug + " str=" + streams;
+  }
 }
