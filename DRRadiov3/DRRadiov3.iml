@@ -3,8 +3,8 @@
   <component name="FacetManager">
     <facet type="android" name="Android">
       <configuration>
+        <option name="LIBS_FOLDER_RELATIVE_PATH" value="" />
         <proGuardCfgFiles>
-          <file>file:///usr/lib/jvm/java-7-oracle/tools/proguard/proguard-android.txt</file>
           <file>file://$MODULE_DIR$/proguard-project.txt</file>
         </proGuardCfgFiles>
         <option name="UPDATE_PROPERTY_FILES" value="true" />
