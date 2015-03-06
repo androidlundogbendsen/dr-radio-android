@@ -508,7 +508,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
           if (position == aktuelUdsendelseIndex + 1) a.visibility(View.INVISIBLE);
           else if (position > 0 && liste.get(position - 1) instanceof String) a.visibility(View.INVISIBLE);
           else a.visibility(View.VISIBLE);
-          vh.titel.setTextColor(udsendelse.kanNokHøres ? Color.BLACK : App.color.grå60);
+          vh.titel.setTextColor(udsendelse.kanHøres ? Color.BLACK : App.color.grå60);
           break;
         case TIDLIGERE_SENERE:
           vh.titel.setText(udsendelse.titel);

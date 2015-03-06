@@ -89,9 +89,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
               JSONObject o = new JSONObject(json);
               udsendelse.streams = DRJson.parsStreams(o.getJSONArray(DRJson.Streams.name()));
               udsendelse.indslag = DRJson.parsIndslag(o.optJSONArray(DRJson.Chapters.name()));
-              udsendelse.kanStreames = udsendelse.findBedsteStreams(false).size() > 0;
+              udsendelse.kanHøres = udsendelse.findBedsteStreams(false).size() > 0;
               udsendelse.kanHentes = udsendelse.findBedsteStreams(true).size() > 0;
-              udsendelse.kanNokHøres = udsendelse.kanStreames;
               if (udsendelse.streams.size() == 0) {
                 if (App.fejlsøgning) Log.d("SSSSS TOMME STREAMS ... men det passer måske ikke! for " + udsendelse.slug + " " + udsendelse.getStreamsUrl());
                 streamsVarTom.put(udsendelse, System.currentTimeMillis());
@@ -329,8 +328,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       hør_ikon.setVisibility(View.GONE);
       hør_tekst.setVisibility(View.VISIBLE);
       hør_tekst.setText("iNTERNETFORBINDELSE\nMANGLER");
-    }
-    else if (!udsendelse.kanStreames && !udsendelsenErAktuelPåKanalen) {   // On demand og direkte udsendelser
+    } else if (!udsendelse.kanHøres && !udsendelsenErAktuelPåKanalen) {   // On demand og direkte udsendelser
       hør_ikon.setVisibility(View.GONE);
       hør_tekst.setVisibility(View.VISIBLE);
       hør_tekst.setText("KAN IKKE\nAFSPILLES");
@@ -392,7 +390,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       if (!getUserVisibleHint() || !isResumed()) return; // Ekstra tjek
       Log.d("Udsendelse_frag tjekFragmentSynligt ");
       if (aktuelUdsendelsePåKanalen() || udsendelse.playliste == null) opdaterSpillelisteRunnable.run();
-      if (udsendelse.kanStreames && afspiller.getAfspillerstatus() == Status.STOPPET) {
+      if (udsendelse.kanHøres && afspiller.getAfspillerstatus() == Status.STOPPET) {
         afspiller.setLydkilde(udsendelse);
       }
     }
@@ -679,13 +677,13 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           boolean topseparator = (adapter.getItemViewType(position - 1) == PLAYLISTEELEM_NU);
           vh.aq.id(R.id.stiplet_linje).visibility(topseparator?View.INVISIBLE:View.VISIBLE);
         }
-        aq.id(R.id.hør).visibility(udsendelse.kanNokHøres && ple.offsetMs >= 0 ? View.VISIBLE : View.GONE);
+        aq.id(R.id.hør).visibility(udsendelse.kanHøres && ple.offsetMs >= 0 ? View.VISIBLE : View.GONE);
       } else if (type == INDSLAGLISTEELEM) {
         Indslaglisteelement ple = (Indslaglisteelement) liste.get(position);
         vh.titel.setText(ple.titel);
         aq.id(R.id.beskrivelse).text(ple.beskrivelse);
         // v.setBackgroundResource(R.drawable.elem_hvid_bg);
-        aq.id(R.id.hør).visibility(udsendelse.kanNokHøres && ple.offsetMs >= 0 ? View.VISIBLE : View.GONE);
+        aq.id(R.id.hør).visibility(udsendelse.kanHøres && ple.offsetMs >= 0 ? View.VISIBLE : View.GONE);
       } else if (type == OVERSKRIFT_PLAYLISTE_INFO || type == OVERSKRIFT_INDSLAG_INFO) {
         aq.id(R.id.playliste).background(visInfo ? R.drawable.knap_graa40_bg : R.drawable.knap_sort_bg);
         aq.id(R.id.info).background(visInfo ? R.drawable.knap_sort_bg : R.drawable.knap_graa40_bg);
@@ -803,7 +801,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
   private void hør() {
     try {
-      if (!udsendelse.kanStreames) {
+      if (!udsendelse.kanHøres) {
         if (aktuelUdsendelsePåKanalen()) {
           // Så skal man lytte til livestreamet
           Kanal_frag.hør(kanal, getActivity());
@@ -844,7 +842,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     int type = adapter.getItemViewType(position);
 
     if (type == PLAYLISTEELEM || type == PLAYLISTEELEM_NU) {
-      if (!udsendelse.streamsKlar() || !udsendelse.kanStreames)
+      if (!udsendelse.streamsKlar() || !udsendelse.kanHøres)
         return;
       // Det må være et playlisteelement
       final Playlisteelement pl = (Playlisteelement) liste.get(position);
