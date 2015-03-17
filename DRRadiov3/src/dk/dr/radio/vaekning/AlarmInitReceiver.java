@@ -36,11 +36,11 @@ public class AlarmInitReceiver extends BroadcastReceiver {
 
     //final PendingResult result = goAsync();
     final WakeLock wl = AlarmAlertWakeLock.createPartialWakeLock(context);
-    wl.acquire();
+    if (wl!=null) wl.acquire(); // fix for https://mint.splunk.com/dashboard/project/cd78aa05/errors/3315048120
 
     Alarms.setNextAlert(context);
     //      result.finish();
     Log.d("AlarmInitReceiver finished");
-    wl.release();
+    if (wl!=null) wl.release(); // fix for https://mint.splunk.com/dashboard/project/cd78aa05/errors/3315048120
   }
 }

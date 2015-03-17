@@ -73,11 +73,12 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
 
   @Override
   public void seekTo(int offsetMs) {
-    player.seekTo(offsetMs);
+    if (player!=null) player.seekTo(offsetMs);
   }
 
   @Override
   public int getDuration() {
+    if (player==null) return 0; // fix for https://mint.splunk.com/dashboard/project/cd78aa05/errors/3038148734
     return (int) player.getDuration();
   }
 
