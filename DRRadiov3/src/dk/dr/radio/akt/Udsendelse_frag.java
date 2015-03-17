@@ -462,14 +462,14 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   static final int[] layoutFraType = {
       R.layout.udsendelse_elem0_top,
       R.layout.udsendelse_elem1_berigtigelse,
-      R.layout.udsendelse_elem1_overskrift_playliste_info,
-      R.layout.udsendelse_elem2_playlisteelem_nu,
-      R.layout.udsendelse_elem3_playlisteelem,
-      R.layout.udsendelse_elem4_overskrift_indslag_info,
-      R.layout.udsendelse_elem5_indslaglisteelem,
-      R.layout.udsendelse_elem6_infotekst,
-      R.layout.udsendelse_elem7_vis_hele_playlisten_knap,
-      R.layout.udsendelse_elem8_alle_udsendelser,
+      R.layout.udsendelse_elem2_overskrift_playliste_info,
+      R.layout.udsendelse_elem3_playlisteelem_nu,
+      R.layout.udsendelse_elem4_playlisteelem,
+      R.layout.udsendelse_elem5_overskrift_indslag_info,
+      R.layout.udsendelse_elem6_indslaglisteelem,
+      R.layout.udsendelse_elem7_infotekst,
+      R.layout.udsendelse_elem8_vis_hele_playlisten_knap,
+      R.layout.udsendelse_elem9_alle_udsendelser,
   };
 
   boolean visInfo = false;
@@ -633,7 +633,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           aq.id(R.id.titel).typeface(App.skrift_gibson_fed);
         } else if (type == BERIGTIGELSE) {
           aq.id(R.id.titel).visible().typeface(App.skrift_gibson).getTextView()
-              .setText(lavFedSkriftTil(udsendelse.berigtigelseTitel+"\n"+udsendelse.berigtigelseTekst, udsendelse.berigtigelseTitel.length()));
+              .setText(lavFedSkriftTil(udsendelse.berigtigelseTitel + "\n" + udsendelse.berigtigelseTekst, udsendelse.berigtigelseTitel.length()));
 //          .setText(lavFedSkriftTil("BEKLAGER\nDenne udsendelse er desværre ikke tilgængelig. For yderligere oplysninger se dr.dk/programetik", 8));
         }
       } else {
