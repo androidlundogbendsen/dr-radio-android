@@ -47,6 +47,12 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
   //public transient int startposition;// hvis der allerede er lyttet til denne senestLyttet så notér det her så afspilning kan fortsætte herfra
   public int episodeIProgramserie;
 
+  /** Berigtigelser er noget som sjældent sker, men vi er forpligtiget til at vise en information til brugeren, hvis vi har måtte tage en program af, eller ændre et program.
+   * Bemærk: Normalk null */
+  public String berigtigelseTitel;
+  /** Normalt null */
+  public String berigtigelseTekst;
+
   public Udsendelse(String s) {
     titel = s;
   }

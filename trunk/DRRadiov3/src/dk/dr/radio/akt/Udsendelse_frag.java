@@ -174,36 +174,8 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     listView.setEmptyView(aq.id(R.id.tom).typeface(App.skrift_gibson).getView());
     listView.setOnItemClickListener(this);
     listView.setContentDescription(udsendelse.titel + " - " + (udsendelse.startTid == null ? "" : DRJson.datoformat.format(udsendelse.startTid)));
-    /*
-    listView.setAccessibilityDelegate(new View.AccessibilityDelegate() {
-      @Override
-      public boolean dispatchPopulateAccessibilityEvent(View host, AccessibilityEvent event) {
-        event.getText().add(0, "Hejsa1");
-        Log.d("xxxxxx1 " + event);
-        return true;
-      }
-
-      @Override
-      public void onPopulateAccessibilityEvent(View host, AccessibilityEvent event) {
-        event.getText().add(0, "Hejsa2");
-        Log.d("xxxxxx2 " + event);
-      }
-
-      @Override
-      public void onInitializeAccessibilityEvent(View host, AccessibilityEvent event) {
-        super.onInitializeAccessibilityEvent(host, event);
-        event.getText().add(0, "Hejsa3");
-        Log.d("xxxxxx3 "+event);
-      }
-    });
-    */
-
     DRData.instans.hentedeUdsendelser.tjekOmHentet(udsendelse);
     hentStreams.run();
-
-//    if (streamsKlar() && DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
-//      DRData.instans.afspiller.setLydkilde(udsendelse);
-//    }
 
     setHasOptionsMenu(true);
     bygListe();
@@ -477,17 +449,19 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   }
 
   static final int TOP = 0;
-  static final int OVERSKRIFT_PLAYLISTE_INFO = 1;
-  static final int PLAYLISTEELEM_NU = 2;
-  static final int PLAYLISTEELEM = 3;
-  static final int OVERSKRIFT_INDSLAG_INFO = 4;
-  static final int INDSLAGLISTEELEM = 5;
-  static final int INFOTEKST = 6;
-  static final int VIS_HELE_PLAYLISTEN_KNAP = 7;
-  static final int ALLE_UDSENDELSER = 8;
+  static final int BERIGTIGELSE = 1;
+  static final int OVERSKRIFT_PLAYLISTE_INFO = 2;
+  static final int PLAYLISTEELEM_NU = 3;
+  static final int PLAYLISTEELEM = 4;
+  static final int OVERSKRIFT_INDSLAG_INFO = 5;
+  static final int INDSLAGLISTEELEM = 6;
+  static final int INFOTEKST = 7;
+  static final int VIS_HELE_PLAYLISTEN_KNAP = 8;
+  static final int ALLE_UDSENDELSER = 9;
 
   static final int[] layoutFraType = {
       R.layout.udsendelse_elem0_top,
+      R.layout.udsendelse_elem1_berigtigelse,
       R.layout.udsendelse_elem1_overskrift_playliste_info,
       R.layout.udsendelse_elem2_playlisteelem_nu,
       R.layout.udsendelse_elem3_playlisteelem,
@@ -505,6 +479,9 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     Log.d("Udsendelse_frag bygListe");
     liste.clear();
     liste.add(TOP);
+    if (udsendelse.berigtigelseTitel!=null) {
+      liste.add(BERIGTIGELSE);
+    }
     if (visInfo) {
       liste.add(OVERSKRIFT_PLAYLISTE_INFO);
       liste.add(INFOTEKST);
@@ -654,6 +631,10 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           aq.id(R.id.vis_hele_playlisten).clicked(Udsendelse_frag.this).typeface(App.skrift_gibson);
         } else if (type == ALLE_UDSENDELSER) {
           aq.id(R.id.titel).typeface(App.skrift_gibson_fed);
+        } else if (type == BERIGTIGELSE) {
+          aq.id(R.id.titel).visible().typeface(App.skrift_gibson).getTextView()
+              .setText(lavFedSkriftTil(udsendelse.berigtigelseTitel+"\n"+udsendelse.berigtigelseTekst, udsendelse.berigtigelseTitel.length()));
+//          .setText(lavFedSkriftTil("BEKLAGER\nDenne udsendelse er desværre ikke tilgængelig. For yderligere oplysninger se dr.dk/programetik", 8));
         }
       } else {
         vh = (Viewholder) v.getTag();
