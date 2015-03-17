@@ -58,7 +58,7 @@ public class AlleUdsendelserAtilAA_frag extends Basisfragment implements Adapter
 
   @Override
   public void onDestroyView() {
-    DRData.instans.programserierAtilÅ.observatører.add(this);
+    DRData.instans.programserierAtilÅ.observatører.remove(this);
     super.onDestroyView();
   }
 
