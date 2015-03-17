@@ -18,8 +18,6 @@ package dk.dr.radio.vaekning;
 import android.content.Context;
 import android.os.PowerManager;
 
-import dk.dr.radio.diverse.App;
-
 /**
  * Hold a wakelock that can be acquired in the AlarmReceiver and
  * released in the AlarmAlert activity
@@ -29,7 +27,7 @@ public class AlarmAlertWakeLock {
     PowerManager pm =
         (PowerManager) context.getSystemService(Context.POWER_SERVICE);
     //return pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, Log.LOGTAG);
-    if (App.PRODUKTION) App.kortToast("createPartialWakeLock");
+    //if (App.PRODUKTION) App.kortToast("createPartialWakeLock");
 
     return pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK
         | PowerManager.ON_AFTER_RELEASE
