@@ -147,12 +147,9 @@ public enum DRJson {
 
   private static Udsendelse opretUdsendelse(DRData drData, JSONObject o) throws JSONException {
     String slug = o.optString(DRJson.Slug.name());  // Bemærk - kan være tom!
-    Udsendelse u = null; //drData.udsendelseFraSlug.get(slug);
-    if (u == null) {
-      u = new Udsendelse();
-      u.slug = slug;
-      drData.udsendelseFraSlug.put(slug, u);
-    }
+    Udsendelse u = new Udsendelse();
+    u.slug = slug;
+    drData.udsendelseFraSlug.put(u.slug, u);
     u.titel = o.getString(DRJson.Title.name());
     u.beskrivelse = o.getString(DRJson.Description.name());
     u.billedeUrl = fjernHttpWwwDrDk(o.optString(DRJson.ImageUrl.name(), null));
@@ -217,14 +214,12 @@ public enum DRJson {
   public static ArrayList<Udsendelse> parseUdsendelserForProgramserie(JSONArray jsonArray, Kanal kanal, DRData drData) throws JSONException, ParseException {
     ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
     for (int n = 0; n < jsonArray.length(); n++) {
-      JSONObject o = jsonArray.getJSONObject(n);
-      Udsendelse u = parseUdsendelseForProgramseriexx(kanal, drData, o);
-      uliste.add(u);
+      uliste.add(parseUdsendelse(kanal, drData, jsonArray.getJSONObject(n)));
     }
     return uliste;
   }
 
-  public static Udsendelse parseUdsendelseForProgramseriexx(Kanal kanal, DRData drData, JSONObject o) throws JSONException, ParseException {
+  public static Udsendelse parseUdsendelse(Kanal kanal, DRData drData, JSONObject o) throws JSONException, ParseException {
     Udsendelse u = opretUdsendelse(drData, o);
     if (kanal != null && kanal.slug.length() > 0) u.kanalSlug = kanal.slug;
     else u.kanalSlug = o.optString(DRJson.ChannelSlug.name());  // Bemærk - kan være tom.
