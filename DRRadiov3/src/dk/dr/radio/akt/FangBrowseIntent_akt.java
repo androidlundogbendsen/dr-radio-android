@@ -19,8 +19,8 @@ import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.Sidevisning;
-import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
-import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
+import dk.dr.radio.net.volley.DrVolleyResonseListener;
+import dk.dr.radio.net.volley.DrVolleyStringRequest;
 
 public class FangBrowseIntent_akt extends Activity {
 

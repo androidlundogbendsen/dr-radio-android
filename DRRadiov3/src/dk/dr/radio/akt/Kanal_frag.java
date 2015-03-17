@@ -44,8 +44,8 @@ import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.Sidevisning;
-import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
-import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
+import dk.dr.radio.net.volley.DrVolleyResonseListener;
+import dk.dr.radio.net.volley.DrVolleyStringRequest;
 import dk.dr.radio.v3.R;
 
 public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClickListener, View.OnClickListener, Runnable {
@@ -255,7 +255,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     super.onPause();
     App.forgrundstråd.removeCallbacks(this);
     if (senesteSynligeFragment == this) senesteSynligeFragment = null;
-    if (App.fejlsøgning) Log.d("onPause() "+this);
+    if (App.fejlsøgning) Log.d("onPause() " + this);
   }
 
   @Override

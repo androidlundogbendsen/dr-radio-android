@@ -1,4 +1,4 @@
-package dk.dr.radio.diverse;
+package dk.dr.radio.net;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.net.NetworkInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import dk.dr.radio.diverse.App;
 
 /**
  * Created by j on 06-03-14.

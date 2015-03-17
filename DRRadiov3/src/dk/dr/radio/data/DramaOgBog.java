@@ -10,8 +10,8 @@ import java.util.List;
 
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
-import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
-import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
+import dk.dr.radio.net.volley.DrVolleyResonseListener;
+import dk.dr.radio.net.volley.DrVolleyStringRequest;
 
 /**
  * Created by j on 05-10-14.

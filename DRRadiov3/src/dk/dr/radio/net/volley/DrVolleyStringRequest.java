@@ -1,4 +1,4 @@
-package dk.dr.radio.diverse.volley;
+package dk.dr.radio.net.volley;
 
 import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;

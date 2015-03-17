@@ -25,8 +25,8 @@ import dk.dr.radio.data.Programserie;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
-import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
-import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
+import dk.dr.radio.net.volley.DrVolleyResonseListener;
+import dk.dr.radio.net.volley.DrVolleyStringRequest;
 
 public class Udsendelser_lodret_skift_frag extends Basisfragment {
 

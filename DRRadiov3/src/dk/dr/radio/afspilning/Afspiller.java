@@ -39,7 +39,6 @@ import android.os.Vibrator;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
-import com.android.deskclock.AlarmAlertWakeLock;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 
@@ -61,9 +60,10 @@ import dk.dr.radio.data.Playlisteelement;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
-import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
-import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
+import dk.dr.radio.net.volley.DrVolleyResonseListener;
+import dk.dr.radio.net.volley.DrVolleyStringRequest;
 import dk.dr.radio.v3.R;
+import dk.dr.radio.vaekning.AlarmAlertWakeLock;
 
 /**
  * @author j

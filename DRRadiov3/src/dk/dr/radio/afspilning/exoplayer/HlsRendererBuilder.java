@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dk.dr.exoplayer;
+package dk.dr.radio.afspilning.exoplayer;
 
 import android.media.MediaCodec;
 
@@ -35,7 +35,7 @@ import com.google.android.exoplayer.util.ManifestFetcher.ManifestCallback;
 import java.io.IOException;
 
 /**
- * A {@link dk.dr.exoplayer.DemoPlayer.RendererBuilder} for HLS.
+ * A {@link dk.dr.radio.afspilning.exoplayer.DemoPlayer.RendererBuilder} for HLS.
  */
 public class HlsRendererBuilder implements DemoPlayer.RendererBuilder, ManifestCallback<HlsMasterPlaylist> {
 

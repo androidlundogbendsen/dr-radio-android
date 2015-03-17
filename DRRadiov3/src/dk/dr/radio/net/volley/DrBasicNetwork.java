@@ -1,4 +1,4 @@
-package dk.dr.radio.diverse.volley;
+package dk.dr.radio.net.volley;
 
 import android.os.SystemClock;
 
