@@ -145,11 +145,12 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
       ArrayList<Udsendelse> l = programserie.getUdsendelser();
       if (l != null) {
         førsteUdsendelseDerKanHøresIndex = 0;
+
         for (Udsendelse u : l) {
-          int varighed = (int) ((u.slutTid.getTime() - u.startTid.getTime()) / 1000 / 60);
-          if (varighed>0) break;
+          if (u.kanHøres) break;
           førsteUdsendelseDerKanHøresIndex++;
         }
+
         // Udsendelsesserie hvor ingen udsendelser kan høres - her viser vi alle udsendelserne
         if (førsteUdsendelseDerKanHøresIndex==l.size()) {
           førsteUdsendelseDerKanHøresIndex=0;
