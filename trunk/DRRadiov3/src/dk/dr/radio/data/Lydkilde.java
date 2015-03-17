@@ -10,7 +10,7 @@ import java.util.List;
 
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
-import dk.dr.radio.diverse.Netvaerksstatus;
+import dk.dr.radio.net.Netvaerksstatus;
 
 /**
  * En lydkilde der kan spilles af afspilleren

@@ -9,8 +9,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 
-import dk.dr.radio.data.Diverse;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.net.Diverse;
 
 /**
  * Created by j on 06-06-14.

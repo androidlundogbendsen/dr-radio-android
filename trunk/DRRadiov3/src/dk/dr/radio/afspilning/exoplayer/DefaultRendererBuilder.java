@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dk.dr.exoplayer;
+package dk.dr.radio.afspilning.exoplayer;
 
 import android.content.Context;
 import android.media.MediaCodec;
@@ -26,7 +26,7 @@ import com.google.android.exoplayer.MediaCodecVideoTrackRenderer;
 import com.google.android.exoplayer.TrackRenderer;
 
 /**
- * A {@link dk.dr.exoplayer.DemoPlayer.RendererBuilder} for streams that can be read using
+ * A {@link dk.dr.radio.afspilning.exoplayer.DemoPlayer.RendererBuilder} for streams that can be read using
  * {@link android.media.MediaExtractor}.
  */
 /* package */ public class DefaultRendererBuilder implements DemoPlayer.RendererBuilder {

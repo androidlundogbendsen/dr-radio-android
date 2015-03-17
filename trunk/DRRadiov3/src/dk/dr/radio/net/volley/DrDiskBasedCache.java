@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dk.dr.radio.diverse.volley;
+package dk.dr.radio.net.volley;
 
 import android.os.SystemClock;
 
@@ -36,9 +36,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import dk.dr.radio.data.Diverse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.net.Diverse;
 
 /**
  * Cache-implementering, der cacher filerne direkte på harddisken.

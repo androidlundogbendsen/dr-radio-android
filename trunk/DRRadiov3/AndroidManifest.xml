@@ -3,7 +3,7 @@
           package="dk.dr.radio.v3"
           android:installLocation="auto"
           android:versionCode="1"
-          android:versionName="3.5.1 6 mar fix: kanHøres kanHentes"
+          android:versionName="3.5.1 17 mar navngivning"
     >
 
   <uses-sdk
@@ -143,7 +143,7 @@
       </intent-filter>
     </activity>
 
-    <activity android:name="com.android.deskclock.AlarmClock_akt"
+    <activity android:name="dk.dr.radio.vaekning.AlarmClock_akt"
               android:icon="@drawable/deskclock_ic_menu_alarms"
               android:label="@string/alarm_list_title"
               android:configChanges="orientation|keyboardHidden|keyboard|navigation"
@@ -151,19 +151,19 @@
     </activity>
 
 
-    <activity android:name="com.android.deskclock.SetAlarm_akt"
+    <activity android:name="dk.dr.radio.vaekning.SetAlarm_akt"
               android:label="@string/set_alarm"
               android:configChanges="orientation|keyboardHidden|keyboard|navigation"/>
 
 
-    <receiver android:name="com.android.deskclock.AlarmReceiver"
+    <receiver android:name="dk.dr.radio.vaekning.AlarmReceiver"
               android:exported="false">
       <intent-filter><!-- XXXX -->
         <action android:name="dk.dr.radio.ALARM_ALERT"/>
       </intent-filter>
     </receiver>
 
-    <receiver android:name="com.android.deskclock.AlarmInitReceiver">
+    <receiver android:name="dk.dr.radio.vaekning.AlarmInitReceiver">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
         <!-- overflødige i vores tilfælde - og det er set at de kommer for ofte, f.eks.

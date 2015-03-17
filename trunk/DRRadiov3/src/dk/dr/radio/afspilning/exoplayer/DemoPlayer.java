@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dk.dr.exoplayer;
+package dk.dr.radio.afspilning.exoplayer;
 
 import android.media.MediaCodec.CryptoException;
 import android.os.Handler;

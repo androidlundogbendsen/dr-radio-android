@@ -10,10 +10,10 @@ import com.google.android.exoplayer.ExoPlayerLibraryInfo;
 
 import java.io.IOException;
 
-import dk.dr.exoplayer.DefaultRendererBuilder;
-import dk.dr.exoplayer.DemoPlayer;
-import dk.dr.exoplayer.EventLogger;
-import dk.dr.exoplayer.HlsRendererBuilder;
+import dk.dr.radio.afspilning.exoplayer.DefaultRendererBuilder;
+import dk.dr.radio.afspilning.exoplayer.DemoPlayer;
+import dk.dr.radio.afspilning.exoplayer.EventLogger;
+import dk.dr.radio.afspilning.exoplayer.HlsRendererBuilder;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 

@@ -70,13 +70,14 @@ import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.afspilning.Fjernbetjening;
 import dk.dr.radio.akt.Basisaktivitet;
 import dk.dr.radio.data.DRData;
-import dk.dr.radio.data.Diverse;
 import dk.dr.radio.data.Grunddata;
 import dk.dr.radio.data.Kanal;
-import dk.dr.radio.diverse.volley.DrBasicNetwork;
-import dk.dr.radio.diverse.volley.DrDiskBasedCache;
-import dk.dr.radio.diverse.volley.DrVolleyResonseListener;
-import dk.dr.radio.diverse.volley.DrVolleyStringRequest;
+import dk.dr.radio.net.Diverse;
+import dk.dr.radio.net.Netvaerksstatus;
+import dk.dr.radio.net.volley.DrBasicNetwork;
+import dk.dr.radio.net.volley.DrDiskBasedCache;
+import dk.dr.radio.net.volley.DrVolleyResonseListener;
+import dk.dr.radio.net.volley.DrVolleyStringRequest;
 import dk.dr.radio.v3.R;
 
 public class App extends Application {

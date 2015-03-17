@@ -25,8 +25,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.deskclock.AlarmClock_akt;
-import com.android.deskclock.Alarms;
 import com.androidquery.AQuery;
 
 import java.util.ArrayList;
@@ -43,6 +41,8 @@ import dk.dr.radio.diverse.Sidevisning;
 import dk.dr.radio.skrald.ProgramserierAtilAA_frag;
 import dk.dr.radio.skrald.Radiodrama_frag_SLETTES;
 import dk.dr.radio.v3.R;
+import dk.dr.radio.vaekning.AlarmClock_akt;
+import dk.dr.radio.vaekning.Alarms;
 
 
 /**
