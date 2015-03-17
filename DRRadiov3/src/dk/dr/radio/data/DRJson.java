@@ -5,7 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,7 +43,8 @@ public enum DRJson {
    */
   Playable,
   /* Om en udsendelse kan hentes. Som #Watchable */
-  Downloadable;
+  Downloadable,
+  RectificationTitle, RectificationText;
 
   /*
     public enum StreamType {
@@ -162,7 +162,7 @@ public enum DRJson {
   /**
    * Parser udsendelser for getKanal. A la http://www.dr.dk/tjenester/mu-apps/schedule/P3/0
    */
-  public static ArrayList<Udsendelse> parseUdsendelserForKanal(JSONArray jsonArray, Kanal kanal, Date dato, DRData drData) throws JSONException, ParseException {
+  public static ArrayList<Udsendelse> parseUdsendelserForKanal(JSONArray jsonArray, Kanal kanal, Date dato, DRData drData) throws JSONException {
     String dagsbeskrivelse = getDagsbeskrivelse(dato);
 
     ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
@@ -211,7 +211,7 @@ public enum DRJson {
    * Parser udsendelser for programserie.
    * A la http://www.dr.dk/tjenester/mu-apps/series/sprogminuttet?type=radio&includePrograms=true
    */
-  public static ArrayList<Udsendelse> parseUdsendelserForProgramserie(JSONArray jsonArray, Kanal kanal, DRData drData) throws JSONException, ParseException {
+  public static ArrayList<Udsendelse> parseUdsendelserForProgramserie(JSONArray jsonArray, Kanal kanal, DRData drData) throws JSONException {
     ArrayList<Udsendelse> uliste = new ArrayList<Udsendelse>();
     for (int n = 0; n < jsonArray.length(); n++) {
       uliste.add(parseUdsendelse(kanal, drData, jsonArray.getJSONObject(n)));
@@ -219,7 +219,7 @@ public enum DRJson {
     return uliste;
   }
 
-  public static Udsendelse parseUdsendelse(Kanal kanal, DRData drData, JSONObject o) throws JSONException, ParseException {
+  public static Udsendelse parseUdsendelse(Kanal kanal, DRData drData, JSONObject o) throws JSONException {
     Udsendelse u = opretUdsendelse(drData, o);
     if (kanal != null && kanal.slug.length() > 0) u.kanalSlug = kanal.slug;
     else u.kanalSlug = o.optString(DRJson.ChannelSlug.name());  // Bemærk - kan være tom.
@@ -235,6 +235,12 @@ public enum DRJson {
     if (DRData.instans.grunddata.udelukHLS) {
       u.kanHøres = u.kanHentes;
     }
+    u.berigtigelseTitel = o.optString(DRJson.RectificationTitle.name(), null);
+    u.berigtigelseTekst = o.optString(DRJson.RectificationText.name(), null);
+    if (!App.PRODUKTION && false) {
+      u.berigtigelseTitel = "BEKLAGER";
+      u.berigtigelseTekst = "Denne udsendelse er desværre ikke tilgængelig. For yderligere oplysninger se dr.dk/programetik";
+    }
 
     return u;
   }
@@ -248,7 +254,7 @@ public enum DRJson {
   Played: "2014-02-06T15:58:33",
   OffsetMs: 6873000
    */
-  public static ArrayList<Playlisteelement> parsePlayliste(JSONArray jsonArray) throws JSONException, ParseException {
+  public static ArrayList<Playlisteelement> parsePlayliste(JSONArray jsonArray) throws JSONException {
     ArrayList<Playlisteelement> liste = new ArrayList<Playlisteelement>();
     for (int n = 0; n < jsonArray.length(); n++) {
       JSONObject o = jsonArray.getJSONObject(n);
@@ -316,7 +322,7 @@ Description: "Parsifal udspiller sig i et univers af gralsriddere og gralsvogter
 OffsetMs: 1096360
 },
    */
-  public static ArrayList<Indslaglisteelement> parsIndslag(JSONArray jsonArray) throws JSONException, ParseException {
+  public static ArrayList<Indslaglisteelement> parsIndslag(JSONArray jsonArray) throws JSONException {
     ArrayList<Indslaglisteelement> liste = new ArrayList<Indslaglisteelement>();
     if (jsonArray == null) return liste;
     for (int n = 0; n < jsonArray.length(); n++) {
