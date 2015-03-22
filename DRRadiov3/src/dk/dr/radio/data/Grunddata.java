@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
@@ -163,7 +164,7 @@ public class Grunddata {
     if (servertidsformatAndreJson==null) return  servertidsformatAndre;
     DateFormat[] res = new DateFormat[servertidsformatAndreJson.length()];
     for (int i=0; i<res.length; i++) {
-      res[i] = new SimpleDateFormat(servertidsformatAndreJson.getString(i));
+      res[i] = new SimpleDateFormat(servertidsformatAndreJson.getString(i), Locale.US);
     }
     return res;
   }

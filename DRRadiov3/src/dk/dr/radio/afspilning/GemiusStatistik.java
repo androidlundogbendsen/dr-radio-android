@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import dk.dr.radio.data.Grunddata;
 import dk.dr.radio.data.Lydkilde;
@@ -29,7 +30,7 @@ class GemiusStatistik {
   private static final String NØGLE = "Gemius sporingsnøgle";
 
 
-  private static SimpleDateFormat servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssSSSZ"); // "2014-07-09T09:54:32.086603Z" +01:00 springes over da kolon i +01:00 er ikke-standard Java
+  private static SimpleDateFormat servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssSSSZ", Locale.US); // "2014-07-09T09:54:32.086603Z" +01:00 springes over da kolon i +01:00 er ikke-standard Java
   private SharedPreferences prefs;
   private JSONObject json;
   private String sporingsnøgle;

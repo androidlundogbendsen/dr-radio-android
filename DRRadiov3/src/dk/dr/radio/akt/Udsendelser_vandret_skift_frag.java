@@ -77,6 +77,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
 
 
     viewPager = (ViewPager) rod.findViewById(R.id.pager);
+    //noinspection ResourceType
     viewPager.setId(123); // TODO hvorfor? fjern eller forklar hvorfor R.id.pager ikke er god nok
     pager_title_strip = rod.findViewById(R.id.pager_title_strip);
     // Da ViewPager er indlejret i et fragment skal adapteren virke på den indlejrede (child)
