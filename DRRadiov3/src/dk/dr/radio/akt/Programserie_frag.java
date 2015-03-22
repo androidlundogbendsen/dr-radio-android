@@ -1,6 +1,7 @@
 package dk.dr.radio.akt;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -273,6 +274,10 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
         //vh.titel.setText(Html.fromHtml("<b>" + u.titel + "</b>&nbsp; - " + DRJson.datoformat.format(u.startTid)));
         //vh.titel.setText(lavFedSkriftTil(u.titel + " - " + DRJson.datoformat.format(u.startTid), u.titel.length()));
         vh.titel.setText(u.titel);
+        if (type==UDSENDELSE) {
+          // Vis hvilke udsendelser der kan hentes
+          vh.titel.setTextColor(u.kanHentes ? Color.BLACK : App.color.grå60);
+        }
         vh.dato.setText(DRJson.datoformat.format(u.startTid));
         //Log.d("DRJson.datoformat.format(u.startTid)=" + DRJson.datoformat.format(u.startTid));
 
