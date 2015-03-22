@@ -38,8 +38,6 @@ import dk.dr.radio.data.DRJson;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.Sidevisning;
-import dk.dr.radio.skrald.ProgramserierAtilAA_frag;
-import dk.dr.radio.skrald.Radiodrama_frag_SLETTES;
 import dk.dr.radio.v3.R;
 import dk.dr.radio.vaekning.AlarmClock_akt;
 import dk.dr.radio.vaekning.Alarms;
@@ -514,14 +512,6 @@ public class Venstremenu_frag extends Fragment implements Runnable {
         });
         aq.id(R.id.tekst).text("ExoPlayer DR2");
         */
-        tilføj(R.layout.venstremenu_elem_overskrift, ProgramserierAtilAA_frag.class);
-        aq.id(R.id.tekst).text("Alle udsendelser A-Å x");
-        aq.typeface(App.skrift_gibson_fed);
-
-        tilføj(R.layout.venstremenu_elem_overskrift, Radiodrama_frag_SLETTES.class);
-        aq.id(R.id.tekst).text("Radio drama x");
-        aq.typeface(App.skrift_gibson_fed);
-
       }
     }
 

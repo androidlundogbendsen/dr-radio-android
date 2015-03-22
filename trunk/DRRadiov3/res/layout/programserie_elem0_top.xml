@@ -38,7 +38,7 @@
 
     <TextView
         android:id="@+id/titel"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="P3 Sporten"
         android:textAppearance="?android:attr/textAppearanceLarge"
