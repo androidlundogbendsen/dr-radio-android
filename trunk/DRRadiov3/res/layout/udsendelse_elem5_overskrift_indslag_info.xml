@@ -15,8 +15,8 @@
       android:layout_weight="1"
       android:layout_marginRight="1dp"
       android:layout_marginLeft="16dp"
-      android:text="INDSLAG"
-      android:contentDescription="indslag"
+      android:text="@string/INDSLAG"
+      android:contentDescription="@string/indslag"
       android:textColor="@color/hvid"
       android:background="@drawable/knap_sort_bg"/>
 
@@ -27,8 +27,8 @@
       android:layout_weight="1"
       android:layout_marginLeft="1dp"
       android:layout_marginRight="16dp"
-      android:text="INFO"
-      android:contentDescription="info"
+      android:text="@string/INFO"
+      android:contentDescription="@string/info"
       android:textColor="@color/hvid"
       android:background="@drawable/knap_graa40_bg"/>
 
