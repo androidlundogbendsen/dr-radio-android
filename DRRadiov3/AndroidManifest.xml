@@ -3,7 +3,7 @@
           xmlns:tools="http://schemas.android.com/tools" package="dk.dr.radio.v3"
           android:installLocation="auto"
           android:versionCode="1"
-          android:versionName="3.5.1 20 mar vis om kanHøres"
+          android:versionName="3.5.1 22 mar lint"
     >
 
   <uses-sdk
