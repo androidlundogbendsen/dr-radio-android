@@ -32,6 +32,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
+import dk.dr.radio.akt.Kanal_nyheder_frag;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
@@ -92,6 +93,7 @@ public class Grunddata {
       k.urn = j.getString("urn");
       k.slug = j.optString("slug", "p4");
       k.ingenPlaylister = j.optBoolean("hideLatestTrack", false);
+      k.fragKlasse = k.kode.equals("DRN") ? Kanal_nyheder_frag.class : null;
       k.p4underkanal = parserP4underkanaler;
       kanaler.add(k);
       if (parserP4underkanaler) p4koder.add(k.kode);
