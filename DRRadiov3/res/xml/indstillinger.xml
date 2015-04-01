@@ -13,10 +13,10 @@
   <PreferenceCategory android:title="Brugergrænseflade">
     <CheckBoxPreference
         android:key="startAfspilningMedDetSammme"
-        android:title="Spil når app'en åbnes"
+        android:title="@string/Spil_når_app_en_åbnes"
         android:defaultValue="false"
-        android:summaryOff="Start afspilning automatisk, når appen åbnes"
-        android:summaryOn="Afspilning starter automatisk, når appen åbnes"/>
+        android:summaryOff="@string/Start_afspilning_automatisk_når_appen_åbnes"
+        android:summaryOn="@string/Afspilning_starter_automatisk_når_appen_åbnes"/>
 
     <CheckBoxPreference
         android:key="tving_lodret_visning" android:title="Stående visning"
@@ -54,23 +54,23 @@
 
 
     <PreferenceScreen android:title="Avanceret"
-                      android:summary="Hentning af udsendelser og strømbesparende funktioner.">
+                      android:summary="@string/hentning_af_udsendelser_og_strømbesparende_funktioner_">
 
 
-      <PreferenceCategory android:title="Hentede udsendelser">
+      <PreferenceCategory android:title="@string/Hentede_udsendelser">
         <ListPreference
             android:key="placeringAfHentedeFiler"
-            android:title="Placering af hentede udsendelser"
-            android:dialogTitle="Gem udsendelser på"
-            android:summary="Vælg hvor på telefonen du vil gemme udsendelser til offline brug."
+            android:title="@string/Placering_af_hentede_udsendelser"
+            android:dialogTitle="@string/Gem_udsendelser_på"
+            android:summary="@string/Vælg_hvor_på_telefonen_du_vil_gemme_udsendelser_til_offline_brug_"
             />
 
         <CheckBoxPreference
             android:key="hentKunOverWifi"
-            android:title="Hent kun på wifi"
+            android:title="@string/Hent_kun_på_wifi"
             android:defaultValue="false"
-            android:summaryOn="Udsendelser hentes kun over wifi fremover.\n(er en udsendelse i gang med at blive hentet skal du stoppe og genoptage hentning af den før det træder i kraft)"
-            android:summaryOff="Udsendelser hentes både over telefonnet (3G/4G) og wifi."/>
+            android:summaryOn="@string/Udsendelser_hentes_kun_over_wifi_fremover___"
+            android:summaryOff="@string/Udsendelser_hentes_både_over_telefonnet_3g_4g_og_wifi_"/>
 
       </PreferenceCategory>
 
@@ -91,7 +91,7 @@
       </PreferenceCategory>
 
 
-      <PreferenceCategory android:title="Kun til udviklere">
+      <PreferenceCategory android:title="@string/Kun_til_udviklere">
 
 
         <CheckBoxPreference

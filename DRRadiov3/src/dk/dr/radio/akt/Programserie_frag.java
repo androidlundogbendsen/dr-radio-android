@@ -101,7 +101,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
       protected void fikFejl(VolleyError error) {
         super.fikFejl(error);
         if (offset == 0) {
-          aq.id(R.id.tom).text("Siden kunne ikke vises");
+          aq.id(R.id.tom).text(R.string.Netværksfejl_prøv_igen_senere);
         } else {
           bygListe(); // for at fjerne evt progressBar
         }
@@ -115,7 +115,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
     if (v.getId()==R.id.favorit) {
       CheckBox favorit = (CheckBox) v;
       DRData.instans.favoritter.sætFavorit(programserieSlug, favorit.isChecked());
-      if (favorit.isChecked()) App.kortToast(programserie.titel + " er tilføjet til favoritter");
+      if (favorit.isChecked()) App.kortToast(getString(R.string.Programserien_er_føjet_til_favoritter));
       Log.registrérTestet("Valg af favoritprogram", programserieSlug);
     } else {
       Udsendelse udsendelse = ((Viewholder) v.getTag()).udsendelse;
@@ -260,9 +260,8 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
 
       // Opdatér viewholderens data
       if (type == TOP) {
-        String tekst = "ALLE UDSENDELSER";
         vh.aq.id(R.id.alle_udsendelser)
-            .text(tekst + " (" + programserie.antalUdsendelser + ")")
+            .text(getString(R.string.ALLE_UDSENDELSER) + " (" + programserie.antalUdsendelser + ")")
 //            .text(lavFedSkriftTil(tekst + " (" + programserie.antalUdsendelser + ")", tekst.length()))
             .getView().setContentDescription(programserie.antalUdsendelser + " udsendelser");
       } else if (type==UDSENDELSE || type==UDSENDELSE_TOP) {
@@ -287,12 +286,12 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
         if (varighed > 0) {
           //txt += ", ";
           int timer = varighed / 60;
-          if (timer > 1) txt += timer + " TIMER";
-          else if (timer == 1) txt += timer + " TIME";
+          if (timer > 1) txt += timer + getString(R.string._TIMER);
+          else if (timer == 1) txt += timer + getString(R.string._TIME);
           int min = varighed % 60;
-          if (min > 0 && timer > 0) txt += " OG ";
-          if (min > 1) txt += min + " MINUTTER";
-          else if (min == 1) txt += timer + " MINUT";
+          if (min > 0 && timer > 0) txt += getString(R.string._OG_);
+          if (min > 1) txt += min + getString(R.string._MINUTTER);
+          else if (min == 1) txt += timer + getString(R.string._MINUT);
         }
         //Log.d("txt=" + txt);
         vh.varighed.setText(txt);

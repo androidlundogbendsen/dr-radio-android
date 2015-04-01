@@ -199,13 +199,13 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
             listView.setSelectionFromTop(næstøversteSynligNytIndex, næstøversteSynligOffset);
           }
         } else {
-          new AQuery(rod).id(R.id.tom).text("Netværksfejl, prøv igen senere");
+          new AQuery(rod).id(R.id.tom).text(R.string.Netværksfejl_prøv_igen_senere);
         }
       }
 
       @Override
       protected void fikFejl(VolleyError error) {
-        new AQuery(rod).id(R.id.tom).text("Netværksfejl, prøv igen senere");
+        new AQuery(rod).id(R.id.tom).text(R.string.Netværksfejl_prøv_igen_senere);
       }
     }) {
       public Priority getPriority() {
@@ -286,10 +286,10 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
     boolean online = App.netværk.erOnline();
 
     hør_live.setEnabled(online && kanal.harStreams() && !spillerDenneKanal);
-    hør_live.setText(!online ? "Internetforbindelse mangler" :
-            (spillerDenneKanal ? " SPILLER "  + kanal.navn.toUpperCase() : " HØR " + kanal.navn.toUpperCase()));
-    hør_live.setContentDescription(!online ? "Internetforbindelse mangler" :
-        (spillerDenneKanal ? "Spiller " : "Hør ") + kanal.navn.toUpperCase());
+    hør_live.setText(!online ? getString(R.string.Internetforbindelse_mangler) :
+            (" " + getString(spillerDenneKanal? R.string.SPILLER : R.string.HØR) + " " + kanal.navn.toUpperCase()));
+    hør_live.setContentDescription(!online ? getString(R.string.Internetforbindelse_mangler) :
+        (" " + getString(spillerDenneKanal? R.string.Spiller : R.string.Hør) + " " + kanal.navn.toUpperCase()));
 
 
     if (aktuelUdsendelseViewholder == null) return;

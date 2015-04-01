@@ -56,7 +56,7 @@
         android:background="#80ff0000"
         android:padding="8dp"
         android:drawableLeft="@drawable/dri_advarsel_graa40"
-        android:text="@string/dr_ingen_forbindelse"
+        android:text="@string/Manglende_netværksforbindelse___"
         android:textColor="@color/hvid"
         android:shadowColor="@color/rød"
         android:shadowRadius="2"

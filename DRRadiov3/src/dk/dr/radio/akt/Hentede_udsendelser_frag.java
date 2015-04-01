@@ -47,13 +47,13 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
     AQuery aq = new AQuery(rod);
     listView = aq.id(R.id.listView).adapter(adapter).itemClicked(this).getListView();
     View emptyView = aq.id(R.id.tom).typeface(App.skrift_gibson)
-        .text(Html.fromHtml("<b>Du har ingen downloads</b><br><br>Du kan downloade udsendelser og lytte til dem her uden internetforbindelse."))
+        .text(Html.fromHtml(getString(R.string.Du_har_ingen_downloads___)))
         .getView();
 
     listView.setEmptyView(emptyView);
     listView.setCacheColorHint(Color.WHITE);
 
-    aq.id(R.id.overskrift).typeface(App.skrift_gibson_fed).text("Downloadede udsendelser").getTextView();
+    aq.id(R.id.overskrift).typeface(App.skrift_gibson_fed).text(R.string.Downloadede_udsendelser).getTextView();
 
 
     hentedeUdsendelser.observatører.add(this);
@@ -196,8 +196,8 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
         DRData.instans.afspiller.startAfspilning();
       } else if (v.getId() == R.id.slet) {
         new AlertDialog.Builder(getActivity())
-            .setTitle("Slet udsendelse")
-            .setMessage("Vil du slette denne udsendele?\nDu kan altid hente den igen.")
+            .setTitle(R.string.Slet_udsendelse)
+            .setMessage(R.string.Vil_du_slette_denne_udsendele_du_kan_altid_hente_den_igen_)
             .setPositiveButton(android.R.string.ok,
                 new DialogInterface.OnClickListener() {
                   public void onClick(DialogInterface d, int w) {

@@ -574,6 +574,8 @@ public class App extends Application {
     });
   }
 
+  public static void kortToast(int resId) { kortToast(instans.getResources().getString(resId));}
+  public static void langToast(int resId) { langToast(instans.getResources().getString(resId));}
 
   public static void kontakt(Activity akt, String emne, String txt, String vedhæftning) {
     String[] modtagere;

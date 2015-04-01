@@ -38,7 +38,7 @@ public class Basisaktivitet extends ActionBarActivity {
 
   @Override
   public void setContentView(int layoutResID) {
-    setTitle("D R Radio"); // til blinde, for at undgå at "DR Radio" bliver udtalt som "Doktor Radio"
+    setTitle(R.string.D_R_Radio); // til blinde, for at undgå at "DR Radio" bliver udtalt som "Doktor Radio"
     super.setContentView(layoutResID);
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     if (toolbar != null) {
