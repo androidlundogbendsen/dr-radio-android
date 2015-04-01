@@ -13,6 +13,7 @@ import java.util.Locale;
 
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.v3.R;
 
 /**
  * Navne for felter der er i DRs JSON-feeds og støttefunktioner til at parse dem
@@ -193,15 +194,16 @@ public enum DRJson {
     // Se også String.intern()
     String dagsbeskrivelse = datoTilBeskrivelse.get(datoStr0);
     if (dagsbeskrivelse == null) {
-      dagsbeskrivelse = ugedagformat.format(tid).toUpperCase();
+      dagsbeskrivelse = ugedagformat.format(tid);
       String år = årformat.format(tid);
       if (datoStr0.equals(iDagDatoStr)) dagsbeskrivelse = I_DAG; // ingenting
-      else if (datoStr0.equals(iMorgenDatoStr)) dagsbeskrivelse = "I MORGEN - " + dagsbeskrivelse;
-      else if (datoStr0.equals(iOvermorgenDatoStr)) dagsbeskrivelse = "I OVERMORGEN - " + dagsbeskrivelse;
-      else if (datoStr0.equals(iGårDatoStr)) dagsbeskrivelse = "I GÅR"; // "I GÅR - "+dagsbeskrivelse;
-      else if (datoStr0.equals(iForgårsDatoStr)) dagsbeskrivelse = "I FORGÅRS - " + dagsbeskrivelse;
+      else if (datoStr0.equals(iMorgenDatoStr)) dagsbeskrivelse = App.instans.getString(R.string.i_morgen)+" - " + dagsbeskrivelse;
+      else if (datoStr0.equals(iOvermorgenDatoStr)) dagsbeskrivelse = App.instans.getString(R.string.i_overmorgen) + " - " + dagsbeskrivelse;
+      else if (datoStr0.equals(iGårDatoStr)) dagsbeskrivelse = App.instans.getString(R.string.i_går); // "I GÅR - "+dagsbeskrivelse;
+      else if (datoStr0.equals(iForgårsDatoStr)) dagsbeskrivelse = App.instans.getString(R.string.i_forgårs)+" - " + dagsbeskrivelse;
       else if (år.equals(iÅrDatoStr)) dagsbeskrivelse = dagsbeskrivelse;
       else dagsbeskrivelse = dagsbeskrivelse + " " + år;
+      dagsbeskrivelse = dagsbeskrivelse.toUpperCase();
       datoTilBeskrivelse.put(datoStr0, dagsbeskrivelse);
     }
     return dagsbeskrivelse;

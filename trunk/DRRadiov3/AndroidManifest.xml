@@ -3,7 +3,7 @@
           xmlns:tools="http://schemas.android.com/tools" package="dk.dr.radio.v3"
           android:installLocation="auto"
           android:versionCode="1"
-          android:versionName="3.5.1 22 mar lint"
+          android:versionName="3.5.1 1 apr lint"
     >
 
   <uses-sdk
@@ -65,7 +65,7 @@
     <activity
         android:name="dk.dr.radio.akt.Indstillinger_akt"
         android:theme="@style/Theme.Indstillinger"
-        android:label="D R Radio Indstillinger" tools:ignore="ExportedPreferenceActivity">
+        android:label="@string/D_R_Radio_Indstillinger" tools:ignore="ExportedPreferenceActivity">
       <!-- Gør aktivitet synlig i forbindelse med at brugeren gennemser sit dataforbrug -->
       <intent-filter>
         <action android:name="android.intent.action.MANAGE_NETWORK_USAGE"/>
@@ -104,7 +104,7 @@
 
     <receiver
         android:name="dk.dr.radio.afspilning.AfspillerIkonOgNotifikation"
-        android:label="DR Radio">
+        android:label="@string/dr_radio">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
       </intent-filter>

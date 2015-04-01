@@ -287,7 +287,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     else if (udsendelsenSpillerNu) { // Afspiller / forbinder denne udsendelse
       hør_ikon.setVisibility(View.GONE);
       hør_tekst.setVisibility(View.VISIBLE);
-      hør_tekst.setText(spiller ? "AFSPILLER" : "FORBINDER");
+      hør_tekst.setText(spiller ? R.string.AFSPILLER : R.string.FORBINDER);
     }
     else if (udsendelse.hentetStream != null) {// Hentet udsendelse
       hør_ikon.setVisibility(View.VISIBLE);
@@ -296,11 +296,11 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     else if (!erOnline) {                     // Ej online
       hør_ikon.setVisibility(View.GONE);
       hør_tekst.setVisibility(View.VISIBLE);
-      hør_tekst.setText("iNTERNETFORBINDELSE\nMANGLER");
+      hør_tekst.setText(R.string.INTERNETFORBINDELSE_MANGLER);
     } else if (!udsendelse.kanHøres && !udsendelsenErAktuelPåKanalen) {   // On demand og direkte udsendelser
       hør_ikon.setVisibility(View.GONE);
       hør_tekst.setVisibility(View.VISIBLE);
-      hør_tekst.setText("KAN IKKE\nAFSPILLES");
+      hør_tekst.setText(R.string.KAN_IKKE_AFSPILLES);
     } else {
       hør_ikon.setVisibility(View.VISIBLE);
       hør_tekst.setVisibility(View.GONE);
@@ -327,11 +327,11 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
       aq.text(statustekst.toUpperCase()).enabled(true).textColorId(R.color.grå40);
     } else if (!udsendelse.kanHentes) {
-      aq.text("KAN IKKE HENTES").enabled(false).textColorId(R.color.grå40);
+      aq.text(R.string.KAN_IKKE_HENTES).enabled(false).textColorId(R.color.grå40);
     } else if (!udsendelse.streamsKlar()) {
       aq.text("").enabled(false).textColorId(R.color.grå40);
     } else {
-      aq.text("DOWNLOAD").enabled(true).textColorId(R.color.blå);
+      aq.text(R.string.DOWNLOAD).enabled(true).textColorId(R.color.blå);
     }
     udvikling_checkDrSkrifter(topView, this + " position top");
   }
@@ -612,9 +612,10 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           String forkortInfoStr = udsendelse.beskrivelse;
           if (udsendelse.beskrivelse.length() > 110) {
             forkortInfoStr = forkortInfoStr.substring(0, 110);
-            forkortInfoStr += "...(VIS MERE)";
+            String vis_mere = getString(R.string.___vis_mere_);
+            forkortInfoStr += vis_mere;
             SpannableString spannable = new SpannableString(forkortInfoStr);
-            spannable.setSpan(new ForegroundColorSpan(App.color.blå), forkortInfoStr.length() - "(VIS MERE)".length(), forkortInfoStr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new ForegroundColorSpan(App.color.blå), forkortInfoStr.length() - vis_mere.length(), forkortInfoStr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             aq.clicked(Udsendelse_frag.this).text(spannable/*forkortInfoStr*/);
           } else {
             aq.text(forkortInfoStr);
@@ -696,7 +697,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     } else if (v.getId() == R.id.favorit) {
       CheckBox favorit = (CheckBox) v;
       DRData.instans.favoritter.sætFavorit(udsendelse.programserieSlug, favorit.isChecked());
-      if (favorit.isChecked()) App.kortToast("Programserien er tilføjet til favoritter");
+      if (favorit.isChecked()) App.kortToast(R.string.Programserien_er_føjet_til_favoritter);
       Log.registrérTestet("Valg af favoritprogram", udsendelse.programserieSlug);
     } else {
       App.langToast("fejl");
@@ -770,7 +771,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       return;
     }
     if (!udsendelse.kanHentes) {
-      App.kortToast("Udsendelsen kan ikke hentes");
+      App.kortToast(R.string.Udsendelsen_kan_ikke_hentes);
       Log.rapporterFejl(new IllegalStateException("Udsendelsen kan ikke hentes - burde ikke kunne komme hertil"));
       return;
     }

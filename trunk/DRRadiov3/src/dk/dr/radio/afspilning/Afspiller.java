@@ -163,7 +163,7 @@ public class Afspiller {
 
   public void startAfspilning() {
     if (lydkilde.hentetStream == null && !App.erOnline()) {
-      App.kortToast("Internetforbindelse mangler");
+      App.kortToast(R.string.Internetforbindelse_mangler);
       if (vækningIGang) ringDenAlarm();
       return;
     }
@@ -177,7 +177,7 @@ public class Afspiller {
           lydkilde.setStreams(o);
           Log.d("hentStreams afsp fraCache=" + fraCache + " => " + lydkilde);
           if (onErrorTæller++>2) {
-            App.kortToast("Internetforbindelse til DR mangler");
+            App.kortToast(R.string.Kunne_ikke_oprette_forbindelse_til_DR);
             //Log.rapporterFejl(new Exception("onErrorTæller++>10, uendelig løkke afværget"), lydkilde);
             if (vækningIGang) ringDenAlarm();
           } else {
@@ -187,7 +187,7 @@ public class Afspiller {
 
         @Override
         protected void fikFejl(VolleyError error) {
-          App.kortToast("Kan ikke få forbindelse til DR");
+          App.kortToast(R.string.Kunne_ikke_oprette_forbindelse_til_DR);
           if (vækningIGang) ringDenAlarm();
           super.fikFejl(error);
         }
@@ -360,7 +360,7 @@ public class Afspiller {
 
           if (bs.size() == 0) {
             Log.rapporterFejl(new IllegalStateException("Ingen passende lydUrl for " + lydkilde));
-            App.kortToast("Kunne ikke oprette forbindelse");
+            App.kortToast(R.string.Kunne_ikke_oprette_forbindelse_til_DR);
             return;
           }
           lydstream = bs.get(0);
@@ -792,8 +792,8 @@ public class Afspiller {
           }
         } else {
           pauseAfspilning(); // Vi giver op efter 10. forsøg
-          App.langToast("Beklager, kan ikke spille radio");
-          App.langToast("Tjek din internetforbindelse,\n og prøv eventuelt at vælge et andet lydformat i indstillingerne");
+          App.langToast(R.string.Beklager_kan_ikke_spille_radio);
+          App.langToast(R.string.Tjek_din_internetforbindelse_og___);
           if (afspillerlyde) afspillerlyd.fejl.start();
         }
       } else {

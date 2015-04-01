@@ -45,6 +45,7 @@ import dk.dr.radio.net.Diverse;
 /**
  * Afprøvning af diverse ting
  */
+@SuppressWarnings("HardCodedStringLiteral")
 public class Afproevning {
 
   public static void main(String[] a) throws Exception {
