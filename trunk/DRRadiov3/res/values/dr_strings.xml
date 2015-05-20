@@ -115,6 +115,7 @@
   <string name="Udsendelsen___blev_hentet">Udsendelsen %1$s blev hentet</string>
   <string name="Det_lykkedes_ikke_at_hente_udsendelsen___tjek_at___">Det lykkedes ikke at hente udsendelsen %1$s\nTjek at du har tilstrækkeligt ledigt plads</string>
   <string name="Forbinder">Forbinder</string>
+  <string name="Angiv_vækning">Angiv vækning</string>
 
   <string-array name="lydformat_tekst">
     <item>AAC (HLS)</item>
