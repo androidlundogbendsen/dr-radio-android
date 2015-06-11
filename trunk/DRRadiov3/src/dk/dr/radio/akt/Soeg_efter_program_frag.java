@@ -141,6 +141,10 @@ public class Soeg_efter_program_frag extends Basisfragment implements
 
     udvikling_checkDrSkrifter(rod, this + " rod");
 
+    // Indlæs A-Å-liste hvis den ikke allerede er det, så vi har en komplet programliste
+    if (DRData.instans.programserierAtilÅ.liste == null) {
+      DRData.instans.programserierAtilÅ.startHentData();
+    }
     return rod;
   }
 
@@ -247,8 +251,8 @@ public class Soeg_efter_program_frag extends Basisfragment implements
     }
 
     if (søgelistecache == null) {
-      søgelistecache = new ArrayList<SoegElement>(DRData.instans.programserierAtilÅ.liste.size());
-      for (Programserie ps : DRData.instans.programserierAtilÅ.liste) {
+      søgelistecache = new ArrayList<SoegElement>(DRData.instans.programserieFraSlug.size());
+      for (Programserie ps : DRData.instans.programserieFraSlug.values()) {
         SoegElement se = new SoegElement();
         se.programserie = ps;
         se.titel = " "+ps.titel.toLowerCase() + " " + ps.undertitel.toLowerCase();
