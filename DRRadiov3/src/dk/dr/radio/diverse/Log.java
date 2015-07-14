@@ -167,7 +167,7 @@ public class Log {
     ret += "\nFunktioner brugt: "+ Sidevisning.getViste();
     ret += "\nFunktioner ej brugt: "+ Sidevisning.getIkkeViste();
     ret += "\nIndstillinger: "+ App.prefs.getAll();
-    ret += "\nLydkilde: "+ DRData.instans.afspiller.getLydkilde();
+    ret += "\nAfspiller: "+ DRData.instans.afspiller.toString();
     return ret;
   }
 
