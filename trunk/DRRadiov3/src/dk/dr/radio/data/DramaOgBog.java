@@ -3,6 +3,7 @@ package dk.dr.radio.data;
 import com.android.volley.Request;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import dk.dr.radio.diverse.App;
+import dk.dr.radio.diverse.Log;
 import dk.dr.radio.net.volley.DrVolleyResonseListener;
 import dk.dr.radio.net.volley.DrVolleyStringRequest;
 
@@ -37,12 +39,14 @@ public class DramaOgBog {
         for (int i=0; i<jsonArray.length(); i++) {
           JSONObject jsonObject = jsonArray.getJSONObject(i);
           JSONArray karuselJson = jsonObject.optJSONArray(DRJson.Spots.name());
-          if (karuselJson!=null) for (int n = 0; n < karuselJson.length(); n++) {
+          if (karuselJson!=null) for (int n = 0; n < karuselJson.length(); n++) try {
             JSONObject udsendelseJson = karuselJson.getJSONObject(n);
             // TODO mangler
             Udsendelse u = DRJson.parseUdsendelse(null, DRData.instans, udsendelseJson);
             karusel.add(u);
             karuselSerieSlug.add(u.programserieSlug);
+          } catch (JSONException je) {
+            Log.e("Fejl i "+karuselJson.getJSONObject(n), je);
           }
 
           String titel = jsonObject.optString(DRJson.Title.name());
