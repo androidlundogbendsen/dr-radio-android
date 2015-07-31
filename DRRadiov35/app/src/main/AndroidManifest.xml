@@ -3,7 +3,7 @@
           xmlns:tools="http://schemas.android.com/tools" package="dk.dr.radio.v3"
           android:installLocation="auto"
           android:versionCode="1"
-          android:versionName="3.5.1 51 søg fixet"
+          android:versionName="3.5.1 60 gradle"
     >
 
   <uses-sdk
