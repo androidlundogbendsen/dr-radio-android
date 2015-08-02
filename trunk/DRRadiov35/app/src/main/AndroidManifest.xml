@@ -31,7 +31,7 @@
   <application
       android:allowBackup="true"
       android:name="dk.dr.radio.diverse.App"
-      android:icon="@drawable/ic_launcher_beta"
+      android:icon="@drawable/ic_launcher"
       android:logo="@drawable/dr_logo"
       android:label="DR Radio beta"
       android:theme="@style/Theme.Dr"

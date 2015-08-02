@@ -262,6 +262,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   public void run() {
     if (App.fejlsøgning) Log.d("run() synlig=" + getUserVisibleHint()+" "+this);
     App.forgrundstråd.removeCallbacks(this);
+    if (getActivity()==null) return; // Fragment ikke mere synligt
     App.forgrundstråd.postDelayed(this, DRData.instans.grunddata.opdaterPlaylisteEfterMs);
 
     if (!kanal.harStreams()) { // ikke && App.erOnline(), det kan være vi har en cachet udgave
