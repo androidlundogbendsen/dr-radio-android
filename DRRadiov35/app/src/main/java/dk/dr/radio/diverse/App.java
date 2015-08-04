@@ -78,6 +78,7 @@ import dk.dr.radio.net.volley.DrBasicNetwork;
 import dk.dr.radio.net.volley.DrDiskBasedCache;
 import dk.dr.radio.net.volley.DrVolleyResonseListener;
 import dk.dr.radio.net.volley.DrVolleyStringRequest;
+import dk.dr.radio.v3.BuildConfig;
 import dk.dr.radio.v3.R;
 
 public class App extends Application {
@@ -85,7 +86,7 @@ public class App extends Application {
   public static final String P4_FORETRUKKEN_AF_BRUGER = "P4_FORETRUKKEN_AF_BRUGER";
   public static final String FORETRUKKEN_KANAL = "FORETRUKKEN_kanal";
   public static final String NØGLE_advaretOmInstalleretPåSDKort = "erInstalleretPåSDKort";
-  public static final boolean PRODUKTION = false;
+  public static final boolean PRODUKTION = !BuildConfig.DEBUG;
   private static final String DRAMA_OG_BOG__A_Å_INDLÆST = "DRAMA_OG_BOG__A_Å_INDLÆST";
   public static boolean EMULATOR = true; // Sæt i onCreate(), ellers virker det ikke i std Java
   public static App instans;
