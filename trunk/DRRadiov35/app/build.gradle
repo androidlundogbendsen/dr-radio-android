@@ -2,6 +2,9 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
+        config {
+            storeFile file('/home/j/android/A_signaturer/drandroid.key')
+        }
     }
     compileSdkVersion 22
     buildToolsVersion '22.0.1'
@@ -9,10 +12,13 @@ android {
         applicationId 'dk.dr.radio'
         minSdkVersion 7
         targetSdkVersion 21
+        versionCode 47
+        versionName '3.5.2'
     }
     buildTypes {
         release {
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
         debug {
