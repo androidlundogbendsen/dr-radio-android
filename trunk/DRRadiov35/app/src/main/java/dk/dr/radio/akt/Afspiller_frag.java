@@ -272,18 +272,18 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
 
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    if (App.accessibilityManager.isEnabled()) {
+    if (App.accessibilityManager.isEnabled()) try {
 
       inflater.inflate(R.menu.tilg_afspiller, menu);
       MenuItem menuItem = menu.findItem(R.id.startStopKnap);
 
       if (DRData.instans.afspiller.getAfspillerstatus() == Status.STOPPET) {
-        menuItem.setTitle(getString(R.string.Start) + DRData.instans.afspiller.getLydkilde());
+        menuItem.setTitle(getString(R.string.Start) + DRData.instans.afspiller.getLydkilde().getNavn());
       } else {
         menuItem.setTitle(R.string.Stop_afspilning);
         menuItem.setIcon(R.drawable.dri_radio_stop_graa40);
       }
-    }
+    } catch (Exception e) { Log.rapporterFejl(e); } // fix for https://mint.splunk.com/dashboard/project/cd78aa05/errors/4021328508
     super.onCreateOptionsMenu(menu, inflater);
   }
 
