@@ -13,7 +13,7 @@ android {
         minSdkVersion 7
         targetSdkVersion 21
         versionCode 50
-        versionName '3.5.2'
+        versionName '3.5.2++ standardorientering'
     }
     buildTypes {
         release {
