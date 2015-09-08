@@ -83,7 +83,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         kanalkode = App.prefs.getString(App.P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, "KH4");
         kanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
         if (kanal == null) {
-          Log.e("P4 IKKE FUNDET kanalkode=" + kanalkode, null);
+          Log.d("P4 IKKE FUNDET kanalkode=" + kanalkode);
           kanalkode = DRData.instans.grunddata.p4koder.get(3); // KH4
           kanal = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
         }
@@ -358,7 +358,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         listView.setSelectionFromTop(aktuelUdsendelseIndex, topmargen);
       }
     } catch (Exception e1) {
-      Log.rapporterFejl(e1);
+      Log.rapporterFejl(e1, "kanal="+kanal+" med udsendelser "+kanal.udsendelser);
     }
   }
 
