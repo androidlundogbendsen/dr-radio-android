@@ -72,6 +72,7 @@ import dk.dr.radio.akt.Basisaktivitet;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Grunddata;
 import dk.dr.radio.data.Kanal;
+import dk.dr.radio.data.afproevning.FilCache;
 import dk.dr.radio.net.Diverse;
 import dk.dr.radio.net.Netvaerksstatus;
 import dk.dr.radio.net.volley.DrBasicNetwork;
@@ -87,6 +88,7 @@ public class App extends Application {
   public static final String FORETRUKKEN_KANAL = "FORETRUKKEN_kanal";
   public static final String NØGLE_advaretOmInstalleretPåSDKort = "erInstalleretPåSDKort";
   public static final boolean PRODUKTION = !BuildConfig.DEBUG;
+  public static final boolean ÆGTE_DR = true;
   private static final String DRAMA_OG_BOG__A_Å_INDLÆST = "DRAMA_OG_BOG__A_Å_INDLÆST";
   public static boolean EMULATOR = true; // Sæt i onCreate(), ellers virker det ikke i std Java
   public static App instans;
@@ -175,6 +177,7 @@ public class App extends Application {
     accessibilityManager = (AccessibilityManager) getSystemService(Context.ACCESSIBILITY_SERVICE);
 
 
+    if (!ÆGTE_DR) FilCache.init(new File(getCacheDir(), "FilCache"));
     // Initialisering af Volley
 
     // Prior to Gingerbread, HttpUrlConnection was unreliable.
@@ -203,7 +206,8 @@ public class App extends Application {
 
     // P4 stedplacering skal ske så tidligt som muligt - ellers
     // når P4-valgskærmbilledet at blive instantieret med ukendt placering og foreslår derfor København
-    if (prefs.getString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, null) == null) startP4stedplacering();
+    // Slået fra, da stedplaceringen ikke virker
+    // if (prefs.getString(P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING, null) == null) startP4stedplacering();
 
     try {
       DRData.instans = new DRData();
@@ -221,6 +225,7 @@ public class App extends Application {
           App.prefs.edit().remove(DRData.GRUNDDATA_URL).commit();
           grunddata_prefs.edit().putString(DRData.GRUNDDATA_URL, grunddata).commit();
         }
+        if (!ÆGTE_DR) App.prefs.edit().putBoolean("vispager_title_strip", true).commit();
       }
 
       if (App.prefs.contains("stamdata23") || App.prefs.contains("stamdata24")) {
@@ -290,7 +295,7 @@ public class App extends Application {
       Log.e("DRs skrifttyper er ikke tilgængelige", e);
       skrift_gibson = Typeface.DEFAULT;
       skrift_gibson_fed = Typeface.DEFAULT_BOLD;
-      skrift_georgia = Typeface.DEFAULT;
+      skrift_georgia = Typeface.SERIF;
     }
     skrift_gibson_fed_span = new EgenTypefaceSpan("Gibson fed", App.skrift_gibson_fed);
 
@@ -479,6 +484,7 @@ public class App extends Application {
       if (antal>1) Log.d("sætErIGang: "+hvad+" har "+antal+" samtidige anmodninger");
       else if (antal<0) Log.e(new IllegalStateException("erIGang manglede " + hvad));
       else if (netværkErIGang) Log.d("sætErIGang: "+hvad);
+      //if (!netværkErIGang && hvad.trim().length()==0) Log.e(new IllegalStateException("hvad er tom"));
     }
     erIGang += netværkErIGang ? 1 : -1;
     boolean nu = erIGang > 0;

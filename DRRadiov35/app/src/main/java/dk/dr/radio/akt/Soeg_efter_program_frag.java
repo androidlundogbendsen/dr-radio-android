@@ -142,7 +142,7 @@ public class Soeg_efter_program_frag extends Basisfragment implements
     udvikling_checkDrSkrifter(rod, this + " rod");
 
     // Indlæs A-Å-liste hvis den ikke allerede er det, så vi har en komplet programliste
-    if (DRData.instans.programserierAtilÅ.liste == null) {
+    if (App.ÆGTE_DR && DRData.instans.programserierAtilÅ.liste == null) {
       DRData.instans.programserierAtilÅ.startHentData();
     }
     return rod;

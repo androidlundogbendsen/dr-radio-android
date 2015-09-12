@@ -13,7 +13,7 @@ import dk.dr.radio.diverse.Log;
  * Repræsenterer en udsendelse
  * Created by j on 28-01-14.
  */
-public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
+public class Udsendelse extends Lydkilde implements Comparable<Udsendelse>, Cloneable {
   // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/1415558087
   // - at proguard obfuskering havde
   // Se også http://stackoverflow.com/questions/16210831/serialization-deserialization-proguard
@@ -158,5 +158,14 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse> {
     }
     kanHøres = findBedsteStreams(false).size() > 0;
     kanHentes = findBedsteStreams(true).size() > 0;
+  }
+
+  public Udsendelse kopi() {
+    try {
+      return (Udsendelse) this.clone();
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
+    }
+    return this;
   }
 }
