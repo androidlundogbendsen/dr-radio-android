@@ -117,6 +117,9 @@
   <string name="Forbinder">Forbinder</string>
   <string name="Angiv_vækning">Angiv vækning</string>
   <string name="Indlæser_vent_venligst___">Indlæser, vent venligst...</string>
+  <string name="SENEST_SPILLET">SENEST SPILLET</string>
+  <string name="LIGE_NU">LIGE NU</string>
+  <string name="Dine_favoritter">Dine favoritter</string>
 
   <string-array name="lydformat_tekst">
     <item>AAC (HLS)</item>

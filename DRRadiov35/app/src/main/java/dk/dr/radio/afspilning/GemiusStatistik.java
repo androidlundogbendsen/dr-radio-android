@@ -106,6 +106,7 @@ class GemiusStatistik {
 
 
   void startSendData() {
+    if (!App.ÆGTE_DR) hændelser.clear();
     if (hændelser.isEmpty()) return;
     try {
       // json.put("Url", "http://test.com");  // behøves ikke?
