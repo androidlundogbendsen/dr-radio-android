@@ -2,13 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools" package="dk.dr.radio.v3"
           android:installLocation="auto"
-          android:versionCode="1"
-          android:versionName="3.5.1 61 ny testsrv"
-    >
-
-  <uses-sdk
-      android:minSdkVersion="7"
-      android:targetSdkVersion="21"/>
+          tools:ignore="UnusedAttribute">
 
 
   <!-- Nødvendigt til vækkeur -->
@@ -35,7 +29,7 @@
       android:logo="@drawable/dr_logo"
       android:label="DR Radio beta"
       android:theme="@style/Theme.Dr"
-      >
+      tools:ignore="UnusedAttribute">
 
     <!--
     Version 3 havde brug for

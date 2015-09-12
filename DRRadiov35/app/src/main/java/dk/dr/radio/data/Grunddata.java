@@ -93,7 +93,6 @@ public class Grunddata {
       k.urn = j.getString("urn");
       k.slug = j.optString("slug", "p4");
       k.ingenPlaylister = j.optBoolean("hideLatestTrack", false);
-      k.fragKlasse = k.kode.equals("DRN") ? Kanal_nyheder_frag.class : null;
       k.p4underkanal = parserP4underkanaler;
       kanaler.add(k);
       if (parserP4underkanaler) p4koder.add(k.kode);

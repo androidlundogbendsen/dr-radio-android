@@ -7,7 +7,7 @@ import dk.dr.radio.diverse.PinnedSectionListView;
 /**
  * Created by j on 17-11-13.
  */
-abstract class Basisadapter extends BaseAdapter implements PinnedSectionListView.PinnedSectionListAdapter {
+public abstract class Basisadapter extends BaseAdapter implements PinnedSectionListView.PinnedSectionListAdapter {
   @Override
   public Object getItem(int position) {
     return null;
