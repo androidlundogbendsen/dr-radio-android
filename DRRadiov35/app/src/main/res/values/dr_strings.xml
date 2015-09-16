@@ -120,6 +120,15 @@
   <string name="SENEST_SPILLET">SENEST SPILLET</string>
   <string name="LIGE_NU">LIGE NU</string>
   <string name="Dine_favoritter">Dine favoritter</string>
+  <string name="Stop_afspilningen_">Stop afspilningen?</string>
+  <string name="Fortsæt_i_baggrunden">Fortsæt i\nbaggrunden</string>
+  <string name="Brugergrænseflade">Brugergrænseflade</string>
+  <string name="Avanceret">Avanceret</string>
+
+  <string name="GRUNDDATA_URL_PRODUKTION">http://www.dr.dk/tjenester/iphone/radio/settings/iphone200d.drxml</string>
+  <string name="GRUNDDATA_URL_UDVIKLING">http://android.lundogbendsen.dk/drradiov3_grunddata.json</string>
+  <string name="HENTEDE_UDS_MAPPENAVN">DR_Radio</string>
+  <string name="URL_TIL_DR_RADIO_BETAVERSION">http://android.lundogbendsen.dk/DRRadiov3.apk</string>
 
   <string-array name="lydformat_tekst">
     <item>AAC (HLS)</item>
