@@ -853,6 +853,6 @@ public class Afspiller {
   }
 
   public String toString() {
-    return afspillerstatus+" "+lydstream.toString();
+    return afspillerstatus+" "+lydstream;
   }
 }
