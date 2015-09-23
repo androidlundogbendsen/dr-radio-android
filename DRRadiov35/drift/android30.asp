@@ -50,11 +50,15 @@
 
 </head>
 <body>
-<p><span style="color:red;">Inden du trykker på 'Skriv meddelelser til DR' skal du forsøge at starte afspilning én gang.</span><br>
-Vi har p.t. en kendt fejl, der gør at app'en crasher hvis kontaktformularen bruges før første afspilning.<p>
 <p><b>Hvis du oplever problemer, s&aring; vil vi meget gerne
 kontaktes</b><br>Tryk p&aring; knappen 'Skriv meddelelse til DR'
-herunder.<br>Sammen med din meddelelse sendes en programlog over din
+herunder.
+<span style="color:red;">Inden du trykker på 'Skriv meddelelser til DR'
+skal du forsøge at starte afspilning én gang</span>,
+da vi p.t. har en kendt fejl, der gør at app'en crasher hvis
+kontaktformularen bruges før første afspilning<p>
+<p>
+Sammen med din meddelelse sendes en programlog over din
 brug af app'en det seneste minut, som g&oslash;r os i stand til at
 lave mere detaljeret fejls&oslash;gning.</p>
 <p><b>Har du problemer med lyden?</b><br>Visse enheder har problemer
@@ -78,7 +82,7 @@ f.eks. <a href="http://dr.dk/p1">dr.dk/p1</a> og pr&oslash;v at &aring;bne
 webplayeren.</p>
 
 <p><b>Kendte fejl og problemer</b><br>
-Når man spoler så bliver der afspillet fra dobbelt så langt inde som man vælger (på Android 5)<br>
+Når man spoler/skipper i en udsendelse bliver der afspillet fra dobbelt så langt inde som man vælger (på Android 5)<br>
 Holdes app'en åben til næste dag er overskrifter 'i dag', 'i morgen', 'i går' etc ikke opdateret<br>
 </p>
 </body>
