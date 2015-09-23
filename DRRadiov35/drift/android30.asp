@@ -65,6 +65,8 @@ med lydformatet HLS.<br>Pr&oslash;v at skifte format til MP3
 det hj&aelig;lper, s&aring; vi kan sl&aring; det fra p&aring; de
 ber&oslash;rte enheder. 
 </p>
+<p><b>Liggende visning</b><br>App'en er beregnet til lodret visning,
+men du kan sl&aring; liggende visning til i indstillingerne.</p>
 <p><b>Generelle funktioner</b><br>Se <a href="http://www.dr.dk/Temaer/Mobil/2014/04/08/170942.htm">artiklen
 om app'en</a>. Android-udgaven har ydermere:</p>
 <p><i>Forbedret fjernbetjening</i> fra Bluetooth.<br>Du kan skippe
@@ -72,8 +74,7 @@ til forrige/n&aelig;ste sang (eller 5%) i on demand udsendelser fra
 dit Bluetooth headset og fra l&aring;sesk&aelig;rmen i Android 4. Ved
 direkte udsendelser skiftes til forrige/n&aelig;ste kanal.</p>
 <p>L&aring;sesk&aelig;rmens baggrund viser den aktuelle kanal. Dette
-kan sl&aring;s fra ved at sl&aring; 'Fjernbetjening' fra i
-indstillingerne</p>
+kan sl&aring;s fra under 'Fjernbetjening' i indstillingerne</p>
 <p>Kanaloversigten: <i>H&oslash;r live-knap er flyttet op i toppen</i>
 af siden. <br>Tryk p&aring; den hvide baggrund for at rulle hen til
 aktuel udsendelse.</p>
@@ -84,6 +85,6 @@ webplayeren.</p>
 en udsendelse bliver der afspillet fra dobbelt s&aring; langt inde
 som man v&aelig;lger (p&aring; Android 5)<br>Holdes app'en &aring;ben
 til n&aelig;ste dag er overskrifter 'i dag', 'i morgen', 'i g&aring;r'
-etc ikke opdateret</p>
+etc ikke opdateret.</p>
 </body>
 </html>
