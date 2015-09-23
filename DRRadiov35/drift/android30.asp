@@ -8,21 +8,21 @@
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Om</title>
+	<title>Om DR Radio Android</title>
 
 	<style>
 		body {
-			padding: 20px;
+			padding: 10px;
 			font-family: Helvetica;
 			font-size: 1em;
 			color: #000;
 			background-color: #fff ;
 		}
-		
+
 		span {
 			color: #fff;
 		}
-		
+
 		h1,h2,h3 {
 			font-weight: normal;
 		}
@@ -37,13 +37,12 @@
 		}
 
 		p {
-			margin: 1em 0 3em 0;
 			color: #000;
 		}
-	
+
 		li {
 			color: #ccc ;
-		}	
+		}
 		a {
 			color: #000 ;
 		}
@@ -63,31 +62,24 @@ med lydformatet HLS.<br>Pr&oslash;v at skifte format til MP3
 (Shoutcast) - kontakt os gerne og fort&aelig;l om det hj&aelig;lper,
 s&aring; vi kan sl&aring; det fra p&aring; de ber&oslash;rte enheder.
 </p>
-<p><b>Nylige vigtige </b><b>rettelser</b></p>
-<p>Se <a href="http://www.dr.dk/Temaer/Mobil/2014/04/08/170942.htm">artiklen
-om app'en</a> for generelle forbedringer. 
-</p>
-<p>Android-udgaven har ydermere:</p>
-<p><i>Forbedret fjernbetjening</i> fra Bluetooth og fra l&aring;sesk&aelig;rm
-i Android 4.<br>Du kan skippe til forrige/n&aelig;ste sang (eller 5%)
-i on demand udsendelser. Ved direkte udsendelser skiftes til
+<p><b>Generelle funktioner</b><br>
+Se <a href="http://www.dr.dk/Temaer/Mobil/2014/04/08/170942.htm">artiklen
+om app'en</a>. Android-udgaven har ydermere:</p>
+<p><i>Forbedret fjernbetjening</i> fra Bluetooth.<br>Du kan skippe til forrige/n&aelig;ste sang (eller 5%)
+i on demand udsendelser fra dit Bluetooth headset og fra l&aring;sesk&aelig;rmen i Android 4. Ved direkte udsendelser skiftes til
 forrige/n&aelig;ste kanal.</p>
+<p>L&aring;sesk&aelig;rmens baggrund viser den aktuelle kanal.
+	Dette kan slås fra ved at slå 'Fjernbetjening' fra i indstillingerne</p>
 <p>Kanaloversigten: <i>H&oslash;r live-knap er flyttet op i toppen</i>
 af siden. <br>Tryk p&aring; den hvide baggrund for at rulle hen til
 aktuel udsendelse.</p>
 <p><i>Radiolinks i browseren kan aktivere app'en</i> - &aring;bn
 f.eks. <a href="http://dr.dk/p1">dr.dk/p1</a> og pr&oslash;v at &aring;bne
 webplayeren.</p>
-<p>Rettet fejl: Favoritter, bluetooth fjernbetjening,
-stemmevejledning (Google Maps kan nu bruges n&aring;r radio er p&aring;
-pause - f&oslash;r blev der skruet ned for lyden hele tiden), diverse
-Android 2 rettelser</p>
-<p style="margin-bottom: 0cm"><br>
-</p>
-<p><b>Kendte fejl og problemer</b></p>
-<p>S&oslash;gning s&oslash;ger kun i programserienavne &ndash; vi
-arbejder p&aring; at udvide s&oslash;gningen til ogs&aring; at s&oslash;ge
- i beskrivelserne</p>
 
+<p><b>Kendte fejl og problemer</b><br>
+Når man spoler så bliver der afspillet fra dobbelt så langt inde som man vælger (på Android 5)<br>
+Holdes app'en åben til næste dag er overskrifter 'i dag', 'i morgen', 'i går' etc ikke opdateret<br>
+</p>
 </body>
 </html>
