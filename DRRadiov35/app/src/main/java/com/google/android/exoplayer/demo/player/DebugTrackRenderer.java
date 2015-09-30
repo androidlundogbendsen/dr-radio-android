@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dk.dr.radio.afspilning.exoplayer;
+package com.google.android.exoplayer.demo.player;
 
 import android.widget.TextView;
 

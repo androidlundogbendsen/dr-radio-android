@@ -10,10 +10,10 @@ import com.google.android.exoplayer.ExoPlayerLibraryInfo;
 
 import java.io.IOException;
 
-import dk.dr.radio.afspilning.exoplayer.DefaultRendererBuilder;
-import dk.dr.radio.afspilning.exoplayer.DemoPlayer;
-import dk.dr.radio.afspilning.exoplayer.EventLogger;
-import dk.dr.radio.afspilning.exoplayer.HlsRendererBuilder;
+import com.google.android.exoplayer.demo.player.ExtractorRendererBuilder;
+import com.google.android.exoplayer.demo.player.DemoPlayer;
+import com.google.android.exoplayer.demo.EventLogger;
+import com.google.android.exoplayer.demo.player.HlsRendererBuilder;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
@@ -41,8 +41,8 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
           player = new DemoPlayer(new HlsRendererBuilder(versionName, url, url));
           App.kortToast("HlsRendererBuilder\n" + url);
         } else {
-          player = new DemoPlayer(new DefaultRendererBuilder(App.instans, Uri.parse(url), null));
-          App.kortToast("DefaultRendererBuilder\n" + url);
+          player = new DemoPlayer(new ExtractorRendererBuilder(App.instans, Uri.parse(url), null));
+          App.kortToast("ExtractorRendererBuilder\n" + url);
         }
         player.addListener(ExoPlayerWrapper.this);
         player.seekTo(0);

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dk.dr.radio.afspilning.exoplayer;
+package com.google.android.exoplayer.demo;
 
 import android.media.MediaCodec.CryptoException;
 import android.os.SystemClock;
@@ -22,6 +22,7 @@ import android.util.Log;
 import com.google.android.exoplayer.ExoPlayer;
 import com.google.android.exoplayer.MediaCodecAudioTrackRenderer.AudioTrackInitializationException;
 import com.google.android.exoplayer.MediaCodecTrackRenderer.DecoderInitializationException;
+import com.google.android.exoplayer.demo.player.DemoPlayer;
 import com.google.android.exoplayer.util.VerboseLogUtil;
 
 import java.io.IOException;

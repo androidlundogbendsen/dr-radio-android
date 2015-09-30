@@ -10,7 +10,7 @@ android {
     buildToolsVersion '22.0.1'
     defaultConfig {
         applicationId 'dk.dr.radio'
-        minSdkVersion 7
+        minSdkVersion 9
         targetSdkVersion 21
         versionCode 50
         versionName '3.5.2++ Ny API-URL igen'
@@ -32,6 +32,7 @@ android {
 dependencies {
     compile 'com.android.support:support-v4:21.0.3'
     compile 'com.android.support:appcompat-v7:21.0.3'
+//    compile 'com.google.android.exoplayer:exoplayer:r1.5.0'
     compile files('libs/ExoPlayer-HLS.jar')
     compile files('libs/android-query-full.0.26.7.jar')
     compile files('libs/bugsense-3.6.jar')

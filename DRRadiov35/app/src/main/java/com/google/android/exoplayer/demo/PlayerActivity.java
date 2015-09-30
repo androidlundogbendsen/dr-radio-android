@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dk.dr.radio.afspilning.exoplayer;
+package com.google.android.exoplayer.demo;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -40,9 +40,12 @@ import android.widget.TextView;
 import com.google.android.exoplayer.ExoPlayer;
 import com.google.android.exoplayer.ExoPlayerLibraryInfo;
 import com.google.android.exoplayer.VideoSurfaceView;
+import com.google.android.exoplayer.demo.player.ExtractorRendererBuilder;
 import com.google.android.exoplayer.text.SubtitleView;
 import com.google.android.exoplayer.util.VerboseLogUtil;
 
+import com.google.android.exoplayer.demo.player.DemoPlayer;
+import com.google.android.exoplayer.demo.player.HlsRendererBuilder;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.v3.R;
 
@@ -50,7 +53,7 @@ import dk.dr.radio.v3.R;
  * An activity that plays media using {@link DemoPlayer}.
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class DRFullPlayerActivity extends Activity implements SurfaceHolder.Callback, OnClickListener,
+public class PlayerActivity extends Activity implements SurfaceHolder.Callback, OnClickListener,
     DemoPlayer.Listener, DemoPlayer.TextListener {
 
   private static final float CAPTION_LINE_HEIGHT_RATIO = 0.0533f;
@@ -171,8 +174,8 @@ public class DRFullPlayerActivity extends Activity implements SurfaceHolder.Call
         player = new DemoPlayer(new HlsRendererBuilder(versionName, url, navn));
         App.kortToast("HlsRendererBuilder\n"+url);
       } else {
-        player = new DemoPlayer(new DefaultRendererBuilder(this, Uri.parse(url), debugTextView));
-        App.kortToast("DefaultRendererBuilder\n"+url);
+        player = new DemoPlayer(new ExtractorRendererBuilder(this, Uri.parse(url), debugTextView));
+        App.kortToast("ExtractorRendererBuilder\n"+url);
       }
       player.addListener(this);
       player.setTextListener(this);
