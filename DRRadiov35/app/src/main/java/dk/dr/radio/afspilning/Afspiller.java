@@ -173,8 +173,7 @@ public class Afspiller {
         @Override
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
           if (uændret) return; // ingen grund til at parse det igen
-          JSONObject o = new JSONObject(json);
-          lydkilde.setStreams(o);
+          lydkilde.setStreams(json);
           Log.d("hentStreams afsp fraCache=" + fraCache + " => " + lydkilde);
           if (onErrorTæller++>2) {
             App.kortToast(R.string.Kunne_ikke_oprette_forbindelse_til_DR);

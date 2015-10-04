@@ -82,11 +82,11 @@ public class Grunddata {
     int antal = jsonArray.length();
     for (int i = 0; i < antal; i++) {
       JSONObject j = jsonArray.getJSONObject(i);
-      String kanalkode = j.optString("scheduleIdent", "P4F");
+      String kanalkode = j.optString("scheduleIdent", Kanal.P4kode);
       Kanal k = kanalFraKode.get(kanalkode);
       if (k == null) {
         k = new Kanal();
-        k.kode = j.optString("scheduleIdent", "P4F");
+        k.kode = j.optString("scheduleIdent", Kanal.P4kode);
         kanalFraKode.put(k.kode, k);
       }
       k.navn = j.getString("title");

@@ -18,49 +18,68 @@ package com.google.android.exoplayer.demo.player;
 import android.content.Context;
 import android.media.MediaCodec;
 import android.net.Uri;
-import android.widget.TextView;
 
-import com.google.android.exoplayer.FrameworkSampleSource;
 import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
 import com.google.android.exoplayer.MediaCodecVideoTrackRenderer;
 import com.google.android.exoplayer.TrackRenderer;
+import com.google.android.exoplayer.audio.AudioCapabilities;
+import com.google.android.exoplayer.demo.player.DemoPlayer.RendererBuilder;
+import com.google.android.exoplayer.extractor.Extractor;
+import com.google.android.exoplayer.extractor.ExtractorSampleSource;
+import com.google.android.exoplayer.text.TextTrackRenderer;
+import com.google.android.exoplayer.upstream.Allocator;
+import com.google.android.exoplayer.upstream.DataSource;
+import com.google.android.exoplayer.upstream.DefaultAllocator;
+import com.google.android.exoplayer.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer.upstream.DefaultUriDataSource;
 
 /**
- * A {@link DemoPlayer.RendererBuilder} for streams that can be read using
- * {@link android.media.MediaExtractor}.
+ * A {@link RendererBuilder} for streams that can be read using an {@link Extractor}.
  */
-/* package */ public class ExtractorRendererBuilder implements DemoPlayer.RendererBuilder {
+public class ExtractorRendererBuilder implements RendererBuilder {
+
+  private static final int BUFFER_SEGMENT_SIZE = 64 * 1024;
+  private static final int BUFFER_SEGMENT_COUNT = 256;
 
   private final Context context;
+  private final String userAgent;
   private final Uri uri;
-  private final TextView debugTextView;
 
-  public ExtractorRendererBuilder(Context context, Uri uri, TextView debugTextView) {
+  public ExtractorRendererBuilder(Context context, String userAgent, Uri uri) {
     this.context = context;
+    this.userAgent = userAgent;
     this.uri = uri;
-    this.debugTextView = debugTextView;
   }
 
   @Override
-  public void buildRenderers(DemoPlayer player, DemoPlayer.RendererBuilderCallback callback) {
-    // Build the video and audio renderers.
-    FrameworkSampleSource sampleSource = new FrameworkSampleSource(context, uri, null, 2);
-    MediaCodecVideoTrackRenderer videoRenderer = new MediaCodecVideoTrackRenderer(sampleSource,
-        null, true, MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT, 5000,
-        player.getMainHandler(), player, 50);
-    MediaCodecAudioTrackRenderer audioRenderer = new MediaCodecAudioTrackRenderer(sampleSource,
-        null, true, player.getMainHandler(), player);
+  public void buildRenderers(DemoPlayer player) {
+    Allocator allocator = new DefaultAllocator(BUFFER_SEGMENT_SIZE);
 
-    // Build the debug renderer.
-    TrackRenderer debugRenderer = debugTextView != null
-        ? new DebugTrackRenderer(debugTextView, videoRenderer)
-        : null;
+    // Build the video and audio renderers.
+    DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter(player.getMainHandler(),
+        null);
+    DataSource dataSource = new DefaultUriDataSource(context, bandwidthMeter, userAgent);
+    ExtractorSampleSource sampleSource = new ExtractorSampleSource(uri, dataSource, allocator,
+        BUFFER_SEGMENT_COUNT * BUFFER_SEGMENT_SIZE);
+    MediaCodecVideoTrackRenderer videoRenderer = new MediaCodecVideoTrackRenderer(sampleSource,
+        null, true, MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT, 5000, null, player.getMainHandler(),
+        player, 50);
+    MediaCodecAudioTrackRenderer audioRenderer = new MediaCodecAudioTrackRenderer(sampleSource,
+        null, true, player.getMainHandler(), player, AudioCapabilities.getCapabilities(context));
+    TrackRenderer textRenderer = new TextTrackRenderer(sampleSource, player,
+        player.getMainHandler().getLooper());
 
     // Invoke the callback.
     TrackRenderer[] renderers = new TrackRenderer[DemoPlayer.RENDERER_COUNT];
     renderers[DemoPlayer.TYPE_VIDEO] = videoRenderer;
     renderers[DemoPlayer.TYPE_AUDIO] = audioRenderer;
-    renderers[DemoPlayer.TYPE_DEBUG] = debugRenderer;
-    callback.onRenderers(null, null, renderers);
+    renderers[DemoPlayer.TYPE_TEXT] = textRenderer;
+    player.onRenderers(renderers, bandwidthMeter);
   }
+
+  @Override
+  public void cancel() {
+    // Do nothing.
+  }
+
 }

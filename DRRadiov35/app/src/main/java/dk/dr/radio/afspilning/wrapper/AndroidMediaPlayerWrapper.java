@@ -123,7 +123,6 @@ public class AndroidMediaPlayerWrapper implements MediaPlayerWrapper {
   private static Class<? extends MediaPlayerWrapper> mediaPlayerWrapperKlasse = null;
 
   public static MediaPlayerWrapper opret() {
-    if (!App.PRODUKTION) mediaPlayerWrapperKlasse = null; // TODO skal nok fjernes igen
     if (mediaPlayerWrapperKlasse == null) {
       if (App.prefs.getBoolean("exoplayer", false)) {
         mediaPlayerWrapperKlasse = ExoPlayerWrapper.class;
@@ -140,7 +139,6 @@ public class AndroidMediaPlayerWrapper implements MediaPlayerWrapper {
         }
       }
     }
-
     try {
       Log.d("MediaPlayerWrapper opret() " + mediaPlayerWrapperKlasse);
       return mediaPlayerWrapperKlasse.newInstance();
@@ -149,4 +147,9 @@ public class AndroidMediaPlayerWrapper implements MediaPlayerWrapper {
     }
     return new AndroidMediaPlayerWrapper();
   }
+
+  public static void nulstilWrapper() {
+    mediaPlayerWrapperKlasse = null;
+  }
+
 }

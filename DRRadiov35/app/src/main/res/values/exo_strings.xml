@@ -10,11 +10,25 @@
      Unless required by applicable law or agreed to in writing, software
      distributed under the License is distributed on an "AS IS" BASIS,
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
+     See the License for the specific languager.java:95)
+            at android.os.Looper.loop(Looper.java:135)
+            at android.app.ActivityThread.main(ActivityThread.java:5257)
+            at java.lang.reflect.Method.invoke(Native Method)
+            at java.lang.reflect.Method.invoke(Method.java:372)
+            at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:903)
+            at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:698)
+09-30 18:10:29.050  13891-13891/dk.dr.radio.v3 D/DRRadio﹕ Kunne ikke ikke parse 2015-09-07T05:00:10.615+02:00 med 2004-12-24T20:00:00GMT+01:00 java.text.ParseException: Unparseable date: "2015-09-07T05:00:10.615+02:00" (at offset 19) (prøver med et andet)
+09-30 18:10:43.270  13891-13891/dk.dr.radio.v3 D/DRRadio﹕ sætErIGang: http://www.dr.dk/tjenester/mu-apps/playlist/hithouse-2015-09-30/0
+09-30 18:11:13.300  13891-13891/dk.dr.radio.v3 D/DRRadio﹕ sætErIGang: http://www.dr.dk/tjenester/mu-apps/playlist/hithouse-2015-09-30/0
+09-30 18:11:43.330  13891-13891/dk.dr.radio.v3 D/DRRadio﹕ sætErIGang: http://www.dr.dk/tjenester/mu-apps/playlist/hithouse-2015-09-30/0
+09-30 18:12:13.360  13891-13891/dk.dr.radio.v3 D/DRRadio﹕ sætErIGang: http://www.dr.dk/tjenester/mu-apps/playlist/hithouse-2015-09-30/0
+09-30 18:12:43.390  13891-13891/dk.dr.radio.v3 D/DRRadio﹕ sætErIGang: http://www.dr.dk/tjenester/mu-apps/playlist/hithouse-2015-09-30/0
+09-30 18:13:13.420  13891-13891/dk.dr.radio.v3 D/DRRadio﹕ sætErIGang: http://www.dr.dk/tjenester/mu-apps/playlist/hithouse-2015-09-30/0
+ governing permissions and
      limitations under the License.
 -->
 
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
   <!-- The user visible name of the application. [CHAR LIMIT=20] -->
   <string name="application_name">ExoPlayer Demo</string>
@@ -37,10 +51,10 @@
 
   <string name="off">[off]</string>
 
-  <string name="on">[on]</string>
+  <string name="drm_error_not_supported">Protected content not supported on API levels below 18</string>
 
-  <string name="drm_not_supported">Protected content not supported on API levels below 18</string>
+  <string name="drm_error_unsupported_scheme">This device does not support the required DRM scheme</string>
 
-  <string name="failed">Playback failed</string>
+  <string name="drm_error_unknown">An unknown DRM error occurred</string>
 
 </resources>

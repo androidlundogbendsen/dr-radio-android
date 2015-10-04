@@ -2,6 +2,8 @@ package dk.dr.radio.net.volley;
 
 import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 
@@ -17,8 +19,8 @@ public class DrVolleyStringRequest extends StringRequest {
     super(url, listener, listener);
     lytter = listener;
     lytter.url = url;
-    if (!App.PRODUKTION && url.equals("http://dr-mu-apps.azurewebsites.net/tjenester/mu-apps-test/channel/p4?includeStreams=true")) {
-      throw new Error("P4 streamURL kaldt, uden underkanal");
+    if (!App.PRODUKTION && url.contains("channel/p4?")) {
+      throw new IllegalStateException("P4 streamURL kaldt, uden underkanal: "+url);
     }
     App.sætErIGang(true, url);
     /*
@@ -68,5 +70,12 @@ public class DrVolleyStringRequest extends StringRequest {
   public void cancel() {
     super.cancel();
     lytter.annulleret();
+  }
+
+  @Override
+  protected Response<String> parseNetworkResponse(NetworkResponse response) {
+    // ignorér forbud mod caching -  i vores tilfælde er en gammel værdi er altid bedre at have liggende end ingen
+    response.headers.remove("Cache-Control");
+    return super.parseNetworkResponse(response);
   }
 }

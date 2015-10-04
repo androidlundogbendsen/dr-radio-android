@@ -59,8 +59,7 @@
             android:id="@+id/direktetekst"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" LIVE"
-            tools:ignore="HardcodedText"
+            android:text="@string/_LIVE"
             android:textColor="@color/grå40"
             />
 

@@ -37,11 +37,11 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
       public void run() {
         String versionName;
         versionName = "ExoPlayerDemo/" + App.versionsnavn + " (Linux;Android " + Build.VERSION.RELEASE + ") " + "ExoPlayerLib/" + ExoPlayerLibraryInfo.VERSION;
-        if (url.endsWith("m3u8")) {
-          player = new DemoPlayer(new HlsRendererBuilder(versionName, url, url));
+        if (url.contains("m3u8")) {
+          player = new DemoPlayer(new HlsRendererBuilder(App.instans, versionName, url));
           App.kortToast("HlsRendererBuilder\n" + url);
         } else {
-          player = new DemoPlayer(new ExtractorRendererBuilder(App.instans, Uri.parse(url), null));
+          player = new DemoPlayer(new ExtractorRendererBuilder(App.instans, versionName, Uri.parse(url)));
           App.kortToast("ExtractorRendererBuilder\n" + url);
         }
         player.addListener(ExoPlayerWrapper.this);
@@ -73,7 +73,9 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
 
   @Override
   public void seekTo(int offsetMs) {
+    App.kortToast("seekTo(" + offsetMs+"\n"+player);
     if (player!=null) player.seekTo(offsetMs);
+//    else udeståendeSeekToOffsetMs = offsetMs;
   }
 
   @Override
@@ -199,7 +201,7 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
   }
 
   @Override
-  public void onVideoSizeChanged(int width, int height, float pixelWidthHeightRatio) {
+  public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
 
   }
 }
