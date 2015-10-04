@@ -300,7 +300,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
     if (App.serverCurrentTimeMillis() > vh.udsendelse.slutTid.getTime()) {
       opdaterListe();
-      if (App.fejlsøgning) App.kortToast("Kanal_frag opdaterListe()");
+      //if (App.fejlsøgning) App.kortToast("Kanal_frag opdaterListe()");
       if (vh.startid.isShown()) rulBlødtTilAktuelUdsendelse();
     }
 
@@ -612,7 +612,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
   }
 
   public static void hør(final Kanal kanal, Activity akt) {
-    if (App.fejlsøgning) App.kortToast("kanal=" + kanal);
+    //if (App.fejlsøgning) App.kortToast("kanal=" + kanal);
     if (App.prefs.getBoolean("manuelStreamvalg", false)) {
       kanal.nulstilForetrukkenStream();
       final List<Lydstream> lydstreamList = kanal.findBedsteStreams(false);

@@ -13,7 +13,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 21
         versionCode 50
-        versionName '3.5.2.1 (beta) Exo 3'
+        versionName '3.5.2 beta Exo 4'
     }
     buildTypes {
         release {
@@ -30,9 +30,15 @@ android {
 }
 
 dependencies {
+    /*
     compile 'com.android.support:support-v4:21.0.3'
     compile 'com.android.support:appcompat-v7:21.0.3'
+
+    compile 'com.android.support:support-v4:22.0.+'
+     */
+    compile 'com.android.support:appcompat-v7:22.0.+'
     compile 'com.google.android.exoplayer:exoplayer:r1.5.0'
+//    compile 'com.devbrackets.android:exomedia:2.3.5'
 //    compile files('libs/ExoPlayer-HLS.jar')
     compile files('libs/android-query-full.0.26.7.jar')
     compile files('libs/bugsense-3.6.jar')

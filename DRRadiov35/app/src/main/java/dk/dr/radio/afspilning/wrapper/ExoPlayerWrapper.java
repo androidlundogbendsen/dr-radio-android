@@ -39,10 +39,10 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
         versionName = "ExoPlayerDemo/" + App.versionsnavn + " (Linux;Android " + Build.VERSION.RELEASE + ") " + "ExoPlayerLib/" + ExoPlayerLibraryInfo.VERSION;
         if (url.contains("m3u8")) {
           player = new DemoPlayer(new HlsRendererBuilder(App.instans, versionName, url));
-          App.kortToast("HlsRendererBuilder\n" + url);
+          if (App.fejlsøgning) App.kortToast("HlsRendererBuilder\n" + url);
         } else {
           player = new DemoPlayer(new ExtractorRendererBuilder(App.instans, versionName, Uri.parse(url)));
-          App.kortToast("ExtractorRendererBuilder\n" + url);
+          if (App.fejlsøgning) App.kortToast("ExtractorRendererBuilder\n" + url);
         }
         player.addListener(ExoPlayerWrapper.this);
         player.seekTo(0);
@@ -73,7 +73,7 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
 
   @Override
   public void seekTo(int offsetMs) {
-    App.kortToast("seekTo(" + offsetMs+"\n"+player);
+    if (App.fejlsøgning) App.kortToast("seekTo(" + offsetMs+"\n"+player);
     if (player!=null) player.seekTo(offsetMs);
 //    else udeståendeSeekToOffsetMs = offsetMs;
   }

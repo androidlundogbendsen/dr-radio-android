@@ -164,6 +164,7 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
     super.onDestroy();
     App.fejlsøgning = App.prefs.getBoolean("fejlsøgning", false);
     AndroidMediaPlayerWrapper.nulstilWrapper();
+    AndroidMediaPlayerWrapper.opret();
   }
 
   @Override
