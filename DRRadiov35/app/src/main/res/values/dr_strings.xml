@@ -124,6 +124,8 @@
   <string name="Fortsæt_i_baggrunden">Fortsæt i\nbaggrunden</string>
   <string name="Brugergrænseflade">Brugergrænseflade</string>
   <string name="Avanceret">Avanceret</string>
+  <string name="Udviklertilstand">Udviklertilstand</string>
+  <string name="Vis_ekstra_muligheder_til_udvikling_og_fejlfinding">Vis ekstra muligheder til udvikling og fejlfinding</string>
 
   <string name="GRUNDDATA_URL_PRODUKTION">http://www.dr.dk/tjenester/iphone/radio/settings/iphone200d.drxml</string>
   <string name="GRUNDDATA_URL_UDVIKLING">http://android.lundogbendsen.dk/drradiov3_grunddata.json</string>

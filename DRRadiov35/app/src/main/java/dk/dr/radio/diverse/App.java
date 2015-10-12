@@ -143,7 +143,7 @@ public class App extends Application {
     }
     String packageName = getPackageName();
     try {
-      if ("dk.dr.radio".equals(packageName)) {
+      if (ÆGTE_DR) if ("dk.dr.radio".equals(packageName)) {
         if (!PRODUKTION) App.langToast("Sæt PRODUKTIONs-flaget");
       } else {
         if (PRODUKTION) App.langToast("Testudgave - fjern PRODUKTIONs-flaget");
