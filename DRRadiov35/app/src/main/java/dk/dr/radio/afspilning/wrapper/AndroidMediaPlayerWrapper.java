@@ -121,6 +121,8 @@ public class AndroidMediaPlayerWrapper implements MediaPlayerWrapper {
   }
 
   private static Class<? extends MediaPlayerWrapper> mediaPlayerWrapperKlasse = null;
+  enum Hvilken { GammelMediaPlayer, NyExoPlayer, NyEmaPlayer };
+  private static Hvilken hvilkenSidst;
 
   public static MediaPlayerWrapper opret() {
     if (mediaPlayerWrapperKlasse == null) {
@@ -131,16 +133,37 @@ public class AndroidMediaPlayerWrapper implements MediaPlayerWrapper {
       }
       if (App.EMULATOR || !App.ÆGTE_DR) rapporter = false;
 
-      boolean exoplayer = App.PRODUKTION||!App.ÆGTE_DR ? false : Math.random()>0.5;
-      if (App.prefs.getBoolean("tving_exoplayer", false)) exoplayer = true;
-      if (App.prefs.getBoolean("tving_mediaplayer", false)) exoplayer = false;
+      // A/B/C test - Vælg en tilfældig
+      Hvilken hvilken = Hvilken.values()[(int) (Math.random()*Hvilken.values().length)];
+      if (hvilkenSidst==hvilken) { // Det er lidt kedeligt med den samme, prøv igen
+        hvilken = Hvilken.values()[(int) (Math.random()*Hvilken.values().length)];
+      }
 
-      if (exoplayer) {
+      //boolean exoplayer = App.PRODUKTION||!App.ÆGTE_DR ? false : Math.random()>0.5;
+      if (!App.PRODUKTION_PÅ_PRØVE || !App.ÆGTE_DR) hvilken = Hvilken.GammelMediaPlayer;
+
+      hvilkenSidst = hvilken;
+      if (App.prefs.getBoolean("tving_exoplayer", false)) hvilken = Hvilken.NyExoPlayer;
+      if (App.prefs.getBoolean("tving_mediaplayer", false)) hvilken = Hvilken.GammelMediaPlayer;
+      if (App.prefs.getBoolean("tving_emaplayer", false)) hvilken = Hvilken.NyEmaPlayer;
+
+      if (hvilken==Hvilken.NyExoPlayer) {
         try {
           if (!rapporter)
             mediaPlayerWrapperKlasse = ExoPlayerWrapper.class;
           else
             mediaPlayerWrapperKlasse = (Class<? extends MediaPlayerWrapper>) Class.forName("dk.dr.radio.afspilning.wrapper.AkamaiExoPlayerWrapper");
+        } catch (Exception e) {
+          e.printStackTrace();
+          mediaPlayerWrapperKlasse = ExoPlayerWrapper.class;
+          if (App.ÆGTE_DR) Log.e("Mangler Akamai-wrapper til statistik", e);
+        }
+      } else if (hvilken==Hvilken.NyEmaPlayer) {
+        try {
+          if (!rapporter)
+            mediaPlayerWrapperKlasse = EmaPlayerWrapper.class;
+          else
+            mediaPlayerWrapperKlasse = (Class<? extends MediaPlayerWrapper>) Class.forName("dk.dr.radio.afspilning.wrapper.AkamaiEmaPlayerWrapper");
         } catch (Exception e) {
           e.printStackTrace();
           mediaPlayerWrapperKlasse = ExoPlayerWrapper.class;
@@ -169,8 +192,12 @@ public class AndroidMediaPlayerWrapper implements MediaPlayerWrapper {
   }
 
   public static void nulstilWrapper() {
-    if (App.fejlsøgning) App.kortToast("Fjerner wrapper\n"+mediaPlayerWrapperKlasse);
+    if (App.fejlsøgning) App.kortToast(("Fjerner wrapper\n"+mediaPlayerWrapperKlasse).replaceAll("dk.dr.radio.afspilning.wrapper.",""));
     mediaPlayerWrapperKlasse = null;
   }
 
+  @Override
+  public String toString() {
+    return "Android MediaPlayer";
+  }
 }

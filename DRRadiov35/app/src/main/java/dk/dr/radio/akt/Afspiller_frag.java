@@ -31,6 +31,7 @@ import com.androidquery.AQuery;
 
 import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.afspilning.Status;
+import dk.dr.radio.afspilning.wrapper.AndroidMediaPlayerWrapper;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.Kanal;
@@ -422,6 +423,7 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
       if (DRData.instans.afspiller.afspillerstatus == Status.STOPPET) {
         DRData.instans.afspiller.startAfspilning();
       } else {
+        if (App.PRODUKTION_PÅ_PRØVE) AndroidMediaPlayerWrapper.nulstilWrapper(); // TODO fjern
         DRData.instans.afspiller.stopAfspilning();
       }
     } else if (v.getId() == R.id.forrige) {

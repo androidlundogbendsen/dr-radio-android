@@ -28,7 +28,6 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
   private EventLogger eventLogger;
   private MediaPlayerLytter lytter;
   private PowerManager.WakeLock mWakeLock = null;
-  private boolean mStayAwake;
 
   @Override
   public void setDataSource(final String url) throws IOException {
@@ -105,11 +104,13 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
   @Override
   public void release() {
     player.release();
+    stayAwake(false);
   }
 
   @Override
   public void reset() {
     //player.reset();
+    stayAwake(false);
   }
 
   @Override
@@ -162,7 +163,6 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
         mWakeLock.release();
       }
     }
-    mStayAwake = awake;
   }
 
   @Override
@@ -203,5 +203,10 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
   @Override
   public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
 
+  }
+
+  @Override
+  public String toString() {
+    return "ExoPlayer";
   }
 }

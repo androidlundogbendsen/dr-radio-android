@@ -122,6 +122,11 @@
               android:summaryOff="forvalgt"/>
 
           <CheckBoxPreference
+            android:key="tving_emaplayer" android:title="Tving EmaPlayer"
+            android:summaryOn="EmaPlayer benyttes altid.\nNogle funktioner, bl.a. valg af musiknummer, og at en udsende fortsætter hvor den sidst blev stoppet, er ikke implementeret"
+            android:summaryOff="forvalgt"/>
+
+          <CheckBoxPreference
               android:key="fejlsøgning" android:title="Fejlsøgning"
               android:defaultValue="false" android:summaryOff=""
               android:summaryOn="Sæt app i fejlsøgningstilstand (også efter genstart)"/>

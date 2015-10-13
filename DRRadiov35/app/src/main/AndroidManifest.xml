@@ -4,6 +4,7 @@
           android:installLocation="auto"
           tools:ignore="UnusedAttribute">
 
+  <uses-sdk tools:overrideLibrary="com.google.android.exoplayer"/>
 
   <!-- Nødvendigt til vækkeur -->
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>

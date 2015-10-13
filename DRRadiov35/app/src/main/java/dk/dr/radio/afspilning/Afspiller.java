@@ -162,6 +162,7 @@ public class Afspiller {
   private long onErrorTællerNultid;
 
   public void startAfspilning() {
+    if (App.fejlsøgning) App.kortToast("startAfspilning() "+mediaPlayer);
     if (lydkilde.hentetStream == null && !App.erOnline()) {
       App.kortToast(R.string.Internetforbindelse_mangler);
       if (vækningIGang) ringDenAlarm();
