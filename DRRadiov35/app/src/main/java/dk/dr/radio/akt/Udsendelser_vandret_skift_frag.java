@@ -1,6 +1,5 @@
 package dk.dr.radio.akt;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -88,19 +87,19 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     liste = new ArrayList<Udsendelse>();
     if (programserie == null) {
       liste.add(startudsendelse);
-      adapter.liste2 = liste;
+      adapter.setListe(liste);
       viewPager.setAdapter(adapter);
       hentUdsendelser(0);
     } else {
       int n = Programserie.findUdsendelseIndexFraSlug(liste, startudsendelse.slug);
       if (n < 0) {
         liste.add(startudsendelse);
-        adapter.liste2 = liste;
+        adapter.setListe(liste);
         viewPager.setAdapter(adapter);
         hentUdsendelser(0);
       } else {
         liste.addAll(programserie.getUdsendelser());
-        adapter.liste2 = liste;
+        adapter.setListe(liste);
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(n);
       }
@@ -149,8 +148,7 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     }
     int nEft = udsFør==null?0:Programserie.findUdsendelseIndexFraSlug(liste, udsFør.slug);
     if (nEft < 0) nEft = liste.size() - 1; // startudsendelsen
-    adapter.liste2 = liste;
-    adapter.notifyDataSetChanged();
+    adapter.setListe(liste);
     if (App.fejlsøgning) Log.d("xxx setCurrentItem " + viewPager.getCurrentItem() + "   nEft=" + nEft);
     viewPager.setCurrentItem(nEft, false); // - burde ikke være nødvendig, vi har defineret getItemPosition
     vispager_title_strip();
@@ -226,6 +224,12 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
 
     public UdsendelserAdapter(FragmentManager fm) {
       super(fm);
+    }
+
+
+    public void setListe(ArrayList<Udsendelse> liste) {
+      liste2 = new ArrayList<>(liste);
+      notifyDataSetChanged();
     }
 
     @Override
