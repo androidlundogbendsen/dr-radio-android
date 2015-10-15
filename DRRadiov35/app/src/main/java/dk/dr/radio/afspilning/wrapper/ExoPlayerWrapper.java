@@ -197,6 +197,7 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
 
   @Override
   public void onError(Exception e) {
+    if (lytter==null) return;
     lytter.onError(null, 42, 42);
   }
 
