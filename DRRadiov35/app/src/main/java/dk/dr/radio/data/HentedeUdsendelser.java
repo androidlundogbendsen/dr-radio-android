@@ -237,6 +237,7 @@ public class HentedeUdsendelser {
     DownloadManager.Query query = new DownloadManager.Query();
     query.setFilterById(downloadId);
     Cursor c = downloadService.query(query);
+    if (c==null) return null; // fix for https://mint.splunk.com/dashboard/project/cd78aa05/errors/4066198043
     if (c.moveToFirst()) {
       return c;
     }

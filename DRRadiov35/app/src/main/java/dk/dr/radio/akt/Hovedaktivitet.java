@@ -125,9 +125,9 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
       venstremenuFrag.skjulMenu();
     } else if (afspillerFrag.viserUdvidetOmråde()) {
       afspillerFrag.udvidSkjulOmråde();
-    } else {
+    } else try {
       super.onBackPressed();
-    }
+    } catch (Exception e) { Log.rapporterFejl(e); } // Workaround for https://mint.splunk.com/dashboard/project/cd78aa05/errors/4016698276 - se http://stackoverflow.com/questions/7469082/getting-exception-illegalstateexception-can-not-perform-this-action-after-onsa
   }
 
   @Override
@@ -207,21 +207,23 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == android.R.id.home) {
-      getSupportFragmentManager().popBackStack();
-    }
-    if (item.getItemId()==R.id.søg) {
-      FragmentManager fm = getSupportFragmentManager();
-      // Fjern backstak - så vi starter forfra i 'roden'
-      fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-      FragmentTransaction ft = fm.beginTransaction();
-      ft.replace(R.id.indhold_frag, new Soeg_efter_program_frag());
-      // Tilbageknappen skal gå til forsiden - undtagen hvis vi ER på forsiden
-      ft.addToBackStack("Venstremenu");
-      ft.commit();
-      Sidevisning.vist(Soeg_efter_program_frag.class);
-      return true;
-    }
+    try {
+      if (item.getItemId() == android.R.id.home) {
+        getSupportFragmentManager().popBackStack();
+      }
+      if (item.getItemId() == R.id.søg) {
+        FragmentManager fm = getSupportFragmentManager();
+        // Fjern backstak - så vi starter forfra i 'roden'
+        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.indhold_frag, new Soeg_efter_program_frag());
+        // Tilbageknappen skal gå til forsiden - undtagen hvis vi ER på forsiden
+        ft.addToBackStack("Venstremenu");
+        ft.commit();
+        Sidevisning.vist(Soeg_efter_program_frag.class);
+        return true;
+      }
+    } catch (Exception e) { Log.rapporterFejl(e); } // fix for https://mint.splunk.com/dashboard/project/cd78aa05/errors/4020628139
     return super.onOptionsItemSelected(item);
   }
 

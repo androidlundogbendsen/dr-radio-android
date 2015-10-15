@@ -826,16 +826,20 @@ public class Afspiller {
   };
 
   void ringDenAlarm() {
-    Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-    if (alert == null) {
-      // alert is null, using backup
-      alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-      if (alert == null) {  // I can't see this ever being null (as always have a default notification) but just incase
-        // alert backup is null, using 2nd backup
-        alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+    // Fix for https://mint.splunk.com/dashboard/project/cd78aa05/errors/2819028090
+    //  - undgå at wrappe lydkilde i AlarmLydkilde igen og igen
+    if (!(lydkilde instanceof AlarmLydkilde)) {
+      Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+      if (alert == null) {
+        // alert is null, using backup
+        alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        if (alert == null) {  // I can't see this ever being null (as always have a default notification) but just incase
+          // alert backup is null, using 2nd backup
+          alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+        }
       }
+      lydkilde = new AlarmLydkilde(alert.toString(), lydkilde);
     }
-    lydkilde = new AlarmLydkilde(alert.toString(), lydkilde);
     handler.postDelayed(startAfspilningIntern, 100);
     vibru(4000);
   }

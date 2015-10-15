@@ -46,7 +46,7 @@ public class DramaOgBog {
             karusel.add(u);
             karuselSerieSlug.add(u.programserieSlug);
           } catch (JSONException je) {
-            Log.e("Fejl i "+karuselJson.getJSONObject(n), je);
+            Log.d("Fejl i "+ karuselJson.getJSONObject(n) + je);
           }
 
           String titel = jsonObject.optString(DRJson.Title.name());

@@ -64,6 +64,7 @@ public class ExoPlayerWrapper implements MediaPlayerWrapper, DemoPlayer.Listener
     App.forgrundstråd.post(new Runnable() {
       @Override
       public void run() {
+        if (player==null) return;
         player.prepare();
         player.setPlayWhenReady(true);
       }

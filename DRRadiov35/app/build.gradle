@@ -15,7 +15,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 21
         versionCode 53
-        versionName '3.5.2 beta6'
+        versionName '3.5.2 beta7'
     }
     buildTypes {
         release {

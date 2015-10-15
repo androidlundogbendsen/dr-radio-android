@@ -404,7 +404,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
 
     @Override
     public int getItemViewType(int position) {
-      if (position == 0 || position >= liste.size() - 1) return TIDLIGERE_SENERE;
+      if (position == 0 || position >= liste.size() - 1) return TIDLIGERE_SENERE;  // Workaround for https://mint.splunk.com/dashboard/project/cd78aa05/errors/3004788237 hvor PinnedSectionListView spørger ud over adapterens størrelse
       if (position == aktuelUdsendelseIndex) return AKTUEL;
       if (liste.get(position) instanceof Udsendelse) return NORMAL;
       return DAGSOVERSKRIFT;
