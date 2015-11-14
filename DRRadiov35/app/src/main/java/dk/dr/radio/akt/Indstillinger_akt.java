@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import dk.dr.radio.afspilning.wrapper.AndroidMediaPlayerWrapper;
+import dk.dr.radio.afspilning.wrapper.Wrapperfabrikering;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.HentedeUdsendelser;
 import dk.dr.radio.data.Lydkilde;
@@ -163,8 +164,8 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
   protected void onDestroy() {
     super.onDestroy();
     App.fejlsøgning = App.prefs.getBoolean("fejlsøgning", false);
-    AndroidMediaPlayerWrapper.nulstilWrapper();
-    AndroidMediaPlayerWrapper.opret();
+    Wrapperfabrikering.nulstilWrapper();
+    Wrapperfabrikering.opret();
   }
 
   @Override

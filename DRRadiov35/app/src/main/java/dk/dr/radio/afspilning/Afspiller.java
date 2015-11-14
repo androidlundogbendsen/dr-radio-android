@@ -52,6 +52,7 @@ import dk.dr.radio.afspilning.wrapper.AndroidMediaPlayerWrapper;
 import dk.dr.radio.afspilning.wrapper.ExoPlayerWrapper;
 import dk.dr.radio.afspilning.wrapper.MediaPlayerLytter;
 import dk.dr.radio.afspilning.wrapper.MediaPlayerWrapper;
+import dk.dr.radio.afspilning.wrapper.Wrapperfabrikering;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Lydkilde;
@@ -122,7 +123,7 @@ public class Afspiller {
    * Forudsætter DRData er initialiseret
    */
   public Afspiller() {
-    mediaPlayer = AndroidMediaPlayerWrapper.opret();
+    mediaPlayer = Wrapperfabrikering.opret();
 
     sætMediaPlayerLytter(mediaPlayer, this.lytter);
     // Indlæs gamle værdier så vi har nogle...
@@ -413,7 +414,7 @@ public class Afspiller {
       }
     }.start();
 
-    mediaPlayer = AndroidMediaPlayerWrapper.opret();
+    mediaPlayer = Wrapperfabrikering.opret();
     sætMediaPlayerLytter(mediaPlayer, this.lytter); // registrér lyttere på den nye instans
 
     afspillerstatus = Status.STOPPET;
@@ -732,7 +733,7 @@ public class Afspiller {
 
         if (lydkilde.erDirekte()) {
           Log.d("Genstarter afspilning!");
-          mediaPlayer = AndroidMediaPlayerWrapper.opret();
+          mediaPlayer = Wrapperfabrikering.opret();
           sætMediaPlayerLytter(mediaPlayer, this); // registrér lyttere på den nye instans
           startAfspilningIntern();
           if (afspillerlyde) afspillerlyd.forbinder.start();
