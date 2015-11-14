@@ -363,8 +363,6 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
   public void udvidSkjulOmråde() {
     if (!viserUdvidetOmråde()) {
       Sidevisning.vist(Afspiller_frag.class);
-      opdaterSeekBar.run();
-      lydstyrke.run();
       indhold_overskygge.setOnTouchListener(indhold_overskygge_onTouchListener);
       int forrigeNæsteSynlighed = DRData.instans.afspiller.getLydkilde().erDirekte() ? View.GONE : View.VISIBLE;
       aq.id(R.id.forrige).visibility(forrigeNæsteSynlighed).id(R.id.næste).visibility(forrigeNæsteSynlighed);
@@ -392,6 +390,8 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
         indhold_overskygge.setVisibility(View.VISIBLE);
         udvidSkjulOmråde.setVisibility(View.VISIBLE);
       }
+      opdaterSeekBar.run(); // skal ske efter at udvidSkjulOmråde er sat til synligt
+      lydstyrke.run();
     } else {
       App.forgrundstråd.removeCallbacks(opdaterSeekBar);
       App.forgrundstråd.removeCallbacks(lydstyrke);
@@ -424,7 +424,6 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
       if (DRData.instans.afspiller.afspillerstatus == Status.STOPPET) {
         DRData.instans.afspiller.startAfspilning();
       } else {
-        if (App.PRODUKTION_PÅ_PRØVE) Wrapperfabrikering.nulstilWrapper(); // TODO fjern
         DRData.instans.afspiller.stopAfspilning();
       }
     } else if (v.getId() == R.id.forrige) {
