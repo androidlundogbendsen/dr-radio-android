@@ -34,8 +34,9 @@
         android:summary="Standard er 96kbps og bruger ca. 45 MB data per time, mens høj kvalitet bruger ca. 90 MB/time"
         android:entries="@array/lydkvalitet_tekst"
         android:entryValues="@array/lydkvalitet_kode"/>
+    <!-- Hedder fra v 3.5.3 lydformat2 for at få den nulstillet i forhold til det oprindelige lydformat -->
     <ListPreference
-        android:key="lydformat"
+        android:key="lydformat2"
         android:title="Lydformat"
         android:summary="Hvis du ikke kan få lyd så prøv at vælge MP3 (Shoutcast) her"
         android:defaultValue="auto"
