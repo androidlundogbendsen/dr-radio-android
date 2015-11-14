@@ -566,7 +566,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
       opdaterSenestSpilletViews(aq2, u2);
       return;
     }
-    Request<?> req = new DrVolleyStringRequest(DRData.getPlaylisteUrl(u2.slug), new DrVolleyResonseListener() {
+    Request<?> req = new DrVolleyStringRequest(DRData.getPlaylisteUrl(u2), new DrVolleyResonseListener() {
       @Override
       public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
         if (App.fejlsøgning) Log.d("KAN fikSvar playliste(" + fraCache + uændret + " " + url);

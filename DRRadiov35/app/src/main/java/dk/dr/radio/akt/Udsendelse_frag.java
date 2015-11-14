@@ -378,7 +378,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       App.forgrundstråd.removeCallbacks(opdaterSpillelisteRunnable);
       if (!getUserVisibleHint() || !isResumed() || kanal.ingenPlaylister) return;
       //new Exception("startOpdaterSpilleliste() for "+this).printStackTrace();
-      Request<?> req = new DrVolleyStringRequest(DRData.getPlaylisteUrl(udsendelse.slug), new DrVolleyResonseListener() {
+      Request<?> req = new DrVolleyStringRequest(DRData.getPlaylisteUrl(udsendelse), new DrVolleyResonseListener() {
         @Override
         public void fikSvar(String json, boolean fraCache, boolean uændret) throws Exception {
           if (App.fejlsøgning) Log.d("fikSvar playliste(" + fraCache + " " + url + "   " + this);

@@ -91,6 +91,8 @@ public class App extends Application {
   public static final boolean PRODUKTION_PÅ_PRØVE = true; // TODO sæt til false
   public static final boolean ÆGTE_DR = true;
   private static final String DRAMA_OG_BOG__A_Å_INDLÆST = "DRAMA_OG_BOG__A_Å_INDLÆST";
+  /** Bruges på nye funktioner - for at tjekke om de altid er opfyldt i felten. Fjernes ved næste udgivelser */
+  public static final boolean TJEK_ANTAGELSER = true;
   public static boolean EMULATOR = true; // Sæt i onCreate(), ellers virker det ikke i std Java
   public static App instans;
   public static SharedPreferences prefs;

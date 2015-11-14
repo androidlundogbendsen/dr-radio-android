@@ -139,6 +139,13 @@ public class Log {
     ab.create().show();
   }
 
+
+  public static void fejlantagelse(String fejl) {
+    IllegalStateException e = new IllegalStateException(fejl);
+    if (!App.PRODUKTION) throw e;
+    else Log.rapporterFejl(e);
+  }
+
   //private static LinkedHashMap<String, String> afprøvedeTing = new LinkedHashMap<String, String>();
 
   public static final void registrérTestet(String hvad, String res) {
