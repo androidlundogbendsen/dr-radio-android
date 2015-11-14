@@ -56,6 +56,9 @@ public class Grunddata {
   public long opdaterGrunddataEfterMs = 30 * 60 * 1000;
   /** Om Http Live Streaming skal udelukkes fra mulige lydformater. Gælder på Android 2 og visse Android 4-enheder */
   public boolean udelukHLS;
+  public boolean tving_exoplayer;
+  public boolean tving_mediaplayer;
+  public boolean tving_emaplayer;
 
   public Grunddata() {
     ukendtKanal.navn = "";
@@ -147,18 +150,24 @@ public class Grunddata {
       return;
     }
 
-    udelukHLS = false;
+    if (søgEfterMatch(model_og_version, android_json.optString("udeluk_HLS2"))) udelukHLS = true;
+    tving_exoplayer = søgEfterMatch(model_og_version, android_json.optString("tving_exoplayer"));
+    tving_mediaplayer = søgEfterMatch(model_og_version, android_json.optString("tving_mediaplayer"));
+    tving_emaplayer = søgEfterMatch(model_og_version, android_json.optString("tving_emaplayer"));
+  }
+
+  private static boolean søgEfterMatch(String model_og_version, String søgestreng) {
     try {
-      for (String lin : android_json.getString("udeluk_HLS").split(",")) {
+      for (String lin : søgestreng.split(",")) {
         if (model_og_version.matches(lin.trim())) {
-          Log.d("tjekUdelukFraHLS linjen " + lin + " matcher " + model_og_version + ", så HLS slås fra");
-          udelukHLS = true;
-          break;
+          Log.d("tjek " + søgestreng + " linjen " + lin + " MATCHER " + model_og_version);
+          return true;
         }
       }
     } catch (Exception e) {
       Log.e(e);
     } // Ikke kritisk
+    return false;
   }
 
   private DateFormat[] parseDRBackendTidsformater(JSONArray servertidsformatAndreJson, DateFormat[] servertidsformatAndre) throws JSONException {

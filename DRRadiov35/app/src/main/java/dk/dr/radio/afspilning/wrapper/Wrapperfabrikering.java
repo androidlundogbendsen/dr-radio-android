@@ -1,5 +1,6 @@
 package dk.dr.radio.afspilning.wrapper;
 
+import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 
@@ -29,12 +30,12 @@ public class Wrapperfabrikering {
       }
 
       //boolean exoplayer = App.PRODUKTION||!App.ÆGTE_DR ? false : Math.random()>0.5;
-      if (!App.PRODUKTION_PÅ_PRØVE || !App.ÆGTE_DR) hvilken = Hvilken.GammelMediaPlayer;
+      hvilken = Hvilken.NyEmaPlayer;
 
       hvilkenSidst = hvilken;
-      if (App.prefs.getBoolean("tving_exoplayer", false)) hvilken = Hvilken.NyExoPlayer;
-      if (App.prefs.getBoolean("tving_mediaplayer", false)) hvilken = Hvilken.GammelMediaPlayer;
-      if (App.prefs.getBoolean("tving_emaplayer", false)) hvilken = Hvilken.NyEmaPlayer;
+      if (App.prefs.getBoolean("tving_exoplayer", DRData.instans.grunddata.tving_exoplayer)) hvilken = Hvilken.NyExoPlayer;
+      if (App.prefs.getBoolean("tving_mediaplayer", DRData.instans.grunddata.tving_mediaplayer)) hvilken = Hvilken.GammelMediaPlayer;
+      if (App.prefs.getBoolean("tving_emaplayer", DRData.instans.grunddata.tving_emaplayer)) hvilken = Hvilken.NyEmaPlayer;
 
       if (hvilken==Hvilken.NyExoPlayer) {
         try {
