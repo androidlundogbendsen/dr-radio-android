@@ -229,11 +229,13 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
 
     public void setListe(ArrayList<Udsendelse> liste) {
       liste2 = new ArrayList<>(liste);
+      if (App.EMULATOR) Log.d("setListe() liste2.size() = "+liste2.size());
       notifyDataSetChanged();
     }
 
     @Override
     public Fragment getItem(int position) {
+      if (App.EMULATOR) Log.d("getItem() liste2.size() = "+liste2.size());
       Udsendelse u = liste2.get(position);
       Fragment f = Fragmentfabrikering.udsendelse(u);
       f.getArguments().putString(Kanal_frag.P_kode, kanal.kode);
@@ -272,11 +274,13 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
      */
     @Override
     public int getCount() {
+      if (App.EMULATOR) Log.d("getCount() liste2.size() = "+liste2.size());
       return liste2.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
+      if (App.EMULATOR) Log.d("getPageTitle() liste2.size() = "+liste2.size());
       Udsendelse u = liste2.get(position);
       String dato = DRJson.datoformat.format(u.startTid);
       if (dato.equals(DRJson.iDagDatoStr)) dato = getString(R.string.i_dag);

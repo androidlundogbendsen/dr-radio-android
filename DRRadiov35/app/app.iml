@@ -94,14 +94,14 @@
     <orderEntry type="library" exported="" name="exoplayer-r1.5.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.0.0" level="project" />
     <orderEntry type="library" exported="" name="bugsense-3.6" level="project" />
+    <orderEntry type="library" exported="" name="spring-util-android" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-22.0.0" level="project" />
     <orderEntry type="library" exported="" name="gemiusSDK" level="project" />
     <orderEntry type="library" exported="" name="android-query-full.0.26.7" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-22.0.0" level="project" />
     <orderEntry type="library" exported="" name="libAkamaiAnalytics" level="project" />
-    <orderEntry type="library" exported="" name="spring-appsensor-android-1.7.4" level="project" />
-    <orderEntry type="library" exported="" name="spring-util-android" level="project" />
     <orderEntry type="library" exported="" name="volley" level="project" />
+    <orderEntry type="library" exported="" name="spring-appsensor-android-1.7.4" level="project" />
     <orderEntry type="module" module-name="ExoMedialibrary" exported="" />
   </component>
 </module>
