@@ -16,6 +16,6 @@ public class Playlisteelement {
 
   @Override
   public String toString() {
-    return startTidKl + "/" + kunstner + "/" + titel;
+    return startTidKl + "("+ (offsetMs/1000/60)+ ")"+ "/" + kunstner + "/" + titel;
   }
 }

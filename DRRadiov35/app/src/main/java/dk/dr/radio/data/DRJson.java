@@ -28,7 +28,7 @@ public enum DRJson {
   Streams,
   Uri, Played, Artist, Image,
   Type, Kind, Quality, Kbps, ChannelSlug, TotalPrograms, Programs,
-  FirstBroadcast, DurationInSeconds, Format, OffsetMs,
+  FirstBroadcast, DurationInSeconds, Format, OffsetMs, OffsetInMs,
   ProductionNumber, ShareLink, Episode, Chapters, Subtitle,
 
   /**
@@ -265,13 +265,15 @@ public enum DRJson {
     ArrayList<Playlisteelement> liste = new ArrayList<Playlisteelement>();
     for (int n = 0; n < jsonArray.length(); n++) {
       JSONObject o = jsonArray.getJSONObject(n);
+      if (n==0) Log.d("parsePlayliste "+o);
       Playlisteelement u = new Playlisteelement();
       u.titel = o.getString(DRJson.Title.name());
       u.kunstner = o.getString(DRJson.Artist.name());
       u.billedeUrl = o.optString(DRJson.Image.name(), null);
       u.startTid = DRBackendTidsformater.parseUpålideigtServertidsformatPlayliste(o.getString(DRJson.Played.name()));
       u.startTidKl = klokkenformat.format(u.startTid);
-      u.offsetMs = o.optInt(DRJson.OffsetMs.name(), -1);
+      if (App.TJEK_ANTAGELSER) ; // TODO fjern OffsetMs hvis det nye navn vitterligt ER OffsetInMs
+      u.offsetMs = o.optInt(DRJson.OffsetMs.name(), o.optInt(DRJson.OffsetInMs.name(), -1));
       liste.add(u);
     }
     return liste;

@@ -227,6 +227,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       }
     });
     */
+    run();
     return rod;
   }
 
@@ -423,6 +424,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     afspiller.observatører.remove(this);
     DRData.instans.hentedeUdsendelser.observatører.remove(this);
     DRData.instans.favoritter.observatører.remove(opdaterFavoritter);
+    App.forgrundstråd.removeCallbacks(this);
     super.onDestroyView();
   }
 
@@ -526,17 +528,21 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     if (udsendelse == null) return; // fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/834728045 ???
     App.forgrundstråd.removeCallbacks(this);
 
-    int spillerNuIndexNy = -1;
     if (udsendelse.equals(DRData.instans.afspiller.getLydkilde().getUdsendelse()))
     {
       // Find og fremhævet nummeret der spilles lige nu
       int pos = DRData.instans.afspiller.getCurrentPosition();
-      spillerNuIndexNy = udsendelse.findPlaylisteElemTilTid(pos, playlisteElemDerSpillerNuIndex);
-      App.forgrundstråd.postDelayed(this, DRData.instans.grunddata.opdaterPlaylisteEfterMs);
-    }
-    if (playlisteElemDerSpillerNuIndex != spillerNuIndexNy) {
-      playlisteElemDerSpillerNuIndex = spillerNuIndexNy;
-      playlisteElemDerSpillerNu = playlisteElemDerSpillerNuIndex < 0 ? null : udsendelse.playliste.get(playlisteElemDerSpillerNuIndex);
+      int spillerNuIndexNy = udsendelse.findPlaylisteElemTilTid(pos, playlisteElemDerSpillerNuIndex);
+      App.forgrundstråd.postDelayed(this, 10000);
+      Log.d("spillerNuIndex=" + spillerNuIndexNy + " for pos="+pos);
+      if (pos > 0 && playlisteElemDerSpillerNuIndex != spillerNuIndexNy) {
+        playlisteElemDerSpillerNuIndex = spillerNuIndexNy;
+        playlisteElemDerSpillerNu = playlisteElemDerSpillerNuIndex < 0 ? null : udsendelse.playliste.get(playlisteElemDerSpillerNuIndex);
+        Log.d("playlisteElemDerSpillerNu="+playlisteElemDerSpillerNu);
+      }
+    } else {
+      playlisteElemDerSpillerNuIndex = -1;
+      playlisteElemDerSpillerNu = null;
     }
     DRData.instans.hentedeUdsendelser.tjekOmHentet(udsendelse);
     adapter.notifyDataSetChanged(); // Opdater knapper etc
