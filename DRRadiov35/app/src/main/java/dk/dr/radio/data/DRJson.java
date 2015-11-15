@@ -268,7 +268,7 @@ public enum DRJson {
       if (n==0) Log.d("parsePlayliste "+o);
       Playlisteelement u = new Playlisteelement();
       u.titel = o.getString(DRJson.Title.name());
-      u.kunstner = o.getString(DRJson.Artist.name());
+      u.kunstner = o.optString(DRJson.Artist.name());
       u.billedeUrl = o.optString(DRJson.Image.name(), null);
       u.startTid = DRBackendTidsformater.parseUpålideigtServertidsformatPlayliste(o.getString(DRJson.Played.name()));
       u.startTidKl = klokkenformat.format(u.startTid);
