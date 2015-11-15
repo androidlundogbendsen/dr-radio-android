@@ -387,7 +387,16 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           if (udsendelse.playliste != null && uændret) return;
           if (json == null || "null".equals(json)) return; // fejl
           Log.d("UDS fikSvar playliste(" + fraCache + uændret + " " + url);
-          udsendelse.playliste = DRJson.parsePlayliste(new JSONArray(json));
+          ArrayList<Playlisteelement> playliste = DRJson.parsePlayliste(new JSONArray(json));
+          if (playliste.size()==0 && udsendelse.playliste!=null && udsendelse.playliste.size()>0) {
+            // Server-API er desværre ikke så stabilt - behold derfor en spilleliste med elementer,
+            // selvom serveren har ombestemt sig, og siger at listen er tom.
+            // Desværre caches den tomme værdi, men der må være grænser for hvor langt vi går
+            Log.d("Server-API gik fra spilleliste med "+udsendelse.playliste.size()+" til tom liste - det ignorerer vi");
+            return;
+          }
+          udsendelse.playliste = playliste;
+//          Log.d("UDS fikSvar playliste: " + json);
           if (!aktuelUdsendelsePåKanalen()) { // Aktuel udsendelse skal have senest spillet nummer øverst
             Collections.reverse(udsendelse.playliste); // andre udsendelser skal have stigende tid nedad
           }
@@ -475,7 +484,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
   boolean visHelePlaylisten = false;
 
   void bygListe() {
-    Log.d("Udsendelse_frag bygListe");
+    Log.d("Udsendelse_frag bygListe "+liste.size() + " -> "+udsendelse.playliste);
     liste.clear();
     liste.add(TOP);
     if (udsendelse.berigtigelseTitel!=null) {

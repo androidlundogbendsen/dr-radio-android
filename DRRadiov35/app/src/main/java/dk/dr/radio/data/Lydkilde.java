@@ -99,7 +99,7 @@ public abstract class Lydkilde implements Serializable {
       }
 
     Collections.sort(kandidater);
-    Log.d("findBedsteStreams " + kandidater);
+    if (App.fejlsøgning) Log.d("findBedsteStreams " + kandidater);
     return kandidater;
   }
 

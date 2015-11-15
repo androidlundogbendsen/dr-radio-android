@@ -152,9 +152,9 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse>, Clon
       boolean kanHøresNy = findBedsteStreams(false).size() > 0;
       boolean kanHentesNy = findBedsteStreams(true).size() > 0;
       if (kanHentes && !kanHentesNy)
-        Log.rapporterFejl(new IllegalArgumentException("API løj om kanHentes for " + o.optString(DRJson.Slug.name())));
+        Log.d("API løj om kanHentes for " + o.optString(DRJson.Slug.name())+": "+kanHentes +"->" +kanHentesNy);
       if (kanHøres && !kanHøresNy)
-        Log.rapporterFejl(new IllegalArgumentException("API løj om kanHøres for " + o.optString(DRJson.Slug.name())));
+        Log.d("API løj om kanHøres for " + o.optString(DRJson.Slug.name())+": "+kanHøres +"->" +kanHøresNy);
     }
     kanHøres = findBedsteStreams(false).size() > 0;
     kanHentes = findBedsteStreams(true).size() > 0;
