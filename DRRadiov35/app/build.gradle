@@ -47,6 +47,8 @@ dependencies {
     compile files('libs/bugsense-3.6.jar')
     compile files('libs/gemiusSDK.jar')
     compile files('libs/libAkamaiAnalytics.jar')
+    compile files('libs/spring-appsensor-android-1.7.4.jar')
+    compile files('libs/spring-util-android.jar')
     compile files('libs/volley.jar')
     compile project(':ExoMedialibrary')
 }

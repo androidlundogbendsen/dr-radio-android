@@ -517,13 +517,26 @@ public class App extends Application {
       }
     }
     if (kørFørsteGangAppIkkeMereErSynlig != null) forgrundstråd.removeCallbacks(kørFørsteGangAppIkkeMereErSynlig);
+    forgrundstråd.postDelayed(synlighedsSporing, 50);
   }
 
   public void aktivitetStoppet(Activity akt) {
     if (akt != aktivitetIForgrunden) return; // en anden aktivitet er allerede startet
     aktivitetIForgrunden = null;
     if (kørFørsteGangAppIkkeMereErSynlig != null) forgrundstråd.postDelayed(kørFørsteGangAppIkkeMereErSynlig, 1000);
+    forgrundstråd.postDelayed(synlighedsSporing, 50);
   }
+
+  Runnable synlighedsSporing = new Runnable() {
+    boolean sidstSynlig = false;
+    @Override
+    public void run() {
+      boolean synligNu = aktivitetIForgrunden!=null;
+      if (sidstSynlig == synligNu) return;
+      sidstSynlig = synligNu;
+      Sidevisning.i().synlig(synligNu);
+    }
+  };
 
   /**
    * Køres et sekund efter at app'en ikke mere er synlig.

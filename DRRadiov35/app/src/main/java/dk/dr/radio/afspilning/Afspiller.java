@@ -61,6 +61,7 @@ import dk.dr.radio.data.Playlisteelement;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
+import dk.dr.radio.diverse.Sidevisning;
 import dk.dr.radio.net.volley.DrVolleyResonseListener;
 import dk.dr.radio.net.volley.DrVolleyStringRequest;
 import dk.dr.radio.v3.R;
@@ -244,6 +245,7 @@ public class Afspiller {
     afspillerlyde = App.prefs.getBoolean("afspillerlyde", false);
     if (afspillerlyde && afspillerlyd==null) afspillerlyd = new Afspillerlyd();
     if (afspillerlyde) afspillerlyd.start.start();
+    Sidevisning.vist("afspilning_start");
   }
 
   /** Sørg for at volumen er skruet op til en minimumsværdi, angivet i 5'tedele af fuld styrke */
@@ -453,6 +455,7 @@ public class Afspiller {
   synchronized public void stopAfspilning() {
     Log.d("Afspiller stopAfspilning");
     gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Stopped, getCurrentPosition() / 1000);
+    Sidevisning.vist("afspilning_stop");
     gemPosition();
     pauseAfspilningIntern();
     if (wifilock != null) wifilock.release();

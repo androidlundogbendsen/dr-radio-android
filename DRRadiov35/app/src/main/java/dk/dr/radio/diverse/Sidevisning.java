@@ -32,6 +32,20 @@ import dk.dr.radio.v3.R;
 public class Sidevisning {
   private static final HashMap<Class, String> m = new HashMap<Class, String>();
 
+  private static Sidevisning instans = null;
+  public static Sidevisning i() {
+    if (instans==null && App.ÆGTE_DR) try {
+      instans = new GallupSidevisning();
+    } catch (Exception e) {
+      Log.rapporterFejl(e);
+    }
+
+    if (instans==null) {
+      instans = new Sidevisning();
+    }
+    return instans;
+  }
+
   public static final String DEL = "del_udsendelse";
   public static final String KONTAKT_SKRIV = "kontakt__skriv_meddelelse";
 
@@ -58,7 +72,8 @@ public class Sidevisning {
   private final static HashSet<String> besøgt = new HashSet<String>();
   private static Intent intent;
 
-  public static void vist(String side, String slug) {
+  public void vist(String side, String slug) {
+    if (!App.PRODUKTION) App.kortToast("vist "+side+" "+slug);
     // Gemius sidevisningsstatistik
     // appname=MyApp|version=1.0.0
     String data = "side=" + side + (slug == null ? "" : "|slug=" + slug);
@@ -83,7 +98,7 @@ public class Sidevisning {
       side = fk.getSimpleName();
       m.put(fk, side);
     }
-    vist(side, slug);
+    i().vist(side, slug);
   }
 
   public static void vist(Class fk) {
@@ -91,7 +106,7 @@ public class Sidevisning {
   }
 
   public static void vist(String side) {
-    vist(side, null);
+    i().vist(side, null);
   }
 
   /** Giver sorteret af viste sider, som en streng */
@@ -104,5 +119,9 @@ public class Sidevisning {
     TreeSet<String> ejBesøgt = new TreeSet<String>(m.values());
     ejBesøgt.removeAll(besøgt);
     return ejBesøgt.toString();
+  }
+
+  public void synlig(boolean synligNu) {
+    if (!App.PRODUKTION) App.kortToast("synligNu = "+synligNu);
   }
 }

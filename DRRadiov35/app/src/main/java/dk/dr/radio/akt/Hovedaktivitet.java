@@ -78,7 +78,6 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
         getSupportFragmentManager().beginTransaction()
             .replace(R.id.indhold_frag, new Kanaler_frag())
             .commit();
-        Sidevisning.vist(Kanaler_frag.class);
         // Hvis det ikke er en direkte udsendelse, så hop ind i den pågældende udsendelsesside
         if (DRData.instans.afspiller.getAfspillerstatus() != Status.STOPPET) {
           Lydkilde lydkilde = DRData.instans.afspiller.getLydkilde();
