@@ -35,7 +35,15 @@ public class Sidevisning {
   private static Sidevisning instans = null;
   public static Sidevisning i() {
     if (instans==null && App.ÆGTE_DR) try {
-      instans = new GallupSidevisning();
+    /*
+    Klasserne til Gallup er ikke med i offentligt repo, derfor indlæses klassen dynamisk
+    instans = new GallupSidevisning();
+
+    Generér ny version af Gallup JAR-fil med
+    unzip /home/j/android/dr-radio-android/gallupstatistik/build/outputs/aar/gallupstatistik-debug.aar classes.jar -d /tmp
+    mv /tmp/classes.jar /home/j/android/dr-radio-android/DRRadiov35/app/libs/gallupstatistik.jar
+    */
+      instans = ((Class<? extends Sidevisning>) Class.forName("dk.dr.radio.diverse.GallupSidevisning")).newInstance();
     } catch (Exception e) {
       Log.rapporterFejl(e);
     }
@@ -50,7 +58,7 @@ public class Sidevisning {
   public static final String KONTAKT_SKRIV = "kontakt__skriv_meddelelse";
 
   static {
-    m.put(Afspiller_frag.class, "afspiller");
+    m.put(Afspiller_frag.class, "afspiller_popop");
     m.put(AlleUdsendelserAtilAA_frag.class, "alle_udsendelser");
     m.put(DramaOgBog_frag.class, "drama_og_bog");
     m.put(FangBrowseIntent_akt.class, "fang_browser");
@@ -64,7 +72,7 @@ public class Sidevisning {
     m.put(P4kanalvalg_frag.class, "p4_kanalvalg");
     m.put(Programserie_frag.class, "programserie");
     m.put(Senest_lyttede_frag.class, "senest_lyttede");
-    m.put(Soeg_efter_program_frag.class, "søg");
+    m.put(Soeg_efter_program_frag.class, "soeg");
     m.put(Udsendelse_frag.class, "udsendelse");
     m.put(String.class, DEL); // bare en eller anden unik klasse - det er værdien der skal bruges
     m.put(Integer.class, KONTAKT_SKRIV); // bare en eller anden unik klasse - det er værdien der skal bruges
