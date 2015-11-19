@@ -534,8 +534,12 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       // Find og fremhævet nummeret der spilles lige nu
       int pos = DRData.instans.afspiller.getCurrentPosition();
       int spillerNuIndexNy = udsendelse.findPlaylisteElemTilTid(pos, playlisteElemDerSpillerNuIndex);
-      App.forgrundstråd.postDelayed(this, 10000);
-      Log.d("spillerNuIndex=" + spillerNuIndexNy + " for pos="+pos);
+      // Opdatér igen om 10 sekunder hvis musikken spiller, så vi kan markere det punkt på playlisten der spilles nu
+      if (DRData.instans.afspiller.getAfspillerstatus()!=Status.STOPPET || DRData.instans.afspiller.getLydkilde().erDirekte()) {
+        App.forgrundstråd.postDelayed(this, 10000);
+      }
+
+      Log.d("spillerNuIndex=" + spillerNuIndexNy + " for pos=" + pos);
       if (pos > 0 && playlisteElemDerSpillerNuIndex != spillerNuIndexNy) {
         playlisteElemDerSpillerNuIndex = spillerNuIndexNy;
         playlisteElemDerSpillerNu = playlisteElemDerSpillerNuIndex < 0 ? null : udsendelse.playliste.get(playlisteElemDerSpillerNuIndex);
