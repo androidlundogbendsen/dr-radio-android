@@ -279,6 +279,24 @@ public enum DRJson {
     return liste;
   }
 
+  /** Fix for fejl i server-API hvor offsets i playlister forskydes en time frem i tiden */
+  public static void retForkerteOffsetsIPlayliste(Udsendelse udsendelse) {
+    ArrayList<Playlisteelement> playliste = udsendelse.playliste;
+    if (playliste.size()==0) return;
+    // Server-API forskyder offsets i spillelister med præcis 1 time - opdag det og fix det
+    int ENTIME = 1000*60*60;
+//            if (playliste.get(0).offsetMs>=ENTIME && playliste.get(playliste.size()-1).offsetMs>udsendelse.)
+    long varighed = udsendelse.slutTid.getTime() - udsendelse.startTid.getTime();
+    Log.d("ret_forkerte_offsets_i_playliste " + udsendelse  + "  varighed " + varighed/ENTIME+" timer - start " +udsendelse.startTid);
+    Log.d("ret_forkerte_offsets_i_playliste "+playliste);
+    if (playliste.get(playliste.size()-1).offsetMs>=ENTIME && playliste.get(0).offsetMs>varighed) {
+      Log.d("ret_forkerte_offsets_i_playliste UDFØRES");
+      for (Playlisteelement e : playliste) e.offsetMs -= ENTIME;
+    } else {
+      Log.d("ret_forkerte_offsets_i_playliste udføres IKKE");
+    }
+  }
+
   /**
    * Parse en stream.
    * F.eks. Streams-objekt fra

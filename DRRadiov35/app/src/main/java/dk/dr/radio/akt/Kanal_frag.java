@@ -575,6 +575,7 @@ public class Kanal_frag extends Basisfragment implements AdapterView.OnItemClick
         if (u2.playliste != null && uændret) return; // så har vi allerede den nyeste liste i MEM
         if (json != null && !"null".equals(json)) {
           u2.playliste = DRJson.parsePlayliste(new JSONArray(json));
+          if (DRData.instans.grunddata.serverapi_ret_forkerte_offsets_i_playliste) DRJson.retForkerteOffsetsIPlayliste(u2);
         }
         if (aktuelUdsendelseViewholder == null) return;
         opdaterSenestSpilletViews(aq2, u2);

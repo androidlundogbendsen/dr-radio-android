@@ -59,6 +59,7 @@ public class Grunddata {
   public boolean tving_exoplayer;
   public boolean tving_mediaplayer;
   public boolean tving_emaplayer;
+  public boolean serverapi_ret_forkerte_offsets_i_playliste;
 
   public Grunddata() {
     ukendtKanal.navn = "";
@@ -154,6 +155,8 @@ public class Grunddata {
     tving_exoplayer = søgEfterMatch(model_og_version, android_json.optString("tving_exoplayer"));
     tving_mediaplayer = søgEfterMatch(model_og_version, android_json.optString("tving_mediaplayer"));
     tving_emaplayer = søgEfterMatch(model_og_version, android_json.optString("tving_emaplayer"));
+
+    serverapi_ret_forkerte_offsets_i_playliste = android_json.optBoolean("serverapi_ret_forkerte_offsets_i_playliste", true);
   }
 
   private static boolean søgEfterMatch(String model_og_version, String søgestreng) {

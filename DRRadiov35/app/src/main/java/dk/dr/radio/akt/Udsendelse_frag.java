@@ -397,6 +397,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
             return;
           }
           udsendelse.playliste = playliste;
+          if (DRData.instans.grunddata.serverapi_ret_forkerte_offsets_i_playliste) DRJson.retForkerteOffsetsIPlayliste(udsendelse);
 //          Log.d("UDS fikSvar playliste: " + json);
           if (!aktuelUdsendelsePåKanalen()) { // Aktuel udsendelse skal have senest spillet nummer øverst
             Collections.reverse(udsendelse.playliste); // andre udsendelser skal have stigende tid nedad

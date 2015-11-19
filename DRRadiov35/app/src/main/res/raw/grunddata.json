@@ -15,6 +15,8 @@
         "tving_mediaplayer" : "",
         "tving_emaplayer" : "",
 
+        "serverapi_ret_forkerte_offsets_i_playliste" : true,
+
         "kontakt_url": "http://www.dr.dk/tjenester/iphone/radio/about/android30.drxml",
         "kontakt_modtagere": ["android@lundogbendsen.dk", "mobil@dr.dk" ],
         "kontakt_titel": "Angående DR Radio",
