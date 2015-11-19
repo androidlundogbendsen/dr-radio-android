@@ -83,45 +83,26 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
     DRJson.opdateriDagIMorgenIGårDatoStr(App.serverCurrentTimeMillis());
 
     udsendelser = new ArrayList<Udsendelse>();
-    if (programserie == null) { // Ingen kendt programserie til denne udsendelse
-      udsendelser.add(startudsendelse);
-      adapter.setListe(udsendelser);
-      viewPager.setAdapter(adapter);
-      hentUdsendelser(0);
-    } else {
-      int n = Programserie.findUdsendelseIndexFraSlug(udsendelser, startudsendelse.slug);
-      if (n < 0) { // Indtil nu ikke fundet udsendelsen i programserien
-        udsendelser.add(startudsendelse); // så tilføj den i slutningen af listen
-        adapter.setListe(udsendelser);
-        viewPager.setAdapter(adapter);
-        hentUdsendelser(0);
-      } else {
-        udsendelser.addAll(programserie.getUdsendelser());
-        adapter.setListe(udsendelser);
-        viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(n);
-      }
-    }
+    udsendelser.add(startudsendelse);
+    adapter.setListe(udsendelser);
+    viewPager.setAdapter(adapter);
+    hentUdsendelser(0);
 
-/*    int n = programserie == null ? -1 : programserie.findUdsendelseIndexFraSlug(startudsendelse.slug);
-
-    Log.d("programserie.udsendelser.indexOf(startudsendelse) = " + n);
-    if (n >= 0) {
-      udsendelser.addAll(programserie.getUdsendelser());
-      viewPager.setAdapter(adapter);
-      viewPager.setCurrentItem(n);
-    } else {
-      udsendelser.add(startudsendelse);
-      viewPager.setAdapter(adapter);
-      if (programserie == null) hentUdsendelser(0);
-    }
-    */
     vispager_title_strip();
     viewPager.setOnPageChangeListener(this);
     // Nødvendigt fordi underfragmenter har optionsmenu
     // - ellers nulstilles optionsmenuen ikke når man hopper ud igen!
     setHasOptionsMenu(true);
     return rod;
+  }
+
+  @Override
+  public void onDestroyView() {
+    //if (viewPager!=null) viewPager.setAdapter(null); - forårsager crash... har ikke kigget nærmere på hvorfor
+    viewPager = null;
+    adapter = null;
+    pager_title_strip = null;
+    super.onDestroyView();
   }
 
   private void vispager_title_strip() {
@@ -161,15 +142,6 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
       hentUdsendelser(programserie.getUdsendelser().size()-1);
     }
 */
-  }
-
-  @Override
-  public void onDestroyView() {
-    //if (viewPager!=null) viewPager.setAdapter(null); - forårsager crash... har ikke kigget nærmere på hvorfor
-    viewPager = null;
-    adapter = null;
-    pager_title_strip = null;
-    super.onDestroyView();
   }
 
   private void hentUdsendelser(final int offset) {
