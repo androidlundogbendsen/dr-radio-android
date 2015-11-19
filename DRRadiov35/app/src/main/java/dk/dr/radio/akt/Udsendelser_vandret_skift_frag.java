@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
@@ -111,43 +112,45 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
             udsendelser.size() > 1 ? View.VISIBLE : View.INVISIBLE);
   }
 
-
+  private HashSet<Integer> alledeForsøgtHentet = new HashSet<>(); // forsøg ikke at hente det samme offset flere gange
   private void opdaterUdsendelser() {
     if (viewPager == null) return;
     Udsendelse udsFør = udsendelser.size()>viewPager.getCurrentItem() ? udsendelser.get(viewPager.getCurrentItem()) : null;
     udsendelser = new ArrayList<Udsendelse>();
     udsendelser.addAll(programserie.getUdsendelser());
-    if (Programserie.findUdsendelseIndexFraSlug(udsendelser, startudsendelse.slug) < 0) {
-      udsendelser.add(startudsendelse);
+    int udsIndexFør = Programserie.findUdsendelseIndexFraSlug(udsendelser, startudsendelse.slug);
+    if (udsIndexFør < 0) {
+      udsendelser.add(0, startudsendelse);
       // hvis startudsendelse ikke er med i listen, så hent nogle flere, i håb om at komme hen til
       // startudsendelsen (hvis vi ikke allerede har forsøgt 7 gange)
-      if (antalHentedeSendeplaner++ < 7) {
-        hentUdsendelser(programserie.getUdsendelser().size());
+      final int offset = programserie.getUdsendelser().size();
+      if (alledeForsøgtHentet.add(offset) && antalHentedeSendeplaner++ < 7) {
+        // Fix for en lang række crashes, bl.a.:
+        // https://mint.splunk.com/dashboard/project/cd78aa05/errors/3004788237
+        // https://mint.splunk.com/dashboard/project/cd78aa05/errors/4207258113
+        // Kald ikke hentUdsendelser(offset); direkte herfra - medfører rekursion
+        // da den kalder direkte tilbage i opdaterUdsendelser() hvis der foreligger et cachet svar
+        // og det giver rod i systemet hvis antal elementer i udsendelser skifter midt i det hele
+        App.forgrundstråd.post(new Runnable() {
+          @Override
+          public void run() {
+            hentUdsendelser(offset);
+          }
+        });
       }
     }
-    int nEft = udsFør==null?0:Programserie.findUdsendelseIndexFraSlug(udsendelser, udsFør.slug);
-    if (nEft < 0) nEft = udsendelser.size() - 1; // startudsendelsen
+    int udsIndexEfter = udsFør==null?0:Programserie.findUdsendelseIndexFraSlug(udsendelser, udsFør.slug);
+    if (udsIndexEfter < 0) udsIndexEfter = udsendelser.size() - 1; // startudsendelsen
     adapter.setListe(udsendelser);
-    if (App.fejlsøgning) Log.d("xxx setCurrentItem " + viewPager.getCurrentItem() + "   nEft=" + nEft);
-    viewPager.setCurrentItem(nEft, false); // - burde ikke være nødvendig, vi har defineret getItemPosition
+    if (App.fejlsøgning) Log.d("xxx setCurrentItem " + viewPager.getCurrentItem() + "   udsIndexEfter=" + udsIndexEfter);
+    viewPager.setCurrentItem(udsIndexEfter, false); // - burde ikke være nødvendig, hvis vi havde defineret getItemPosition
     vispager_title_strip();
-/*
-    if (programserie.getUdsendelser().size() < programserie.antalUdsendelser) {
-      hentUdsendelser(programserie.getUdsendelser().size());
-    }
-    // hvis vi er sidst i listen og der er flere at hente, så hent nogle flere,
-    // i håb om at komme hen til den aktuelle startudsendelse (hvis vi ikke allerede har forsøgt 7 gange)
-    if (nEft==udsendelser.size()-1 && nEft<programserie.antalUdsendelser-1 && antalHentedeSendeplaner++ < 7) {
-      // da det element vi viser lige nu
-      hentUdsendelser(programserie.getUdsendelser().size()-1);
-    }
-*/
   }
 
   private void hentUdsendelser(final int offset) {
     if (!App.ÆGTE_DR) return;
     String url = DRData.getProgramserieUrl(programserie, startudsendelse.programserieSlug) + "&offset=" + offset;
-    Log.d("XXX url=" + url);
+    Log.d("hentUdsendelser url=" + url);
 
     Request<?> req = new DrVolleyStringRequest(url, new DrVolleyResonseListener() {
       @Override
@@ -199,13 +202,13 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
 
     public void setListe(ArrayList<Udsendelse> liste) {
       liste2 = new ArrayList<>(liste);
-      if (App.EMULATOR) Log.d("setListe() liste2.size() = "+liste2.size());
+      //if (App.EMULATOR) Log.d("setListe() liste2.size() = "+liste2.size());
       notifyDataSetChanged();
     }
 
     @Override
     public Fragment getItem(int position) {
-      if (App.EMULATOR) Log.d("getItem() liste2.size() = "+liste2.size());
+      //if (App.EMULATOR) Log.d("getItem() liste2.size() = "+liste2.size());
       Udsendelse u = liste2.get(position);
       Fragment f = Fragmentfabrikering.udsendelse(u);
       f.getArguments().putString(Kanal_frag.P_kode, kanal.kode);
@@ -244,13 +247,13 @@ public class Udsendelser_vandret_skift_frag extends Basisfragment implements Vie
      */
     @Override
     public int getCount() {
-      if (App.EMULATOR) Log.d("getCount() liste2.size() = "+liste2.size());
+      //if (App.EMULATOR) Log.d("getCount() liste2.size() = "+liste2.size());
       return liste2.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-      if (App.EMULATOR) Log.d("getPageTitle() liste2.size() = "+liste2.size());
+      //if (App.EMULATOR) Log.d("getPageTitle() liste2.size() = "+liste2.size());
       Udsendelse u = liste2.get(position);
       String dato = DRJson.datoformat.format(u.startTid);
       if (dato.equals(DRJson.iDagDatoStr)) dato = getString(R.string.i_dag);
