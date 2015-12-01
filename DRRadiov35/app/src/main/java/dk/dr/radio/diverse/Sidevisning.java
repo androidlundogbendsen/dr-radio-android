@@ -88,10 +88,14 @@ public class Sidevisning {
     // app = DRNyheder/DRRadio/DRTV/DRRamasjang/DRUltra
     // Z = notset (gælder alle apps, undtagen nyhedsappen)
     // W = begin/background/termination (gælder alle apps, undtagen nyhedsappen)
-
-    String data = "app=DRRadio|platform=Android|page="+side+(slug==null ? "" : "/" + slug)+"|action=begin|version="+App.versionsnavn;
     besøgt.add(side);
-    Log.d("sidevisning "+data);
+
+    String data = "app=DRRadio|platform=Android|page="+side+(slug==null ? "" : "/" + slug)+"|action=pageload|version="+App.versionsnavn;
+    sendTilGemius(data);
+  }
+
+  private void sendTilGemius(String data) {
+    if (App.fejlsøgning || App.EMULATOR) Log.d("sendTilGemius "+data);
     if (intent==null) {
       String nøgle = App.instans.getString(R.string.gemius_sidevisninsstatistik_nøgle);
       if (nøgle.length()==0) return; // Nøgle til indrapportering mangler
@@ -134,7 +138,11 @@ public class Sidevisning {
     return ejBesøgt.toString();
   }
 
+
   public void synlig(boolean synligNu) {
     if (!App.PRODUKTION) App.kortToast("synligNu = "+synligNu);
+
+    String data = "app=DRRadio|platform=Android|page=notset|action="+(synligNu?"begin":"background")+"|version="+App.versionsnavn;
+    sendTilGemius(data);
   }
 }

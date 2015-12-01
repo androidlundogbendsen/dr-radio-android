@@ -192,7 +192,16 @@ public class HentedeUdsendelser {
 
     Res res = new Res();
     res.put(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS));
-
+/* XXX TODO
+    if (Build.VERSION.SDK_INT>=19) try {
+      for (File f : App.instans.getExternalFilesDirs(Environment.DIRECTORY_PODCASTS)) {
+        res.put(f);
+      }
+    } catch (Exception e) { Log.rapporterFejl(e); }
+    else {
+      res.put(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS));
+    }
+*/
     File fstab = new File("/etc/vold.fstab"); // læs i vold.fstab hvor der t.o.m Android 4.2 er nævnt det rigtige SD-kort
     if (fstab.canRead()) {
       try {

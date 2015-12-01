@@ -232,6 +232,7 @@ public class Afspiller {
       // Skru op til 1/5 styrke hvis volumen er lavere end det
       tjekVolumenMindst5tedele(1);
 
+      Sidevisning.i().vist("afspilning_start", lydkilde.slug);
     } else Log.d(" forkert status=" + afspillerstatus);
 
     // Hvis det er en favorit så opdater favoritter så der ikke mere optræder nye udsendelser i denne programserie
@@ -245,7 +246,6 @@ public class Afspiller {
     afspillerlyde = App.prefs.getBoolean("afspillerlyde", false);
     if (afspillerlyde && afspillerlyd==null) afspillerlyd = new Afspillerlyd();
     if (afspillerlyde) afspillerlyd.start.start();
-    Sidevisning.vist("afspilning_start");
   }
 
   /** Sørg for at volumen er skruet op til en minimumsværdi, angivet i 5'tedele af fuld styrke */
@@ -499,11 +499,7 @@ public class Afspiller {
     if ((afspillerstatus == Status.SPILLER) || (afspillerstatus == Status.FORBINDER)) {
       pauseAfspilning(); // gemmer lydkildens position
       this.lydkilde = lydkilde;
-      try {
-        startAfspilning(); // sætter afspilleren til den nye lydkildes position
-      } catch (Exception e) {
-        Log.rapporterFejl(e); // TODO fjern efter et par måneder i drift (nov 2014)
-      }
+      startAfspilning(); // sætter afspilleren til den nye lydkildes position
     } else {
       this.lydkilde = lydkilde;
     }
