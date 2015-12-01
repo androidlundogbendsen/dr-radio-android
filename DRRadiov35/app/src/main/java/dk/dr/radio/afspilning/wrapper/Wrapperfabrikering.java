@@ -1,5 +1,7 @@
 package dk.dr.radio.afspilning.wrapper;
 
+import android.os.Build;
+
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
@@ -31,6 +33,7 @@ public class Wrapperfabrikering {
 
       //boolean exoplayer = App.PRODUKTION||!App.ÆGTE_DR ? false : Math.random()>0.5;
       hvilken = Hvilken.NyEmaPlayer;
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) hvilken = Hvilken.GammelMediaPlayer;
 
       hvilkenSidst = hvilken;
       if (App.prefs.getBoolean("tving_exoplayer", DRData.instans.grunddata.tving_exoplayer)) hvilken = Hvilken.NyExoPlayer;

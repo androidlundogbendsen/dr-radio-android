@@ -84,7 +84,12 @@ public class Sidevisning {
     if (!App.PRODUKTION) App.kortToast("vist "+side+" "+slug);
     // Gemius sidevisningsstatistik
     // appname=MyApp|version=1.0.0
-    String data = "side=" + side + (slug == null ? "" : "|slug=" + slug);
+    // app=DRRadio|platform=Android|page=Z|action=W|version=1.0.0
+    // app = DRNyheder/DRRadio/DRTV/DRRamasjang/DRUltra
+    // Z = notset (gælder alle apps, undtagen nyhedsappen)
+    // W = begin/background/termination (gælder alle apps, undtagen nyhedsappen)
+
+    String data = "app=DRRadio|platform=Android|page="+side+(slug==null ? "" : "/" + slug)+"|action=begin|version="+App.versionsnavn;
     besøgt.add(side);
     Log.d("sidevisning "+data);
     if (intent==null) {

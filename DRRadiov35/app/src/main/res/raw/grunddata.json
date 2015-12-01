@@ -18,7 +18,6 @@
         "serverapi_ret_forkerte_offsets_i_playliste" : true,
         "servertidsformatAndre": [ "yyyy-MM-dd'T'HH:mm:ss.SSSz" ],
         "servertidsformatPlaylisteAndre": [ "yyyy-MM-dd'T'HH:mm:ssz" ],
-
         "kontakt_url": "http://www.dr.dk/tjenester/iphone/radio/about/android30.drxml",
         "kontakt_modtagere": ["android@lundogbendsen.dk", "mobil@dr.dk" ],
         "kontakt_titel": "Angående DR Radio",

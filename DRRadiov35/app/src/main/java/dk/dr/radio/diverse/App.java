@@ -88,7 +88,7 @@ public class App extends Application {
   public static final String FORETRUKKEN_KANAL = "FORETRUKKEN_kanal";
   public static final String NØGLE_advaretOmInstalleretPåSDKort = "erInstalleretPåSDKort";
   public static final boolean PRODUKTION = !BuildConfig.DEBUG;
-  public static final boolean PRODUKTION_PÅ_PRØVE = true; // TODO sæt til false
+  public static final boolean PRODUKTION_PÅ_PRØVE = false; // TODO sæt til false
   public static final boolean ÆGTE_DR = true;
   private static final String DRAMA_OG_BOG__A_Å_INDLÆST = "DRAMA_OG_BOG__A_Å_INDLÆST";
   /** Bruges på nye funktioner - for at tjekke om de altid er opfyldt i felten. Fjernes ved næste udgivelser */

@@ -55,7 +55,10 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable, AdapterV
         for (Programserie programserie : sektion) {
           //Log.d("DramaOgBogF "+sektionsnummer+" "+n+programserie+" "+programserie.antalUdsendelser+" "+programserie.billedeUrl);
           n++;
-          if (programserie.antalUdsendelser>0 && programserie.billedeUrl!=null && DRData.instans.dramaOgBog.karuselSerieSlug.contains(programserie.slug)) karruselListe.add(programserie);
+          if (programserie.antalUdsendelser>0 && programserie.billedeUrl!=null
+                  && DRData.instans.dramaOgBog.karuselSerieSlug.contains(programserie.slug)) {
+            karruselListe.add(programserie);
+          }
           if (n < 3  || listesektionerUdvidet.contains(sektionsnummer)) liste.add(programserie);
           if (n == 3 && !listesektionerUdvidet.contains(sektionsnummer)) liste.add(sektionsnummer); // VIS FLERE
         }
@@ -64,9 +67,6 @@ public class DramaOgBog_frag extends Basisfragment implements Runnable, AdapterV
       //karruselListe.addAll(DRData.instans.dramaOgBog.karusel);
     }
     if (karruselAdapter != null) {
-      if (viewPager.getCurrentItem() >= karruselListe.size()) {
-        viewPager.setCurrentItem(0);
-      }
       karruselAdapter.notifyDataSetChanged();
       listeAdapter.notifyDataSetChanged();
     }

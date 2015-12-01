@@ -12,10 +12,10 @@ android {
         applicationId 'dk.dr.radio'
 //        minSdkVersion 9
 // Mens vi undersøger streamingkvalitet opgraderer vi kun fra Android 4.1 og op
-        minSdkVersion 16
+        minSdkVersion 10
         targetSdkVersion 21
-        versionCode 56
-        versionName '3.5.3.1'
+        versionCode 57
+        versionName '3.5.3.2'
     }
     buildTypes {
         release {
