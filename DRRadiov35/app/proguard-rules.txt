@@ -37,7 +37,10 @@
 public <init>(android.content.Context, android.util.AttributeSet, int);
 }
 
+# For at Gallups statistik kan gemme data serialiseret
 -keepclassmembers class * implements java.io.Serializable {
 private static final long serialVersionUID;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
 }
 
