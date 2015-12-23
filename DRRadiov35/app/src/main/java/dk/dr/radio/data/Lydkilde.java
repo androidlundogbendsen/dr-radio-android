@@ -3,6 +3,7 @@ package dk.dr.radio.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +27,7 @@ public abstract class Lydkilde implements Serializable {
   transient ArrayList<Lydstream> streams;
   public transient Lydstream hentetStream;
   public static final String INDST_lydformat = "lydformat2";
+  public File hentetStreamDestination;
 
   @Override
   public boolean equals(Object o) {

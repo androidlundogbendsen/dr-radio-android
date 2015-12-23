@@ -14,6 +14,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
@@ -26,6 +28,7 @@ import java.util.Scanner;
 
 import dk.dr.radio.akt.Hentede_udsendelser_frag;
 import dk.dr.radio.akt.Hovedaktivitet;
+import dk.dr.radio.data.afproevning.FilCache;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.Serialisering;
@@ -119,16 +122,23 @@ public class HentedeUdsendelser {
         return;
       }
       Uri uri = Uri.parse(prioriteretListe.get(0).url);
-      Log.d("uri=" + uri);
 
       String brugervalg = App.prefs.getString(NØGLE_placeringAfHentedeFiler, null);
       File dir;
       if (brugervalg != null && new File(brugervalg).exists()) dir = new File(brugervalg);
       else dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
+      Log.d("Hent uri=" + uri +" til "+dir);
       dir = new File(dir, App.instans.getString(R.string.HENTEDE_UDS_MAPPENAVN));
       dir.mkdirs();
       if (!dir.exists()) throw new IOException("kunne ikke oprette " + dir);
-
+/* NYT
+      udsendelse.hentetStreamDestination = new File(dir, udsendelse.slug.replace(':','_') + ".mp3");
+      String externalPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+      if (!dir.getPath().startsWith(externalPath)) {
+        dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
+        Log.d("DownloadManager kan ikke hente til dette sted - gem midlertidigt på "+dir);
+      }
+*/
       int typer = App.prefs.getBoolean("hentKunOverWifi", false) ?
           DownloadManager.Request.NETWORK_WIFI :
           DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE;
@@ -138,10 +148,8 @@ public class HentedeUdsendelser {
           .setAllowedOverRoaming(false)
           .setTitle(udsendelse.titel)
           .setDescription(udsendelse.beskrivelse);
-      //req.setDestinationInExternalPublicDir(Environment.DIRECTORY_PODCASTS, udsendelse.slug + ".mp3");
-      //req.setDestinationInExternalPublicDir("DR_Radio", udsendelse.slug + ".mp3");
-      //req.setDestinationInExternalFilesDir(App.instans, Environment.DIRECTORY_PODCASTS, "DRRADIO4xx"+ udsendelse.slug + ".mp3");
-      req.setDestinationUri(Uri.fromFile(new File(dir, udsendelse.slug.replace(':','_') + ".mp3")));
+
+      req.setDestinationUri(Uri.fromFile(new File(dir, udsendelse.hentetStreamDestination.getName())));
 
       if (Build.VERSION.SDK_INT >= 11) req.allowScanningByMediaScanner();
 
@@ -192,7 +200,7 @@ public class HentedeUdsendelser {
 
     Res res = new Res();
     res.put(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS));
-/* XXX TODO
+/* NYT
     if (Build.VERSION.SDK_INT>=19) try {
       for (File f : App.instans.getExternalFilesDirs(Environment.DIRECTORY_PODCASTS)) {
         res.put(f);
@@ -330,10 +338,19 @@ public class HentedeUdsendelser {
         query.setFilterById(downloadId);
         Cursor c = DRData.instans.hentedeUdsendelser.downloadService.query(query);
         if (c.moveToFirst()) {
-          Log.d("DLS " + c + "  " + c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS)));
+          Log.d("HentedeUdsendelser DLS " + c + "  " + c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS)));
           if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
             App.langToast(App.instans.getString(R.string.Udsendelsen___blev_hentet, u.titel));
             Log.registrérTestet("Hente udsendelse", u.slug);
+            /* NYT
+            String uri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+            File hentet =  new File(URI.create(uri));
+            if (!hentet.equals(u.hentetStreamDestination)) {
+              Log.d("HentedeUdsendelser flytter fil fra " + hentet + " til " + u.hentetStreamDestination);
+              FilCache.kopierOgLuk(new FileInputStream(hentet), new FileOutputStream(u.hentetStreamDestination));
+              hentet.delete();
+            }
+            */
           } else {
             App.langToast(App.instans.getString(R.string.Det_lykkedes_ikke_at_hente_udsendelsen___tjek_at___, u.titel));
           }
@@ -396,6 +413,20 @@ public class HentedeUdsendelser {
 
   public void tjekOmHentet(Udsendelse udsendelse) {
     if (!virker()) return;
+    /* NYT
+    if (udsendelse.hentetStream == null && udsendelse.hentetStreamDestination != null && udsendelse.hentetStreamDestination.exists()) {
+      File file = udsendelse.hentetStreamDestination;
+      if (file.exists()) {
+        udsendelse.hentetStream = new Lydstream();
+        udsendelse.hentetStream.url = file.getPath();
+        udsendelse.hentetStream.score = 500; // Rigtig god!
+        udsendelse.kanHøres = true;
+        Log.registrérTestet("Afspille hentet udsendelse", udsendelse.slug);
+      } else {
+        Log.rapporterFejl(new IllegalStateException("FilXXX " + file + " hentet, men fandtes ikke alligevel??!"));
+      }
+    }
+    */
     if (udsendelse.hentetStream == null) {
       Cursor c = getStatusCursor(udsendelse);
       if (c == null) return;
@@ -417,6 +448,8 @@ public class HentedeUdsendelser {
           udsendelse.hentetStream.score = 500; // Rigtig god!
           udsendelse.kanHøres = true;
           Log.registrérTestet("Afspille hentet udsendelse", udsendelse.slug);
+          Log.rapporterFejl(new IllegalStateException("Nylig opgradering? Denne blok fjernes i 2016... "));
+          udsendelse.hentetStreamDestination = file;
         } else {
 //          Log.rapporterFejl(new IllegalStateException("Fil " + file + "  fandtes ikke alligevel??! for " + udsendelse));
           Log.rapporterFejl(new IllegalStateException("Fil " + file + " hentet, men fandtes ikke alligevel??!"));
