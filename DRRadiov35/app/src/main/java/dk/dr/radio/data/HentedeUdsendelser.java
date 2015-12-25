@@ -9,13 +9,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
@@ -28,7 +27,6 @@ import java.util.Scanner;
 
 import dk.dr.radio.akt.Hentede_udsendelser_frag;
 import dk.dr.radio.akt.Hovedaktivitet;
-import dk.dr.radio.data.afproevning.FilCache;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.Serialisering;
@@ -131,8 +129,8 @@ public class HentedeUdsendelser {
       dir = new File(dir, App.instans.getString(R.string.HENTEDE_UDS_MAPPENAVN));
       dir.mkdirs();
       if (!dir.exists()) throw new IOException("kunne ikke oprette " + dir);
-/* NYT
       udsendelse.hentetStreamDestination = new File(dir, udsendelse.slug.replace(':','_') + ".mp3");
+/* NYT
       String externalPath = Environment.getExternalStorageDirectory().getAbsolutePath();
       if (!dir.getPath().startsWith(externalPath)) {
         dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
@@ -245,7 +243,8 @@ public class HentedeUdsendelser {
    * @param udsendelse
    * @return
    */
-  public Cursor getStatusCursor(Udsendelse udsendelse) {
+  @Nullable
+  private Cursor getStatusCursor(Udsendelse udsendelse) {
     if (!virker()) return null;
     tjekDataOprettet();
     Long downloadId = data.downloadIdFraSlug.get(udsendelse.slug);
@@ -262,28 +261,28 @@ public class HentedeUdsendelser {
     return null;
   }
 
-  public static int getStatus(Cursor c) {
-    return c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-  }
-
-  public static String getStatustekst(Cursor c) {
-    int status = getStatus(c);
-    long iAlt = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)) / 1000000;
-    long hentet = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)) / 1000000;
-    String txt;
-    if (status == DownloadManager.STATUS_SUCCESSFUL) {
-      txt = App.instans.getString(R.string.Klar___mb_, iAlt);
-    } else if (status == DownloadManager.STATUS_FAILED) {
-      txt = App.instans.getString(R.string.Mislykkedes);
-    } else if (status == DownloadManager.STATUS_PENDING) {
-      txt = App.instans.getString(R.string.Venter___);
-    } else if (status == DownloadManager.STATUS_PAUSED) {
-      txt = App.instans.getString(R.string.Hentning_pauset__)+App.instans.getString(R.string.Hentet___mb_af___mb, hentet, iAlt);
+  public HentetStatus getHentetStatus(Udsendelse udsendelse) {
+    Cursor c = getStatusCursor(udsendelse);
+    if (c==null) return null;
+    HentetStatus hs = new HentetStatus();
+    hs.status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+    hs.iAlt = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)) / 1000000;
+    hs.hentet = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)) / 1000000;
+    hs.uri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+    c.close();
+    if (hs.status == DownloadManager.STATUS_SUCCESSFUL) {
+      hs.statustekst = App.instans.getString(R.string.Klar___mb_, hs.iAlt);
+    } else if (hs.status == DownloadManager.STATUS_FAILED) {
+      hs.statustekst = App.instans.getString(R.string.Mislykkedes);
+    } else if (hs.status == DownloadManager.STATUS_PENDING) {
+      hs.statustekst = App.instans.getString(R.string.Venter___);
+    } else if (hs.status == DownloadManager.STATUS_PAUSED) {
+      hs.statustekst = App.instans.getString(R.string.Hentning_pauset__)+App.instans.getString(R.string.Hentet___mb_af___mb, hs.hentet, hs.iAlt);
     } else { // RUNNING
-      if (hentet > 0 || iAlt > 0) txt = App.instans.getString(R.string.Hentet___mb_af___mb, hentet, iAlt);
-      else txt = App.instans.getString(R.string.Henter__);
+      if (hs.hentet > 0 || hs.iAlt > 0) hs.statustekst = App.instans.getString(R.string.Hentet___mb_af___mb, hs.hentet, hs.iAlt);
+      else hs.statustekst = App.instans.getString(R.string.Henter__);
     }
-    return txt;
+    return hs;
   }
 
   /** Sletter udsendelsen fuldstændigt fra listen */
@@ -308,14 +307,9 @@ public class HentedeUdsendelser {
   }
 
   private void sletLokalFil(Udsendelse u) {
-    Cursor c = getStatusCursor(u);
-    String uri = null;
-    if (c != null) {
-      uri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-      c.close();
-    }
-    if (uri != null) {
-      new File(URI.create(uri).getPath()).delete();
+    HentetStatus hs = getHentetStatus(u);
+    if (hs.uri != null) {
+      new File(URI.create(hs.uri).getPath()).delete();
     }
   }
 
@@ -324,7 +318,7 @@ public class HentedeUdsendelser {
     @Override
     public void onReceive(Context context, Intent intent) {
       String action = intent.getAction();
-      Log.d("DLS " + intent);
+      Log.d("HentedeUdsendelser DLS " + intent);
       if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) try {
         long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
         DRData.instans.hentedeUdsendelser.tjekDataOprettet(); // Fix for https://mint.splunk.com/dashboard/project/cd78aa05/errors/803968027
@@ -395,22 +389,6 @@ public class HentedeUdsendelser {
   }
 
 
-  public void status() {
-    if (!virker()) return;
-//    Cursor c= downloadService.query(new DownloadManager.Query().setFilterById(lastDownload));
-    Cursor c = downloadService.query(new DownloadManager.Query());
-
-    while (c.moveToNext()) {
-      Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)));
-      Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)));
-      Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_LAST_MODIFIED_TIMESTAMP)));
-      Log.d(c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
-      Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS)));
-      Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_REASON)));
-    }
-    c.close();
-  }
-
   public void tjekOmHentet(Udsendelse udsendelse) {
     if (!virker()) return;
     /* NYT
@@ -428,6 +406,7 @@ public class HentedeUdsendelser {
     }
     */
     if (udsendelse.hentetStream == null) {
+      //hs = getHentetStatus(udsendelse);
       Cursor c = getStatusCursor(udsendelse);
       if (c == null) return;
       try {

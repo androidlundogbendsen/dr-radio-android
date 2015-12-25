@@ -6,7 +6,6 @@ import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -45,7 +44,7 @@ import dk.dr.radio.afspilning.Afspiller;
 import dk.dr.radio.afspilning.Status;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
-import dk.dr.radio.data.HentedeUdsendelser;
+import dk.dr.radio.data.HentetStatus;
 import dk.dr.radio.data.Indslaglisteelement;
 import dk.dr.radio.data.Kanal;
 import dk.dr.radio.data.Lydstream;
@@ -310,21 +309,19 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     aq.id(R.id.hent).text("SPILLER " + kanal.navn.toUpperCase() + " LIVE");
 */
 
-    Cursor c = DRData.instans.hentedeUdsendelser.getStatusCursor(udsendelse);
     aq.id(R.id.hent);
+    HentetStatus hs;
 
     if (!DRData.instans.hentedeUdsendelser.virker()) {
       aq.gone();
     }
-    else if (c != null) {
-      int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-      if (status != DownloadManager.STATUS_SUCCESSFUL && status != DownloadManager.STATUS_FAILED) {
+    else if (null!=(hs = DRData.instans.hentedeUdsendelser.getHentetStatus(udsendelse))) {
+      if (hs.status != DownloadManager.STATUS_SUCCESSFUL && hs.status != DownloadManager.STATUS_FAILED) {
         App.forgrundstråd.removeCallbacks(this);
         App.forgrundstråd.postDelayed(this, 5000);
       }
-      String statustekst = HentedeUdsendelser.getStatustekst(c);
-      c.close();
-      if (status == DownloadManager.STATUS_SUCCESSFUL) statustekst = "Hentet";
+      String statustekst = hs.statustekst;
+      if (hs.status == DownloadManager.STATUS_SUCCESSFUL) statustekst = App.instans.getString(R.string.Hentet);
 
       aq.text(statustekst.toUpperCase()).enabled(true).textColorId(R.color.grå40);
     } else if (!udsendelse.kanHentes) {
@@ -771,10 +768,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       Log.rapporterFejl(e);
     }
 
-    Cursor c = DRData.instans.hentedeUdsendelser.getStatusCursor(udsendelse);
-    if (c != null) {
-      c.close();
-      // Skift til Hentede_frag
+    if (DRData.instans.hentedeUdsendelser.getHentetStatus(udsendelse)!=null) {
       try {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         // Fjern IKKE backstak - vi skal kunne hoppe tilbage hertil

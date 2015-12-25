@@ -4,8 +4,6 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +26,7 @@ import java.util.Collections;
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.data.DRJson;
 import dk.dr.radio.data.HentedeUdsendelser;
+import dk.dr.radio.data.HentetStatus;
 import dk.dr.radio.data.Udsendelse;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
@@ -121,8 +120,8 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
       aq.id(R.id.slet).tag(udsendelse);
       aq.id(R.id.hør).tag(udsendelse);
 
-      Cursor c = hentedeUdsendelser.getStatusCursor(udsendelse);
-      if (c == null) {
+      HentetStatus hs = hentedeUdsendelser.getHentetStatus(udsendelse);
+      if (hs == null) {
         aq.id(R.id.startStopKnap).visible().image(R.drawable.dri_radio_spil_graa40);
         aq.id(R.id.progressBar).gone();
         aq.id(R.id.linje1).text(udsendelse.titel).textColor(App.color.grå40);
@@ -130,27 +129,22 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
         return v;
       }
 
-      int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-      String statustekst = HentedeUdsendelser.getStatustekst(c);
-      int iAlt = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)) / 1000000;
-      int hentet = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)) / 1000000;
-      c.close();
-      aq.id(R.id.linje2).text(DRJson.datoformat.format(udsendelse.startTid).toUpperCase() + " - " + statustekst.toUpperCase());
+      aq.id(R.id.linje2).text(DRJson.datoformat.format(udsendelse.startTid).toUpperCase() + " - " + hs.statustekst.toUpperCase());
 
-      if (status != DownloadManager.STATUS_SUCCESSFUL && status != DownloadManager.STATUS_FAILED) {
+      if (hs.status != DownloadManager.STATUS_SUCCESSFUL && hs.status != DownloadManager.STATUS_FAILED) {
         // Genopfrisk hele listen om 1 sekund
         App.forgrundstråd.removeCallbacks(Hentede_udsendelser_frag.this);
         App.forgrundstråd.postDelayed(Hentede_udsendelser_frag.this, 1000);
         ProgressBar progressBar = aq.id(R.id.progressBar).visible().getProgressBar();
-        progressBar.setMax(iAlt);
-        progressBar.setProgress(hentet);
+        progressBar.setMax(hs.iAlt);
+        progressBar.setProgress(hs.hentet);
         aq.id(R.id.startStopKnap).visible().image(R.drawable.dri_radio_stop_graa40);
       } else {
         aq.id(R.id.progressBar).gone();
         aq.id(R.id.startStopKnap).gone();
       }
       aq.id(R.id.linje1).text(udsendelse.titel)
-          .textColor(status == DownloadManager.STATUS_SUCCESSFUL ? Color.BLACK : App.color.grå60);
+          .textColor(hs.status == DownloadManager.STATUS_SUCCESSFUL ? Color.BLACK : App.color.grå60);
 
       udvikling_checkDrSkrifter(v, this.getClass() + " ");
 
@@ -224,10 +218,8 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
             .show();
 
       } else {
-        Cursor c = hentedeUdsendelser.getStatusCursor(u);
-        if (c != null) {
+        if (hentedeUdsendelser.getHentetStatus(u)!=null) {
           hentedeUdsendelser.stop(u);
-          c.close();
         } else {
           if (u.streamsKlar()) hentedeUdsendelser.hent(u); // vi har streams, hent dem
           else visUdsendelse_frag(u); // hack - vis udsendelsessiden, den indlæser streamsne
