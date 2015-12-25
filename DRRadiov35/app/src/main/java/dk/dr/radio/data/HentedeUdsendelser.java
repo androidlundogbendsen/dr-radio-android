@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -238,34 +237,23 @@ public class HentedeUdsendelser {
     return data.udsendelser;
   }
 
-  /**
-   * Giver status
-   * @param udsendelse
-   * @return
-   */
-  @Nullable
-  private Cursor getStatusCursor(Udsendelse udsendelse) {
+  public HentetStatus getHentetStatus(Udsendelse udsendelse) {
     if (!virker()) return null;
     tjekDataOprettet();
     Long downloadId = data.downloadIdFraSlug.get(udsendelse.slug);
-    //Log.d("HentedeUdsendelser getStatus gav downloadId = " + downloadId + " for u=" + udsendelse);
     if (downloadId == null) return null;
     DownloadManager.Query query = new DownloadManager.Query();
     query.setFilterById(downloadId);
     Cursor c = downloadService.query(query);
     if (c==null) return null; // fix for https://mint.splunk.com/dashboard/project/cd78aa05/errors/4066198043
-    if (c.moveToFirst()) {
-      return c;
+    if (!c.moveToFirst()) {
+      c.close();
+      return null;
     }
-    c.close();
-    return null;
-  }
 
-  public HentetStatus getHentetStatus(Udsendelse udsendelse) {
-    Cursor c = getStatusCursor(udsendelse);
-    if (c==null) return null;
     HentetStatus hs = new HentetStatus();
     hs.status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+    //if (hs.status==DownloadManager.STATUS_FAILED || hs.status==DownloadManager.STATUS_PAUSED) hs.grund = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_REASON));
     hs.iAlt = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)) / 1000000;
     hs.hentet = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)) / 1000000;
     hs.uri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
@@ -406,24 +394,13 @@ public class HentedeUdsendelser {
     }
     */
     if (udsendelse.hentetStream == null) {
-      //hs = getHentetStatus(udsendelse);
-      Cursor c = getStatusCursor(udsendelse);
-      if (c == null) return;
-      try {
-        Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)));
-        Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)));
-        Log.d(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_LAST_MODIFIED_TIMESTAMP)));
-        Log.d(c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
-        Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS)));
-        Log.d(c.getInt(c.getColumnIndex(DownloadManager.COLUMN_REASON)));
-
-        if (c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS)) != DownloadManager.STATUS_SUCCESSFUL)
-          return;
-        String uri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-        File file = new File(URI.create(uri).getPath());
+      HentetStatus hs = getHentetStatus(udsendelse);
+      if (hs == null) return;
+      if (hs.status != DownloadManager.STATUS_SUCCESSFUL) return;
+      File file = new File(URI.create(hs.uri).getPath());
         if (file.exists()) {
           udsendelse.hentetStream = new Lydstream();
-          udsendelse.hentetStream.url = uri;
+          udsendelse.hentetStream.url = hs.uri;
           udsendelse.hentetStream.score = 500; // Rigtig god!
           udsendelse.kanHøres = true;
           Log.registrérTestet("Afspille hentet udsendelse", udsendelse.slug);
@@ -433,9 +410,6 @@ public class HentedeUdsendelser {
 //          Log.rapporterFejl(new IllegalStateException("Fil " + file + "  fandtes ikke alligevel??! for " + udsendelse));
           Log.rapporterFejl(new IllegalStateException("Fil " + file + " hentet, men fandtes ikke alligevel??!"));
         }
-      } finally {
-        c.close();
-      }
     } else {
       if (!new File(URI.create(udsendelse.hentetStream.url).getPath()).exists()) {
         Log.d("Fil findes pt ikke" + udsendelse.hentetStream);
