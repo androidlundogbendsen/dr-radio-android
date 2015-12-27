@@ -12,5 +12,6 @@ public class HentetStatus implements Serializable {
   public String statustekst;
   public int iAlt;
   public int hentet;
-  public String uri;
+  public String startUri;
+  public String destinationFil;
 }

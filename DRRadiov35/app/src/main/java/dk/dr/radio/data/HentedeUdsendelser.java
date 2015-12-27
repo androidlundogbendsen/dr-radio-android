@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
@@ -14,6 +15,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
@@ -26,6 +29,7 @@ import java.util.Scanner;
 
 import dk.dr.radio.akt.Hentede_udsendelser_frag;
 import dk.dr.radio.akt.Hovedaktivitet;
+import dk.dr.radio.data.afproevning.FilCache;
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.Serialisering;
@@ -52,6 +56,9 @@ public class HentedeUdsendelser {
     /** DownloadId -> udsendelse */
     private Map<Long, Udsendelse> udsendelseFraDownloadId = new LinkedHashMap<Long, Udsendelse>();
     private ArrayList<Udsendelse> udsendelser = new ArrayList<Udsendelse>();
+
+    /** slug -> filnavn */
+    private Map<String, HentetStatus> hentetStatusFraSlug = new LinkedHashMap<>();
   }
 
   private Data data;
@@ -81,6 +88,13 @@ public class HentedeUdsendelser {
   public HentetStatus getHentetStatus(Udsendelse udsendelse) {
     if (!virker()) return null;
     tjekDataOprettet();
+
+    HentetStatus hs = data.hentetStatusFraSlug.get(udsendelse.slug);
+    if (hs != null && (hs.status==DownloadManager.STATUS_SUCCESSFUL || hs.status == DownloadManager.STATUS_FAILED)) {
+      hs.statustekst = lavStatustekst(hs);
+      return hs;
+    }
+
     Long downloadId = data.downloadIdFraSlug.get(udsendelse.slug);
     if (downloadId == null) return null;
     DownloadManager.Query query = new DownloadManager.Query();
@@ -92,72 +106,71 @@ public class HentedeUdsendelser {
       return null;
     }
 
-    HentetStatus hs = new HentetStatus();
+    if (hs == null) {
+      hs = new HentetStatus();
+      data.hentetStatusFraSlug.put(udsendelse.slug, hs);
+    }
     hs.status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
     //if (hs.status==DownloadManager.STATUS_FAILED || hs.status==DownloadManager.STATUS_PAUSED) hs.grund = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_REASON));
     hs.iAlt = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)) / 1000000;
     hs.hentet = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)) / 1000000;
-    hs.uri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+    hs.startUri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
     c.close();
-    if (hs.status == DownloadManager.STATUS_SUCCESSFUL) {
-      hs.statustekst = App.instans.getString(R.string.Klar___mb_, hs.iAlt);
-    } else if (hs.status == DownloadManager.STATUS_FAILED) {
-      hs.statustekst = App.instans.getString(R.string.Mislykkedes);
-    } else if (hs.status == DownloadManager.STATUS_PENDING) {
-      hs.statustekst = App.instans.getString(R.string.Venter___);
-    } else if (hs.status == DownloadManager.STATUS_PAUSED) {
-      hs.statustekst = App.instans.getString(R.string.Hentning_pauset__)+App.instans.getString(R.string.Hentet___mb_af___mb, hs.hentet, hs.iAlt);
-    } else { // RUNNING
-      if (hs.hentet > 0 || hs.iAlt > 0) hs.statustekst = App.instans.getString(R.string.Hentet___mb_af___mb, hs.hentet, hs.iAlt);
-      else hs.statustekst = App.instans.getString(R.string.Henter__);
-    }
+    hs.statustekst = lavStatustekst(hs);
+    if (!App.PRODUKTION) hs.statustekst+="\n"+hs.startUri+"\n"+hs.destinationFil; // til fejlfinding
     return hs;
+  }
+
+  public static String lavStatustekst(HentetStatus hs) {
+    if (hs.status == DownloadManager.STATUS_SUCCESSFUL) {
+      if (new File(hs.destinationFil).canRead())
+        return App.instans.getString(R.string.Klar___mb_, hs.iAlt);
+      return App.instans.getString(R.string._ikke_tilgængelig_);
+    } else if (hs.status == DownloadManager.STATUS_FAILED) {
+      return App.instans.getString(R.string.Mislykkedes);
+    } else if (hs.status == DownloadManager.STATUS_PENDING) {
+      return App.instans.getString(R.string.Venter___);
+    } else if (hs.status == DownloadManager.STATUS_PAUSED) {
+      return App.instans.getString(R.string.Hentning_pauset__) + App.instans.getString(R.string.Hentet___mb_af___mb, hs.hentet, hs.iAlt);
+    }
+    // RUNNING
+    if (hs.hentet > 0 || hs.iAlt > 0) return App.instans.getString(R.string.Hentet___mb_af___mb, hs.hentet, hs.iAlt);
+    return App.instans.getString(R.string.Henter__);
   }
 
   public void tjekOmHentet(Udsendelse udsendelse) {
     if (!virker()) return;
-    /* NYT
-    if (udsendelse.hentetStream == null && udsendelse.hentetStreamDestination != null && udsendelse.hentetStreamDestination.exists()) {
-      File file = udsendelse.hentetStreamDestination;
-      if (file.exists()) {
-        udsendelse.hentetStream = new Lydstream();
-        udsendelse.hentetStream.url = file.getPath();
-        udsendelse.hentetStream.score = 500; // Rigtig god!
-        udsendelse.kanHøres = true;
-        Log.registrérTestet("Afspille hentet udsendelse", udsendelse.slug);
-      } else {
-        Log.rapporterFejl(new IllegalStateException("FilXXX " + file + " hentet, men fandtes ikke alligevel??!"));
-      }
-    }
-    */
     if (udsendelse.hentetStream == null) {
       HentetStatus hs = getHentetStatus(udsendelse);
       if (hs == null) return;
       if (hs.status != DownloadManager.STATUS_SUCCESSFUL) return;
-      File file = new File(URI.create(hs.uri).getPath());
+      File file = new File(hs.destinationFil);
       if (file.exists()) {
         udsendelse.hentetStream = new Lydstream();
-        udsendelse.hentetStream.url = hs.uri;
+        udsendelse.hentetStream.url = hs.destinationFil;
         udsendelse.hentetStream.score = 500; // Rigtig god!
         udsendelse.kanHøres = true;
         Log.registrérTestet("Afspille hentet udsendelse", udsendelse.slug);
-//          Log.rapporterFejl(new IllegalStateException("Nylig opgradering? Denne blok fjernes i 2016... "));
-        udsendelse.hentetStreamDestination = file;
       } else {
         Log.rapporterFejl(new IllegalStateException("Fil " + file + " hentet, men fandtes ikke alligevel??!"));
       }
-    } else {
-      if (!new File(URI.create(udsendelse.hentetStream.url).getPath()).exists()) {
-        Log.d("Fil findes pt ikke" + udsendelse.hentetStream);
-        udsendelse.hentetStream = null;
-      }
     }
+    /*
+    if (udsendelse.hentetStream!=null && !new File(udsendelse.hentetStream.url).canRead()) {
+      Log.d("Fil findes pt ikke" + udsendelse.hentetStream.url);
+      udsendelse.hentetStream = null;
+    }
+    */
   }
 
   private void tjekDataOprettet() {
     if (data != null) return;
     if (new File(FILNAVN).exists()) try {
       data = (Data) Serialisering.hent(FILNAVN);
+
+      if (data.hentetStatusFraSlug == null) { // Feltet data.udsendelser kom med 26. dec 2015 - tjek kan slettes efter sommer 2016
+        data.hentetStatusFraSlug = new LinkedHashMap<>();
+      }
       if (data.udsendelser == null) { // Feltet data.udsendelser kom med 2. okt 2014 - tjek kan slettes efter sommer 2015
         data.udsendelser = new ArrayList<Udsendelse>(data.udsendelseFraDownloadId.values());
       }
@@ -210,14 +223,16 @@ public class HentedeUdsendelser {
       dir = new File(dir, App.instans.getString(R.string.HENTEDE_UDS_MAPPENAVN));
       dir.mkdirs();
       if (!dir.exists()) throw new IOException("kunne ikke oprette " + dir);
-      udsendelse.hentetStreamDestination = new File(dir, udsendelse.slug.replace(':','_') + ".mp3");
-/* NYT
+      File destination = new File(dir, udsendelse.slug.replace(':','_') + ".mp3");
+
       String externalPath = Environment.getExternalStorageDirectory().getAbsolutePath();
       if (!dir.getPath().startsWith(externalPath)) {
         dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
-        Log.d("DownloadManager kan ikke hente til dette sted - gem midlertidigt på "+dir);
+        dir.mkdirs();
+        Log.d("DownloadManager kan ikke hente til "+destination+" - gem midlertidigt på "+dir);
+        if (!App.PRODUKTION) App.langToast("DownloadManager kan ikke hente til "+destination+" - gem midlertidigt på "+dir);
       }
-*/
+
       int typer = App.prefs.getBoolean("hentKunOverWifi", false) ?
           DownloadManager.Request.NETWORK_WIFI :
           DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE;
@@ -228,11 +243,14 @@ public class HentedeUdsendelser {
           .setTitle(udsendelse.titel)
           .setDescription(udsendelse.beskrivelse);
 
-      req.setDestinationUri(Uri.fromFile(new File(dir, udsendelse.hentetStreamDestination.getName())));
+      req.setDestinationUri(Uri.fromFile(new File(dir, destination.getName())));
 
       if (Build.VERSION.SDK_INT >= 11) req.allowScanningByMediaScanner();
 
       long downloadId = downloadService.enqueue(req);
+      HentetStatus hs = new HentetStatus();
+      hs.destinationFil = destination.getPath();
+      data.hentetStatusFraSlug.put(udsendelse.slug, hs);
       data.downloadIdFraSlug.put(udsendelse.slug, downloadId);
       data.udsendelseFraDownloadId.put(downloadId, udsendelse);
       if (!data.udsendelser.contains(udsendelse)) data.udsendelser.add(udsendelse);
@@ -251,9 +269,10 @@ public class HentedeUdsendelser {
   public void stop(Udsendelse u) {
     tjekDataOprettet();
     HentetStatus hs = getHentetStatus(u);
-    if (hs.uri != null) {
-      new File(URI.create(hs.uri).getPath()).delete();
-    }
+    new File(URI.create(hs.startUri)).delete();
+    new File(hs.destinationFil).delete();
+
+    data.hentetStatusFraSlug.remove(u.slug);
     Long id = data.downloadIdFraSlug.remove(u.slug);
     if (id == null) {
       Log.d("stop() udsendelse " + u + " ikke i data.downloadIdFraSlug - den er nok allerede stoppet");
@@ -261,14 +280,15 @@ public class HentedeUdsendelser {
       data.udsendelseFraDownloadId.remove(id);
       downloadService.remove(id);
     }
+    u.hentetStream = null;
     gemListe();
     for (Runnable obs : new ArrayList<Runnable>(observatører)) obs.run();
   }
 
   /** Sletter udsendelsen fuldstændigt fra listen */
   public void slet(Udsendelse u) {
-    stop(u);
     data.udsendelser.remove(u);
+    stop(u); // kald til sidst, da listen gemmes her
   }
 
 
@@ -280,7 +300,7 @@ public class HentedeUdsendelser {
       if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) try {
         long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
         DRData.instans.hentedeUdsendelser.tjekDataOprettet(); // Fix for https://mint.splunk.com/dashboard/project/cd78aa05/errors/803968027
-        Udsendelse u = DRData.instans.hentedeUdsendelser.data.udsendelseFraDownloadId.get(downloadId);
+        final Udsendelse u = DRData.instans.hentedeUdsendelser.data.udsendelseFraDownloadId.get(downloadId);
         if (u == null) {
           Log.d("Ingen udsendelse for hentning for " + downloadId + " den er nok blevet slettet");
           return;
@@ -294,15 +314,41 @@ public class HentedeUdsendelser {
           if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
             App.langToast(App.instans.getString(R.string.Udsendelsen___blev_hentet, u.titel));
             Log.registrérTestet("Hente udsendelse", u.slug);
-            /* NYT
-            String uri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-            File hentet =  new File(URI.create(uri));
-            if (!hentet.equals(u.hentetStreamDestination)) {
-              Log.d("HentedeUdsendelser flytter fil fra " + hentet + " til " + u.hentetStreamDestination);
-              FilCache.kopierOgLuk(new FileInputStream(hentet), new FileOutputStream(u.hentetStreamDestination));
-              hentet.delete();
+
+            final HentetStatus hs = DRData.instans.hentedeUdsendelser.getHentetStatus(u);
+            hs.startUri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+            final File hentet =  new File(URI.create(hs.startUri));
+            final File dest = new File(hs.destinationFil);
+
+            if (!hentet.equals(dest)) {
+              Log.d("HentedeUdsendelser flytter fil fra " + hentet + " til " + hs.destinationFil);
+              if (!App.PRODUKTION) App.langToast("flytter fra\n" + hentet + " til\n" + hs.destinationFil);
+              dest.getParentFile().mkdirs();
+              hs.status = DownloadManager.STATUS_RUNNING;
+              hs.statustekst = App.res.getString(R.string.Flytter__);
+              if (!App.PRODUKTION) hs.statustekst+="\n"+hentet + " til " + hs.destinationFil;
+              new AsyncTask() {
+                @Override
+                protected Object doInBackground(Object[] params) {
+                  try {
+                    FilCache.kopierOgLuk(new FileInputStream(hentet), new FileOutputStream(dest));
+                    hentet.delete();
+                  } catch (Exception e) {
+                    e.printStackTrace();
+                    App.langToast(App.instans.getString(R.string.Kunne_ikke_flytte__, u.titel, dest));
+                  }
+                  return null;
+                }
+
+                @Override
+                protected void onPostExecute(Object o) {
+                  hs.status = DownloadManager.STATUS_SUCCESSFUL;
+                  hs.statustekst = lavStatustekst(hs);
+                  DRData.instans.hentedeUdsendelser.gemListe();
+                  for (Runnable obs : new ArrayList<Runnable>(DRData.instans.hentedeUdsendelser.observatører)) obs.run();
+                }
+              }.execute();
             }
-            */
           } else {
             App.langToast(App.instans.getString(R.string.Det_lykkedes_ikke_at_hente_udsendelsen___tjek_at___, u.titel));
           }
@@ -378,8 +424,6 @@ public class HentedeUdsendelser {
     }
 
     Res res = new Res();
-    res.put(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS));
-/* NYT
     if (Build.VERSION.SDK_INT>=19) try {
       for (File f : App.instans.getExternalFilesDirs(Environment.DIRECTORY_PODCASTS)) {
         res.put(f);
@@ -388,7 +432,6 @@ public class HentedeUdsendelser {
     else {
       res.put(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS));
     }
-*/
     File fstab = new File("/etc/vold.fstab"); // læs i vold.fstab hvor der t.o.m Android 4.2 er nævnt det rigtige SD-kort
     if (fstab.canRead()) {
       try {

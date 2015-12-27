@@ -96,7 +96,7 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
                 File dir = l.get(i);
                 String dirs = dir.toString();
                 værdi[i] = dirs;
-                visVærdi[i] = dir.getParent() + getString(R.string.__ikke_tilgængelig_);
+                visVærdi[i] = dir.getParent() + " " + getString(R.string._ikke_tilgængelig_);
                 // Find ledig plads
                 boolean fandtesFørMkdirs = dir.exists();
                 dir.mkdirs();

@@ -321,8 +321,6 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         App.forgrundstråd.postDelayed(this, 5000);
       }
       String statustekst = hs.statustekst;
-      if (hs.status == DownloadManager.STATUS_SUCCESSFUL) statustekst = App.instans.getString(R.string.Hentet);
-
       aq.text(statustekst.toUpperCase()).enabled(true).textColorId(R.color.grå40);
     } else if (!udsendelse.kanHentes) {
       aq.text(R.string.KAN_IKKE_HENTES).enabled(false).textColorId(R.color.grå40);

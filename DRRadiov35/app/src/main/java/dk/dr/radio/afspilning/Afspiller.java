@@ -487,12 +487,9 @@ public class Afspiller {
       String kanalkode = App.tjekP4OgVælgUnderkanal(((Kanal) lydkilde).kode);
       lydkilde = DRData.instans.grunddata.kanalFraKode.get(kanalkode);
     }
-    // TODO konsistenstjek - fjern efter et par måneder i drift (dec 2014)
+    // Tjek om der er en hentet udsendelse - det sker også i brugergrænsefladen men det kan være den ikke har været i spil
     if (lydkilde.hentetStream==null && lydkilde instanceof Udsendelse) {
       DRData.instans.hentedeUdsendelser.tjekOmHentet((Udsendelse) lydkilde);
-      if (lydkilde.hentetStream!=null) {
-        Log.rapporterFejl(new IllegalStateException("Sen opdagelse af hentet udsendelse "), lydkilde);
-      }
     }
 
 

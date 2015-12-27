@@ -27,7 +27,6 @@ public abstract class Lydkilde implements Serializable {
   transient ArrayList<Lydstream> streams;
   public transient Lydstream hentetStream;
   public static final String INDST_lydformat = "lydformat2";
-  public File hentetStreamDestination;
 
   @Override
   public boolean equals(Object o) {
@@ -44,7 +43,7 @@ public abstract class Lydkilde implements Serializable {
 
   public List<Lydstream> findBedsteStreams(boolean tilHentning) {
     ArrayList<Lydstream> kandidater = new ArrayList<Lydstream>();
-    if (hentetStream != null) kandidater.add(hentetStream);
+    if (hentetStream != null && new File(hentetStream.url).canRead()) kandidater.add(hentetStream);
     if (streams == null) return kandidater;
 
     //Bedst bedst = new Bedst();
