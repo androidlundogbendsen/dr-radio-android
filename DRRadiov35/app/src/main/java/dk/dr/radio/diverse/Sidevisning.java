@@ -140,7 +140,7 @@ public class Sidevisning {
 
 
   public void synlig(boolean synligNu) {
-    if (!App.PRODUKTION) App.kortToast("synligNu = "+synligNu);
+    if (App.fejlsøgning) App.kortToast("synligNu = "+synligNu);
 
     String data = "app=DRRadio|platform=Android|page=notset|action="+(synligNu?"begin":"background")+"|version="+App.versionsnavn;
     sendTilGemius(data);

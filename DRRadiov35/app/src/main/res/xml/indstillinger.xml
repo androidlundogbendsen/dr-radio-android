@@ -44,38 +44,40 @@
         android:entryValues="@array/lydformat_kode"/>
   </PreferenceCategory>
 
+  <PreferenceCategory android:title="@string/Hentede_udsendelser">
+
+    <CheckBoxPreference
+      android:key="hentKunOverWifi"
+      android:title="@string/Hent_kun_på_wifi"
+      android:defaultValue="false"
+      android:summaryOn="@string/Udsendelser_hentes_kun_over_wifi_fremover___"
+      android:summaryOff="@string/Udsendelser_hentes_både_over_telefonnet_3g_4g_og_wifi_"/>
+
+    <ListPreference
+      android:key="placeringAfHentedeFiler"
+      android:title="@string/Placering_af_hentede_udsendelser"
+      android:dialogTitle="@string/Gem_udsendelser_på"
+      android:summary="@string/Vælg_hvor_på_telefonen_du_vil_gemme_udsendelser_til_offline_brug_"
+      />
+
+  </PreferenceCategory>
+
+
 
   <PreferenceCategory android:title="Andet">
 
     <CheckBoxPreference
-        android:key="fjernbetjening" android:title="Fjernbetjening"
-        android:defaultValue="true"
-        android:summaryOff="Ingen betjening fra Bluetooth og ændrer ikke baggrunden på låseskærmen"
-        android:summaryOn="Betjening fra Bluetooth headset og låseskærmen på Android 4.\nLåseskærmens baggrund viser grafik fra udsendelsen, der afspilles."
-        />
+      android:key="fjernbetjening" android:title="Fjernbetjening"
+      android:defaultValue="true"
+      android:summaryOff="Ingen betjening fra Bluetooth og ændrer ikke baggrunden på låseskærmen"
+      android:summaryOn="Betjening fra Bluetooth headset og låseskærmen på Android 4.\nLåseskærmens baggrund viser grafik fra udsendelsen, der afspilles."
+      />
+  </PreferenceCategory>
 
 
-    <PreferenceScreen android:title="@string/Avanceret"
-                      android:summary="@string/hentning_af_udsendelser_og_strømbesparende_funktioner_">
 
-
-      <PreferenceCategory android:title="@string/Hentede_udsendelser">
-        <ListPreference
-            android:key="placeringAfHentedeFiler"
-            android:title="@string/Placering_af_hentede_udsendelser"
-            android:dialogTitle="@string/Gem_udsendelser_på"
-            android:summary="@string/Vælg_hvor_på_telefonen_du_vil_gemme_udsendelser_til_offline_brug_"
-            />
-
-        <CheckBoxPreference
-            android:key="hentKunOverWifi"
-            android:title="@string/Hent_kun_på_wifi"
-            android:defaultValue="false"
-            android:summaryOn="@string/Udsendelser_hentes_kun_over_wifi_fremover___"
-            android:summaryOff="@string/Udsendelser_hentes_både_over_telefonnet_3g_4g_og_wifi_"/>
-
-      </PreferenceCategory>
-
+  <PreferenceScreen android:title="@string/Avanceret"
+                      android:summary="@string/strømbesparende_funktioner_og_andet">
 
       <PreferenceCategory android:title="Strømforbrug">
         <CheckBoxPreference
@@ -166,6 +168,5 @@
       </PreferenceCategory>
 
     </PreferenceScreen>
-  </PreferenceCategory>
 
 </PreferenceScreen>

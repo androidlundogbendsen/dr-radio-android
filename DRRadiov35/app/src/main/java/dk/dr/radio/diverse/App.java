@@ -301,6 +301,7 @@ public class App extends Application {
     }
     skrift_gibson_fed_span = new EgenTypefaceSpan("Gibson fed", App.skrift_gibson_fed);
 
+    if (!EMULATOR) AppOpdatering.tjekForNyAPK(this);
     Log.d("onCreate tog " + (System.currentTimeMillis() - TIDSSTEMPEL_VED_OPSTART) + " ms");
   }
 

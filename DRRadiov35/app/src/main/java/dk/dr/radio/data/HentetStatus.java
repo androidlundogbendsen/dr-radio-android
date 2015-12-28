@@ -14,4 +14,5 @@ public class HentetStatus implements Serializable {
   public int hentet;
   public String startUri;
   public String destinationFil;
+  public transient boolean statusFlytningIGang;
 }

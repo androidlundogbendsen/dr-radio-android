@@ -111,20 +111,24 @@ public class HentedeUdsendelser {
       data.hentetStatusFraSlug.put(udsendelse.slug, hs);
     }
     hs.status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-    //if (hs.status==DownloadManager.STATUS_FAILED || hs.status==DownloadManager.STATUS_PAUSED) hs.grund = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_REASON));
     hs.iAlt = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)) / 1000000;
     hs.hentet = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)) / 1000000;
     hs.startUri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-    c.close();
     hs.statustekst = lavStatustekst(hs);
-    if (!App.PRODUKTION) hs.statustekst+="\n"+hs.startUri+"\n"+hs.destinationFil; // til fejlfinding
+    if (hs.status==DownloadManager.STATUS_FAILED || hs.status==DownloadManager.STATUS_PAUSED) {
+      int grund = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_REASON));
+      Log.d(udsendelse.slug+ " hs.grund til fejl "+ grund);
+      if (grund==DownloadManager.ERROR_INSUFFICIENT_SPACE) hs.statustekst += " - Ikke nok plads";
+    }
+    c.close();
+    //if (!App.PRODUKTION) hs.statustekst+="\n"+hs.startUri+"\n"+hs.destinationFil; // til fejlfinding
     return hs;
   }
 
   public static String lavStatustekst(HentetStatus hs) {
     if (hs.status == DownloadManager.STATUS_SUCCESSFUL) {
-      if (new File(hs.destinationFil).canRead())
-        return App.instans.getString(R.string.Klar___mb_, hs.iAlt);
+      if (hs.statusFlytningIGang) return App.res.getString(R.string.Flytter__);
+      if (new File(hs.destinationFil).canRead()) return App.instans.getString(R.string.Klar___mb_, hs.iAlt);
       return App.instans.getString(R.string._ikke_tilgængelig_);
     } else if (hs.status == DownloadManager.STATUS_FAILED) {
       return App.instans.getString(R.string.Mislykkedes);
@@ -215,10 +219,7 @@ public class HentedeUdsendelser {
       }
       Uri uri = Uri.parse(prioriteretListe.get(0).url);
 
-      String brugervalg = App.prefs.getString(NØGLE_placeringAfHentedeFiler, null);
-      File dir;
-      if (brugervalg != null && new File(brugervalg).exists()) dir = new File(brugervalg);
-      else dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
+      File dir = findPlaceringAfHentedeFilerFraPrefs();
       Log.d("Hent uri=" + uri +" til "+dir);
       dir = new File(dir, App.instans.getString(R.string.HENTEDE_UDS_MAPPENAVN));
       dir.mkdirs();
@@ -264,12 +265,22 @@ public class HentedeUdsendelser {
     }
   }
 
+  public static File findPlaceringAfHentedeFilerFraPrefs() {
+    String brugervalg = App.prefs.getString(NØGLE_placeringAfHentedeFiler, null);
+    File dir = null;
+    if (brugervalg != null) dir = new File(brugervalg);
+    if (dir == null || !dir.canWrite()) {
+      dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
+    }
+    return dir;
+  }
+
 
   /** Sletter udsendelsen, men viser den stadig på listen, hvis brugern vil hente den igen senere */
   public void stop(Udsendelse u) {
     tjekDataOprettet();
     HentetStatus hs = getHentetStatus(u);
-    new File(URI.create(hs.startUri)).delete();
+    if (hs.startUri!=null) new File(URI.create(hs.startUri)).delete(); // Hvis ikke hentet færdig endnu er hs.startUri==null
     new File(hs.destinationFil).delete();
 
     data.hentetStatusFraSlug.remove(u.slug);
@@ -322,10 +333,9 @@ public class HentedeUdsendelser {
 
             if (!hentet.equals(dest)) {
               Log.d("HentedeUdsendelser flytter fil fra " + hentet + " til " + hs.destinationFil);
-              if (!App.PRODUKTION) App.langToast("flytter fra\n" + hentet + " til\n" + hs.destinationFil);
+              if (!App.PRODUKTION) App.kortToast("flytter fra\n" + hentet + " til\n" + hs.destinationFil);
               dest.getParentFile().mkdirs();
-              hs.status = DownloadManager.STATUS_RUNNING;
-              hs.statustekst = App.res.getString(R.string.Flytter__);
+              hs.statusFlytningIGang = true;
               if (!App.PRODUKTION) hs.statustekst+="\n"+hentet + " til " + hs.destinationFil;
               new AsyncTask() {
                 @Override
@@ -342,7 +352,7 @@ public class HentedeUdsendelser {
 
                 @Override
                 protected void onPostExecute(Object o) {
-                  hs.status = DownloadManager.STATUS_SUCCESSFUL;
+                  hs.statusFlytningIGang = false;
                   hs.statustekst = lavStatustekst(hs);
                   DRData.instans.hentedeUdsendelser.gemListe();
                   for (Runnable obs : new ArrayList<Runnable>(DRData.instans.hentedeUdsendelser.observatører)) obs.run();
