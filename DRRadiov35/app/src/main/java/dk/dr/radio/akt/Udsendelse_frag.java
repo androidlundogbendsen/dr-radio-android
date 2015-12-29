@@ -527,7 +527,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
     if (udsendelse.equals(DRData.instans.afspiller.getLydkilde().getUdsendelse()))
     {
       // Find og fremhævet nummeret der spilles lige nu
-      int pos = DRData.instans.afspiller.getCurrentPosition();
+      long pos = DRData.instans.afspiller.getCurrentPosition();
       int spillerNuIndexNy = udsendelse.findPlaylisteElemTilTid(pos, playlisteElemDerSpillerNuIndex);
       // Opdatér igen om 10 sekunder hvis musikken spiller, så vi kan markere det punkt på playlisten der spilles nu
       if (DRData.instans.afspiller.getAfspillerstatus()!=Status.STOPPET || DRData.instans.afspiller.getLydkilde().erDirekte()) {

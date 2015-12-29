@@ -2,7 +2,6 @@ package dk.dr.radio.afspilning.wrapper;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.os.PowerManager;
 
 
@@ -11,7 +10,6 @@ import com.devbrackets.android.exomedia.EMAudioPlayer;
 import java.io.IOException;
 
 import dk.dr.radio.diverse.App;
-import dk.dr.radio.diverse.Log;
 
 /**
  * @author Jacob Nordfalk 28-11-14.
@@ -41,17 +39,17 @@ public class EmaPlayerWrapper extends EMAudioPlayer implements  MediaPlayerWrapp
   }
 
   @Override
-  public void seekTo(int offsetMs) {
-    super.seekTo(offsetMs);
+  public void seekTo(long offsetMs) {
+    super.seekTo((int) offsetMs);
   }
 
   @Override
-  public int getDuration() {
+  public long getDuration() {
     return super.getDuration();
   }
 
   @Override
-  public int getCurrentPosition() {
+  public long getCurrentPosition() {
     return super.getCurrentPosition();
   }
 

@@ -109,10 +109,10 @@ public class Afspiller_frag extends Basisfragment implements Runnable, View.OnCl
             seekBar.setEnabled(true);
             starttid.setVisibility(View.VISIBLE);
             slutttid.setVisibility(View.VISIBLE);
-            int længdeMs = afspiller.getDuration();
+            int længdeMs = (int) afspiller.getDuration();
             if (længdeMs>0) seekBar.setMax(længdeMs);
             slutttid.setText(DateUtils.formatElapsedTime(længdeMs / 1000));
-            int pos = afspiller.getCurrentPosition();
+            int pos = (int) afspiller.getCurrentPosition();
             Log.d("   pos " + pos + "   " + længdeMs);
             if (pos > 0) { // pos=0 rapporteres efter onSeekComplete, det skal ignoreres
               starttid.setText(DateUtils.formatElapsedTime(pos / 1000));

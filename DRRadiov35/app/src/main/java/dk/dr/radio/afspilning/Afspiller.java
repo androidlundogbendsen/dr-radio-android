@@ -425,7 +425,7 @@ public class Afspiller {
   }
 
   synchronized public void pauseAfspilning() {
-    int pos = gemPosition();
+    long pos = gemPosition();
     pauseAfspilningIntern();
     if (wifilock != null) wifilock.release();
     gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Pause, pos / 1000);
@@ -438,13 +438,13 @@ public class Afspiller {
   /**
    * Gem position - og spol herhen næste gang udsendelsen spiller
    */
-  private int gemPosition() {
+  private long gemPosition() {
     if (!lydkilde.erDirekte() && afspillerstatus == Status.SPILLER) {
-      int pos = mediaPlayer.getCurrentPosition();
+      long pos = mediaPlayer.getCurrentPosition();
       if (pos > 0) {
         //senestLyttet.getUdsendelse().startposition = pos;
         Log.d("senestLyttede.sætStartposition("+lydkilde+" , "+pos);
-        DRData.instans.senestLyttede.sætStartposition(lydkilde, pos);
+        DRData.instans.senestLyttede.sætStartposition(lydkilde, (int) pos);
       }
       return pos;
     }
@@ -574,7 +574,7 @@ public class Afspiller {
   }
 
   /** Flyt til position (i millisekunder) */
-  public void seekTo(int offsetMs) {
+  public void seekTo(long offsetMs) {
     Log.d("afspiler seekTo " + offsetMs);
     mediaPlayer.seekTo(offsetMs);
     gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Seeking, offsetMs / 1000);
@@ -584,13 +584,13 @@ public class Afspiller {
   }
 
   /** Længde i millisekunder */
-  public int getDuration() {
+  public long getDuration() {
     if (afspillerstatus == Status.SPILLER) return mediaPlayer.getDuration();
     return 0;
   }
 
   /** Position i millisekunder */
-  public int getCurrentPosition() {
+  public long getCurrentPosition() {
     if (afspillerstatus == Status.SPILLER) return mediaPlayer.getCurrentPosition();
     return 0;
   }
@@ -611,7 +611,7 @@ public class Afspiller {
     }
     Udsendelse u = lydkilde.getUdsendelse();
     if (u == null) return;
-    int posMs = getCurrentPosition(); // spol hen til sang, der var 10 sekunder før denne
+    long posMs = getCurrentPosition(); // spol hen til sang, der var 10 sekunder før denne
     // TODO hvis posMs<0, skal der så skiftes til forrige udsendelse/lytning?
     int index = u.findPlaylisteElemTilTid(posMs-10000, 0);
     if (index < 0) {
@@ -647,7 +647,7 @@ public class Afspiller {
     }
     Udsendelse u = lydkilde.getUdsendelse();
     if (u == null) return;
-    int posMs = getCurrentPosition();
+    long posMs = getCurrentPosition();
     int index = u.findPlaylisteElemTilTid(posMs, 0);
     if (index < 0) {
       // Skift 5% af udsendelsens varighed
@@ -676,7 +676,7 @@ public class Afspiller {
           try { // Fix for https://www.bugsense.com/dashboard/project/cd78aa05/errors/825188032
             Log.d("mediaPlayer.start() " + mpTils());
             int startposition = DRData.instans.senestLyttede.getStartposition(lydkilde);
-            int varighed = mediaPlayer.getDuration();
+            long varighed = mediaPlayer.getDuration();
             Log.d("mediaPlayer genoptager afspilning ved " + startposition + " varighed="+varighed);
             if (varighed>0 && startposition>0.95*varighed) {
               Log.d("mediaPlayer nej, det er for langt henne, starter ved starten");

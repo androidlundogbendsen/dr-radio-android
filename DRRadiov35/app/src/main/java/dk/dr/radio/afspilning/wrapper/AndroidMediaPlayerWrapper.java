@@ -7,9 +7,6 @@ import android.net.Uri;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import dk.dr.radio.diverse.App;
-import dk.dr.radio.diverse.Log;
-
 /**
  * Wrapper til MediaPlayer.
  * Akamai kræver at MediaPlayer'en bliver 'wrappet' sådan at deres statistikmodul
@@ -71,17 +68,17 @@ public class AndroidMediaPlayerWrapper implements MediaPlayerWrapper {
   }
 
   @Override
-  public void seekTo(int offsetMs) {
-    mediaPlayer.seekTo(offsetMs);
+  public void seekTo(long offsetMs) {
+    mediaPlayer.seekTo((int) offsetMs);
   }
 
   @Override
-  public int getDuration() {
+  public long getDuration() {
     return mediaPlayer.getDuration();
   }
 
   @Override
-  public int getCurrentPosition() {
+  public long getCurrentPosition() {
     return mediaPlayer.getCurrentPosition();
   }
 

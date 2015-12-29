@@ -57,7 +57,7 @@ import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
 import com.androidquery.callback.BitmapAjaxCallback;
-import com.bugsense.trace.BugSenseHandler;
+import com.splunk.mint.Mint;
 
 import org.json.JSONObject;
 
@@ -128,7 +128,7 @@ public class App extends Application {
     netværk = new Netvaerksstatus();
     EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator");
     if (!EMULATOR)
-      BugSenseHandler.initAndStartSession(this, getString(PRODUKTION ? R.string.bugsense_nøgle : R.string.bugsense_testnøgle));
+      Mint.initAndStartSession(this, getString(PRODUKTION ? R.string.bugsense_nøgle : R.string.bugsense_testnøgle));
     super.onCreate();
 
     forgrundstråd = new Handler();

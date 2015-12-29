@@ -15,10 +15,6 @@
  */
 package com.google.android.exoplayer.demo.player;
 
-import android.content.Context;
-import android.media.MediaCodec;
-import android.net.Uri;
-
 import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
 import com.google.android.exoplayer.MediaCodecVideoTrackRenderer;
 import com.google.android.exoplayer.TrackRenderer;
@@ -32,6 +28,10 @@ import com.google.android.exoplayer.upstream.DataSource;
 import com.google.android.exoplayer.upstream.DefaultAllocator;
 import com.google.android.exoplayer.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer.upstream.DefaultUriDataSource;
+
+import android.content.Context;
+import android.media.MediaCodec;
+import android.net.Uri;
 
 /**
  * A {@link RendererBuilder} for streams that can be read using an {@link Extractor}.
@@ -57,17 +57,17 @@ public class ExtractorRendererBuilder implements RendererBuilder {
 
     // Build the video and audio renderers.
     DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter(player.getMainHandler(),
-        null);
+            null);
     DataSource dataSource = new DefaultUriDataSource(context, bandwidthMeter, userAgent);
     ExtractorSampleSource sampleSource = new ExtractorSampleSource(uri, dataSource, allocator,
-        BUFFER_SEGMENT_COUNT * BUFFER_SEGMENT_SIZE);
-    MediaCodecVideoTrackRenderer videoRenderer = new MediaCodecVideoTrackRenderer(sampleSource,
-        null, true, MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT, 5000, null, player.getMainHandler(),
-        player, 50);
+            BUFFER_SEGMENT_COUNT * BUFFER_SEGMENT_SIZE);
+    MediaCodecVideoTrackRenderer videoRenderer = new MediaCodecVideoTrackRenderer(context,
+            sampleSource, MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT, 5000, player.getMainHandler(),
+            player, 50);
     MediaCodecAudioTrackRenderer audioRenderer = new MediaCodecAudioTrackRenderer(sampleSource,
-        null, true, player.getMainHandler(), player, AudioCapabilities.getCapabilities(context));
+            null, true, player.getMainHandler(), player, AudioCapabilities.getCapabilities(context));
     TrackRenderer textRenderer = new TextTrackRenderer(sampleSource, player,
-        player.getMainHandler().getLooper());
+            player.getMainHandler().getLooper());
 
     // Invoke the callback.
     TrackRenderer[] renderers = new TrackRenderer[DemoPlayer.RENDERER_COUNT];

@@ -15,10 +15,6 @@
  */
 package com.google.android.exoplayer.demo.player;
 
-import android.content.Context;
-import android.media.MediaCodec;
-import android.os.Handler;
-
 import com.google.android.exoplayer.DefaultLoadControl;
 import com.google.android.exoplayer.LoadControl;
 import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
@@ -42,6 +38,10 @@ import com.google.android.exoplayer.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer.upstream.DefaultUriDataSource;
 import com.google.android.exoplayer.util.ManifestFetcher;
 import com.google.android.exoplayer.util.ManifestFetcher.ManifestCallback;
+
+import android.content.Context;
+import android.media.MediaCodec;
+import android.os.Handler;
 
 import java.io.IOException;
 import java.util.Map;
@@ -97,7 +97,7 @@ public class HlsRendererBuilder implements RendererBuilder {
       this.player = player;
       HlsPlaylistParser parser = new HlsPlaylistParser();
       playlistFetcher = new ManifestFetcher<>(url, new DefaultUriDataSource(context, userAgent),
-          parser);
+              parser);
     }
 
     public void init() {
@@ -145,17 +145,17 @@ public class HlsRendererBuilder implements RendererBuilder {
 
       DataSource dataSource = new DefaultUriDataSource(context, bandwidthMeter, userAgent);
       HlsChunkSource chunkSource = new HlsChunkSource(dataSource, url, manifest, bandwidthMeter,
-          variantIndices, HlsChunkSource.ADAPTIVE_MODE_SPLICE);
+              variantIndices, HlsChunkSource.ADAPTIVE_MODE_SPLICE);
       HlsSampleSource sampleSource = new HlsSampleSource(chunkSource, loadControl,
-          BUFFER_SEGMENTS * BUFFER_SEGMENT_SIZE, mainHandler, player, DemoPlayer.TYPE_VIDEO);
-      MediaCodecVideoTrackRenderer videoRenderer = new MediaCodecVideoTrackRenderer(sampleSource,
-          MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT, 5000, mainHandler, player, 50);
+              BUFFER_SEGMENTS * BUFFER_SEGMENT_SIZE, mainHandler, player, DemoPlayer.TYPE_VIDEO);
+      MediaCodecVideoTrackRenderer videoRenderer = new MediaCodecVideoTrackRenderer(context,
+              sampleSource, MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT, 5000, mainHandler, player, 50);
       MediaCodecAudioTrackRenderer audioRenderer = new MediaCodecAudioTrackRenderer(sampleSource,
-          null, true, player.getMainHandler(), player, AudioCapabilities.getCapabilities(context));
+              null, true, player.getMainHandler(), player, AudioCapabilities.getCapabilities(context));
       MetadataTrackRenderer<Map<String, Object>> id3Renderer = new MetadataTrackRenderer<>(
-          sampleSource, new Id3Parser(), player, mainHandler.getLooper());
+              sampleSource, new Id3Parser(), player, mainHandler.getLooper());
       Eia608TrackRenderer closedCaptionRenderer = new Eia608TrackRenderer(sampleSource, player,
-          mainHandler.getLooper());
+              mainHandler.getLooper());
 
       TrackRenderer[] renderers = new TrackRenderer[DemoPlayer.RENDERER_COUNT];
       renderers[DemoPlayer.TYPE_VIDEO] = videoRenderer;

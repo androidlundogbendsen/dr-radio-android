@@ -129,7 +129,7 @@ public class Udsendelse extends Lydkilde implements Comparable<Udsendelse>, Clon
    * @param indeks   Gæt på index, f.eks fra sidste kald
    * @return korrekt indeks
    */
-  public int findPlaylisteElemTilTid(int offsetMs, int indeks) {
+  public int findPlaylisteElemTilTid(long offsetMs, int indeks) {
     if (playliste == null || playliste.size() == 0) return -1;
     if (indeks < 0 || playliste.size() <= indeks) {
       indeks = 0;
