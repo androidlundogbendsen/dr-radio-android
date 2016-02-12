@@ -340,7 +340,7 @@ public class Programserie_frag extends Basisfragment implements AdapterView.OnIt
           .replace(R.id.indhold_frag, f)
           .addToBackStack(null)
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-          .commit();
+          .commitAllowingStateLoss(); // Fix for https://mint.splunk.com/dashboard/project/cd78aa05/errors/4061148411
       Sidevisning.vist(Udsendelse_frag.class, udsendelse.slug);
       return;
     }

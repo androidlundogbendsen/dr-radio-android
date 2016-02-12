@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import dk.dr.radio.diverse.App;
 import dk.dr.radio.diverse.Log;
@@ -113,6 +114,7 @@ public enum DRJson {
 
   public static final Locale dansk = new Locale("da", "DA");
   public static final DateFormat klokkenformat = new SimpleDateFormat("HH:mm", dansk);
+  static { klokkenformat.setTimeZone(TimeZone.getTimeZone("GMT+1"));}
   public static final DateFormat datoformat = new SimpleDateFormat("d. MMM yyyy", dansk);
   private static final DateFormat ugedagformat = new SimpleDateFormat("EEEE d. MMM", dansk);
   private static final DateFormat årformat = new SimpleDateFormat("yyyy", dansk);

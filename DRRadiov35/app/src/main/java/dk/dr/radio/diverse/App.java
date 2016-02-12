@@ -127,8 +127,11 @@ public class App extends Application {
     instans = this;
     netværk = new Netvaerksstatus();
     EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator");
-    if (!EMULATOR)
+    if (!EMULATOR) {
       Mint.initAndStartSession(this, getString(PRODUKTION ? R.string.bugsense_nøgle : R.string.bugsense_testnøgle));
+      Mint.enableLogging(true);
+      Mint.setLogging(50);
+    }
     super.onCreate();
 
     forgrundstråd = new Handler();

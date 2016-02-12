@@ -15,8 +15,8 @@ android {
 // Mens vi undersøger streamingkvalitet opgraderer vi kun fra Android 4.1 og op
         minSdkVersion 10
         targetSdkVersion 23
-        versionCode 60
-        versionName '3.5.8 nye_biblioteker'
+        versionCode 61
+        versionName '3.5.8'
     }
     buildTypes {
         release {

@@ -881,7 +881,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
           .replace(R.id.indhold_frag, f)
           .addToBackStack(null)
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-          .commit();
+          .commitAllowingStateLoss(); // Fix for https://mint.splunk.com/dashboard/project/cd78aa05/errors/4456778083
       Sidevisning.vist(Programserie_frag.class, udsendelse.programserieSlug);
     }
   }

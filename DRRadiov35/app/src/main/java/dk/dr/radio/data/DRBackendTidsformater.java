@@ -52,15 +52,15 @@ public class DRBackendTidsformater {
 
 
   /**
-   * Det tidformat, DRs backend normalt sender for playlister: "2014-02-13T10:03:00"
+   * Det tidformat, DRs backend normalt sender for playlister når vi rammer ny Azure-backend: "2014-02-13T10:03:00+0000"
    */
-  public static DateFormat servertidsformatPlayliste = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
+  public static DateFormat servertidsformatPlayliste = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz", Locale.US);
 
   /**
-   * Nogle gange kommer et andet tidsformat, når vi rammer ny Azure-backend
+   * Nogle gange kommer et andet tidsformat, når vi rammer gammel backend: "2014-02-13T10:03:00"
    */
-  public static DateFormat[] servertidsformatPlaylisteAndre = new DateFormat[]{
-          new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz", Locale.US),
+  public static DateFormat[] servertidsformatPlaylisteAndre2 = new DateFormat[]{
+          new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US),
   };
 
   private static Date parseUpålideigtServertidsformat(String tid, DateFormat tidsformat, DateFormat[] tidsformatAndre) {
@@ -85,7 +85,7 @@ public class DRBackendTidsformater {
   }
 
   public static Date parseUpålideigtServertidsformatPlayliste(String tid) {
-    return parseUpålideigtServertidsformat(tid, servertidsformatPlayliste, servertidsformatPlaylisteAndre);
+    return parseUpålideigtServertidsformat(tid, servertidsformatPlayliste, servertidsformatPlaylisteAndre2);
   }
 
 
