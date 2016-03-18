@@ -417,6 +417,7 @@ public class HentedeUdsendelser {
       LinkedHashMap<File, File> res = new LinkedHashMap<File, File>();
 
       public void put(File dir) {
+        if (dir == null) return;
         File nøgle = dir;
         try {
           nøgle = nøgle.getCanonicalFile();

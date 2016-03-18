@@ -67,6 +67,7 @@ public class Basisaktivitet extends ActionBarActivity {
       menu.add(0, 642, 0, "Fejlsøgning");
       menu.add(0, 643, 0, "Vis log");
       menu.add(0, 646, 0, "Send fejlrapport");
+      menu.add(0, 647, 0, "Fremtving crash (og send rapport)");
 //      menu.add(0, 2645, 0, "Status på hentninger");
       menu.add(0, 13643, 0, "Vis servertid");
     }
@@ -142,6 +143,8 @@ public class Basisaktivitet extends ActionBarActivity {
       case 646:
         Log.rapporterFejl(new Exception("Fejlrapport for enhed sendes"));
         return true;
+      case 647:
+        throw new IllegalStateException("Brugeren lavede et test-crash");
     }
     return super.onOptionsItemSelected(item);
   }

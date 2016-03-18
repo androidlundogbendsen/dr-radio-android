@@ -57,7 +57,7 @@ import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
 import com.androidquery.callback.BitmapAjaxCallback;
-import com.splunk.mint.Mint;
+import com.crashlytics.android.Crashlytics;
 
 import org.json.JSONObject;
 
@@ -81,6 +81,7 @@ import dk.dr.radio.net.volley.DrVolleyResonseListener;
 import dk.dr.radio.net.volley.DrVolleyStringRequest;
 import dk.dr.radio.v3.BuildConfig;
 import dk.dr.radio.v3.R;
+import io.fabric.sdk.android.Fabric;
 
 public class App extends Application {
   public static final String P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING = "P4_FORETRUKKEN_GÆT_FRA_STEDPLACERING";
@@ -92,7 +93,7 @@ public class App extends Application {
   public static final boolean ÆGTE_DR = true;
   private static final String DRAMA_OG_BOG__A_Å_INDLÆST = "DRAMA_OG_BOG__A_Å_INDLÆST";
   /** Bruges på nye funktioner - for at tjekke om de altid er opfyldt i felten. Fjernes ved næste udgivelser */
-  public static final boolean TJEK_ANTAGELSER = true;
+  public static final boolean TJEK_ANTAGELSER = !PRODUKTION;
   public static boolean EMULATOR = true; // Sæt i onCreate(), ellers virker det ikke i std Java
   public static App instans;
   public static SharedPreferences prefs;
@@ -128,9 +129,11 @@ public class App extends Application {
     netværk = new Netvaerksstatus();
     EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator");
     if (!EMULATOR) {
-      Mint.initAndStartSession(this, getString(PRODUKTION ? R.string.bugsense_nøgle : R.string.bugsense_testnøgle));
-      Mint.enableLogging(true);
-      Mint.setLogging(50);
+//      Mint.initAndStartSession(this, getString(PRODUKTION ? R.string.bugsense_nøgle : R.string.bugsense_testnøgle));
+//      Mint.enableLogging(true);
+//      Mint.setLogging(5);
+      Fabric.with(this, new Crashlytics());
+      Log.d("Crashlytics startet");
     }
     super.onCreate();
 

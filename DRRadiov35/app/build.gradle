@@ -1,4 +1,19 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 
 android {
     signingConfigs {
@@ -16,7 +31,7 @@ android {
         minSdkVersion 10
         targetSdkVersion 23
         versionCode 61
-        versionName '3.5.8'
+        versionName '3.5.8 crashlytics 2'
     }
     buildTypes {
         release {
@@ -36,9 +51,12 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.devbrackets.android:exomedia:2.4.2'
     compile files('libs/android-query-full.0.26.7.jar')
-    compile files('libs/mint-4.4.0.jar')
+//    compile files('libs/mint-4.4.0.jar')
     compile files('libs/gemiusSDK.jar')
     compile files('libs/libAkamaiAnalytics.jar')
     compile files('libs/gallupstatistik.jar')
     compile files('libs/volley.jar')
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+        transitive = true;
+    }
 }
