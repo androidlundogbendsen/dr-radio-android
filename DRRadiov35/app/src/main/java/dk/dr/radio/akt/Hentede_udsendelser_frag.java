@@ -74,7 +74,7 @@ public class Hentede_udsendelser_frag extends Basisfragment implements AdapterVi
                     R.string.Udsendelser_hentes_kun_over_wifi_fremover___ :
                     R.string.Udsendelser_hentes_både_over_telefonnet_3g_4g_og_wifi_  );
 
-    aq.id(R.id.supplerende_info).text(tekst);
+    //aq.id(R.id.supplerende_info).text(tekst);
   }
 
   @Override

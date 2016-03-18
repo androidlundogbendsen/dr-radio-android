@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -746,15 +748,20 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
 
   private void hent() {
     try {
-      int tilladelse = App.instans.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, App.instans.getPackageName());
+      int tilladelse = ContextCompat.checkSelfPermission(App.instans, Manifest.permission.WRITE_EXTERNAL_STORAGE);
       if (tilladelse != PackageManager.PERMISSION_GRANTED) {
         AlertDialog.Builder ab = new AlertDialog.Builder(getActivity());
         ab.setTitle("Tilladelse mangler");
-        ab.setMessage("Du kan give tilladelse til eksternt lager ved at opgradere til den seneste version");
-        ab.setPositiveButton("OK, opgrader", new AlertDialog.OnClickListener() {
+        ab.setMessage("Du skal give tilladelse til eksternt lager, så vi kan gemme udsendelsen.");
+        ab.setPositiveButton("OK", new AlertDialog.OnClickListener() {
           public void onClick(DialogInterface arg0, int arg1) {
-            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=dk.dr.radio"));
-            startActivity(i);
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+              ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 117);
+            } else{
+              Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+              intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
+              startActivity(intent);
+            }
           }
         });
         ab.setNegativeButton("Nej tak", null);

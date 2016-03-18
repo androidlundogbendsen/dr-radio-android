@@ -50,8 +50,8 @@
       android:background="@drawable/elem_hvid_bg"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="@string/Udsendelser_hentes_både_over_telefonnet_3g_4g_og_wifi_"
-      android:gravity="bottom"/>
+      android:text=""
+      android:gravity="right|center_vertical"/>
 
 </LinearLayout>
 

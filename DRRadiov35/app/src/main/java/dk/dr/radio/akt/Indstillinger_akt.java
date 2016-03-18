@@ -129,7 +129,7 @@ public class Indstillinger_akt extends PreferenceActivity implements OnPreferenc
               lp.setEnabled(false);
               int tilladelse = App.instans.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, App.instans.getPackageName());
               if (tilladelse != PackageManager.PERMISSION_GRANTED) {
-                lp.setSummary(lp.getSummary() + " Fejl - tilladelse til eksternt lager mangler (du skal opdatere app'en)");
+                lp.setSummary(lp.getSummary() + " Du skal give app'en tilladelse til eksternt lager");
               } else {
                 lp.setSummary(lp.getSummary() + " " + getString(R.string.Fejl__adgang_til_eksternt_lager_mangler_indsæt_sd_kort_));
               }

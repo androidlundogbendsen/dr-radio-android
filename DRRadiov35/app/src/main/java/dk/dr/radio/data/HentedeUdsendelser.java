@@ -230,8 +230,8 @@ public class HentedeUdsendelser {
       if (!dir.getPath().startsWith(externalPath)) {
         dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
         dir.mkdirs();
-        Log.d("DownloadManager kan ikke hente til "+destination+" - gem midlertidigt på "+dir);
-        if (!App.PRODUKTION) App.langToast("DownloadManager kan ikke hente til "+destination+" - gem midlertidigt på "+dir);
+        Log.d("DownloadManager kan ikke direkte hente til "+destination+"\nGem midlertidigt i "+dir);
+        if (!App.PRODUKTION) App.langToast("DownloadManager kan ikke direkte hente til\n"+destination+".\n\nGem midlertidigt i\n"+dir);
       }
 
       int typer = App.prefs.getBoolean("hentKunOverWifi", false) ?
