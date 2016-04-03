@@ -65,7 +65,8 @@ public class DRBackendTidsformater {
 
   private static Date parseUpålideigtServertidsformat(String tid, DateFormat tidsformat, DateFormat[] tidsformatAndre) {
     try {
-      return tidsformat.parse(tid);
+      Date res = tidsformat.parse(tid);
+      return res;
     } catch (Exception e) {
       Log.d("Kunne ikke ikke parse "+tid+" med "+tidsformat.format(juleaften)+" "+e+" (prøver med et andet)");
       for (DateFormat tidsformatAndet : tidsformatAndre) {
@@ -91,8 +92,11 @@ public class DRBackendTidsformater {
 
 
   public static void main(String[] a) throws Exception {
-    DRBackendTidsformater.servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US); // +01:00 springes over da kolon i +01:00 er ikke-standard Java
-    parseUpålideigtServertidsformat("2014-02-13T10:03:00+01:00");
+//    DRBackendTidsformater.servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US); // +01:00 springes over da kolon i +01:00 er ikke-standard Java
+//    parseUpålideigtServertidsformat("2014-02-13T10:03:00+01:00");
+    DRBackendTidsformater.servertidsformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz", Locale.US); // +01:00 springes over da kolon i +01:00 er ikke-standard Java
+    Date res = parseUpålideigtServertidsformat("2016-04-01T08:03:00+0000");
+    System.out.println("res = "+res);
   }
 
 

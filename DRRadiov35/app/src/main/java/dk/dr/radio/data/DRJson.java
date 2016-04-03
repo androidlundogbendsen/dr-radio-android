@@ -114,7 +114,7 @@ public enum DRJson {
 
   public static final Locale dansk = new Locale("da", "DA");
   public static final DateFormat klokkenformat = new SimpleDateFormat("HH:mm", dansk);
-  static { klokkenformat.setTimeZone(TimeZone.getTimeZone("GMT+1"));}
+  static { klokkenformat.setTimeZone(TimeZone.getTimeZone("Europe/Copenhagen"));} // GMT+1 om vinteren, GMT+2 om sommeren
   public static final DateFormat datoformat = new SimpleDateFormat("d. MMM yyyy", dansk);
   private static final DateFormat ugedagformat = new SimpleDateFormat("EEEE d. MMM", dansk);
   private static final DateFormat årformat = new SimpleDateFormat("yyyy", dansk);
