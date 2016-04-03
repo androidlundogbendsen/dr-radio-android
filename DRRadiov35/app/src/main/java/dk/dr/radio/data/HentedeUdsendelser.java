@@ -280,8 +280,8 @@ public class HentedeUdsendelser {
   public void stop(Udsendelse u) {
     tjekDataOprettet();
     HentetStatus hs = getHentetStatus(u);
-    if (hs.startUri!=null) new File(URI.create(hs.startUri)).delete(); // Hvis ikke hentet færdig endnu er hs.startUri==null
-    if (hs.destinationFil!=null) new File(hs.destinationFil).delete();
+    if (hs != null && hs.startUri!=null) new File(URI.create(hs.startUri)).delete(); // Hvis ikke hentet færdig endnu er hs.startUri==null
+    if (hs != null && hs.destinationFil!=null) new File(hs.destinationFil).delete();
 
     data.hentetStatusFraSlug.remove(u.slug);
     Long id = data.downloadIdFraSlug.remove(u.slug);
