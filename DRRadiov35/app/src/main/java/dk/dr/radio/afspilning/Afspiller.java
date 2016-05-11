@@ -304,7 +304,8 @@ public class Afspiller {
             // Dette sker hvis en anden app med lyd startes, f.eks. et spil
             case (AudioManager.AUDIOFOCUS_LOSS):
               Log.d("JPER stop");
-              stopAfspilning();
+              // stopAfspilning();
+              pauseAfspilning();
               am.abandonAudioFocus(this);
               break;
 

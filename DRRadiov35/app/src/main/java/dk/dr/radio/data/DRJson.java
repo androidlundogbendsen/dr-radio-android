@@ -29,7 +29,7 @@ public enum DRJson {
   Streams,
   Uri, Played, Artist, Image,
   Type, Kind, Quality, Kbps, ChannelSlug, TotalPrograms, Programs,
-  FirstBroadcast, DurationInSeconds, Format, OffsetMs, OffsetInMs,
+  FirstBroadcast, BroadcastStartTime, DurationInSeconds, Format, OffsetMs, OffsetInMs,
   ProductionNumber, ShareLink, Episode, Chapters, Subtitle,
 
   /**
@@ -232,7 +232,7 @@ public enum DRJson {
     Udsendelse u = opretUdsendelse(drData, o);
     if (kanal != null && kanal.slug.length() > 0) u.kanalSlug = kanal.slug;
     else u.kanalSlug = o.optString(DRJson.ChannelSlug.name());  // Bemærk - kan være tom.
-    u.startTid = DRBackendTidsformater.parseUpålideigtServertidsformat(o.getString(DRJson.FirstBroadcast.name()));
+    u.startTid = DRBackendTidsformater.parseUpålideigtServertidsformat(o.getString(DRJson.BroadcastStartTime.name()));
     u.startTidKl = klokkenformat.format(u.startTid);
     u.slutTid = new Date(u.startTid.getTime() + o.getInt(DRJson.DurationInSeconds.name()) * 1000);
 
