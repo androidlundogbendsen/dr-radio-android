@@ -108,6 +108,14 @@
                           android:summary="Vis ekstra muligheder til udvikling og fejlfinding"
                           android:title="Til udvikling og fejlfinding">
 
+          <!-- TODO fjern engang efter juni 2016 -->
+          <CheckBoxPreference
+              android:key="HovedtelefonFjernetReciever" android:title="Hovedtelefoner fjernes"
+              android:summary="Stop afspilning når hovedtelefoner fjernes"
+              android:defaultValue="true"
+              />
+
+
           <CheckBoxPreference
               android:key="afspillerlyde" android:title="Afspillerlyde"
               android:summaryOn="Afspil lyde, der fortæller når en afspilning starter og slutter"

@@ -25,6 +25,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.MediaPlayer;
@@ -101,6 +102,7 @@ public class Afspiller {
   public List<Runnable> observatører = new ArrayList<Runnable>();
   public List<Runnable> forbindelseobservatører = new ArrayList<Runnable>();
   public List<Runnable> positionsobservatører = new ArrayList<Runnable>();
+  private HovedtelefonFjernetReciever hovedtelefonFjernetReciever = new HovedtelefonFjernetReciever();
 
   private Lydstream lydstream;
   private int forbinderProcent;
@@ -226,6 +228,8 @@ public class Afspiller {
           App.fjernbetjening.registrér();
         }
       }
+
+      App.instans.registerReceiver(hovedtelefonFjernetReciever, hovedtelefonFjernetReciever.filter);
       startAfspilningIntern();
 
 
@@ -428,6 +432,7 @@ public class Afspiller {
   synchronized public void pauseAfspilning() {
     long pos = gemPosition();
     pauseAfspilningIntern();
+    App.instans.unregisterReceiver(hovedtelefonFjernetReciever);
     if (wifilock != null) wifilock.release();
     gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Pause, pos / 1000);
     if (vækkeurWakeLock != null) {

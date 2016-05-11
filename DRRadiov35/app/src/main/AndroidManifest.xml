@@ -89,6 +89,9 @@
     -->
     <receiver android:name="dk.dr.radio.afspilning.AfspillerStartStopReciever"/>
 
+    <!-- Appen skal stoppe med at spille når man tager hovedtelefoner fra telefonen. -->
+    <receiver android:name="dk.dr.radio.afspilning.HovedtelefonFjernetReciever"/>
+
 
     <!-- Til håndtering af knapper på fjernbetjening (f.eks. på Bluetooth headset.) -->
     <receiver android:name="dk.dr.radio.afspilning.FjernbetjeningReciever">
