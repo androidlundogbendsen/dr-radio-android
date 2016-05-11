@@ -150,7 +150,7 @@ public class Grunddata {
       return;
     }
 
-    if (søgEfterMatch(model_og_version, android_json.optString("udeluk_HLS2"))) udelukHLS = true;
+    udelukHLS = søgEfterMatch(model_og_version, android_json.optString("udeluk_HLS2"));
     tving_exoplayer = søgEfterMatch(model_og_version, android_json.optString("tving_exoplayer"));
     tving_mediaplayer = søgEfterMatch(model_og_version, android_json.optString("tving_mediaplayer"));
     tving_emaplayer = søgEfterMatch(model_og_version, android_json.optString("tving_emaplayer"));
