@@ -333,10 +333,10 @@ public class HentedeUdsendelser {
 
             if (!hentet.equals(dest)) {
               Log.d("HentedeUdsendelser flytter fil fra " + hentet + " til " + hs.destinationFil);
-              if (!App.PRODUKTION) App.kortToast("flytter fra\n" + hentet + " til\n" + hs.destinationFil);
+              if (App.fejlsøgning) App.kortToast("flytter fra\n" + hentet + " til\n" + hs.destinationFil);
               dest.getParentFile().mkdirs();
               hs.statusFlytningIGang = true;
-              if (!App.PRODUKTION) hs.statustekst+="\n"+hentet + " til " + hs.destinationFil;
+              if (App.fejlsøgning) hs.statustekst+="\n"+hentet + " til " + hs.destinationFil;
               new AsyncTask() {
                 @Override
                 protected Object doInBackground(Object[] params) {
