@@ -730,15 +730,18 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       intent.setType("text/plain");
       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
       intent.putExtra(Intent.EXTRA_SUBJECT, udsendelse.titel);
-      intent.putExtra(Intent.EXTRA_TEXT, udsendelse.titel + "\n\n"
-              + udsendelse.beskrivelse + "\n\n" +
-// http://www.dr.dk/radio/ondemand/p6beat/debut-65
-// http://www.dr.dk/radio/ondemand/ramasjangradio/ramasjang-formiddag-44#!/00:03
-              // "http://dr.dk/radio/ondemand/" + kanal.slug + "/" + udsendelse.slug
-              (udsendelse.shareLink != null ? udsendelse.shareLink : "")
-//          + "\n\n" + udsendelse.findBedsteStream(true).url
-      );
-//www.dr.dk/p1/mennesker-og-medier/mennesker-og-medier-100
+
+      String tekst = (udsendelse.titel + "\n\n" + udsendelse.beskrivelse).trim();
+      String url = udsendelse.shareLink != null ? udsendelse.shareLink : "";
+
+      // Tilføj URL og begræns delingstekst så den passer med Twitter + max 40 tegn (som det er overkommetligt at slette manuelt)
+      if (url.length()>0) {
+        if (tekst.length() > 158) tekst = tekst.substring(0, 145) + "…\n\n" + url ;
+      } else {
+        if (tekst.length() > 180) tekst = tekst.substring(0, 169) + "…";
+      }
+      intent.putExtra(Intent.EXTRA_TEXT, tekst);
+
       startActivity(intent);
       Sidevisning.i().vist(Sidevisning.DEL, udsendelse.slug);
     } catch (Exception e) {
