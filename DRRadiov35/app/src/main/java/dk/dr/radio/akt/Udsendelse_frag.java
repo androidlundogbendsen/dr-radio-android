@@ -735,11 +735,13 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
       String url = udsendelse.shareLink != null ? udsendelse.shareLink : "";
 
       // Tilføj URL og begræns delingstekst så den passer med Twitter + max 40 tegn (som det er overkommetligt at slette manuelt)
-      if (url.length()>0) {
-        if (tekst.length() > 158) tekst = tekst.substring(0, 145) + "…\n\n" + url ;
-      } else {
+      // se https://www.version2.dk/artikel/twitter-vil-fremover-ikke-taelle-links-og-fotos-med-i-antal-tegn-766725
+      // "Twitter vil fremover ikke tælle links og fotos med i antal tegn".
+      //if (url.length()>0) {
+      //  if (tekst.length() > 158) tekst = tekst.substring(0, 145) + "…\n\n" + url ;
+      //} else {
         if (tekst.length() > 180) tekst = tekst.substring(0, 169) + "…";
-      }
+      //}
       intent.putExtra(Intent.EXTRA_TEXT, tekst);
 
       startActivity(intent);
