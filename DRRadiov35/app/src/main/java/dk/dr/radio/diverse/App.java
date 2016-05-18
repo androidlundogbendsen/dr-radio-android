@@ -95,6 +95,7 @@ public class App extends Application {
   /** Bruges på nye funktioner - for at tjekke om de altid er opfyldt i felten. Fjernes ved næste udgivelser */
   public static final boolean TJEK_ANTAGELSER = !PRODUKTION;
   public static boolean EMULATOR = true; // Sæt i onCreate(), ellers virker det ikke i std Java
+  public static boolean IKKE_Android_VM = false; // Hvis test fra almindelig JVM
   public static App instans;
   public static SharedPreferences prefs;
   public static ConnectivityManager connectivityManager;
@@ -127,7 +128,7 @@ public class App extends Application {
     TIDSSTEMPEL_VED_OPSTART = System.currentTimeMillis();
     instans = this;
     netværk = new Netvaerksstatus();
-    EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator");
+    EMULATOR = Build.PRODUCT.contains("sdk") || Build.MODEL.contains("Emulator") || IKKE_Android_VM;
     if (!EMULATOR) {
 //      Mint.initAndStartSession(this, getString(PRODUKTION ? R.string.bugsense_nøgle : R.string.bugsense_testnøgle));
 //      Mint.enableLogging(true);

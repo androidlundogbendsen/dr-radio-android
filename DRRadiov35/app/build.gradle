@@ -30,8 +30,8 @@ android {
 // Mens vi undersøger streamingkvalitet opgraderer vi kun fra Android 4.1 og op
         minSdkVersion 10
         targetSdkVersion 23
-        versionCode 64
-        versionName '3.5.9.1'
+        versionCode 67
+        versionName '3.5.9.4'
     }
     buildTypes {
         release {
@@ -40,7 +40,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
         debug {
-            applicationIdSuffix 'v3'
+            applicationIdSuffix '.v3'
         }
     }
     productFlavors {
@@ -59,4 +59,5 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
+    testCompile 'org.robolectric:robolectric:3.0'
 }

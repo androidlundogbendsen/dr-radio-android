@@ -84,13 +84,13 @@ public class Log {
     android.util.Log.d(TAG, s);
   }
 
-  public static void e(Exception e) {
+  public static void e(Throwable e) {
     e("fejl", e);
   }
 
-  public static void e(String tekst, Exception e) {
+  public static void e(String tekst, Throwable e) {
     if (e == null) e = new Exception(tekst);
-    if (App.instans == null) {
+    if (App.instans == null || App.IKKE_Android_VM) {
       System.err.println(tekst);
       e.printStackTrace();
       return; // Hop ud hvis vi ikke kører i en Android VM
@@ -104,7 +104,7 @@ public class Log {
 
   static int fejlRapporteret = 0;
 
-  public static void rapporterFejl(final Exception e) {
+  public static void rapporterFejl(final Throwable e) {
     Log.e(e);
     if (fejlRapporteret++ > 2) return; // rapportér ikke mere end 2 fejl per kørsel
     if (!App.EMULATOR) {
@@ -114,7 +114,7 @@ public class Log {
     }
   }
 
-  public static void rapporterFejl(final Exception e, final Object f) {
+  public static void rapporterFejl(final Throwable e, final Object f) {
     Log.e("" + f, e);
     if (fejlRapporteret++ > 2) return; // rapportér ikke mere end 2 fejl per kørsel
     if (!App.EMULATOR) {
