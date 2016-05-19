@@ -77,7 +77,7 @@ public class Log {
   public static void d(Object o) {
     String s = String.valueOf(o);
     logappend(s);
-    if (App.instans == null) {
+    if (App.instans == null || App.IKKE_Android_VM) {
       System.out.println(o);
       return; // Hop ud hvis vi ikke kører i en Android VM
     }
