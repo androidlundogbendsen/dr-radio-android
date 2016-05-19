@@ -627,7 +627,7 @@ public class Udsendelse_frag extends Basisfragment implements View.OnClickListen
         } else if (type == INFOTEKST) {
           aq.id(R.id.titel).typeface(App.skrift_georgia);
           String forkortInfoStr = udsendelse.beskrivelse;
-          if (udsendelse.beskrivelse.length() > 110) {
+          if (forkortInfoStr!=null && forkortInfoStr.length() > 110) {
             forkortInfoStr = forkortInfoStr.substring(0, 110);
             String vis_mere = getString(R.string.___vis_mere_);
             forkortInfoStr += vis_mere;

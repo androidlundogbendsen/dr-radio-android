@@ -111,8 +111,10 @@ public class AfproevBackend {
     int sektionsnummer = 0;
     for (ArrayList<Programserie> sektion : DRData.instans.dramaOgBog.lister) {
       assertTrue(DRData.instans.dramaOgBog.overskrifter.get(sektionsnummer)+" er tom", !sektion.isEmpty());
+      int n = 0;
       for (Programserie ps : sektion) {
         assertTrue(ps+" har ingen udsendelser", ps.antalUdsendelser>0);
+        if (n++ > 3) break; // Tjek kun de første 3.
 
         String url = DRData.getProgramserieUrl(ps, ps.slug) + "&offset=" + 0;
         JSONObject data = new JSONObject(hentStreng(url));
@@ -124,7 +126,9 @@ public class AfproevBackend {
         System.out.println(ps.slug + " " + ps.antalUdsendelser + " " + udsendelser.size());
         assertTrue(ps.slug + " har færre udsendelser end påstået:\n"+url, ps.antalUdsendelser>= udsendelser.size());
 
+        int m = 0;
         for (Udsendelse u : udsendelser) {
+          if (m++ > 5) break; // Tjek kun de første 5.
           u.setStreams(new JSONObject(hentStreng(u.getStreamsUrl())));
           assertTrue(u+" kan ikke høres ", u.kanHentes);
         }

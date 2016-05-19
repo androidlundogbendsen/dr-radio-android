@@ -23,11 +23,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
-import android.view.KeyEvent;
 
 import dk.dr.radio.data.DRData;
 import dk.dr.radio.diverse.App;
-import dk.dr.radio.diverse.Log;
 
 /**
  * Appen skal stoppe med at spille når man tager hovedtelefoner fra telefonen.
@@ -35,11 +33,11 @@ import dk.dr.radio.diverse.Log;
  */
 public class HovedtelefonFjernetReciever extends BroadcastReceiver {
 
-  IntentFilter filter = new IntentFilter();
-
+  final IntentFilter FILTER = new IntentFilter();
   {
-    filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+    FILTER.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
   }
+  static boolean aktiv;
 
 
   @Override

@@ -25,7 +25,6 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.MediaPlayer;
@@ -43,13 +42,10 @@ import android.telephony.TelephonyManager;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import dk.dr.radio.afspilning.wrapper.AndroidMediaPlayerWrapper;
 import dk.dr.radio.afspilning.wrapper.ExoPlayerWrapper;
 import dk.dr.radio.afspilning.wrapper.MediaPlayerLytter;
 import dk.dr.radio.afspilning.wrapper.MediaPlayerWrapper;
@@ -229,7 +225,10 @@ public class Afspiller {
         }
       }
 
-      App.instans.registerReceiver(hovedtelefonFjernetReciever, hovedtelefonFjernetReciever.filter);
+      if (!hovedtelefonFjernetReciever.aktiv) {
+        hovedtelefonFjernetReciever.aktiv = true;
+        App.instans.registerReceiver(hovedtelefonFjernetReciever, hovedtelefonFjernetReciever.FILTER);
+      }
       startAfspilningIntern();
 
 
@@ -432,7 +431,10 @@ public class Afspiller {
   synchronized public void pauseAfspilning() {
     long pos = gemPosition();
     pauseAfspilningIntern();
-    App.instans.unregisterReceiver(hovedtelefonFjernetReciever);
+    if (hovedtelefonFjernetReciever.aktiv) {
+      hovedtelefonFjernetReciever.aktiv = false;
+      App.instans.unregisterReceiver(hovedtelefonFjernetReciever);
+    }
     if (wifilock != null) wifilock.release();
     gemiusStatistik.registérHændelse(GemiusStatistik.PlayerAction.Pause, pos / 1000);
     if (vækkeurWakeLock != null) {
