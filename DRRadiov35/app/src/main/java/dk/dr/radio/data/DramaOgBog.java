@@ -32,7 +32,7 @@ public class DramaOgBog {
    * @param json
    * @throws JSONException
    */
-  public void parseSvar(String json) throws JSONException {
+  void parseSvar(String json) throws JSONException {
     JSONArray jsonArray = new JSONArray(json);
     overskrifter.clear();
     lister.clear();
