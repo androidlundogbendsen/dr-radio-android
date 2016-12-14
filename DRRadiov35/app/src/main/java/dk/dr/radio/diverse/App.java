@@ -625,7 +625,14 @@ public class App extends Application {
       fos.write(vedhæftning.getBytes());
       fos.close();
       Uri uri = Uri.fromFile(new File(akt.getFilesDir().getAbsolutePath(), logfil));
+
+//      https://medium.com/google-developers/sharing-content-between-android-apps-2e6db9d1368b#.kkoqnbkar
+//      Uri uriToImage = FileProvider.getUriForFile(
+//              akt, FILES_AUTHORITY, imageFile);
+// ??
+
       txt += "\n\nRul op øverst i meddelelsen og giv din feedback, tak.";
+      i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
       i.putExtra(Intent.EXTRA_STREAM, uri);
     } catch (Exception e) {
       Log.e(e);

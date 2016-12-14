@@ -41,6 +41,7 @@ public class Hovedaktivitet extends Basisaktivitet implements Runnable {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    com.ensighten.Ensighten.bootstrap(this, "drdk-ensighten", "dr_radio_android", true);
     super.onCreate(savedInstanceState);
 
     if (App.prefs.getBoolean("tving_lodret_visning", true)) {

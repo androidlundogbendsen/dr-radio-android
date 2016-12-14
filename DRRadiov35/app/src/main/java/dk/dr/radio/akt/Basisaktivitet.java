@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,7 +27,7 @@ import dk.dr.radio.diverse.Log;
 import dk.dr.radio.diverse.P4Stedplacering;
 import dk.dr.radio.v3.R;
 
-public class Basisaktivitet extends ActionBarActivity {
+public class Basisaktivitet extends AppCompatActivity {
   protected final AQuery aq = new AQuery(this);
   private ProgressBar progressBar;
 

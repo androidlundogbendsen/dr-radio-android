@@ -1,17 +1,29 @@
 buildscript {
     repositories {
-        maven { url 'https://maven.fabric.io/public' }
+        maven {
+            url 'https://maven.fabric.io/public'
+        }
+        maven {
+            url"https://ensighten-mobile.bintray.com/maven"
+        }
+        mavenCentral()
     }
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
+        classpath "com.ensighten.plugin.android:ensighten:2.0.1"
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'ensighten'
 apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    maven {
+        url"https://ensighten-mobile.bintray.com/maven"
+    }
+    mavenCentral()
 }
 
 
@@ -30,8 +42,8 @@ android {
 // Mens vi undersøger streamingkvalitet opgraderer vi kun fra Android 4.1 og op
         minSdkVersion 10
         targetSdkVersion 23
-        versionCode 68
-        versionName '3.5.9.4'
+        versionCode 69
+        versionName '3.5.9.5'
     }
     buildTypes {
         release {
@@ -49,6 +61,7 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.ensighten.android:ensighten-core:2.2.5'
     compile 'com.devbrackets.android:exomedia:2.4.2'
     compile files('libs/android-query-full.0.26.7.jar')
 //    compile files('libs/mint-4.4.0.jar')
